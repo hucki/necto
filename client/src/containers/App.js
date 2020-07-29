@@ -8,6 +8,7 @@ function App() {
   return (
     <div className={classes.App}>
       <Header />
+
       <Dashboard />
       <Footer />
     </div>

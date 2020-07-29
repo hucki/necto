@@ -1,4 +1,6 @@
 .Footer {
+  width: 100%;
   background-color: darkslategrey;
   color: white;
+  text-align: right;
 }

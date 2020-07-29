@@ -4,7 +4,7 @@ import classes from './Header.module.css';
 function Header() {
   return (
     <div className={classes.Header + ' box'}>
-      <p>i am a Header</p>
+      <h1 className={classes.Headline}>necto</h1>
     </div>
   )
 }
