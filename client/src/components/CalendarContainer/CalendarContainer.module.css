@@ -18,7 +18,7 @@
 
 .Weekday {
   display: grid;
-  grid-template-rows: 1fr 12fr;
+  grid-template-rows: 1fr 20fr;
   text-align: center;
   align-items: center;
   border-width: 1px;
@@ -43,9 +43,13 @@
 }
 .MemberHeader {
   display: grid;
-  place-items: center end;
+  place-items: center;
+  width: 15px;
+  /* align-items: center;
+  justify-items: baseline; */
   transform: rotate(-90deg);
-  height: 50px;
+  /* white-space: nowrap;
+  height: 50px; */
 }
 
 .Weekend {

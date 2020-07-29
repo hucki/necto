@@ -1,8 +1,13 @@
 import React from 'react';
 import classes from './CalendarContainer.module.css';
+import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 dayjs.extend(weekday)
+
+function onChange(date, dateString) {
+  console.log(date, dateString);
+}
 
 const teamMembers = [
   { id: 1, firstName: 'Mitchell', lastName: 'Bidmead', color: 'black'},
@@ -33,12 +38,15 @@ const members = teamMembers.map((member, index) =>
 );
 const weekdays = Array(5).fill(0).map((item, index) =>
   <div key={index} className={classes.Weekday}>
-    <div className={classes.WeekdayHeader}>{dayjs().day(index+1).format('ddd')}</div>
+    <div className={classes.WeekdayHeader}>{dayjs().day(index+1).format('ddd, DD.MM YYYY')}</div>
     <div className={classes.MemberContainer}>{members}</div>
   </div>
 );
+
 const CalendarContainer = () => {
   return (
+    <>
+    <DatePicker onChange={onChange} picker="week" />
     <div className={classes.Week}>
       <div className={classes.Weekdays}>
         {weekdays}
@@ -47,6 +55,7 @@ const CalendarContainer = () => {
 
       </div>
     </div>
+    </>
   );
 }
 export default CalendarContainer;
