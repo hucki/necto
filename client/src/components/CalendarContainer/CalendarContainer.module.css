@@ -1,10 +1,58 @@
 .Week {
-  /* display: grid; */
+  box-sizing: border-box;
+  margin: 20px auto;
+  width: 90%;
+  height: 90%;
+  display: grid;
+  grid-template-columns: 5fr 0.5fr;
+  /* border-width: 2px;
+  border: groove; */
 
 }
 .Weekdays {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  /* border-width: 2px;
+  border: groove; */
+}
+
+.Weekday {
+  display: grid;
+  grid-template-rows: 1fr 12fr;
+  text-align: center;
+  align-items: center;
+  border-width: 1px;
+  border: groove;
+}
+.WeekdayHeader {
+  height: 100%;
+  background-color: lightskyblue;
+}
+.MemberContainer {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+}
+.Member {
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: repeat(12, 1fr);
+  /* border-width: 2px;
+  border: groove; */
+}
+.MemberHeader {
+  display: grid;
+  place-items: center end;
+  transform: rotate(-90deg);
+  height: 50px;
+}
+
+.Weekend {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  border-width: 2px;
+  border: groove;
 }

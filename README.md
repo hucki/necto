@@ -13,8 +13,9 @@ https://www.chartjs.org
 - [ ] setup OSS license (GPL / MIT)
 - [ ] decide which calendar to use
   - [o] react-big-calendar -> no. even more deprecated ans unsafe methods used
-  - [ ] react-calendar-timeline -> second try, although uses deprecated context API (https://reactjs.org/docs/context.html#legacy-api)
+  - [o] react-calendar-timeline -> second try, although uses deprecated context API (https://reactjs.org/docs/context.html#legacy-api)
   - [o] semantic-ui-react -> i will not build the calendar by hand
+  - [ ] antd and selfrender calendar
   - [ ] Fullcalendar.io scheduler license: schedulerLicenseKey= 'GPL-My-Project-Is-Open-Source'
   - [ ] ToastUI Calendar
 
