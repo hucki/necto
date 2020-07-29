@@ -15,9 +15,10 @@ https://www.chartjs.org
   - [o] react-big-calendar -> no. even more deprecated ans unsafe methods used
   - [o] react-calendar-timeline -> second try, although uses deprecated context API (https://reactjs.org/docs/context.html#legacy-api)
   - [o] semantic-ui-react -> i will not build the calendar by hand
-  - [ ] antd and selfrender calendar
+  - [o] DHTMLX Scheduler -> mutliple resources only iin pro version
+  - [ ] antd and self-render calendar
   - [ ] Fullcalendar.io scheduler license: schedulerLicenseKey= 'GPL-My-Project-Is-Open-Source'
-  - [ ] ToastUI Calendar
+  - [o] ToastUI Calendar -> no multiple resources
 
 **frontend**
 - [x] define Structure (components)

@@ -1,10 +1,9 @@
 .Week {
   box-sizing: border-box;
-  margin: 20px auto;
+  margin: auto;
   width: 90%;
   height: 90%;
   display: grid;
-  grid-template-columns: 5fr 0.5fr;
   /* border-width: 2px;
   border: groove; */
 
@@ -21,8 +20,7 @@
   grid-template-rows: 1fr 20fr;
   text-align: center;
   align-items: center;
-  border-width: 1px;
-  border: groove;
+  border: 1px solid #3333;
 }
 .WeekdayHeader {
   height: 100%;
@@ -38,6 +36,7 @@
   overflow: hidden;
   display: grid;
   grid-template-rows: repeat(12, 1fr);
+  border: 1px solid #3331;
   /* border-width: 2px;
   border: groove; */
 }
@@ -45,11 +44,7 @@
   display: grid;
   place-items: center;
   width: 15px;
-  /* align-items: center;
-  justify-items: baseline; */
   transform: rotate(-90deg);
-  /* white-space: nowrap;
-  height: 50px; */
 }
 
 .Weekend {

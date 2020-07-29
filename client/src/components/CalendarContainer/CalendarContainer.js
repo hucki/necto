@@ -3,6 +3,7 @@ import classes from './CalendarContainer.module.css';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
+import CalendarDay from '../CalendarDay/CalendarDay';
 dayjs.extend(weekday)
 
 function onChange(date, dateString) {
@@ -36,12 +37,14 @@ const members = teamMembers.map((member, index) =>
     <div className={classes.MemberHeader}>{member.firstName}</div>
   </div>
 );
+{/* <div className={classes.WeekdayHeader}>{dayjs().day(index+1).format('ddd, DD.MM')}</div>
+<div className={classes.MemberContainer}>{members}</div> */}
+
 const weekdays = Array(5).fill(0).map((item, index) =>
-  <div key={index} className={classes.Weekday}>
-    <div className={classes.WeekdayHeader}>{dayjs().day(index+1).format('ddd, DD.MM YYYY')}</div>
-    <div className={classes.MemberContainer}>{members}</div>
-  </div>
+  <CalendarDay key={index} className={classes.Weekday} day={dayjs().day(index+1).format('ddd, DD.MM')}/>
 );
+
+
 
 const CalendarContainer = () => {
   return (
@@ -50,9 +53,6 @@ const CalendarContainer = () => {
     <div className={classes.Week}>
       <div className={classes.Weekdays}>
         {weekdays}
-      </div>
-      <div className={classes.Weekend}>
-
       </div>
     </div>
     </>
