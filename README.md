@@ -4,16 +4,33 @@
 
 ## TODO
 andre's comment:
-> Hey, Stefan! I think this is a great idea and certainly an original one. I would suggest to focus on implementing the adding appointments with different frequencies to a calendar in a way that would be great for the users. Once you have that working well, then I would focus on implementing the team features. Overall I think you are in the right track and I'm looking forward to following your progress
+> I would suggest to focus on implementing the adding appointments with different frequencies to a calendar in a way that would be great for the users. Once you have that working well, then I would focus on implementing the team features. Overall I think you are in the right track and I'm looking forward to following your progress
+
+https://github.com/atlassian/react-beautiful-dnd
+https://www.chartjs.org
+
+**general**
+- [ ] setup OSS license (GPL / MIT)
+- [ ] decide which calendar to use
+  - [ ] react calendar timeline
+  - [ ] Fullcalendar.io scheduler license: schedulerLicenseKey= 'GPL-My-Project-Is-Open-Source'
+  - [ ] ToastUI Calendar
 
 **frontend**
-- [ ] define Structure
-  - [ ] Components / libs
+- [x] define Structure (components)
 - [ ] create-react-app
-- [ ]
-- [ ]
-- [ ]
+- [ ] install libraries
+  - [ ] redux for state manangement
+- [ ] connect API
+- [ ] color schema
+
 **backend**
+- [ ] define Models
+- [ ] setup express/mongoose
+
+
+**authentication**
+- [ ]
 
 ## FrontEnd structure
 ```
