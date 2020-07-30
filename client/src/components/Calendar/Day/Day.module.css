@@ -1,0 +1,16 @@
+.Day {
+  display: grid;
+  grid-template-rows: 1fr 12fr;
+}
+
+.DayHeader {
+  height: 100%;
+  border-radius: 2px;
+  box-shadow: 2px 2px 5px #3333;
+  text-shadow: 1px 1px cyan, -1px -1px magenta;
+}
+
+.Hours {
+  display: grid;
+  grid-template-rows: auto;
+}

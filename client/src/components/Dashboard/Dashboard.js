@@ -1,11 +1,12 @@
 import React from 'react';
 import classes from './Dashboard.module.css';
-import CalendarContainer from '../CalendarContainer/CalendarContainer';
+import Calendar from '../Calendar/Calendar';
+
 
 function Dashboard() {
   return (
     <div className={classes.Dashboard}>
-      <CalendarContainer />
+      <Calendar />
     </div>
   )
 }
