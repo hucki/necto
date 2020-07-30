@@ -9,14 +9,25 @@ import {events} from '../assets/data'
 import ActionButton from 'antd/lib/modal/ActionButton';
 
 const initialState = {
-  events: events
+  events: events,
+  maxId: 100
 }
 
 function reducer(state=initialState, action) {
-  switch(ActionButton.type) {
+  switch(action.type) {
     case 'ADD_APPOINTMENT':
-      return {...state, events: [... state.events, action.payload]};
+      console.log(action.payload)
+      const newState = {
+        events: {},
+        maxId: state.maxId + 1
+      }
+      Object.keys(state.events).map(stateKey => {
+        if (stateKey === 'Person 1') newState.events['Person 1'] = [...state.events[stateKey], action.payload];
+        else newState.events['Person 2']= [...state.events[stateKey]];
+      })
+      return newState;
     default:
+      console.log(action)
       return state;
   }
 }

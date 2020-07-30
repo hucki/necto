@@ -5,22 +5,27 @@ import classes from './AddButton.module.css';
 import { connect } from "react-redux";
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
-import addAppointment from '../../actions/actions'
+import {addAppointment} from '../../actions/actions'
 
 dayjs.extend(weekday)
 
-const AddButton = (addAppointment) => {
+const AddButton = ({dispatch}) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
-  const [newAppointment, setNewAppointment] = useState([
-      { name: 'Custom Event 1',
-        startTime: dayjs('2018-02-23T11:30:00'),
-        endTime: dayjs('2018-02-23T13:30:00')
-      }]);
+  const [newAppointment, setNewAppointment] = useState(
+      { name: 'new Appointment',
+        startTime: dayjs(),
+        endTime: dayjs()
+      });
 
   useEffect(() => {
     if (visible) {
-      form.setFieldsValue({ user: "antd" });
+      form.setFieldsValue({
+        name: 'New Appointment',
+        startTime: dayjs(),
+        endTime: dayjs().add(45,'m')
+     });
+
     }
   }, [visible]);
 
@@ -29,16 +34,16 @@ const AddButton = (addAppointment) => {
   }
 
   function onOkHandler() {
-    setNewAppointment(state => [{
+    setNewAppointment(state => {return {
       name: form.getFieldValue('name'),
       startTime: form.getFieldValue('startTime'),
       endTime: form.getFieldValue('endTime')
-    }])
-
-
-    //addAppointment();
+    }})
+    console.log('new', newAppointment)
+    dispatch(addAppointment(newAppointment));
     setVisible(false);
   }
+
   return (
     <>
     <Tooltip title="new Appointment">
@@ -47,17 +52,17 @@ const AddButton = (addAppointment) => {
     <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
         <Form form={form}>
           <Form.Item label='Title' name='name'><Input /></Form.Item>
-          <Form.Item label='Start' name='startTime'><DatePicker /></Form.Item>
-          <Form.Item label='End' name='endTime'><DatePicker /></Form.Item>
+          <Form.Item label='Start' name='startTime'><DatePicker showTime/></Form.Item>
+          <Form.Item label='End' name='endTime'><DatePicker showTime/></Form.Item>
         </Form>
       </Modal>
   </>
   )
 }
 
-function mapDispatchToProps(dispatch, newAppointment) {
+function mapDispatchToProps(dispatch) {
   return {
-    addAppointment: () => dispatch({ type: "ADD_APPOINTMENT", })
+    addAppointment: (newAppointment) => dispatch({ type: "ADD_APPOINTMENT", payload: newAppointment})
   };
 }
 

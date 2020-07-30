@@ -1,3 +1,5 @@
 .AddButton {
-  position: absolute;
+  position: sticky;
+  bottom: 20px;
+
 }
