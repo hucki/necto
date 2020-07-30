@@ -25,9 +25,11 @@ https://www.chartjs.org
 - [x] create-react-app
 - [x] install libraries
   - [x] redux for state manangement
-- [ ] add new appointments to calendar
+- [x] add new appointments to calendar
+- [ ] move add button to the right
 - [ ] connect date / week picker to displayed schedule
-- [ ]
+- [ ] delete appointments
+- [ ] create week view
 - [ ] connect API
 - [ ] color schema
 
