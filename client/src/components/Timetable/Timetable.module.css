@@ -1,0 +1,61 @@
+
+.time_table_wrapper {
+  height: 100%;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  color: var(--secondary);
+  overflow: hidden;
+}
+
+.day {
+  position: relative;
+  height: 100%;
+  float: left;
+  background-color: #fff;
+  background-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);
+}
+
+.day_title {
+  background-color: #34495e;
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  z-index: 2;}
+.hour {
+  background-color: rgba(52, 73, 94,0.9);
+  font-size: 12px;
+  text-align: center;
+  width: 5rem;
+}
+
+.event {
+
+  position: absolute;
+  width: 98%;
+  height: 15vh;
+  line-height: 15vh;
+  background-color:  var(--primary);
+  font-size: .7em;
+  font-weight: 300;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 0 15px #3333;
+}
+
+.event_info {
+  color: var(--secondary);
+  font-size: 1.1rem;
+  line-height: initial;
+  text-align: center;
+}
+
+.bg_green {
+  background-color: limegreen;
+}

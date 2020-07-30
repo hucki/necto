@@ -12,8 +12,11 @@ code {
     monospace;
 }
 
-#root {
-
+:root {
+  --primary: cyan;
+  --secondary: magenta;
+  --primary-alpha: rgba(0,255,255,0.5);
+  --secondary-alpha: rgba(255,0,255,0.5);
 }
 
 .box {

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.2.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -13,8 +14,10 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-calendar-timeline": "^0.27.0",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
     "react-scripts": "3.4.1",
     "react-timetable-events": "^1.0.2",
+    "redux": "^4.0.5",
     "styled-components": "^5.1.1"
   },
   "scripts": {

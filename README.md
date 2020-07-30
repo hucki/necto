@@ -94,3 +94,7 @@ Users should be able to create, read, update and delete their own appointments a
 - local holidays: date-holidays
 - additional mock Data: Mock Data
   i.e. Team Members / appointments
+
+  ## License
+
+MIT © [Stefan Huckschlag](https://github.com/hucki)

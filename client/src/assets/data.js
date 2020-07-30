@@ -32,14 +32,16 @@ export const events = {
       name: 'Custom Event 1',
       type: 'custom',
       startTime: dayjs('2018-02-23T11:30:00'),
-      endTime: dayjs('2018-02-23T13:30:00')
+      endTime: dayjs('2018-02-23T13:30:00'),
+      style: 'bg_green'
     },
     {
       id: 100,
       name: 'Custom Event 100',
       type: 'custom',
       startTime: dayjs('2018-02-23T12:30:00'),
-      endTime: dayjs('2018-02-23T13:30:00')
+      endTime: dayjs('2018-02-23T13:30:00'),
+      style: 'bg_green'
     }
   ],
   'Person 2': [
@@ -48,14 +50,16 @@ export const events = {
       name: 'Custom Event 2',
       type: 'custom',
       startTime: dayjs('2018-02-22T12:30:00'),
-      endTime: dayjs('2018-02-22T14:30:00')
+      endTime: dayjs('2018-02-22T14:30:00'),
+      style: 'bg_green'
     },
     {
       id: 3,
       name: 'Custom Event 3',
       type: 'custom',
       startTime: dayjs('2018-02-22T16:30:00'),
-      endTime: dayjs('2018-02-22T18:45:00')
+      endTime: dayjs('2018-02-22T18:45:00'),
+      style: 'bg_green'
     }
   ]
 };
