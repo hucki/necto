@@ -23,3 +23,34 @@ export const items = [
   { id: 2, group: 2, title: 'item 2', start_time: dayjs().add(-0.5, 'hour'), end_time: dayjs().add(0.5, 'hour')},
   { id: 3, group: 1, title: 'item 3', start_time: dayjs().add(2, 'hour'), end_time: dayjs().add(3, 'hour')}
 ]
+
+export const events = {
+  'Person 1': [
+    {
+      id: 1,
+      name: 'Custom Event 1',
+      type: 'custom',
+      startTime: dayjs('2018-02-23T11:30:00'),
+      endTime: dayjs('2018-02-23T13:30:00')
+    }
+  ],
+  'Person 2': [
+    {
+      id: 2,
+      name: 'Custom Event 2',
+      type: 'custom',
+      startTime: dayjs('2018-02-22T12:30:00'),
+      endTime: dayjs('2018-02-22T14:30:00')
+    },
+    {
+      id: 3,
+      name: 'Custom Event 3',
+      type: 'custom',
+      startTime: dayjs('2018-02-22T16:30:00'),
+      endTime: dayjs('2018-02-22T18:45:00')
+    }
+  ],
+  'Person 3': [],
+  'Person 4': [],
+  'Person 5': []
+};
