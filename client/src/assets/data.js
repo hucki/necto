@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 dayjs.extend(weekday)
 
+
 export const teamMembers = [
   { id: 1, firstName: 'Mitchell', lastName: 'Bidmead', color: 'black'},
   { id: 2, firstName: 'Gigi', lastName: 'Blitzer', color: 'green'},
@@ -32,6 +33,13 @@ export const events = {
       type: 'custom',
       startTime: dayjs('2018-02-23T11:30:00'),
       endTime: dayjs('2018-02-23T13:30:00')
+    },
+    {
+      id: 100,
+      name: 'Custom Event 100',
+      type: 'custom',
+      startTime: dayjs('2018-02-23T12:30:00'),
+      endTime: dayjs('2018-02-23T13:30:00')
     }
   ],
   'Person 2': [
@@ -49,8 +57,5 @@ export const events = {
       startTime: dayjs('2018-02-22T16:30:00'),
       endTime: dayjs('2018-02-22T18:45:00')
     }
-  ],
-  'Person 3': [],
-  'Person 4': [],
-  'Person 5': []
+  ]
 };

@@ -19,7 +19,6 @@ const Container = styled.div`
   border-radius: 2px;
 `;
 const viewItems = items.map((item, index) => (<Item key={item.id} index={item.id} me={item.title} start={item.start_time.format('DD.MM.YYYY')} end={item.end_time.format('DD.MM.YYYY')} itemId={item.title}/>))
-console.log(viewItems)
 const Day = (props) => {
   return (
     <Container className={classes.Day}>
