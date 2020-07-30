@@ -11,20 +11,23 @@ https://www.chartjs.org
 
 **general**
 - [ ] setup OSS license (GPL / MIT)
-- [ ] decide which calendar to use
-  - [o] react-big-calendar -> no. even more deprecated ans unsafe methods used
-  - [o] react-calendar-timeline -> second try, although uses deprecated context API (https://reactjs.org/docs/context.html#legacy-api)
-  - [o] semantic-ui-react -> i will not build the calendar by hand
-  - [o] DHTMLX Scheduler -> mutliple resources only iin pro version
-  - [ ] antd and self-render calendar
-  - [ ] Fullcalendar.io scheduler license: schedulerLicenseKey= 'GPL-My-Project-Is-Open-Source'
-  - [o] ToastUI Calendar -> no multiple resources
+- [x] decide which calendar to use
+  - [x] antd and react-timeline-events
+    - [o] react-big-calendar -> no. even more deprecated ans unsafe methods used
+    - [o] react-calendar-timeline -> second try, although uses deprecated context API (https://reactjs.org/docs/context.html#legacy-api)
+    - [o] semantic-ui-react -> i will not build the calendar by hand
+    - [o] DHTMLX Scheduler -> mutliple resources only iin pro version
+    - [o] Fullcalendar.io scheduler license: schedulerLicenseKey= 'GPL-My-Project-Is-Open-Source'
+    - [o] ToastUI Calendar -> no multiple resources
 
 **frontend**
 - [x] define Structure (components)
-- [ ] create-react-app
-- [ ] install libraries
-  - [ ] redux for state manangement
+- [x] create-react-app
+- [x] install libraries
+  - [x] redux for state manangement
+- [ ] add new appointments to calendar
+- [ ] connect date / week picker to displayed schedule
+- [ ]
 - [ ] connect API
 - [ ] color schema
 

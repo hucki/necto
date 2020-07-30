@@ -1,29 +1,25 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import { Form, Input, Modal, Button, Tooltip, DatePicker } from "antd";
+import { Form, Input, Modal, Button, Tooltip } from "antd";
+import {DatePicker} from '../index.tsx';
 import {PlusOutlined} from '@ant-design/icons';
 import classes from './AddButton.module.css';
 import { connect } from "react-redux";
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
-import {addAppointment} from '../../actions/actions'
+import {addAppointment, ADD_APPOINTMENT} from '../../actions/actions'
 
 dayjs.extend(weekday)
 
 const AddButton = ({dispatch}) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
-  const [newAppointment, setNewAppointment] = useState(
-      { name: 'new Appointment',
-        startTime: dayjs(),
-        endTime: dayjs()
-      });
 
   useEffect(() => {
     if (visible) {
       form.setFieldsValue({
         name: 'New Appointment',
-        startTime: dayjs(),
-        endTime: dayjs().add(45,'m')
+        startTime: dayjs().subtract(7, 'h'),
+        endTime: dayjs().subtract(7, 'h').add(45,'m')
      });
 
     }
@@ -34,13 +30,11 @@ const AddButton = ({dispatch}) => {
   }
 
   function onOkHandler() {
-    setNewAppointment(state => {return {
+    dispatch(addAppointment({
       name: form.getFieldValue('name'),
       startTime: form.getFieldValue('startTime'),
       endTime: form.getFieldValue('endTime')
-    }})
-    console.log('new', newAppointment)
-    dispatch(addAppointment(newAppointment));
+    }));
     setVisible(false);
   }
 
@@ -60,10 +54,11 @@ const AddButton = ({dispatch}) => {
   )
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
   return {
-    addAppointment: (newAppointment) => dispatch({ type: "ADD_APPOINTMENT", payload: newAppointment})
+    addAppointment: addAppointment,
+    dispatch
   };
 }
 
-export default connect(mapDispatchToProps)(AddButton);
+export default connect(null, mapDispatchToProps)(AddButton);

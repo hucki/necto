@@ -1,17 +1,11 @@
 import React, {useState, useCallback} from 'react';
+import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
-import classes from './TimetableContainer.module.css'
-import {events} from '../../../assets/data'
+import classes from './TimetableContainer.module.css';
+//import { events } from '../../../assets/data';
 import TimetableItem from '../TimetableItem/TimetableItem';
 import AddButton from '../../../elements/AddButton/AddButton';
 import InputForm from '../../Appointments/InputForm/InputForm';
-
-const onClickHandler = (e) => {
-  console.log('clicked event:', e.target)
-}
-
-
-
 
 const renderCustomEvent = (event, defaultAttributes, styles) => {
   return (
@@ -19,16 +13,23 @@ const renderCustomEvent = (event, defaultAttributes, styles) => {
   )
 }
 
-const TimetableContainer = () => {
+const TimetableContainer = (state) => {
+  console.log('here state', state.events)
   return (
-    <div className={classes.TimetableContainer} onClick={onClickHandler}>
+    <div className={classes.TimetableContainer}>
       <Timetable
         hoursInterval={[ 6, 21 ]}
-        events={events}
+        events={state.events}
         renderEvent={renderCustomEvent} />
       <AddButton />
     </div>
   )
 }
 
-export default TimetableContainer
+const MapStateToProps = state => {
+  return {
+    events: state.events
+  }
+}
+
+export default connect(MapStateToProps, null)(TimetableContainer)

@@ -10,7 +10,7 @@ import ActionButton from 'antd/lib/modal/ActionButton';
 
 const initialState = {
   events: events,
-  maxId: 100
+  maxId: 4
 }
 
 function reducer(state=initialState, action) {
@@ -22,12 +22,11 @@ function reducer(state=initialState, action) {
         maxId: state.maxId + 1
       }
       Object.keys(state.events).map(stateKey => {
-        if (stateKey === 'Person 1') newState.events['Person 1'] = [...state.events[stateKey], action.payload];
+        if (stateKey === 'Person 1') newState.events['Person 1'] = [...state.events[stateKey], {id: newState.maxId, type: 'custom', style: 'bg_green',...action.payload}];
         else newState.events['Person 2']= [...state.events[stateKey]];
       })
       return newState;
     default:
-      console.log(action)
       return state;
   }
 }
