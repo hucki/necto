@@ -16,18 +16,22 @@ const initialState = {
   hoursInterval: [ 6, 19 ]
 }
 
+function getPersonId(displayName) {
+  const foundMember = teamMembers.filter(member => member.firstName === displayName);
+  return foundMember[0].id;
+}
+
 function reducer(state=initialState, action) {
   const newState = {};
   newState.hoursInterval = [...state.hoursInterval]
   switch(action.type) {
     case 'ADD_APPOINTMENT':
-      newState.events= {};
+      const personId = getPersonId(action.payload.rowId)
       newState.maxId= state.maxId + 1;
       newState.currentDate= state.currentDate
-      Object.keys(state.events).map(stateKey => {
-        if (stateKey === 'Person 1') newState.events['Person 1'] = [...state.events[stateKey], {id: newState.maxId, type: 'custom', style: 'bg_green',...action.payload}];
-        else newState.events['Person 2']= [...state.events[stateKey]];
-      })
+      pureEvents.push({id: newState.maxId, personId: personId, type: 'custom',...action.payload});
+      newState.events= events(teamMembers, pureEvents);
+      console.log(newState)
       return newState;
     case 'CHANGE_DATE':
       newState.events= {...state.events};

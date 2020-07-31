@@ -23,13 +23,16 @@ const renderCustomEvent = (event, defaultAttributes, styles) => {
 const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
+  const [startTime, setStartTime] = useState(dayjs().set('seconds',0));
+  const [endTime, setEndTime] = useState(dayjs().add(45,'m').set('seconds',0));
+  const [rowId, setRowId] = useState('');
 
   useEffect(() => {
     if (visible) {
       form.setFieldsValue({
         name: 'New Appointment',
-        startTime: dayjs().subtract(7, 'h'),
-        endTime: dayjs().subtract(7, 'h').add(45,'m')
+        startTime: startTime,
+        endTime: endTime
      });
 
     }
@@ -41,6 +44,7 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
 
   function onOkHandler() {
     dispatch(addAppointment({
+      rowId: rowId,
       name: form.getFieldValue('name'),
       startTime: form.getFieldValue('startTime'),
       endTime: form.getFieldValue('endTime')
@@ -51,21 +55,23 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
 
   function getPosition(e) {
     e.preventDefault();
-    const clickOnFreeTime = !e.target.className.indexOf('styles_day__')
+    const clickOnFreeTime = !e.target.className.indexOf('styles_day__');
 
     if (clickOnFreeTime) {
-      const rowId = (e.target.className.split(' ')[1]);
+      setRowId(e.target.className.split(' ')[1]);
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       const numberOfHours = hoursInterval[1]-hoursInterval[0]+1;
       const cellHeight = (rect.bottom-rect.top)/numberOfHours;
       const startOfDay = currentDate.clone().set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0);
-      const clickTimeMin = ((y-cellHeight)/(cellHeight/60))
-      const clickTime = startOfDay.clone().add(clickTimeMin,'m')
+      const clickTimeMin = ((y-cellHeight)/(cellHeight/60));
+      const clickTime = startOfDay.clone().add(clickTimeMin,'m');
       const fullQuarterHour = Math.round(clickTime.get('minute')/15)*15;
-      const clickTimeFQH = clickTime.set('minutes', 0).add(fullQuarterHour, 'm')
-      console.log(`clicked on ${rowId}'s row at around: ${clickTimeFQH.format('HH:mm')}`);
+      const clickTimeFQH = clickTime.set('minutes', 0).add(fullQuarterHour, 'm').set('seconds',0);
+      setStartTime(clickTimeFQH)
+      setEndTime(clickTimeFQH.add(45,'m'))
+      setVisible(true);
     }
   }
 
