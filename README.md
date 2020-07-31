@@ -34,6 +34,9 @@ https://www.chartjs.org
 - [ ] connect API
 - [ ] color schema
 
+**data**
+- [x] untie persons and appointments and dynamically generate event for timetable
+
 **backend**
 - [ ] define Models
 - [ ] setup express/mongoose

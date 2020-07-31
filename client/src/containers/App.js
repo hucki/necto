@@ -5,12 +5,12 @@ import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
-import {events} from '../assets/data'
+import {teamMembers, pureEvents, events} from '../assets/data'
 import ActionButton from 'antd/lib/modal/ActionButton';
 import dayjs from 'dayjs';
 
 const initialState = {
-  events: events,
+  events: events(teamMembers, pureEvents),
   maxId: 4,
   currentDate: dayjs()
 }

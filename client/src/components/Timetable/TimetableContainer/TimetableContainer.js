@@ -19,7 +19,6 @@ const renderCustomEvent = (event, defaultAttributes, styles) => {
 }
 
 const TimetableContainer = ({events, currentDate}) => {
-  console.log('here newDay', currentDate)
   return (
     <div className={classes.TimetableContainer}>
       <Timetable
@@ -42,7 +41,6 @@ function filteredEvents(events, currentDate) {
       if (dayjs(event.startTime).isSame(currentDate, 'day')) filtered[stateKey] = [...filtered[stateKey], event];
     })
   })
-  console.log('filtered Events:', filtered)
   return filtered;
 }
 
