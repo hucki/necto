@@ -38,7 +38,8 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
     }
   }, [visible]);
 
-  function onClose() {
+  function onClose(e) {
+    e.stopPropagation();
     setVisible(false);
   }
 
@@ -74,11 +75,18 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
       setVisible(true);
     }
   }
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 16 },
+  };
+  const tailLayout = {
+    wrapperCol: { offset: 5, span: 16 },
+  };
 
   return (
     <div className={classes.TimetableContainer} onClick={getPosition}>
       <Timetable
-        timeLabel={dayjs(currentDate).format('DD.MM.YYYY')}
+        timeLabel={dayjs(currentDate).format('ddd DD.MM.')}
         hoursInterval={hoursInterval}
         events={events}
         renderEvent={renderCustomEvent}
@@ -86,8 +94,10 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
         />
       {/* <AddButton /> */}
       <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
-        <Form form={form}>
-          <Form.Item label='Title' name='name'><Input /></Form.Item>
+        <Form form={form} {...layout}>
+          <h1>{rowId}</h1>
+          <Form.Item label='Title' name='name'
+            rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input /></Form.Item>
           <Form.Item label='Start' name='startTime'><DatePicker showTime/></Form.Item>
           <Form.Item label='End' name='endTime'><DatePicker showTime/></Form.Item>
         </Form>

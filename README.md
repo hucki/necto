@@ -30,6 +30,9 @@ https://www.chartjs.org
 - [x] connect date / week picker to App State (redux)
 - [x] connect App state to displayed schedule (redux)
 - [x] datePicker and prev/nextDay Buttons
+- [ ] replace endTime in form with fixed minutes amount [30, 45]
+- [x] show name in form
+- [x] add Today button
 - [ ] delete appointments
 - [ ] create week view
 - [ ] connect API

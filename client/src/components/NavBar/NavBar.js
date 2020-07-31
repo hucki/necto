@@ -10,18 +10,21 @@ import dayjs from 'dayjs';
 const NavBar = (props) => {
 
   function onChangeHandler(date) {
-    props.dispatch(changeDate(date))
+    props.dispatch(changeDate(date));
   }
-
+  function todayClickHandler(date) {
+    props.dispatch(changeDate(dayjs()));
+  }
   function prevDayHandler() {
-    props.dispatch(changeDate(dayjs(props.currentDate).subtract(1, 'day')))
+    props.dispatch(changeDate(dayjs(props.currentDate).subtract(1, 'day')));
   }
   function nextDayHandler() {
-    props.dispatch(changeDate(dayjs(props.currentDate).add(1, 'day')))
+    props.dispatch(changeDate(dayjs(props.currentDate).add(1, 'day')));
   }
 
   return (
     <div className={classes.NavBar}>
+      <Button onClick={todayClickHandler}>Today</Button>
       <Tooltip title='previous Day'>
         <Button icon={<CaretLeftOutlined />} onClick={prevDayHandler}></Button>
       </Tooltip>
