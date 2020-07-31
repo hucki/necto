@@ -26,7 +26,7 @@ https://www.chartjs.org
 - [x] install libraries
   - [x] redux for state manangement
 - [x] add new appointments to calendar
-- [ ] move add button to the right
+  - [o] move add button to the right (removed it)
 - [x] connect date / week picker to App State (redux)
 - [x] connect App state to displayed schedule (redux)
 - [x] datePicker and prev/nextDay Buttons
@@ -35,7 +35,7 @@ https://www.chartjs.org
 - [x] add Today button
 - [x] prevent overlapping events (single event)
 - [ ] put input form in separate component
-- [ ] delete appointments
+- [x] delete appointments
 - [ ] create week view
 - [ ] connect API
 - [ ] color schema

@@ -5,9 +5,7 @@ import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
 import classes from './TimetableContainer.module.css';
 import TimetableItem from '../TimetableItem/TimetableItem';
-import AddButton from '../../../elements/AddButton/AddButton';
-import InputForm from '../../Appointments/InputForm/InputForm';
-import {addAppointment, ADD_APPOINTMENT} from '../../../actions/actions'
+import {addAppointment, deleteAppointment} from '../../../actions/actions'
 import dayjs from 'dayjs';
 
 const renderCustomEvent = (event, defaultAttributes, styles) => {
@@ -63,9 +61,7 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
     } else {
       message.error('Overlapping Appointments are not allowed');
     }
-
   }
-
 
   function getPosition(e) {
     e.preventDefault();
@@ -109,7 +105,6 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
     };
   }
   function onDurationChange(value) {
-    console.log(value)
     const newTime = form.getFieldValue('startTime').add(value,'m')
     form.setFieldsValue({endTime: newTime});
     return;
@@ -167,6 +162,7 @@ const MapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addAppointment: addAppointment,
+    deleteAppointment: deleteAppointment,
     dispatch
   };
 }

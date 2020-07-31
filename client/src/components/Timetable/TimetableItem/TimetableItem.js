@@ -1,16 +1,36 @@
-import React from 'react'
+import React from 'react';
+import {connect} from 'react-redux';
 import classes from '../Timetable.module.css'
+import {Modal, message} from 'antd';
+import dayjs from 'dayjs';
+import { deleteAppointment } from '../../../actions/actions';
 
-const onClickHandler = (e) => {
-  console.log('clicked event:', e)
-}
+const TimetableItem = ({event, defaultAttributes, styles, dispatch}) => {
 
-const TimetableItem = ({event, defaultAttributes, styles}) => {
+  const { confirm } = Modal;
+  const onClickHandler = ({id, name, startTime, endTime}) => {
+    confirm({
+      content: (<div>
+        <p>Do you want to delete the following Appointment?</p>
+        <p>ID {id}: {name}</p>
+        <p>{dayjs(startTime).format('HH:MM')} - {dayjs(endTime).format('HH:MM')}</p>
+      </div>),
+      onOk() {
+        console.log(id)
+        dispatch(deleteAppointment(id));
+        message.success('Appointment deleted');
+      },
+      onCancel() {
+        console.log('cancael')
+      }
+    });
+  }
+
   return (
     <div {...defaultAttributes}
          title={event.name}
          key={event.id}
-         onClick={() => onClickHandler(event.id)}
+         onClick={() => onClickHandler(event)}
         className={`${classes.event} ${classes[event.bgcolor]}`}
         >
       <span className={classes.event_info}>{ event.name }</span>
@@ -21,4 +41,11 @@ const TimetableItem = ({event, defaultAttributes, styles}) => {
   )
 }
 
-export default TimetableItem
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteAppointment: deleteAppointment,
+    dispatch
+  };
+}
+
+export default connect(null, mapDispatchToProps)(TimetableItem);
