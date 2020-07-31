@@ -33,13 +33,17 @@ https://www.chartjs.org
 - [ ] replace endTime in form with fixed minutes amount [30, 45]
 - [x] show name in form
 - [x] add Today button
+- [ ] prevent overlapping events
 - [ ] delete appointments
 - [ ] create week view
 - [ ] connect API
 - [ ] color schema
+- [ ] translate
 
 **data**
 - [x] untie persons and appointments and dynamically generate event for timetable
+- [ ] use iCal [ics](https://www.npmjs.com/package/ics)
+- [ ] use recurrence Rules [rrule](https://www.npmjs.com/package/rrule)
 
 **backend**
 - [ ] define Models

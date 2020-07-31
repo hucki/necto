@@ -35,48 +35,74 @@
 }
 
 .event {
-
   position: absolute;
   width: 98%;
+  margin-left: 1%;
   height: 15vh;
   line-height: 15vh;
-  background-color:  var(--primary);
+  background-color: var(--primaryalpha);
   font-size: .7em;
   font-weight: 300;
   justify-content: center;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: 3px;
+  border: 1px solid;
   box-shadow: 0 0 15px #3333;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
-
+.event:hover, .event:focus {
+  border: 1px solid;
+  border-color: rgba(64,169,255,1);
+  cursor: pointer;
+}
 .event_info {
   color: var(--secondary);
-  font-size: 1.1rem;
+  font-size: 1.1em;
   line-height: initial;
   text-align: center;
 }
 
 .bg_grey {
-  background-color: darkslategray;
+  background-color: rgb(47,79,79,0.2);
+  border-color: rgb(47,79,79,0.3);
+}
+.bg_grey > span {
+  color: rgb(47,79,79,1);
+}
 
-}
-.bg_grey .event-info {
-  color: white;
-}
 .bg_green {
-  background-color: limegreen;
+  background-color: rgba(0,128,0,0.2);
+  border-color: rgba(0,128,0.3);
 }
+
+.bg_green > span {
+  color: rgba(0, 128, 0, 1);
+}
+
 .bg_red {
-  background-color: red;
-  color: white;
+  background-color: rgba(255,0,0,0.2);
+  border-color: rgba(255,0,0,0.3);
 }
+
+.bg_red > span {
+  color: rgba(255,0,0,1);
+}
+
 .bg_yellow {
-  background-color: yellow;
-  color: black;
+  background-color: rgba(200,200,0,0.2);
+  border-color: rgba(200,200,0,0.3);
 }
+.bg_yellow > span{
+  color: rgb(128, 128, 0);
+}
+
 .bg_blue {
-  background-color: lightskyblue;
-  color: darkblue;
+  background-color: rgba(0, 128, 255,0.2);
+  border-color: rgba(0, 128, 255,0.3);
+}
+
+.bg_blue > span {
+  color: rgba(0, 128, 255,1);
 }
