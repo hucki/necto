@@ -57,6 +57,25 @@
   text-align: center;
 }
 
+.bg_grey {
+  background-color: darkslategray;
+
+}
+.bg_grey .event-info {
+  color: white;
+}
 .bg_green {
   background-color: limegreen;
+}
+.bg_red {
+  background-color: red;
+  color: white;
+}
+.bg_yellow {
+  background-color: yellow;
+  color: black;
+}
+.bg_blue {
+  background-color: lightskyblue;
+  color: darkblue;
 }

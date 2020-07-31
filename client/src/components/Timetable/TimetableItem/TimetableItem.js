@@ -11,7 +11,7 @@ const TimetableItem = ({event, defaultAttributes, styles}) => {
          title={event.name}
          key={event.id}
          onClick={() => onClickHandler(event.id)}
-        className={classes.event}
+        className={`${classes.event} ${classes[event.bgcolor]}`}
         >
       <span className={classes.event_info}>{ event.name }</span>
       <span className={classes.event_info}>

@@ -29,6 +29,7 @@ https://www.chartjs.org
 - [ ] move add button to the right
 - [x] connect date / week picker to App State (redux)
 - [x] connect App state to displayed schedule (redux)
+- [x] datePicker and prev/nextDay Buttons
 - [ ] delete appointments
 - [ ] create week view
 - [ ] connect API

@@ -2,7 +2,6 @@ import React, {useState, useCallback} from 'react';
 import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
 import classes from './TimetableContainer.module.css';
-//import { events } from '../../../assets/data';
 import TimetableItem from '../TimetableItem/TimetableItem';
 import AddButton from '../../../elements/AddButton/AddButton';
 import InputForm from '../../Appointments/InputForm/InputForm';

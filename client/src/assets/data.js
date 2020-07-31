@@ -4,7 +4,7 @@ dayjs.extend(weekday)
 
 
 export const teamMembers = [
-  { id: 1, firstName: 'Mitchell', lastName: 'Bidmead', color: 'black'},
+  { id: 1, firstName: 'Mitchell', lastName: 'Bidmead', color: 'grey'},
   { id: 2, firstName: 'Gigi', lastName: 'Blitzer', color: 'green'},
   { id: 3, firstName: 'Trisha', lastName: 'Bernollet', color: 'red'},
   { id: 4, firstName: 'Charlie', lastName: 'Horsburgh', color: 'yellow'},
@@ -17,8 +17,7 @@ export const pureEvents = [
     name: 'Custom Event 1',
     type: 'custom',
     startTime: dayjs('2020-07-30T11:30:00'),
-    endTime: dayjs('2020-07-30T13:30:00'),
-    style: 'bg_green'
+    endTime: dayjs('2020-07-30T13:30:00')
   },
   {
     id: 4,
@@ -26,8 +25,7 @@ export const pureEvents = [
     name: 'Custom Event 4',
     type: 'custom',
     startTime: dayjs('2020-07-30T08:30:00'),
-    endTime: dayjs('2020-07-30T09:30:00'),
-    style: 'bg_green'
+    endTime: dayjs('2020-07-30T09:30:00')
   },
   {
     id: 2,
@@ -35,8 +33,7 @@ export const pureEvents = [
     name: 'Custom Event 2',
     type: 'custom',
     startTime: dayjs('2020-07-30T12:30:00'),
-    endTime: dayjs('2020-07-30T14:30:00'),
-    style: 'bg_green'
+    endTime: dayjs('2020-07-30T14:30:00')
   },
   {
     id: 3,
@@ -44,8 +41,7 @@ export const pureEvents = [
     name: 'Custom Event 3',
     type: 'custom',
     startTime: dayjs('2020-07-30T16:30:00'),
-    endTime: dayjs('2020-07-30T18:45:00'),
-    style: 'bg_green'
+    endTime: dayjs('2020-07-30T18:45:00')
   }
 ]
 
@@ -64,47 +60,13 @@ export const events = (teamMembers, pureEvents) => {
   teamMembers.map(member => {
     teamEvents[member.firstName] = [];
     pureEvents.map(event => {
-      if (event.personId === member.id) teamEvents[member.firstName] = [...teamEvents[member.firstName], event]
+      if (event.personId === member.id) {
+        event.bgcolor = `bg_${member.color}`
+        teamEvents[member.firstName] = [...teamEvents[member.firstName], event]
+      }
     })
   })
   return teamEvents;
-
-  // 'Person 1': [
-  //   {
-  //     id: 1,
-  //     name: 'Custom Event 1',
-  //     type: 'custom',
-  //     startTime: dayjs('2020-07-30T11:30:00'),
-  //     endTime: dayjs('2020-07-30T13:30:00'),
-  //     style: 'bg_green'
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Custom Event 4',
-  //     type: 'custom',
-  //     startTime: dayjs('2020-07-30T08:30:00'),
-  //     endTime: dayjs('2020-07-30T09:30:00'),
-  //     style: 'bg_green'
-  //   }
-  // ],
-  // 'Person 2': [
-  //   {
-  //     id: 2,
-  //     name: 'Custom Event 2',
-  //     type: 'custom',
-  //     startTime: dayjs('2020-07-30T12:30:00'),
-  //     endTime: dayjs('2020-07-30T14:30:00'),
-  //     style: 'bg_green'
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Custom Event 3',
-  //     type: 'custom',
-  //     startTime: dayjs('2020-07-30T16:30:00'),
-  //     endTime: dayjs('2020-07-30T18:45:00'),
-  //     style: 'bg_green'
-  //   }
-  // ]
 };
 
 
