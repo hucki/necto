@@ -17,9 +17,28 @@ const renderCustomEvent = (event, defaultAttributes, styles) => {
   )
 }
 
+function getPosition(e) {
+  e.preventDefault();
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left; //x position within the element.
+  const y = e.clientY - rect.top;  //y position within the element.
+
+  console.log('clicked a x/y (rel to container)',  Math.floor(x),Math.floor(y))
+  // row ?
+  // // time ?
+  // var startOfDay = event.startTime.clone().set('hour', this.props.hoursInterval[0]).set('minutes', 0);
+
+  // var minutesFromStartOfDay = round_1(event.startTime.diff(startOfDay) / 1000 / 60);
+  // var minutes = round_1(event.endTime.diff(event.startTime) / 1000 / 60);
+  // return {
+  //   height: minutes * this.state.rowHeight / 60 + 'vh',
+  //   marginTop: minutesFromStartOfDay * this.state.rowHeight / 60 + 'vh'
+  // };
+}
+
 const TimetableContainer = ({events, currentDate}) => {
   return (
-    <div className={classes.TimetableContainer}>
+    <div className={classes.TimetableContainer} onClick={getPosition}>
       <Timetable
         timeLabel={dayjs(currentDate).format('DD.MM.YYYY')}
         hoursInterval={[ 6, 21 ]}
