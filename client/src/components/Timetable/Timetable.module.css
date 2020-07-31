@@ -25,8 +25,9 @@
   flex-direction: column;
   text-align: center;
   z-index: 2;}
+
 .hour {
-  background-color: rgba(52, 73, 94,0.9);
+  color: rgba(52, 73, 94,0.9);
   font-size: 12px;
   text-align: center;
   width: 5rem;

@@ -15,7 +15,7 @@ const TimetableItem = ({event, defaultAttributes, styles}) => {
         >
       <span className={classes.event_info}>{ event.name }</span>
       <span className={classes.event_info}>
-        { event.startTime.format('HH:mm') } TADA { event.endTime.format('HH:mm') }
+        { event.startTime.format('HH:mm') } - { event.endTime.format('HH:mm') }
       </span>
     </div>
   )
