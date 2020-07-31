@@ -12,11 +12,13 @@ import dayjs from 'dayjs';
 const initialState = {
   events: events(teamMembers, pureEvents),
   maxId: 4,
-  currentDate: dayjs()
+  currentDate: dayjs(),
+  hoursInterval: [ 6, 19 ]
 }
 
 function reducer(state=initialState, action) {
   const newState = {};
+  newState.hoursInterval = [...state.hoursInterval]
   switch(action.type) {
     case 'ADD_APPOINTMENT':
       newState.events= {};
