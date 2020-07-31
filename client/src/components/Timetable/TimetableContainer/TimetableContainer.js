@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Form, Input, Modal } from "antd";
+import { Form, Input, Modal, Select } from "antd";
 import { DatePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
@@ -75,6 +75,7 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
       setVisible(true);
     }
   }
+  // Form Layout Options
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
@@ -82,6 +83,25 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
   const tailLayout = {
     wrapperCol: { offset: 5, span: 16 },
   };
+  function range(start, end) {
+    const result = [];
+    for (let i = start; i < end; i++) {
+      result.push(i);
+    }
+    return result;
+  }
+  function disabledRangeTime() {
+    return {
+      disabledSeconds: () => range(0,60)
+    };
+  }
+  function onDurationChange(value) {
+    console.log(value)
+    const newTime = form.getFieldValue('startTime').add(value,'m')
+    form.setFieldsValue({endTime: newTime});
+    return;
+  }
+  const dateFormat = 'DD.MM.YYYY';
 
   return (
     <div className={classes.TimetableContainer} onClick={getPosition}>
@@ -98,8 +118,14 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
           <h1>{rowId}</h1>
           <Form.Item label='Title' name='name'
             rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input /></Form.Item>
-          <Form.Item label='Start' name='startTime'><DatePicker showTime/></Form.Item>
-          <Form.Item label='End' name='endTime'><DatePicker showTime/></Form.Item>
+          <Form.Item label='Start' name='startTime'><DatePicker showTime disabledTime={disabledRangeTime}/></Form.Item>
+          <Form.Item label='Duration' name='duration'>
+            <Select onChange={onDurationChange} defaultValue={45}>
+              <Select.Option value={30}>30</Select.Option>
+              <Select.Option value={45}>45</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item label='End' name='endTime'><DatePicker showTime disabled/></Form.Item>
         </Form>
       </Modal>
     </div>
