@@ -33,7 +33,7 @@ https://www.chartjs.org
 - [x] replace endTime in form with fixed minutes amount [30, 45]
 - [x] show name in form
 - [x] add Today button
-- [ ] prevent overlapping events
+- [x] prevent overlapping events (single event)
 - [ ] put input form in separate component
 - [ ] delete appointments
 - [ ] create week view

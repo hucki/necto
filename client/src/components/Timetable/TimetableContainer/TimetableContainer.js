@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Form, Input, Modal, Select } from "antd";
+import { Form, Input, Modal, Select, message } from "antd";
 import { DatePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
@@ -43,14 +43,27 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
     setVisible(false);
   }
 
+  function checkOverlap() {
+    if(!events[rowId].length) return false;
+    const checkStart = form.getFieldValue('startTime');
+    const checkEnd = form.getFieldValue('endTime');
+    const result = events[rowId].filter(event => (checkStart >= event.startTime && checkStart <= event.endTime) ||  (checkEnd >= event.startTime && checkEnd <= event.endTime));
+    if(!result.length) return false;
+    return true;
+  }
   function onOkHandler() {
-    dispatch(addAppointment({
-      rowId: rowId,
-      name: form.getFieldValue('name'),
-      startTime: form.getFieldValue('startTime'),
-      endTime: form.getFieldValue('endTime')
-    }));
-    setVisible(false);
+    if(!checkOverlap()) {
+      dispatch(addAppointment({
+        rowId: rowId,
+        name: form.getFieldValue('name'),
+        startTime: form.getFieldValue('startTime'),
+        endTime: form.getFieldValue('endTime')
+      }));
+      setVisible(false);
+    } else {
+      message.error('Overlapping Appointments are not allowed');
+    }
+
   }
 
 

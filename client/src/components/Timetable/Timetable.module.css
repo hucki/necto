@@ -40,7 +40,7 @@
   margin-left: 1%;
   height: 15vh;
   line-height: 15vh;
-  background-color: var(--primaryalpha);
+  background-color: rgba(255,255,255,0.5);
   font-size: .7em;
   font-weight: 300;
   justify-content: center;
@@ -48,13 +48,15 @@
   flex-direction: column;
   overflow: hidden;
   border-radius: 3px;
-  border: 1px solid;
-  box-shadow: 0 0 15px #3333;
+  border-top: 1px solid;
+  box-shadow: 0 0 3px #3333;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 .event:hover, .event:focus {
-  border: 1px solid;
-  border-color: rgba(64,169,255,1);
+  border-color: inherit;
+  border-top: 2px solid;
+  /* border-color: rgba(64,169,255,1); */
+  box-shadow: 0 0 15px #3333;
   cursor: pointer;
 }
 .event_info {
@@ -65,7 +67,7 @@
 }
 
 .bg_grey {
-  background-color: rgb(47,79,79,0.2);
+  /* background-color: rgb(47,79,79,0.2); */
   border-color: rgb(47,79,79,0.3);
 }
 .bg_grey > span {
@@ -73,7 +75,7 @@
 }
 
 .bg_green {
-  background-color: rgba(0,128,0,0.2);
+  /* background-color: rgba(0,128,0,0.2); */
   border-color: rgba(0,128,0.3);
 }
 
@@ -82,7 +84,7 @@
 }
 
 .bg_red {
-  background-color: rgba(255,0,0,0.2);
+  /* background-color: rgba(255,0,0,0.2); */
   border-color: rgba(255,0,0,0.3);
 }
 
@@ -91,7 +93,7 @@
 }
 
 .bg_yellow {
-  background-color: rgba(200,200,0,0.2);
+  /* background-color: rgba(200,200,0,0.2); */
   border-color: rgba(200,200,0,0.3);
 }
 .bg_yellow > span{
@@ -99,7 +101,8 @@
 }
 
 .bg_blue {
-  background-color: rgba(0, 128, 255,0.2);
+
+  /* background-color: rgba(0, 128, 255,0.2); */
   border-color: rgba(0, 128, 255,0.3);
 }
 
