@@ -27,6 +27,7 @@ const TimetableContainer = (state) => {
 }
 
 const MapStateToProps = state => {
+
   return {
     events: state.events
   }

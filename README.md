@@ -27,7 +27,8 @@ https://www.chartjs.org
   - [x] redux for state manangement
 - [x] add new appointments to calendar
 - [ ] move add button to the right
-- [ ] connect date / week picker to displayed schedule
+- [x] connect date / week picker to App State (redux)
+- [ ] connect App state to displayed schedule (redux)
 - [ ] delete appointments
 - [ ] create week view
 - [ ] connect API

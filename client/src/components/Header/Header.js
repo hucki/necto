@@ -1,18 +1,33 @@
 import React from 'react';
 import classes from './Header.module.css';
-import { DatePicker } from 'antd';
+import { connect } from 'react-redux';
+import { Button } from 'antd';
+import { DatePicker } from '../../elements';
+import { changeDate } from '../../actions/actions'
 
-function onChange(date, dateString) {
-  console.log(date, dateString);
-}
 
-function Header() {
+
+function Header(props) {
+
+  function onChange(date, dateString) {
+    props.dispatch(changeDate(date))
+    console.log(date, dateString);
+  }
   return (
     <div className={classes.Header + ' box'}>
       <h1 className={classes.Headline}>necto</h1>
-      <DatePicker onChange={onChange} picker="week" />
+      <DatePicker onChange={onChange} value={props.currentDate} size='small'/>
     </div>
   )
 }
-
-export default Header;
+const MapStateToProps = state => {
+  const { currentDate } = state
+  return { currentDate }
+}
+const MapDispatchToProps = dispatch => {
+  return {
+    changeDate,
+    dispatch
+  }
+}
+export default connect(MapStateToProps, MapDispatchToProps)(Header);
