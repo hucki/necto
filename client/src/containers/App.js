@@ -16,22 +16,22 @@ const initialState = {
   maxId: 4,
   currentDate: dayjs(),
   hoursInterval: [ 6, 19 ]
-}
+};
 
-function getPersonId(displayName) {
+function getPersonId (displayName) {
   const foundMember = teamMembers.filter(member => member.firstName === displayName);
   return foundMember[0].id;
 }
 
-function reducer(state=initialState, {type, payload}) {
+function reducer (state=initialState, {type, payload}) {
+  if(payload.rowId) const personId = getPersonId(payload.rowId);
   const newState = {};
   newState.hoursInterval = [...state.hoursInterval];
   newState.teamMembers = [...state.teamMembers];
-  switch(type) {
+  switch (type) {
     case ADD_APPOINTMENT:
-      const personId = getPersonId(payload.rowId)
       newState.maxId = state.maxId + 1;
-      newState.currentDate = state.currentDate
+      newState.currentDate = state.currentDate;
       newState.pureEvents = [...state.pureEvents, {id: newState.maxId, personId: personId, type: 'custom',...payload}];
       newState.events = events(newState.teamMembers, newState.pureEvents);
       return newState;
@@ -45,15 +45,15 @@ function reducer(state=initialState, {type, payload}) {
       newState.events = { ...state.events };
       newState.maxId = state.maxId;
       newState.pureEvents = [...state.pureEvents];
-      newState.currentDate = payload
+      newState.currentDate = payload;
       return newState;
     default:
       return state;
   }
 }
 const store = createStore(reducer);
-store.subscribe(() => console.log("NEW STATE", store.getState()));
-function App() {
+store.subscribe(() => console.log('NEW STATE', store.getState()));
+function App () {
   return (
     <Provider store = { store }>
       <div className = { classes.App }>
@@ -63,7 +63,7 @@ function App() {
         <Footer />
       </div>
     </Provider>
-  )
+  );
 }
 
 export default App;

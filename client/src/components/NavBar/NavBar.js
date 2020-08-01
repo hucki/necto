@@ -3,22 +3,22 @@ import { connect } from 'react-redux';
 import { Button, Tooltip } from 'antd';
 import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
 import { DatePicker } from '../../elements';
-import { changeDate } from '../../actions/actions'
+import { changeDate } from '../../actions/actions';
 import classes from './NavBar.module.css';
 import dayjs from 'dayjs';
 
 const NavBar = (props) => {
 
-  function onChangeHandler(date) {
+  function onChangeHandler (date) {
     props.dispatch(changeDate(date));
   }
-  function todayClickHandler(date) {
+  function todayClickHandler () {
     props.dispatch(changeDate(dayjs()));
   }
-  function prevDayHandler() {
+  function prevDayHandler () {
     props.dispatch(changeDate(dayjs(props.currentDate).subtract(1, 'day')));
   }
-  function nextDayHandler() {
+  function nextDayHandler () {
     props.dispatch(changeDate(dayjs(props.currentDate).add(1, 'day')));
   }
 
@@ -33,18 +33,18 @@ const NavBar = (props) => {
         <Button icon={<CaretRightOutlined />} onClick={nextDayHandler}></Button>
       </Tooltip>
     </div>
-  )
-}
+  );
+};
 
 const MapStateToProps = state => {
-  const { currentDate } = state
-  return { currentDate }
-}
+  const { currentDate } = state;
+  return { currentDate };
+};
 const MapDispatchToProps = dispatch => {
   return {
     changeDate,
     dispatch
-  }
-}
+  };
+};
 
 export default connect(MapStateToProps, MapDispatchToProps)(NavBar);

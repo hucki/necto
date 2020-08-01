@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { Form, Input, Modal, Select, message } from "antd";
+import { Form, Input, Modal, Select, message } from 'antd';
 import { DatePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
 import classes from './TimetableContainer.module.css';
 import TimetableItem from '../TimetableItem/TimetableItem';
-import {addAppointment, deleteAppointment} from '../../../actions/actions'
+import {addAppointment, deleteAppointment} from '../../../actions/actions';
 import dayjs from 'dayjs';
 
 const renderCustomEvent = (event, defaultAttributes, styles) => {
@@ -15,8 +15,8 @@ const renderCustomEvent = (event, defaultAttributes, styles) => {
       event={event}
       defaultAttributes={defaultAttributes}
       styles={styles}/>
-  )
-}
+  );
+};
 
 const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
   const [form] = Form.useForm();
@@ -31,26 +31,26 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
         name: 'New Appointment',
         startTime: startTime,
         endTime: endTime
-     });
+      });
 
     }
   }, [visible]);
 
-  function onClose(e) {
+  function onClose (e) {
     e.stopPropagation();
     setVisible(false);
   }
 
-  function checkOverlap() {
-    if(!events[rowId].length) return false;
+  function checkOverlap () {
+    if (!events[rowId].length) return false;
     const checkStart = form.getFieldValue('startTime');
     const checkEnd = form.getFieldValue('endTime');
     const result = events[rowId].filter(event => (checkStart >= event.startTime && checkStart <= event.endTime) ||  (checkEnd >= event.startTime && checkEnd <= event.endTime));
-    if(!result.length) return false;
+    if (!result.length) return false;
     return true;
   }
-  function onOkHandler() {
-    if(!checkOverlap()) {
+  function onOkHandler () {
+    if (!checkOverlap()) {
       dispatch(addAppointment({
         rowId: rowId,
         name: form.getFieldValue('name'),
@@ -63,14 +63,13 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
     }
   }
 
-  function getPosition(e) {
+  function getPosition (e) {
     e.preventDefault();
     const clickOnFreeTime = !e.target.className.indexOf('styles_day__');
 
     if (clickOnFreeTime) {
       setRowId(e.target.className.split(' ')[1]);
       const rect = e.target.getBoundingClientRect();
-      const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       const numberOfHours = hoursInterval[1]-hoursInterval[0]+1;
       const cellHeight = (rect.bottom-rect.top)/numberOfHours;
@@ -79,8 +78,8 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
       const clickTime = startOfDay.clone().add(clickTimeMin,'m');
       const fullQuarterHour = Math.round(clickTime.get('minute')/15)*15;
       const clickTimeFQH = clickTime.set('minutes', 0).add(fullQuarterHour, 'm').set('seconds',0);
-      setStartTime(clickTimeFQH)
-      setEndTime(clickTimeFQH.add(45,'m'))
+      setStartTime(clickTimeFQH);
+      setEndTime(clickTimeFQH.add(45,'m'));
       setVisible(true);
     }
   }
@@ -89,27 +88,23 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
   };
-  const tailLayout = {
-    wrapperCol: { offset: 5, span: 16 },
-  };
-  function range(start, end) {
+  function range (start, end) {
     const result = [];
     for (let i = start; i < end; i++) {
       result.push(i);
     }
     return result;
   }
-  function disabledRangeTime() {
+  function disabledRangeTime () {
     return {
       disabledSeconds: () => range(0,60)
     };
   }
-  function onDurationChange(value) {
-    const newTime = form.getFieldValue('startTime').add(value,'m')
+  function onDurationChange (value) {
+    const newTime = form.getFieldValue('startTime').add(value,'m');
     form.setFieldsValue({endTime: newTime});
     return;
   }
-  const dateFormat = 'DD.MM.YYYY';
 
   return (
     <div className={classes.TimetableContainer} onClick={getPosition}>
@@ -119,7 +114,7 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
         events={events}
         renderEvent={renderCustomEvent}
         styles={classes}
-        />
+      />
       {/* <AddButton /> */}
       <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
         <Form form={form} {...layout}>
@@ -137,17 +132,17 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
         </Form>
       </Modal>
     </div>
-  )
-}
+  );
+};
 
-function filteredEvents(events, currentDate) {
+function filteredEvents (events, currentDate) {
   const filtered = {};
   Object.keys(events).map(stateKey => {
     filtered[stateKey] = [];
     events[stateKey].map(event => {
       if (dayjs(event.startTime).isSame(currentDate, 'day')) filtered[stateKey] = [...filtered[stateKey], event];
-    })
-  })
+    });
+  });
   return filtered;
 }
 
@@ -156,8 +151,8 @@ const MapStateToProps = state => {
     events: filteredEvents(state.events, state.currentDate),
     currentDate: state.currentDate,
     hoursInterval: state.hoursInterval
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -165,7 +160,7 @@ const mapDispatchToProps = dispatch => {
     deleteAppointment: deleteAppointment,
     dispatch
   };
-}
+};
 
 
-export default connect(MapStateToProps, mapDispatchToProps)(TimetableContainer)
+export default connect(MapStateToProps, mapDispatchToProps)(TimetableContainer);
