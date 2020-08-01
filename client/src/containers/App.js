@@ -30,7 +30,7 @@ function reducer (state=initialState, {type, payload}) {
   newState.teamMembers = [...state.teamMembers];
   switch (type) {
     case ADD_APPOINTMENT:
-      personId.id = getPersonId(payload.rowId)
+      personId.id = getPersonId(payload.rowId);
       newState.maxId = state.maxId + 1;
       newState.currentDate = state.currentDate;
       newState.pureEvents = [...state.pureEvents, {id: newState.maxId, personId: personId.id, type: 'custom',...payload}];
