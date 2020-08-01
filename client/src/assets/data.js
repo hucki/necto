@@ -64,7 +64,9 @@ export const events = (teamMembers, pureEvents) => {
         event.bgcolor = `bg_${member.color}`
         teamEvents[member.firstName] = [...teamEvents[member.firstName], event]
       }
+      return event;
     })
+    return member;
   })
   return teamEvents;
 };

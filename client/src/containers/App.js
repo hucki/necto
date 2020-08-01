@@ -24,21 +24,22 @@ function getPersonId (displayName) {
 }
 
 function reducer (state=initialState, {type, payload}) {
-  if(payload.rowId) const personId = getPersonId(payload.rowId);
+  const personId = {};
   const newState = {};
   newState.hoursInterval = [...state.hoursInterval];
   newState.teamMembers = [...state.teamMembers];
   switch (type) {
     case ADD_APPOINTMENT:
+      personId.id = getPersonId(payload.rowId)
       newState.maxId = state.maxId + 1;
       newState.currentDate = state.currentDate;
-      newState.pureEvents = [...state.pureEvents, {id: newState.maxId, personId: personId, type: 'custom',...payload}];
+      newState.pureEvents = [...state.pureEvents, {id: newState.maxId, personId: personId.id, type: 'custom',...payload}];
       newState.events = events(newState.teamMembers, newState.pureEvents);
       return newState;
     case DELETE_APPOINTMENT:
       newState.maxId = state.maxId;
       newState.currentDate = state.currentDate;
-      newState.pureEvents = state.pureEvents.filter(event => event.id != payload);
+      newState.pureEvents = state.pureEvents.filter(event => event.id !== payload);
       newState.events = events(newState.teamMembers, newState.pureEvents);
       return newState;
     case CHANGE_DATE:

@@ -141,7 +141,9 @@ function filteredEvents (events, currentDate) {
     filtered[stateKey] = [];
     events[stateKey].map(event => {
       if (dayjs(event.startTime).isSame(currentDate, 'day')) filtered[stateKey] = [...filtered[stateKey], event];
+      return event;
     });
+    return stateKey;
   });
   return filtered;
 }
