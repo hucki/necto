@@ -17,7 +17,8 @@ export const pureEvents = [
     name: 'Mr. Miller',
     type: 'custom',
     startTime: dayjs().set('hours',11).set('minutes',30),
-    endTime: dayjs().set('hours',12).set('minutes',15)
+    endTime: dayjs().set('hours',12).set('minutes',15),
+    rrule: ''
   },
   {
     id: 4,
@@ -25,7 +26,8 @@ export const pureEvents = [
     name: 'Mrs. Smith',
     type: 'custom',
     startTime: dayjs().set('hours',12).set('minutes',30),
-    endTime: dayjs().set('hours',13).set('minutes',15)
+    endTime: dayjs().set('hours',13).set('minutes',15),
+    rrule: ''
   },
   {
     id: 2,
@@ -33,7 +35,8 @@ export const pureEvents = [
     name: 'Lisa',
     type: 'custom',
     startTime: dayjs().set('hours',12).set('minutes',30),
-    endTime: dayjs().set('hours',14).set('minutes',30)
+    endTime: dayjs().set('hours',14).set('minutes',30),
+    rrule: ''
   },
   {
     id: 3,
@@ -41,7 +44,8 @@ export const pureEvents = [
     name: 'Paul',
     type: 'custom',
     startTime: dayjs().set('hours',14).set('minutes',45),
-    endTime: dayjs().set('hours',15).set('minutes',30)
+    endTime: dayjs().set('hours',15).set('minutes',30),
+    rrule: ''
   },
   {
     id: 5,
@@ -49,7 +53,8 @@ export const pureEvents = [
     name: 'Jack',
     type: 'custom',
     startTime: dayjs().set('hours',8).set('minutes',30),
-    endTime: dayjs().set('hours',10).set('minutes',30)
+    endTime: dayjs().set('hours',10).set('minutes',30),
+    rrule: ''
   },
   {
     id: 6,
@@ -57,7 +62,8 @@ export const pureEvents = [
     name: 'Jill',
     type: 'custom',
     startTime: dayjs().set('hours',10).set('minutes',45),
-    endTime: dayjs().set('hours',11).set('minutes',30)
+    endTime: dayjs().set('hours',11).set('minutes',30),
+    rrule: ''
   }
 ];
 
