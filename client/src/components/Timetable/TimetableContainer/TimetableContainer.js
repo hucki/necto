@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Form, Input, Modal, Select, message, Radio } from 'antd';
-import { DatePicker } from '../../../elements/index';
+import { DatePicker, TimePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
 import classes from './TimetableContainer.module.css';
@@ -88,28 +88,37 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
+
   };
   const radioStyle = {
-    display: 'block',
-    height: '30px',
-    lineHeight: '30px',
+    // display: 'block',
+    // height: '30px',
+    // lineHeight: '30px',
   };
-  function range (start, end) {
-    const result = [];
-    for (let i = start; i < end; i++) {
-      result.push(i);
-    }
-    return result;
+
+  const dateTimeFormat = {
+    date: 'DD.MM.YYYY',
+    time: 'HH:mm'
   }
-  function disabledRangeTime () {
-    return {
-      disabledSeconds: () => range(0,60)
-    };
+
+  const datePickerFormat = {
+    showTime: true,
+    format: `${dateTimeFormat.date} ${dateTimeFormat.time}`,
+    minuteStep: 15
   }
+
   function onDurationChange (e) {
     const value = e.target.value;
     form.setFieldsValue({duration: value});
     const newTime = form.getFieldValue('startTime').add(value,'m');
+    form.setFieldsValue({endTime: newTime});
+    return;
+  }
+
+  function onStartTimeChange (e) {
+    const value = form.getFieldValue('duration');
+    form.setFieldsValue({duration: value});
+    const newTime = e.add(value,'m');
     form.setFieldsValue({endTime: newTime});
     return;
   }
@@ -128,17 +137,18 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
           <h1>{rowId}</h1>
           <Form.Item label='Title' name='name'
             rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input /></Form.Item>
-          <Form.Item label='Start' name='startTime'><DatePicker showTime disabledTime={disabledRangeTime}/></Form.Item>
+          <Form.Item label='Start' name='startTime' >
+            <DatePicker {...datePickerFormat} onChange={onStartTimeChange}/>
+          </Form.Item>
+
           <Form.Item label='Duration' name='duration'>
-            <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} >
-              <Radio style={radioStyle} value={30}> 30 Minutes</Radio>
-              <Radio style={radioStyle} value={45}> 45 Minutes</Radio>
-              <Radio style={radioStyle} value={99}> other...
-                {form.getFieldValue('duration') === 99 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
-              </Radio>
+            <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} inline>
+              <Radio style={radioStyle} value={45}> 0:45</Radio>
+              <Radio style={radioStyle} value={30}> 0:30</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label='End' name='endTime'><DatePicker showTime disabled/></Form.Item>
+          <Form.Item label='End' name='endTime'><TimePicker disabled format='HH:mm'/></Form.Item>
+
         </Form>
       </Modal>
     </div>
