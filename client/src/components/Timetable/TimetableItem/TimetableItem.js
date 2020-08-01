@@ -11,9 +11,8 @@ const TimetableItem = ({event, defaultAttributes, dispatch}) => {
   const onClickHandler = ({id, name, startTime, endTime}) => {
     confirm({
       content: (<div>
-        <p>Do you want to delete the following Appointment?</p>
-        <p><b>ID {id}: {name}</b></p>
-        <p><b>{dayjs(startTime).format('HH:mm')} - {dayjs(endTime).format('HH:mm')}</b></p>
+        <p>Delete Appointment id: {id}?</p>
+        <p>{dayjs(startTime).format('HH:mm')} - {dayjs(endTime).format('HH:mm')}: <b>{name}</b></p>
       </div>),
       onOk () {
         console.log(id);
