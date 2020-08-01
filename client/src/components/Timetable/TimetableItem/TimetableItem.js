@@ -6,14 +6,14 @@ import dayjs from 'dayjs';
 import { deleteAppointment } from '../../../actions/actions';
 
 const TimetableItem = ({event, defaultAttributes, dispatch}) => {
-
+  // TODO: put delete dialog in a separate Component
   const { confirm } = Modal;
   const onClickHandler = ({id, name, startTime, endTime}) => {
     confirm({
       content: (<div>
         <p>Do you want to delete the following Appointment?</p>
         <p><b>ID {id}: {name}</b></p>
-        <p><b>{dayjs(startTime).format('HH:MM')} - {dayjs(endTime).format('HH:MM')}</b></p>
+        <p><b>{dayjs(startTime).format('HH:mm')} - {dayjs(endTime).format('HH:mm')}</b></p>
       </div>),
       onOk () {
         console.log(id);
