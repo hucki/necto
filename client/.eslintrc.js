@@ -1,3 +1,5 @@
+const { decodedTextSpanIntersectsWith } = require("typescript");
+
 module.exports = {
     "env": {
         "browser": true,
@@ -17,6 +19,11 @@ module.exports = {
     "plugins": [
         "react"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "rules": {
         "indent": ["error", 2, { "SwitchCase": 1 }],
         "keyword-spacing": "error",

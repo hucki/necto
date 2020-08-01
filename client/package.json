@@ -22,6 +22,7 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
+    "pretest": "eslint --ignore-path .gitignore .",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
