@@ -23,6 +23,7 @@ module.exports = {
         "linebreak-style": ["error", "unix"],
         "no-undef": 0,
         "no-unsued-vars": 0,
+        "no-console": 0,
         "quotes": ["error", "single"],
         "react/prop-types": 0,
         "react/display-name": 0,

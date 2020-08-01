@@ -14,34 +14,50 @@ export const pureEvents = [
   {
     id: 1,
     personId: 1,
-    name: 'Custom Event 1',
+    name: 'Mr. Miller',
     type: 'custom',
-    startTime: dayjs('2020-07-30T11:30:00'),
-    endTime: dayjs('2020-07-30T13:30:00')
+    startTime: dayjs().set('hours',11).set('minutes',30),
+    endTime: dayjs().set('hours',12).set('minutes',15)
   },
   {
     id: 4,
     personId: 1,
-    name: 'Custom Event 4',
+    name: 'Mrs. Smith',
     type: 'custom',
-    startTime: dayjs('2020-07-30T08:30:00'),
-    endTime: dayjs('2020-07-30T09:30:00')
+    startTime: dayjs().set('hours',12).set('minutes',30),
+    endTime: dayjs().set('hours',13).set('minutes',15)
   },
   {
     id: 2,
     personId: 2,
-    name: 'Custom Event 2',
+    name: 'Lisa',
     type: 'custom',
-    startTime: dayjs('2020-07-30T12:30:00'),
-    endTime: dayjs('2020-07-30T14:30:00')
+    startTime: dayjs().set('hours',12).set('minutes',30),
+    endTime: dayjs().set('hours',14).set('minutes',30)
   },
   {
     id: 3,
     personId: 2,
-    name: 'Custom Event 3',
+    name: 'Paul',
     type: 'custom',
-    startTime: dayjs('2020-07-30T16:30:00'),
-    endTime: dayjs('2020-07-30T18:45:00')
+    startTime: dayjs().set('hours',14).set('minutes',45),
+    endTime: dayjs().set('hours',15).set('minutes',30)
+  },
+  {
+    id: 5,
+    personId: 3,
+    name: 'Jack',
+    type: 'custom',
+    startTime: dayjs().set('hours',8).set('minutes',30),
+    endTime: dayjs().set('hours',10).set('minutes',30)
+  },
+  {
+    id: 6,
+    personId: 3,
+    name: 'Jill',
+    type: 'custom',
+    startTime: dayjs().set('hours',10).set('minutes',45),
+    endTime: dayjs().set('hours',11).set('minutes',30)
   }
 ]
 

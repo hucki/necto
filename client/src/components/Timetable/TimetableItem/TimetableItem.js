@@ -12,16 +12,16 @@ const TimetableItem = ({event, defaultAttributes, dispatch}) => {
     confirm({
       content: (<div>
         <p>Do you want to delete the following Appointment?</p>
-        <p>ID {id}: {name}</p>
-        <p>{dayjs(startTime).format('HH:MM')} - {dayjs(endTime).format('HH:MM')}</p>
+        <p><b>ID {id}: {name}</b></p>
+        <p><b>{dayjs(startTime).format('HH:MM')} - {dayjs(endTime).format('HH:MM')}</b></p>
       </div>),
       onOk () {
         console.log(id);
         dispatch(deleteAppointment(id));
-        message.success('Appointment deleted');
+        message.success(`Appointment ${id} deleted`);
       },
       onCancel () {
-        console.log('cancael');
+        console.log('delete process cancelled'); // eslint-disable-line no-console
       }
     });
   };
