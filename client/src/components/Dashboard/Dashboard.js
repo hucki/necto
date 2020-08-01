@@ -1,6 +1,5 @@
 import React from 'react';
 import classes from './Dashboard.module.css';
-import Calendar from '../Calendar/Calendar';
 import TimetableContainer from '../Timetable/TimetableContainer/TimetableContainer';
 
 
