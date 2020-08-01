@@ -1,11 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import { Form, Input, Modal, message, Radio } from 'antd';
-import { DatePicker, TimePicker } from '../../../elements/index';
+import React from 'react';
 import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
 import classes from './TimetableContainer.module.css';
 import TimetableItem from '../TimetableItem/TimetableItem';
-import { deleteAppointment, toggleVisible, clickRow, setStart, setEnd, addAppointment } from '../../../actions/actions';
+import { toggleVisible, clickRow, setStart, setEnd } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
 
@@ -21,18 +19,13 @@ const renderCustomEvent = (event, defaultAttributes, styles) => {
 };
 
 const TimetableContainer = ({events, currentDate, hoursInterval, dispatch, visible, rowId}) => {
-  const [form] = Form.useForm();
-  const [startTime, setStartTime] = useState(dayjs().set('seconds',0));
-  const [endTime, setEndTime] = useState(dayjs().add(45,'m').set('seconds',0));
 
   function getPosition (e) {
     e.preventDefault();
     const clickOnFreeTime = !e.target.className.indexOf('styles_day__');
 
     if (clickOnFreeTime) {
-      console.log(e.target.className.split(' ')[1]);
       dispatch(clickRow(e.target.className.split(' ')[1]));
-      // setRowId(e.target.className.split(' ')[1]);
       const rect = e.target.getBoundingClientRect();
       const y = e.clientY - rect.top;
       const numberOfHours = hoursInterval[1]-hoursInterval[0]+1;
@@ -89,7 +82,6 @@ const MapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deleteAppointment: deleteAppointment,
     toggleVisible: toggleVisible,
     clickRow: clickRow,
     setStart: setStart,

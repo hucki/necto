@@ -15,7 +15,6 @@ const TimetableItem = ({event, defaultAttributes, dispatch}) => {
         <p>{dayjs(startTime).format('HH:mm')} - {dayjs(endTime).format('HH:mm')}: <b>{name}</b></p>
       </div>),
       onOk () {
-        console.log(id);
         dispatch(deleteAppointment(id));
         message.success(`Appointment ${id} deleted`);
       },

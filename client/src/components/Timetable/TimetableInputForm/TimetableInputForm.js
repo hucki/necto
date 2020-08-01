@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Modal, message, Radio } from 'antd';
 import { DatePicker, TimePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
-import { addAppointment, toggleVisible, setEnd, setStart } from '../../../actions/actions';
+import { RRule, RRuleSet, rrulestr } from 'rrule'; // Upcoming rrule setup
+import { addAppointment, toggleVisible } from '../../../actions/actions';
 import dayjs from 'dayjs';
 
 const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime}) => {
@@ -21,18 +21,10 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
     }
   }, [visible]);
 
-
-
   // Form Layout Options
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
-
-  };
-  const radioStyle = {
-    // display: 'block',
-    // height: '30px',
-    // lineHeight: '30px',
   };
 
   const dateTimeFormat = {
@@ -101,8 +93,8 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
 
           <Form.Item label='Duration' name='duration'>
             <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} inline>
-              <Radio style={radioStyle} value={45}> 0:45</Radio>
-              <Radio style={radioStyle} value={30}> 0:30</Radio>
+              <Radio value={45}> 0:45</Radio>
+              <Radio value={30}> 0:30</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label='End' name='endTime'><TimePicker disabled format='HH:mm'/></Form.Item>

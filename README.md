@@ -34,8 +34,9 @@ https://www.chartjs.org
 - [x] show name in form
 - [x] add Today button
 - [x] prevent overlapping events (single event)
-- [ ] put input form in separate component
+- [x] put input form in separate component
 - [x] delete appointments
+- [ ] implement combineReducers()
 - [ ] create week view
 - [ ] connect API
 - [ ] color schema

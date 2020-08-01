@@ -13,7 +13,7 @@ const initialState = {
   pureEvents: pureEvents,
   teamMembers: teamMembers,
   events: events(teamMembers, pureEvents),
-  maxId: 4,
+  maxId: pureEvents.length,
   currentDate: dayjs(),
   hoursInterval: [ 6, 19 ],
   newAppointment: {
@@ -37,7 +37,6 @@ function reducer (state=initialState, {type, payload}) {
   newState.teamMembers = [...state.teamMembers];
   switch (type) {
     case ADD_APPOINTMENT:
-      console.log(type)
       personId.id = getPersonId(payload.rowId);
       newState.maxId = state.maxId + 1;
       newState.currentDate = state.currentDate;
@@ -49,7 +48,6 @@ function reducer (state=initialState, {type, payload}) {
       newState.newAppointment.endTime = state.newAppointment.endTime;
       return newState;
     case DELETE_APPOINTMENT:
-      console.log(type)
       newState.maxId = state.maxId;
       newState.currentDate = state.currentDate;
       newState.pureEvents = state.pureEvents.filter(event => event.id !== payload);
@@ -60,7 +58,6 @@ function reducer (state=initialState, {type, payload}) {
       newState.newAppointment.endTime = state.newAppointment.endTime;
       return newState;
     case CHANGE_DATE:
-      console.log(type)
       newState.events = { ...state.events };
       newState.maxId = state.maxId;
       newState.pureEvents = [...state.pureEvents];
@@ -71,7 +68,6 @@ function reducer (state=initialState, {type, payload}) {
       newState.newAppointment.endTime = state.newAppointment.endTime;
       return newState;
     case TOGGLE_VISIBLE:
-      console.log(type)
       newState.events = { ...state.events };
       newState.maxId = state.maxId;
       newState.pureEvents = [...state.pureEvents];
@@ -82,7 +78,6 @@ function reducer (state=initialState, {type, payload}) {
       newState.newAppointment.endTime = state.newAppointment.endTime;
       return newState;
     case CLICK_ROW:
-      console.log(type)
       newState.events = { ...state.events };
       newState.maxId = state.maxId;
       newState.pureEvents = [...state.pureEvents];
@@ -93,7 +88,6 @@ function reducer (state=initialState, {type, payload}) {
       newState.newAppointment.endTime = payload.endTime;
       return newState;
     case SET_START:
-      console.log(type)
       newState.events = { ...state.events };
       newState.maxId = state.maxId;
       newState.pureEvents = [...state.pureEvents];
@@ -104,7 +98,6 @@ function reducer (state=initialState, {type, payload}) {
       newState.newAppointment.endTime = state.newAppointment.endTime;
       return newState;
     case SET_END:
-      console.log(type)
       newState.events = { ...state.events };
       newState.maxId = state.maxId;
       newState.pureEvents = [...state.pureEvents];
@@ -119,7 +112,7 @@ function reducer (state=initialState, {type, payload}) {
   }
 }
 const store = createStore(reducer);
-store.subscribe(() => console.log('NEW STATE', store.getState().newAppointment));
+store.subscribe(() => console.log('NEW STATE', store.getState()));
 function App () {
   return (
     <Provider store = { store }>
