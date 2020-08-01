@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Form, Input, Modal, Select, message } from 'antd';
+import { Form, Input, Modal, Select, message, Radio } from 'antd';
 import { DatePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import Timetable from 'react-timetable-events';
@@ -30,6 +30,7 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
       form.setFieldsValue({
         name: 'New Appointment',
         startTime: startTime,
+        duration: 45,
         endTime: endTime
       });
 
@@ -88,6 +89,11 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
   };
+  const radioStyle = {
+    display: 'block',
+    height: '30px',
+    lineHeight: '30px',
+  };
   function range (start, end) {
     const result = [];
     for (let i = start; i < end; i++) {
@@ -100,7 +106,9 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
       disabledSeconds: () => range(0,60)
     };
   }
-  function onDurationChange (value) {
+  function onDurationChange (e) {
+    const value = e.target.value;
+    form.setFieldsValue({duration: value});
     const newTime = form.getFieldValue('startTime').add(value,'m');
     form.setFieldsValue({endTime: newTime});
     return;
@@ -115,7 +123,6 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
         renderEvent={renderCustomEvent}
         styles={classes}
       />
-      {/* <AddButton /> */}
       <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
         <Form form={form} {...layout}>
           <h1>{rowId}</h1>
@@ -123,10 +130,13 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch}) => {
             rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input /></Form.Item>
           <Form.Item label='Start' name='startTime'><DatePicker showTime disabledTime={disabledRangeTime}/></Form.Item>
           <Form.Item label='Duration' name='duration'>
-            <Select onChange={onDurationChange} defaultValue={45}>
-              <Select.Option value={30}>30</Select.Option>
-              <Select.Option value={45}>45</Select.Option>
-            </Select>
+            <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} >
+              <Radio style={radioStyle} value={30}> 30 Minutes</Radio>
+              <Radio style={radioStyle} value={45}> 45 Minutes</Radio>
+              <Radio style={radioStyle} value={99}> other...
+                {form.getFieldValue('duration') === 99 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
+              </Radio>
+            </Radio.Group>
           </Form.Item>
           <Form.Item label='End' name='endTime'><DatePicker showTime disabled/></Form.Item>
         </Form>
