@@ -36,7 +36,7 @@ https://www.chartjs.org
 - [x] prevent overlapping events (single event)
 - [x] put input form in separate component
 - [x] delete appointments
-- [ ] implement combineReducers()
+- [x] implement combineReducers()
 - [ ] create week view
 - [ ] connect API
 - [ ] color schema

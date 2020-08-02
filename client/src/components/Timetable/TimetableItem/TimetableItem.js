@@ -7,7 +7,6 @@ import { deleteAppointment } from '../../../actions/actions';
 
 const TimetableItem = ({event, defaultAttributes, dispatch}) => {
   // TODO: put delete dialog in a separate Component
-  console.log(event)
   const { confirm } = Modal;
   const onClickHandler = ({id, name, startTime, endTime}) => {
     confirm({

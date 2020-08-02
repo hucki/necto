@@ -2,7 +2,6 @@ import { CHANGE_DATE } from "../actions/actions";
 import { initialState } from '../assets/data';
 
 export default function currentDate(state = initialState.current, {type, payload}) {
-  console.log('currentDate', state)
   const newState = {};
   switch(type) {
     case CHANGE_DATE:
