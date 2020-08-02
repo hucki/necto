@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
-import { Form, Input, Modal, message, Radio } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Modal, message, Radio, Switch, Select } from 'antd';
 import { DatePicker, TimePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import { RRule, RRuleSet, rrulestr } from 'rrule'; // Upcoming rrule setup
 import { addAppointment, toggleVisible } from '../../../actions/actions';
 import dayjs from 'dayjs';
+import { Option } from 'antd/lib/mentions';
 
 const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime}) => {
   const [form] = Form.useForm();
+  const [switcheroo, setSwitcheroo] = useState({disabled: true});
+  const [rruleDates, setRruleDates] = useState([]);
 
   useEffect(() => {
     if (visible) {
@@ -15,7 +18,10 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         name: 'New Appointment',
         startTime: startTime,
         duration: 45,
-        endTime: endTime
+        endTime: endTime,
+        isRecurring: false,
+        frequency: 'WEEKLY',
+        count: 10
       });
 
     }
@@ -25,6 +31,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
+    size: 'small'
   };
 
   const dateTimeFormat = {
@@ -62,8 +69,34 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
     if (!result.length) return false;
     return true;
   }
+  function onSwitchRecurring(checked) {
+    setSwitcheroo({disabled: !checked});
+  }
+
+  function onFrequencyChangeHandler() {
+
+  }
+
+  function onRecurrenceChangeHandler (e){
+    console.log(e.target.value)
+    form.setFieldsValue({count: e.target.value})
+
+  }
+  function buildRrule() {
+    const rrule = new RRule({
+      freq: form.getFieldValue('frequency') === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
+      tzid: 'Europe/Brussels',
+      count: form.getFieldValue('count'),
+      dtstart: new Date(form.getFieldValue('startTime'))
+    })
+    setRruleDates([...rrule.all().map(date => date)]);
+    console.log(rruleDates)
+  }
+
   function onOkHandler () {
-    if (!checkOverlap()) {
+    if (form.getFieldValue('isRecurring') && !buildRrule()) message.error('Input for Recurrence Rule invalid. Please check again');
+    if (checkOverlap()) message.error('Overlapping Appointments are not allowed. Please check again');
+    else {
       dispatch(addAppointment({
         rowId: rowId,
         name: form.getFieldValue('name'),
@@ -71,8 +104,6 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         endTime: form.getFieldValue('endTime')
       }));
       dispatch(toggleVisible())
-    } else {
-      message.error('Overlapping Appointments are not allowed');
     }
   }
 
@@ -98,6 +129,23 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
             </Radio.Group>
           </Form.Item>
           <Form.Item label='End' name='endTime'><TimePicker disabled format='HH:mm'/></Form.Item>
+
+          <Form.Item name='isRecurring'  label='Recurring' valuePropName='checked' >
+            <Switch onChange={onSwitchRecurring} />
+          </Form.Item>
+          <Form.Item label='Frequency'>
+            <Input.Group compact >
+              <Form.Item >
+                <Select {...switcheroo} name='frequency' defaultValue='WEEKLY' style={{ width: 120 }} onChange={onFrequencyChangeHandler}>
+                  <Option value='WEEKLY'>weekly</Option>
+                  <Option value='MONTHLY' disabled>monthly</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item  >
+                  <Input name='count' {...switcheroo} style={{ width: '50%' }} prefix='x' defaultValue={10} onChange={onRecurrenceChangeHandler}/>
+              </Form.Item>
+            </Input.Group>
+          </Form.Item>
         </Form>
       </Modal>
   )
@@ -124,7 +172,8 @@ const MapStateToProps = state => {
     visible: state.newAppointment.inputFormVisible,
     rowId: state.newAppointment.clickedRowId,
     startTime: state.newAppointment.startTime,
-    endTime: state.newAppointment.endTime
+    endTime: state.newAppointment.endTime,
+    newRrule: state.newAppointment.rrule
   };
 };
 

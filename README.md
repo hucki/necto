@@ -41,6 +41,7 @@ https://www.chartjs.org
 - [ ] connect API
 - [ ] color schema
 - [ ] translate
+- [ ] antd Popconfirm to delete
 
 **data**
 - [x] untie persons and appointments and dynamically generate event for timetable

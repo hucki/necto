@@ -106,6 +106,7 @@ export const initialState = {
     inputFormVisible: false,
     clickedRowId: '',
     startTime: dayjs().set('seconds',0),
-    endTime: dayjs().add(45, 'm').set('seconds',0)
+    endTime: dayjs().add(45, 'm').set('seconds',0),
+    rrule: ''
   }
 };
