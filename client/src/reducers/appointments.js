@@ -7,12 +7,10 @@ export default function appointments(state = initialState.appointments, {type, p
   const personId = {};
   const newState = {};
   newState.teamMembers = [...state.teamMembers];
-
   function getPersonId (displayName) {
     const foundMember = state.teamMembers.filter(member => member.firstName === displayName);
     return foundMember[0].id;
   }
-
   switch (type) {
     case ADD_APPOINTMENT:
       personId.id = getPersonId(payload.rowId);
@@ -21,6 +19,7 @@ export default function appointments(state = initialState.appointments, {type, p
       newState.events = events(newState.teamMembers, newState.pureEvents);
       return newState;
     case DELETE_APPOINTMENT:
+      newState.maxId = state.maxId;
       newState.pureEvents = state.pureEvents.filter(event => event.id !== payload);
       newState.events = events(newState.teamMembers, newState.pureEvents);
       return newState;
