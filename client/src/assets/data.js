@@ -93,4 +93,19 @@ export const events = (teamMembers, pureEvents) => {
   return teamEvents;
 };
 
-
+export const initialState = {
+  appointments: {
+    pureEvents: pureEvents,
+    teamMembers: teamMembers,
+    events: events(teamMembers, pureEvents),
+    maxId: pureEvents.length
+  },
+  current: {currentDate: dayjs()},
+  settings: { hoursInterval: [ 6, 19 ] },
+  newAppointment: {
+    inputFormVisible: false,
+    clickedRowId: '',
+    startTime: dayjs().set('seconds',0),
+    endTime: dayjs().add(45, 'm').set('seconds',0)
+  }
+};

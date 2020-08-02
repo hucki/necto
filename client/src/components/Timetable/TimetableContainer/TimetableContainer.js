@@ -72,9 +72,9 @@ function filteredEvents (events, currentDate) {
 
 const MapStateToProps = state => {
   return {
-    events: filteredEvents(state.events, state.currentDate),
-    currentDate: state.currentDate,
-    hoursInterval: state.hoursInterval,
+    events: filteredEvents(state.appointments.events, state.current.currentDate),
+    currentDate: state.current.currentDate,
+    hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,
     rowId: state.newAppointment.clickedRowId
   };

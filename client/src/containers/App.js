@@ -4,18 +4,21 @@ import Header from '../components/Header/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
 import { createStore } from 'redux';
+import reducer from '../reducers/index';
 import { Provider } from 'react-redux';
 import { teamMembers, pureEvents, events} from '../assets/data';
 import dayjs from 'dayjs';
 import { ADD_APPOINTMENT, DELETE_APPOINTMENT, CLICK_ROW, CHANGE_DATE, TOGGLE_VISIBLE, SET_START, SET_END } from '../actions/actions';
 
 const initialState = {
-  pureEvents: pureEvents,
-  teamMembers: teamMembers,
-  events: events(teamMembers, pureEvents),
-  maxId: pureEvents.length,
+  appointments: {
+    pureEvents: pureEvents,
+    teamMembers: teamMembers,
+    events: events(teamMembers, pureEvents),
+    maxId: pureEvents.length
+  },
   currentDate: dayjs(),
-  hoursInterval: [ 6, 19 ],
+  setting: { hoursInterval: [ 6, 19 ] },
   newAppointment: {
     inputFormVisible: false,
     clickedRowId: '',
@@ -24,11 +27,8 @@ const initialState = {
   }
 };
 
-function getPersonId (displayName) {
-  const foundMember = teamMembers.filter(member => member.firstName === displayName);
-  return foundMember[0].id;
-}
 
+/*
 function reducer (state=initialState, {type, payload}) {
   const personId = {};
   const newState = {};
@@ -111,7 +111,8 @@ function reducer (state=initialState, {type, payload}) {
       return state;
   }
 }
-const store = createStore(reducer);
+*/
+const store = createStore(reducer, initialState);
 store.subscribe(() => console.log('NEW STATE', store.getState()));
 function App () {
   return (

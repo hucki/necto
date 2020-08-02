@@ -5,6 +5,11 @@ export const TOGGLE_VISIBLE = 'TOGGLE_VISIBLE';
 export const CLICK_ROW = 'CLICK_ROW';
 export const SET_START = 'SET_START';
 export const SET_END = 'SET_END';
+export const SET_HOURS = 'SET_HOURS';
+
+export function setHours (newHours) {
+  return { type: SET_HOURS, payload: newHours };
+}
 
 export function addAppointment (newAppointment) {
   return { type: ADD_APPOINTMENT, payload: newAppointment };

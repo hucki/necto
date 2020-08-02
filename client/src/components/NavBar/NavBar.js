@@ -37,7 +37,7 @@ const NavBar = (props) => {
 };
 
 const MapStateToProps = state => {
-  const { currentDate } = state;
+  const { currentDate } = state.current;
   return { currentDate };
 };
 const MapDispatchToProps = dispatch => {
