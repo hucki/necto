@@ -1,6 +1,10 @@
 .Footer {
   width: 100%;
-  background-color: darkslategrey;
-  color: white;
+  background-color: white;
+  text-shadow: 1px 1px 1px cyan, -1px -1px 1px magenta;
+  text-transform: uppercase;
+  padding: 10px;
+  /* color: white; */
   text-align: right;
+  box-shadow: 0 0 15px #3333;
 }

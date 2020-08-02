@@ -20,7 +20,7 @@
   background-color: #34495e;
   font-size: .7rem;
   font-weight: 600;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -61,7 +61,7 @@
 }
 .event_info {
   color: var(--secondary);
-  font-size: 1.1em;
+  font-size: 1.2em;
   line-height: initial;
   text-align: center;
 }
