@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { Option } from 'antd/lib/mentions';
 
 const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime, newRrule}) => {
+
   const [form] = Form.useForm();
   const [switcheroo, setSwitcheroo] = useState({disabled: true});
   const [timeline, setTimeline] = useState([]);
@@ -47,19 +48,25 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
 
   function onDurationChange (e) {
     const value = e.target.value;
-    form.setFieldsValue({duration: value});
-    const newTime = form.getFieldValue('startTime').add(value,'m');
-    form.setFieldsValue({endTime: newTime});
+    const newTime = startTime.add(value,'m');
+    dispatch(setEnd(newTime));
+    form.setFieldsValue({
+      duration: value,
+      endTime
+    });
     return;
   }
 
   function onStartTimeChange (e) {
     dispatch(setStart(e));
     const value = form.getFieldValue('duration');
-    form.setFieldsValue({duration: value});
     const newTime = e.add(value,'m');
-    form.setFieldsValue({endTime: newTime});
     dispatch(setEnd(newTime));
+    form.setFieldsValue({
+      duration: value,
+      startTime,
+      endTime
+    });
     return;
   }
 
@@ -136,11 +143,10 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
           <Form.Item label='Title' name='name'
             rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input />
           </Form.Item>
-          <Form.Item name='startTime' ><DatePicker defaultValue={dayjs(startTime)} {...datePickerFormat} onChange={onStartTimeChange}/>  </Form.Item>
           <Form.Item label='Time'>
             <Input.Group compact >
-              {/* <Form.Item name='startTime' ><DatePicker {...datePickerFormat} onChange={onStartTimeChange}/>  </Form.Item> */}
-              <Form.Item name='endTime'><TimePicker disabled format={dateTimeFormat.time}/></Form.Item>
+              <Form.Item name='startTime' ><DatePicker value={dayjs(startTime)} {...datePickerFormat} onChange={onStartTimeChange}/> -&nbsp;</Form.Item>
+              <Form.Item name='endTime'> <TimePicker disabled value={dayjs(endTime)} format={dateTimeFormat.time}/></Form.Item>
             </Input.Group>
           </Form.Item>
           <Form.Item label='Duration' name='duration'>
