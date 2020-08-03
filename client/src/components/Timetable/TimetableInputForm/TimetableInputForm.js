@@ -12,6 +12,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
   const [form] = Form.useForm();
   const [switcheroo, setSwitcheroo] = useState({disabled: true});
   const [timeline, setTimeline] = useState([]);
+  const [isRecurring, setIsRecurring] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -79,6 +80,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
     return true;
   }
   function onSwitchRecurring(checked) {
+    setIsRecurring(checked);
     setSwitcheroo({disabled: !checked});
   }
 
@@ -112,7 +114,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
     })
     dispatch(setRrule(rrule.toString()));
     setTimeline(<Timeline>
-      {rrule.all().map(date => <Timeline.Item>{dayjs(date).format('DD.MM.YYYY HH:mm')}</Timeline.Item>)}
+      {rrule.all().map(date => <Timeline.Item>{dayjs(date).format('ddd DD.MM.YYYY HH:mm')}</Timeline.Item>)}
       </Timeline>)
   }
 
@@ -128,10 +130,15 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         newRrule: form.getFieldValue('rruleString')
       }));
       dispatch(toggleVisible())
+      setIsRecurring(false);
+      setSwitcheroo({disabled: true})
     }
   }
 
   function onClose (e) {
+    setIsRecurring(false);
+    setSwitcheroo({disabled: true})
+    console.log(switcheroo)
     e.stopPropagation();
     dispatch(toggleVisible())
   }
@@ -157,7 +164,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
           </Form.Item>
           <Divider orientation="left">
             <Form.Item name='isRecurring' valuePropName='checked' >
-              <Switch onChange={onSwitchRecurring} /> Plan recurring items
+              <Switch onChange={onSwitchRecurring} checked={isRecurring}/> Plan recurring items
             </Form.Item>
           </Divider>
           <Form.Item label='Frequency'>
