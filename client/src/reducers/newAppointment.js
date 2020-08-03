@@ -1,4 +1,4 @@
-import { TOGGLE_VISIBLE, CLICK_ROW, SET_END, SET_START } from "../actions/actions";
+import { TOGGLE_VISIBLE, CLICK_ROW, SET_END, SET_START, SET_RRULE } from "../actions/actions";
 import { initialState } from '../assets/data';
 
 export default function newAppointment(state = initialState.newAppointment, {type, payload}) {
@@ -31,6 +31,13 @@ export default function newAppointment(state = initialState.newAppointment, {typ
       newState.startTime = state.startTime;
       newState.endTime = payload;
       newState.rrule = state.rrule;
+      return newState;
+    case SET_RRULE:
+      newState.inputFormVisible = state.inputFormVisible;
+      newState.clickedRowId = state.clickedRowId;
+      newState.startTime = state.startTime;
+      newState.endTime = state.endTime;
+      newState.rrule = payload;
       return newState;
     default:
       return state;

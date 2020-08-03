@@ -6,6 +6,7 @@ export const CLICK_ROW = 'CLICK_ROW';
 export const SET_START = 'SET_START';
 export const SET_END = 'SET_END';
 export const SET_HOURS = 'SET_HOURS';
+export const SET_RRULE = 'SET_RRULE';
 
 export function setHours (newHours) {
   return { type: SET_HOURS, payload: newHours };
@@ -35,4 +36,7 @@ export function setStart (newDate) {
 }
 export function setEnd (newDate) {
   return { type: SET_END, payload: newDate };
+}
+export function setRrule (rruleString) {
+  return { type: SET_RRULE, payload: rruleString };
 }

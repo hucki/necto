@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Modal, message, Radio, Switch, Select } from 'antd';
+import { Form, Input, Modal, message, Radio, Switch, Select, Timeline, Button, Popover, Divider } from 'antd';
 import { DatePicker, TimePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import { RRule, RRuleSet, rrulestr } from 'rrule'; // Upcoming rrule setup
-import { addAppointment, toggleVisible } from '../../../actions/actions';
+import { addAppointment, toggleVisible, setRrule, setStart, setEnd } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import { Option } from 'antd/lib/mentions';
 
-const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime}) => {
+const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime, newRrule}) => {
   const [form] = Form.useForm();
   const [switcheroo, setSwitcheroo] = useState({disabled: true});
-  const [rruleDates, setRruleDates] = useState([]);
+  const [timeline, setTimeline] = useState([]);
 
   useEffect(() => {
     if (visible) {
@@ -21,9 +21,9 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         endTime: endTime,
         isRecurring: false,
         frequency: 'WEEKLY',
-        count: 10
+        count: 10,
+        rruleString: ''
       });
-
     }
   }, [visible]);
 
@@ -54,10 +54,12 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
   }
 
   function onStartTimeChange (e) {
+    dispatch(setStart(e));
     const value = form.getFieldValue('duration');
     form.setFieldsValue({duration: value});
     const newTime = e.add(value,'m');
     form.setFieldsValue({endTime: newTime});
+    dispatch(setEnd(newTime));
     return;
   }
 
@@ -89,8 +91,22 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
       count: form.getFieldValue('count'),
       dtstart: new Date(form.getFieldValue('startTime'))
     })
-    setRruleDates([...rrule.all().map(date => date)]);
-    console.log(rruleDates)
+    dispatch(setRrule(rrule.toString()));
+
+    return true;
+  }
+
+  function onBuildTimelineHandler() {
+    const rrule = new RRule({
+      freq: form.getFieldValue('frequency') === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
+      tzid: 'Europe/Brussels',
+      count: form.getFieldValue('count'),
+      dtstart: new Date(form.getFieldValue('startTime'))
+    })
+    dispatch(setRrule(rrule.toString()));
+    setTimeline(<Timeline>
+      {rrule.all().map(date => <Timeline.Item>{dayjs(date).format('DD.MM.YYYY HH:mm')}</Timeline.Item>)}
+      </Timeline>)
   }
 
   function onOkHandler () {
@@ -101,7 +117,8 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         rowId: rowId,
         name: form.getFieldValue('name'),
         startTime: form.getFieldValue('startTime'),
-        endTime: form.getFieldValue('endTime')
+        endTime: form.getFieldValue('endTime'),
+        newRrule: form.getFieldValue('rruleString')
       }));
       dispatch(toggleVisible())
     }
@@ -117,22 +134,25 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         <Form form={form} {...layout}>
           <h1>{rowId}</h1>
           <Form.Item label='Title' name='name'
-            rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input /></Form.Item>
-          <Form.Item label='Start' name='startTime' >
-            <DatePicker {...datePickerFormat} onChange={onStartTimeChange}/>
+            rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input />
           </Form.Item>
-
+          <Form.Item label='Time'>
+            <Input.Group compact >
+              <Form.Item name='startTime' ><DatePicker {...datePickerFormat} onChange={onStartTimeChange}/>  </Form.Item>
+              <Form.Item name='endTime'><TimePicker disabled format='HH:mm'/></Form.Item>
+            </Input.Group>
+          </Form.Item>
           <Form.Item label='Duration' name='duration'>
             <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} inline>
               <Radio value={45}> 0:45</Radio>
               <Radio value={30}> 0:30</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label='End' name='endTime'><TimePicker disabled format='HH:mm'/></Form.Item>
-
-          <Form.Item name='isRecurring'  label='Recurring' valuePropName='checked' >
-            <Switch onChange={onSwitchRecurring} />
-          </Form.Item>
+          <Divider orientation="left">
+            <Form.Item name='isRecurring' valuePropName='checked' >
+              <Switch onChange={onSwitchRecurring} /> Plan recurring items
+            </Form.Item>
+          </Divider>
           <Form.Item label='Frequency'>
             <Input.Group compact >
               <Form.Item >
@@ -144,8 +164,12 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
               <Form.Item  >
                   <Input name='count' {...switcheroo} style={{ width: '50%' }} prefix='x' defaultValue={10} onChange={onRecurrenceChangeHandler}/>
               </Form.Item>
+              <Popover content={timeline} trigger='click'>
+                <Button {...switcheroo} onClick={onBuildTimelineHandler}>show Result</Button>
+              </Popover>
             </Input.Group>
           </Form.Item>
+
         </Form>
       </Modal>
   )
@@ -179,7 +203,10 @@ const MapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addAppointment: addAppointment,
+    addAppointment,
+    setStart,
+    setEnd,
+    setRrule,
     dispatch
   };
 };
