@@ -138,7 +138,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
               name: form.getFieldValue('name'),
               startTime: dayjs(date),
               endTime: dayjs(date).add(form.getFieldValue('duration'), 'm'),
-              newRrule: currentRrule
+              rrule: currentRrule
             }))
             successMsg.push(`${dayjs(date).format('ddd DD.MM HH:mm')} - ${dayjs(date).add(form.getFieldValue('duration'), 'm').format('HH:mm')}`)
           })
@@ -151,7 +151,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         name: form.getFieldValue('name'),
         startTime: form.getFieldValue('startTime'),
         endTime: form.getFieldValue('endTime'),
-        newRrule: form.getFieldValue('rruleString')
+        rrule: form.getFieldValue('rruleString')
       }))
     }
     dispatch(toggleVisible());

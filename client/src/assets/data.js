@@ -101,7 +101,7 @@ export const initialState = {
     maxId: pureEvents.length
   },
   current: {currentDate: dayjs()},
-  settings: { hoursInterval: [ 6, 19 ] },
+  settings: { hoursInterval: [ 7, 19 ] },
   newAppointment: {
     inputFormVisible: false,
     clickedRowId: '',

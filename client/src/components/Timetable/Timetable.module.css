@@ -38,8 +38,9 @@
   position: absolute;
   width: 98%;
   margin-left: 1%;
-  height: 15vh;
-  line-height: 15vh;
+  min-height: 2rem;
+  /* height: 15vh; */
+  /* line-height: 15vh; */
   background-color: rgba(255,255,255,0.5);
   font-size: .7em;
   font-weight: 300;
@@ -62,15 +63,27 @@
 .event_info {
   color: var(--secondary);
   font-size: 1.2em;
-  line-height: initial;
+  /* line-height: initial; */
   text-align: center;
+}
+.event_container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+.icon_container {
+  margin: 0;
+  padding: 2px;
+  font-size: 1em;
+  text-shadow: 0 0 5px #3333;
+  color: red;
 }
 
 .bg_grey {
   /* background-color: rgb(47,79,79,0.2); */
   border-color: rgb(47,79,79,0.3);
 }
-.bg_grey > span {
+.bg_grey > span,
+.bg_grey > div > span {
   color: rgb(47,79,79,1);
 }
 
@@ -79,7 +92,8 @@
   border-color: rgba(0,128,0.3);
 }
 
-.bg_green > span {
+.bg_green > span,
+.bg_green > div > span {
   color: rgba(0, 128, 0, 1);
 }
 
@@ -88,7 +102,8 @@
   border-color: rgba(255,0,0,0.3);
 }
 
-.bg_red > span {
+.bg_red > span,
+.bg_red > div > span {
   color: rgba(255,0,0,1);
 }
 
@@ -96,7 +111,8 @@
   /* background-color: rgba(200,200,0,0.2); */
   border-color: rgba(200,200,0,0.3);
 }
-.bg_yellow > span{
+.bg_yellow > span,
+.bg_yellow > div > span {
   color: rgb(128, 128, 0);
 }
 
@@ -106,6 +122,7 @@
   border-color: rgba(0, 128, 255,0.3);
 }
 
-.bg_blue > span {
+.bg_blue > span,
+.bg_blue > div > span {
   color: rgba(0, 128, 255,1);
 }
