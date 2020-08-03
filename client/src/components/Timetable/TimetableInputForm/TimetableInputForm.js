@@ -136,10 +136,11 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
           <Form.Item label='Title' name='name'
             rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input />
           </Form.Item>
+          <Form.Item name='startTime' ><DatePicker defaultValue={dayjs(startTime)} {...datePickerFormat} onChange={onStartTimeChange}/>  </Form.Item>
           <Form.Item label='Time'>
             <Input.Group compact >
-              <Form.Item name='startTime' ><DatePicker {...datePickerFormat} onChange={onStartTimeChange}/>  </Form.Item>
-              <Form.Item name='endTime'><TimePicker disabled format='HH:mm'/></Form.Item>
+              {/* <Form.Item name='startTime' ><DatePicker {...datePickerFormat} onChange={onStartTimeChange}/>  </Form.Item> */}
+              <Form.Item name='endTime'><TimePicker disabled format={dateTimeFormat.time}/></Form.Item>
             </Input.Group>
           </Form.Item>
           <Form.Item label='Duration' name='duration'>

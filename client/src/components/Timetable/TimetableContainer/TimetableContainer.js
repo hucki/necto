@@ -82,10 +82,10 @@ const MapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleVisible: toggleVisible,
-    clickRow: clickRow,
-    setStart: setStart,
-    setEnd: setEnd,
+    toggleVisible,
+    clickRow,
+    setStart,
+    setEnd,
     dispatch
   };
 };

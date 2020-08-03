@@ -28,8 +28,8 @@ export function toggleVisible () {
   return { type: TOGGLE_VISIBLE };
 }
 
-export function clickRow (rowId, startTime, endTime) {
-  return { type: CLICK_ROW, payload: {rowId, startTime, endTime} };
+export function clickRow (rowId) {
+  return { type: CLICK_ROW, payload: rowId };
 }
 export function setStart (newDate) {
   return { type: SET_START, payload: newDate };

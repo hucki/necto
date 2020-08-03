@@ -13,10 +13,11 @@ export default function newAppointment(state = initialState.newAppointment, {typ
       return newState;
     case CLICK_ROW:
       newState.inputFormVisible = state.inputFormVisible;
-      newState.clickedRowId = payload.rowId;
-      newState.startTime = payload.startTime;
-      newState.endTime = payload.endTime;
+      newState.clickedRowId = payload;
+      newState.startTime = state.startTime;
+      newState.endTime = state.endTime;
       newState.rrule = state.rrule;
+      console.log('click',newState)
       return newState;
     case SET_START:
       newState.inputFormVisible = state.inputFormVisible;
