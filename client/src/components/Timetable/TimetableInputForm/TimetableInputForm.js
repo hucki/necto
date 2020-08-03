@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { RRule, RRuleSet, rrulestr } from 'rrule'; // Upcoming rrule setup
 import { addAppointment, toggleVisible, setRrule, setStart, setEnd } from '../../../actions/actions';
 import dayjs from 'dayjs';
-import { Option } from 'antd/lib/mentions';
+// import { Option } from 'antd/lib/mentions';
 import { HomeTwoTone, HomeOutlined } from '@ant-design/icons';
 
 const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime, newRrule}) => {
@@ -191,39 +191,38 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
     <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
         <Form form={form} {...layout} {...initialValues}>
           <h3>{rowId}</h3>
-          <Form.Item label='Title' name='name'
-            rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}
-            ><Input />
+          <Form.Item label='Title' name='name' rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}>
+            <Input />
           </Form.Item>
           <Form.Item label='Time'>
             <Input.Group compact >
-              <Form.Item name='startTime' ><DatePicker value={dayjs(startTime)} {...datePickerFormat} onChange={onStartTimeChange}/> -&nbsp;</Form.Item>
-              <Form.Item name='endTime'> <TimePicker disabled value={dayjs(endTime)} format={dateTimeFormat.time}/></Form.Item>
+              <Form.Item  ><DatePicker name='startTime' value={dayjs(startTime)} {...datePickerFormat} onChange={onStartTimeChange}/> -&nbsp;</Form.Item>
+              <Form.Item > <TimePicker name='endTime' disabled value={dayjs(endTime)} format={dateTimeFormat.time}/></Form.Item>
             </Input.Group>
-            <Form.Item label='Duration' name='duration'>
+            <Form.Item label='Duration'>
               <Radio.Group onChange={onDurationChange} name='duration' inline>
                 <Radio value={45}> 0:45</Radio>
                 <Radio value={30}> 0:30</Radio>
               </Radio.Group>
             </Form.Item>
             <Tooltip title='Home Visit?'>
-          <Form.Item name='isHomeVisit' valuePropName='checked' label='Home Visit?'>
-            <Switch checkedChildren={<HomeTwoTone />} unCheckedChildren={<HomeOutlined />} checked={isHomeVisit} onChange={onSwitchHomeVisit}/>
+          <Form.Item valuePropName='checked' label='Home Visit?'>
+            <Switch name='isHomeVisit' checkedChildren={<HomeTwoTone />} unCheckedChildren={<HomeOutlined />} checked={isHomeVisit} onChange={onSwitchHomeVisit}/>
           </Form.Item>
           </Tooltip>
           </Form.Item>
 
           <Divider orientation="left">
-            <Form.Item name='isRecurring' valuePropName='checked' >
-              <Switch onChange={onSwitchRecurring} checked={isRecurring}/> recurring Appointment?
+            <Form.Item valuePropName='checked' >
+              <Switch name='isRecurring' onChange={onSwitchRecurring} checked={isRecurring}/> recurring Appointment?
             </Form.Item>
           </Divider>
           <Form.Item label='Frequency'>
             <Input.Group compact >
               <Form.Item >
                 <Select {...switcheroo} name='frequency' style={{ width: 120 }} onChange={onFrequencyChangeHandler}>
-                  <Option value='WEEKLY'>weekly</Option>
-                  <Option value='MONTHLY' disabled>monthly</Option>
+                  <Select.Option value='WEEKLY'>weekly</Select.Option>
+                  <Select.Option value='MONTHLY' disabled>monthly</Select.Option>
                 </Select>
               </Form.Item>
               <Form.Item>
