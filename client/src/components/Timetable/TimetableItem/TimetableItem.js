@@ -4,7 +4,7 @@ import classes from '../Timetable.module.css';
 import {Modal, message} from 'antd';
 import dayjs from 'dayjs';
 import { deleteAppointment } from '../../../actions/actions';
-import { SyncOutlined } from '@ant-design/icons';
+import { SyncTwoTone, HomeOutlined, HomeTwoTone, ApiTwoTone } from '@ant-design/icons';
 
 const TimetableItem = ({event, defaultAttributes, dispatch}) => {
   // TODO: put delete dialog in a separate Component
@@ -12,9 +12,8 @@ const TimetableItem = ({event, defaultAttributes, dispatch}) => {
   const [icons, setIcons] = useState([]);
 
   useEffect(() => {
-    if (event.rrule !== '') {
-      setIcons(icons => [...icons, <SyncOutlined />]);
-    }
+    if (event.rrule !== '') setIcons(icons => [...icons, <ApiTwoTone />]);
+    if (event.homeVisit) setIcons(icons => [...icons, <HomeTwoTone />]);
   }, [])
 
   const onClickHandler = ({id, name, startTime, endTime}) => {

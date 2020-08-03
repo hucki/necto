@@ -37,6 +37,7 @@ https://www.chartjs.org
 - [x] put input form in separate component
 - [x] delete appointments
 - [x] implement combineReducers()
+- [x] add home Visit option
 - [ ] create week view
 - [ ] connect API
 - [ ] color schema
@@ -46,7 +47,8 @@ https://www.chartjs.org
 **data**
 - [x] untie persons and appointments and dynamically generate event for timetable
 - [ ] use iCal [ics](https://www.npmjs.com/package/ics)
-- [ ] use recurrence Rules [rrule](https://www.npmjs.com/package/rrule)
+- [x] use recurrence Rules [rrule](https://www.npmjs.com/package/rrule)
+- [ ]
 
 **backend**
 - [ ] define Models

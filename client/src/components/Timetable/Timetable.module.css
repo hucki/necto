@@ -20,7 +20,6 @@
   background-color: #34495e;
   font-size: .7rem;
   font-weight: 600;
-  /* text-transform: uppercase; */
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -56,14 +55,13 @@
 .event:hover, .event:focus {
   border-color: inherit;
   border-top: 2px solid;
-  /* border-color: rgba(64,169,255,1); */
   box-shadow: 0 0 15px #3333;
   cursor: pointer;
 }
 .event_info {
   color: var(--secondary);
   font-size: 1.2em;
-  /* line-height: initial; */
+  line-height: initial;
   text-align: center;
 }
 .event_container {
@@ -79,7 +77,6 @@
 }
 
 .bg_grey {
-  /* background-color: rgb(47,79,79,0.2); */
   border-color: rgb(47,79,79,0.3);
 }
 .bg_grey > span,
@@ -88,7 +85,6 @@
 }
 
 .bg_green {
-  /* background-color: rgba(0,128,0,0.2); */
   border-color: rgba(0,128,0.3);
 }
 
@@ -98,7 +94,6 @@
 }
 
 .bg_red {
-  /* background-color: rgba(255,0,0,0.2); */
   border-color: rgba(255,0,0,0.3);
 }
 
@@ -108,7 +103,6 @@
 }
 
 .bg_yellow {
-  /* background-color: rgba(200,200,0,0.2); */
   border-color: rgba(200,200,0,0.3);
 }
 .bg_yellow > span,
@@ -117,8 +111,6 @@
 }
 
 .bg_blue {
-
-  /* background-color: rgba(0, 128, 255,0.2); */
   border-color: rgba(0, 128, 255,0.3);
 }
 

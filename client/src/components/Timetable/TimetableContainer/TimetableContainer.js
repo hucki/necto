@@ -22,8 +22,8 @@ const TimetableContainer = ({events, currentDate, hoursInterval, dispatch, visib
 
   function getPosition (e) {
     e.preventDefault();
+    if((typeof e.target.className) !== 'string') return;
     const clickOnFreeTime = !e.target.className.indexOf('styles_day__');
-
     if (clickOnFreeTime) {
       dispatch(clickRow(e.target.className.split(' ')[1]));
       const rect = e.target.getBoundingClientRect();

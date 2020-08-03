@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Modal, message, Radio, Switch, Select, Timeline, Button, Popover, Divider } from 'antd';
+import { Form, Input, Modal, message, Radio, Switch, Select, Timeline, Button, Popover, Divider, Tooltip } from 'antd';
 import { DatePicker, TimePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import { RRule, RRuleSet, rrulestr } from 'rrule'; // Upcoming rrule setup
 import { addAppointment, toggleVisible, setRrule, setStart, setEnd } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import { Option } from 'antd/lib/mentions';
+import { HomeTwoTone, HomeOutlined } from '@ant-design/icons';
 
 const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime, newRrule}) => {
 
@@ -13,6 +14,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
   const [switcheroo, setSwitcheroo] = useState({disabled: true});
   const [timeline, setTimeline] = useState([]);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [isHomeVisit, setIsHomeVisit] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -22,6 +24,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         duration: 45,
         endTime: endTime,
         isRecurring: false,
+        isHomeVisit: false,
         frequency: 'WEEKLY',
         count: 10,
         rruleString: ''
@@ -84,6 +87,10 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
     setSwitcheroo({disabled: !checked});
   }
 
+  function onSwitchHomeVisit(checked) {
+    setIsHomeVisit(checked);
+  }
+
   function onFrequencyChangeHandler() {
 
   }
@@ -138,7 +145,8 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
               name: form.getFieldValue('name'),
               startTime: dayjs(date),
               endTime: dayjs(date).add(form.getFieldValue('duration'), 'm'),
-              rrule: currentRrule
+              rrule: currentRrule,
+              homeVisit: isHomeVisit
             }))
             successMsg.push(`${dayjs(date).format('ddd DD.MM HH:mm')} - ${dayjs(date).add(form.getFieldValue('duration'), 'm').format('HH:mm')}`)
           })
@@ -151,20 +159,24 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         name: form.getFieldValue('name'),
         startTime: form.getFieldValue('startTime'),
         endTime: form.getFieldValue('endTime'),
-        rrule: form.getFieldValue('rruleString')
+        rrule: '',
+        homeVisit: isHomeVisit
       }))
     }
     dispatch(toggleVisible());
-    setIsRecurring(false);
-    setSwitcheroo({disabled: true});
+    setDefaults();
   }
 
   function onClose (e) {
-    setIsRecurring(false);
-    setSwitcheroo({disabled: true})
-    console.log(switcheroo)
+    setDefaults();
     e.stopPropagation();
-    dispatch(toggleVisible())
+    dispatch(toggleVisible());
+  }
+
+  function setDefaults() {
+    setIsRecurring(false);
+    setIsHomeVisit(false);
+    setSwitcheroo({disabled: true});
   }
 
   return (
@@ -172,7 +184,8 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
         <Form form={form} {...layout}>
           <h3>{rowId}</h3>
           <Form.Item label='Title' name='name'
-            rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input />
+            rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}
+            ><Input />
           </Form.Item>
           <Form.Item label='Time'>
             <Input.Group compact >
@@ -185,7 +198,13 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
                 <Radio value={30}> 0:30</Radio>
               </Radio.Group>
             </Form.Item>
+            <Tooltip title='Home Visit?'>
+          <Form.Item name='isHomeVisit' valuePropName='checked' label='Home Visit?'>
+            <Switch checkedChildren={<HomeTwoTone />} unCheckedChildren={<HomeOutlined />} checked={isHomeVisit} onChange={onSwitchHomeVisit}/>
           </Form.Item>
+          </Tooltip>
+          </Form.Item>
+
           <Divider orientation="left">
             <Form.Item name='isRecurring' valuePropName='checked' >
               <Switch onChange={onSwitchRecurring} checked={isRecurring}/> recurring Appointment?

@@ -18,7 +18,8 @@ export const pureEvents = [
     type: 'custom',
     startTime: dayjs().set('hours',11).set('minutes',30),
     endTime: dayjs().set('hours',12).set('minutes',15),
-    rrule: ''
+    rrule: '',
+    homeVisit: false
   },
   {
     id: 4,
@@ -27,7 +28,8 @@ export const pureEvents = [
     type: 'custom',
     startTime: dayjs().set('hours',12).set('minutes',30),
     endTime: dayjs().set('hours',13).set('minutes',15),
-    rrule: ''
+    rrule: '',
+    homeVisit: false
   },
   {
     id: 2,
@@ -36,7 +38,8 @@ export const pureEvents = [
     type: 'custom',
     startTime: dayjs().set('hours',12).set('minutes',30),
     endTime: dayjs().set('hours',14).set('minutes',30),
-    rrule: ''
+    rrule: '',
+    homeVisit: true
   },
   {
     id: 3,
@@ -45,7 +48,8 @@ export const pureEvents = [
     type: 'custom',
     startTime: dayjs().set('hours',14).set('minutes',45),
     endTime: dayjs().set('hours',15).set('minutes',30),
-    rrule: ''
+    rrule: '',
+    homeVisit: false
   },
   {
     id: 5,
@@ -54,7 +58,8 @@ export const pureEvents = [
     type: 'custom',
     startTime: dayjs().set('hours',8).set('minutes',30),
     endTime: dayjs().set('hours',10).set('minutes',30),
-    rrule: ''
+    rrule: '',
+    homeVisit: false
   },
   {
     id: 6,
@@ -63,7 +68,8 @@ export const pureEvents = [
     type: 'custom',
     startTime: dayjs().set('hours',10).set('minutes',45),
     endTime: dayjs().set('hours',11).set('minutes',30),
-    rrule: ''
+    rrule: '',
+    homeVisit: true
   }
 ];
 
