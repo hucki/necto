@@ -94,6 +94,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
 
   }
   function buildRrule() {
+    if(isNaN(form.getFieldValue('count')) || form.getFieldValue('count') < 1) return false;
     const rrule = new RRule({
       freq: form.getFieldValue('frequency') === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
       tzid: 'Europe/Brussels',
@@ -101,8 +102,8 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
       dtstart: new Date(form.getFieldValue('startTime'))
     })
     dispatch(setRrule(rrule.toString()));
-
-    return true;
+    console.log('after setRR', newRrule)
+    return rrule.toString();
   }
 
   function onBuildTimelineHandler() {
@@ -119,20 +120,43 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
   }
 
   function onOkHandler () {
-    if (form.getFieldValue('isRecurring') && !buildRrule()) message.error('Input for Recurrence Rule invalid. Please check again');
-    if (checkOverlap()) message.error('Overlapping Appointments are not allowed. Please check again');
-    else {
+    if (checkOverlap()) {
+      message.error('Overlapping Appointments are not allowed. Please check again');
+      return false;
+    }
+    if (isRecurring) {
+      const currentRrule = buildRrule();
+      if(!currentRrule) {
+        message.error('Input for Recurrence Rule invalid. Please check again');
+        return false;
+      } else {
+        const successMsg =[<div>added appointments {rrulestr(currentRrule).toText()}:</div>];
+        if(currentRrule !== '') {
+          rrulestr(currentRrule).all().map(date => {
+            dispatch(addAppointment({
+              rowId: rowId,
+              name: form.getFieldValue('name'),
+              startTime: dayjs(date),
+              endTime: dayjs(date).add(form.getFieldValue('duration'), 'm'),
+              newRrule: currentRrule
+            }))
+            successMsg.push(`${dayjs(date).format('ddd DD.MM HH:mm')} - ${dayjs(date).add(form.getFieldValue('duration'), 'm').format('HH:mm')}`)
+          })
+        }
+        message.success(successMsg.map(date => <><p>{date}</p></>))
+      }
+    } else {
       dispatch(addAppointment({
         rowId: rowId,
         name: form.getFieldValue('name'),
         startTime: form.getFieldValue('startTime'),
         endTime: form.getFieldValue('endTime'),
         newRrule: form.getFieldValue('rruleString')
-      }));
-      dispatch(toggleVisible())
-      setIsRecurring(false);
-      setSwitcheroo({disabled: true})
+      }))
     }
+    dispatch(toggleVisible());
+    setIsRecurring(false);
+    setSwitcheroo({disabled: true});
   }
 
   function onClose (e) {
@@ -146,7 +170,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
   return (
     <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
         <Form form={form} {...layout}>
-          <h1>{rowId}</h1>
+          <h3>{rowId}</h3>
           <Form.Item label='Title' name='name'
             rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}><Input />
           </Form.Item>
@@ -155,16 +179,16 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
               <Form.Item name='startTime' ><DatePicker value={dayjs(startTime)} {...datePickerFormat} onChange={onStartTimeChange}/> -&nbsp;</Form.Item>
               <Form.Item name='endTime'> <TimePicker disabled value={dayjs(endTime)} format={dateTimeFormat.time}/></Form.Item>
             </Input.Group>
-          </Form.Item>
-          <Form.Item label='Duration' name='duration'>
-            <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} inline>
-              <Radio value={45}> 0:45</Radio>
-              <Radio value={30}> 0:30</Radio>
-            </Radio.Group>
+            <Form.Item label='Duration' name='duration'>
+              <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} inline>
+                <Radio value={45}> 0:45</Radio>
+                <Radio value={30}> 0:30</Radio>
+              </Radio.Group>
+            </Form.Item>
           </Form.Item>
           <Divider orientation="left">
             <Form.Item name='isRecurring' valuePropName='checked' >
-              <Switch onChange={onSwitchRecurring} checked={isRecurring}/> Plan recurring items
+              <Switch onChange={onSwitchRecurring} checked={isRecurring}/> recurring Appointment?
             </Form.Item>
           </Divider>
           <Form.Item label='Frequency'>
@@ -175,8 +199,12 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
                   <Option value='MONTHLY' disabled>monthly</Option>
                 </Select>
               </Form.Item>
-              <Form.Item  >
-                  <Input name='count' {...switcheroo} style={{ width: '50%' }} prefix='x' defaultValue={10} onChange={onRecurrenceChangeHandler}/>
+              <Form.Item>
+                  <Input  name='count' {...switcheroo}
+                          style={{ width: '50%' }}
+                          prefix='x'
+                          defaultValue={10}
+                          onChange={onRecurrenceChangeHandler}/>
               </Form.Item>
               <Popover content={timeline} trigger='click'>
                 <Button {...switcheroo} onClick={onBuildTimelineHandler}>show Result</Button>

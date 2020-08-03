@@ -17,7 +17,6 @@ export default function newAppointment(state = initialState.newAppointment, {typ
       newState.startTime = state.startTime;
       newState.endTime = state.endTime;
       newState.rrule = state.rrule;
-      console.log('click',newState)
       return newState;
     case SET_START:
       newState.inputFormVisible = state.inputFormVisible;
