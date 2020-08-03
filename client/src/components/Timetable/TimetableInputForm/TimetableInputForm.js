@@ -39,6 +39,14 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
     size: 'small'
   };
 
+  const initialValues = {
+    initialValues: {
+      duration: 45,
+      frequency: 'WEEKLY',
+      count: 10
+    }
+  }
+
   const dateTimeFormat = {
     date: 'DD.MM.YYYY',
     time: 'HH:mm'
@@ -181,7 +189,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
 
   return (
     <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
-        <Form form={form} {...layout}>
+        <Form form={form} {...layout} {...initialValues}>
           <h3>{rowId}</h3>
           <Form.Item label='Title' name='name'
             rules={[{ required: true, message: 'Please add a Title to the Appointment' }]}
@@ -193,7 +201,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
               <Form.Item name='endTime'> <TimePicker disabled value={dayjs(endTime)} format={dateTimeFormat.time}/></Form.Item>
             </Input.Group>
             <Form.Item label='Duration' name='duration'>
-              <Radio.Group onChange={onDurationChange} name='duration' defaultValue={45} inline>
+              <Radio.Group onChange={onDurationChange} name='duration' inline>
                 <Radio value={45}> 0:45</Radio>
                 <Radio value={30}> 0:30</Radio>
               </Radio.Group>
@@ -213,7 +221,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
           <Form.Item label='Frequency'>
             <Input.Group compact >
               <Form.Item >
-                <Select {...switcheroo} name='frequency' defaultValue='WEEKLY' style={{ width: 120 }} onChange={onFrequencyChangeHandler}>
+                <Select {...switcheroo} name='frequency' style={{ width: 120 }} onChange={onFrequencyChangeHandler}>
                   <Option value='WEEKLY'>weekly</Option>
                   <Option value='MONTHLY' disabled>monthly</Option>
                 </Select>
@@ -222,7 +230,6 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
                   <Input  name='count' {...switcheroo}
                           style={{ width: '50%' }}
                           prefix='x'
-                          defaultValue={10}
                           onChange={onRecurrenceChangeHandler}/>
               </Form.Item>
               <Popover content={timeline} trigger='click'>
