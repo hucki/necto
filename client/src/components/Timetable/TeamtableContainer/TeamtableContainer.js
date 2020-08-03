@@ -7,14 +7,17 @@ import TimetableItem from '../TimetableItem/TimetableItem';
 import { toggleVisible, clickRow, setStart, setEnd } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
+import TeamTableItem from '../TeamTableItem/TeamTableItem';
 
 
-const renderCustomEvent = (event, defaultAttributes, styles) => {
+const renderCustomEvent = (event,
+                          /*defaultAttributes,*/
+                          styles) => {
   return (
-    <TimetableItem
+    <TeamTableItem
       key={event.id}
       event={event}
-      defaultAttributes={defaultAttributes}
+      // defaultAttributes={defaultAttributes}
       styles={styles}/>
   );
 };
@@ -52,11 +55,7 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
 
     if (clickOnFreeTime) {
       dispatch(clickRow(e.target.className.split(' ')[1]));
-      //     const rect = e.target.getBoundingClientRect();
       const y = e.clientY - top;
-      //     const numOfHours = hoursInterval[1]-hoursInterval[0]+1;
-      //     const cellHeight = (rect.bottom-rect.top)/numOfHours;
-      //     const startOfDay = currentDate.clone().set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0);
       const clickTimeMin = ((y-cellHeight)/(cellHeight/60));
       const clickTime = startOfDay.clone().add(clickTimeMin,'m').set('seconds',0);
       const fullQuarterHour = Math.round(clickTime.get('minute')/15)*15;
@@ -66,6 +65,19 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
       dispatch(setEnd(clickTimeFQH.add(45,'m')));
       dispatch(toggleVisible());
     }
+  }
+  function getItemStyle(event) {
+    const minsFromStartOfDay = dayjs(event.startTime).diff(startOfDay, 'minute');
+    const minsDuration = dayjs(event.endTime).diff(event.startTime, 'minute');
+    const pxPerMinute = cellHeight / 60;
+    const pxFromStartOfDay = (pxPerMinute * minsFromStartOfDay) + cellHeight;
+    const pxItemHeight = pxPerMinute * minsDuration;
+    const itemStyle = {
+      top: `${parseInt(pxFromStartOfDay)}px`,
+      height: `${parseInt(pxItemHeight)}px`
+    }
+      ;
+    return itemStyle;
   }
   const hoursScale = Array(hoursInterval[1]-hoursInterval[0]).fill(null).map((hour, index) =>
     <div  key={index+hoursInterval[0]}
@@ -83,7 +95,7 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
         <div className={classes.dayHeader} style={{
       height: `${cellHeight}px`,
       width: `${cellWidth}px`}}>{personId}</div>
-        {events[personId].map(event => renderCustomEvent(event))}
+        {events[personId].map(event => renderCustomEvent(event, getItemStyle(event)))}
     </div>);
 
   return (

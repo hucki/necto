@@ -19,6 +19,8 @@
 
 .hour {
   border-top: 1px solid #3333;
+  width: 100px;
+
 }
 .hoursScale {
   background-color: #f0f2f5;
