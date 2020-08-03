@@ -1,16 +1,24 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import classes from './Dashboard.module.css';
 import TimetableContainer from '../Timetable/TimetableContainer/TimetableContainer';
 import TeamContainer from '../Team/TeamContainer/TeamContainer';
 
 
-function Dashboard () {
+const Dashboard = ({currentView}) => {
+  const showContent = currentView === 'Appointments' ? <TimetableContainer /> : <TeamContainer />
+
   return (
     <div className={classes.Dashboard}>
-      <TimetableContainer />
-      <TeamContainer />
+      {showContent}
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+const mapStateToProps = state => {
+  return {
+    currentView: state.settings.currentView
+  }
+}
+
+export default connect(mapStateToProps, null)(Dashboard);

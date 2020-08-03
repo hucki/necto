@@ -106,8 +106,11 @@ export const initialState = {
     events: events(teamMembers, pureEvents),
     maxId: pureEvents.length
   },
-  current: {currentDate: dayjs()},
-  settings: { hoursInterval: [ 7, 19 ] },
+  current: { currentDate: dayjs() },
+  settings: {
+    hoursInterval: [ 7, 19 ],
+    currentView: 'Appointments'
+   },
   newAppointment: {
     inputFormVisible: false,
     clickedRowId: '',

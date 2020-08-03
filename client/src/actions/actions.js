@@ -7,6 +7,7 @@ export const SET_START = 'SET_START';
 export const SET_END = 'SET_END';
 export const SET_HOURS = 'SET_HOURS';
 export const SET_RRULE = 'SET_RRULE';
+export const SWITCH_VIEW = 'SWITCH_VIEW';
 
 export function setHours (newHours) {
   return { type: SET_HOURS, payload: newHours };
@@ -39,4 +40,8 @@ export function setEnd (newDate) {
 }
 export function setRrule (rruleString) {
   return { type: SET_RRULE, payload: rruleString };
+}
+
+export function switchView (newView) {
+  return { type: SWITCH_VIEW, payload: newView };
 }

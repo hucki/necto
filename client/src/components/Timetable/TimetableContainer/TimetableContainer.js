@@ -70,7 +70,7 @@ function filteredEvents (events, currentDate) {
   return filtered;
 }
 
-const MapStateToProps = state => {
+const mapStateToProps = state => {
   return {
     events: filteredEvents(state.appointments.events, state.current.currentDate),
     currentDate: state.current.currentDate,
@@ -91,4 +91,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 
-export default connect(MapStateToProps, mapDispatchToProps)(TimetableContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(TimetableContainer);
