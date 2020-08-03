@@ -1,0 +1,25 @@
+.TeamtableContainer {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.day {
+  position: relative;
+  height: 100%;
+  float: left;
+  background-color: #fff;
+  background-image: linear-gradient(#f0f2f5 50%, transparent 50%);
+}
+.dayHeader {
+
+}
+
+.hour {
+
+}
+
+.hoursScaleHeader {
+
+}
