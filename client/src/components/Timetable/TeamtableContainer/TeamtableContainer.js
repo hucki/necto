@@ -27,9 +27,8 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
 
   function getPosition (e) {
     e.preventDefault();
-    console.log('clicked',e.clientY, e.clientX)
     if((typeof e.target.className) !== 'string') return;
-    const clickOnFreeTime = !e.target.className.indexOf('TeamtableContainer_day__');
+    const clickOnFreeTime = !e.target.className.indexOf('TeamtableDay_day__');
 
     if (clickOnFreeTime) {
       dispatch(clickRow(e.target.className.split(' ')[1]));
@@ -88,7 +87,7 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
           </div>
         )}
     </Measure>
-    <TimetableInputForm visible={visible}/>
+    <TimetableInputForm visible={visible} rowId={rowId}/>
     </>
   );
 };

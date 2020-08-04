@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, message, Radio, Switch, Select, Timeline, Button, Popover, Divider, Tooltip } from 'antd';
 import { DatePicker, TimePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
-import { RRule, RRuleSet, rrulestr } from 'rrule'; // Upcoming rrule setup
+import { RRule, RRuleSet, rrulestr } from 'rrule';
 import { addAppointment, toggleVisible, setRrule, setStart, setEnd } from '../../../actions/actions';
 import dayjs from 'dayjs';
-// import { Option } from 'antd/lib/mentions';
 import { HomeTwoTone, HomeOutlined } from '@ant-design/icons';
 
 const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTime, newRrule}) => {
@@ -267,7 +266,6 @@ const MapStateToProps = state => {
     currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,
-    rowId: state.newAppointment.clickedRowId,
     startTime: state.newAppointment.startTime,
     endTime: state.newAppointment.endTime,
     newRrule: state.newAppointment.rrule

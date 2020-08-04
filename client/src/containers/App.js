@@ -11,7 +11,7 @@ import AppMenu from '../components/AppMenu/AppMenu';
 const { Content: AntContent } = Layout;
 
 const store = createStore(reducer);
-store.subscribe(() => console.log('NEW STATE', store.getState()));
+store.subscribe(() => {/*console.log('NEW STATE', store.getState())*/});
 function App () {
   return (
     <Provider store = { store }>

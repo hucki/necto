@@ -31,8 +31,9 @@ const TeamtableDay = ({events, headerArray, cellWidth, cellHeight, hoursInterval
   const numOfHours = hoursInterval[1]-hoursInterval[0]+1;
   const relCellHeightStyle = {height: `${100/numOfHours}%`};
 
-  const days = headerArray.map(rowTitle =>
+  const days = headerArray.map((rowTitle, index) =>
     <div  key={rowTitle}
+          id={index}
           className={`${classes.day} ${rowTitle}`}
           style={{
             height: `100%`,

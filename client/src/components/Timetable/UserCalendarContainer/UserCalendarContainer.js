@@ -9,7 +9,7 @@ import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
 import TeamtableDay from '../TeamtableDay/TeamtableDay';
 dayjs.extend(isBetween);
 
-const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, dispatch, visible, width, height, top, timeScaleWidth, cellHeight, cellWidth, relCellHeight, rowId}) => {
+const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, dispatch, visible, width, height, top, timeScaleWidth, cellHeight, cellWidth, relCellHeight, user, rowId}) => {
   const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1);
   const [numOfCols, setNumOfCols] = useState(daysToShow.length);
   const [dimensionsCalculated, setDimensionsCalculated] = useState({width: -1, height: -1})
@@ -29,15 +29,16 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, 
 
   function getPosition (e) {
     e.preventDefault();
-    console.log('clicked',e.clientY, e.clientX)
     if((typeof e.target.className) !== 'string') return;
-    const clickOnFreeTime = !e.target.className.indexOf('UserCalendarContainer_day__');
+    const clickOnFreeTime = !e.target.className.indexOf('TeamtableDay_day__');
 
     if (clickOnFreeTime) {
+      const clickedDay = currentDate.clone().day(e.target.id).add(1,'d').set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0)
+      setStartOfDay(currentDate.clone().day(e.target.id).add(1,'d').set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0))
       dispatch(clickRow(e.target.className.split(' ')[1]));
       const y = e.clientY - top;
       const clickTimeMin = ((y-cellHeight)/(cellHeight/60));
-      const clickTime = startOfDay.clone().add(clickTimeMin,'m').set('seconds',0);
+      const clickTime = clickedDay.clone().add(clickTimeMin,'m').set('seconds',0);
       const fullQuarterHour = Math.round(clickTime.get('minute')/15)*15;
       const clickTimeFQH = clickTime.set('minutes', 0).add(fullQuarterHour, 'm');
 
@@ -90,7 +91,7 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, 
           </div>
         )}
     </Measure>
-    <TimetableInputForm visible={visible}/>
+    <TimetableInputForm visible={visible} rowId={user}/>
     </>
   );
 };
