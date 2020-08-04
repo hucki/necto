@@ -11,6 +11,7 @@ export const SWITCH_VIEW = 'SWITCH_VIEW';
 export const LOG_IN = 'LOG_IN';
 export const LOG_OUT = 'LOG_OUT';
 export const SET_DIMENSIONS = 'SET_DIMENSIONS';
+export const SET_CELL_DIMENSIONS = 'SET_CELL_DIMENSIONS';
 
 export function setHours (newHours) {
   return { type: SET_HOURS, payload: newHours };
@@ -59,4 +60,8 @@ export function logOut () {
 
 export function setDimensions (dimensions) {
   return {type: SET_DIMENSIONS, payload: dimensions}
+}
+
+export function setCellDimensions (cellDimensions) {
+  return {type: SET_CELL_DIMENSIONS, payload: cellDimensions}
 }

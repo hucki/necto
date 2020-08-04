@@ -2,45 +2,28 @@ import React, { useEffect, useState } from 'react';
 import Measure from 'react-measure';
 import { connect } from 'react-redux';
 import classes from './UserCalendarContainer.module.css';
-import { toggleVisible, clickRow, setStart, setEnd, setDimensions } from '../../../actions/actions';
+import { toggleVisible, clickRow, setStart, setEnd, setDimensions, setCellDimensions } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
-import TeamTableItem from '../TeamTableItem/TeamTableItem';
+import TeamtableDay from '../TeamtableDay/TeamtableDay';
 dayjs.extend(isBetween);
 
-const renderCustomEvent = (event,
-                          styles) => {
-  return (
-    <TeamTableItem
-      key={event.id}
-      event={event}
-      styles={styles}/>
-  );
-};
-
-const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, visible, width, height, top, rowId}) => {
-  const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1)
-  const [daysToShow, setDaysToShow] = useState(['Mon','Tue','Wed','Thu','Fri']) // TODO move to state-ettings
+const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, dispatch, visible, width, height, top, timeScaleWidth, cellHeight, cellWidth, relCellHeight, rowId}) => {
+  const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1);
   const [numOfCols, setNumOfCols] = useState(daysToShow.length);
-  const [timeScaleWidth, setTimeScaleWidth] = useState(50); // TODO move to state-settings
-  const [cellHeight, setCellHeight] = useState(height/numOfHours);
-  const [relCellHeight, setRelCellHeight] = useState(100/numOfHours);
-  const [cellWidth, setCellWidth] = useState((width-timeScaleWidth)/numOfCols);
-  const [cellStyle, setCellStyle] = useState({height: `${cellHeight}px`, width: `${cellWidth}px`})
   const [startOfDay, setStartOfDay] = useState(currentDate.clone().set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0))
-
 
   useEffect(() => {
     calcDimensions()
   },[cellHeight, cellWidth])
 
   function calcDimensions() {
-    setCellHeight(height/numOfHours);
-    setCellWidth((width-timeScaleWidth)/numOfCols);
-    setCellStyle({
-      height: `${relCellHeight}%`,
-      width: `${cellWidth}px`});
+    dispatch(setCellDimensions({
+      cellHeight: height/numOfHours,
+      cellWidth:(width-timeScaleWidth)/numOfCols,
+      relCellHeight: 100/numOfHours
+    }))
   }
 
   function getPosition (e) {
@@ -62,38 +45,15 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
       dispatch(toggleVisible());
     }
   }
-  function getItemStyle(event) {
-    const minsFromStartOfDay =  dayjs(event.startTime).diff(dayjs(event.startTime).startOf('day').add(hoursInterval[0],'h'), 'minute');
-    const minsDuration = dayjs(event.endTime).diff(event.startTime, 'minute');
-    const pxPerMinute = cellHeight / 60;
-    const pxFromStartOfDay = (pxPerMinute * minsFromStartOfDay) + cellHeight;
-    const pxItemHeight = pxPerMinute * minsDuration;
-    const itemStyle = {
-      top: `${pxFromStartOfDay}px`,
-      height: `${pxItemHeight}px`
-    }
-      ;
-    return itemStyle;
-  }
+
+  const relCellHeightStyle = {height: `${relCellHeight}%`}
+
   const hoursScale = Array(hoursInterval[1]-hoursInterval[0]).fill(null).map((hour, index) =>
     <div  key={index+hoursInterval[0]}
           className={classes.hour}
           style={{
-            height: `${relCellHeight}%`,
+            ...relCellHeightStyle,
             width: `${timeScaleWidth}px`}}> {index+hoursInterval[0]}:00</div>);
-
-  const days = daysToShow.map(day =>
-    <div  key={day}
-          className={`${classes.day} ${day}`}
-          style={{
-            height: `100%`,
-            width: `${cellWidth}px`,
-          }}>
-        <div className={classes.dayHeader} style={{
-      height: `${relCellHeight}%`,
-      width: `${cellWidth}px`}}>{day}</div>
-        {events[day].map(event => renderCustomEvent(event, getItemStyle(event)))}
-    </div>);
 
   return (
     <>
@@ -105,8 +65,11 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
           height: Math.floor(contentRect.bounds.height),
           top: Math.floor(contentRect.bounds.top)
       }));
-      setCellHeight(height/numOfHours);
-      setCellWidth(width/numOfCols);
+      dispatch(setCellDimensions({
+        cellHeight: height/numOfHours,
+        cellWidth:(width-timeScaleWidth)/numOfCols,
+        relCellHeight: 100/numOfHours
+      }));
     }}>
       {({ measureRef }) => (
           <div className={classes.UserCalendarContainer} onClick={getPosition} ref={measureRef} style={{
@@ -118,8 +81,7 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
                 width: `${timeScaleWidth}px`}}> Time</div>
               {hoursScale}
             </div>
-            {console.log(width, height, top)}
-            {days}
+            <TeamtableDay events={events} />
           </div>
         )}
     </Measure>
@@ -155,6 +117,11 @@ const mapStateToProps = state => {
     width: state.teamtable.viewportDimensions.width,
     height: state.teamtable.viewportDimensions.height,
     top: state.teamtable.viewportDimensions.top,
+    timeScaleWidth: state.teamtable.settings.timeScaleWidth,
+    daysToShow: state.teamtable.settings.daysToShow,
+    cellHeight: state.teamtable.calculatedDimensions.cellHeight,
+    cellWidth: state.teamtable.calculatedDimensions.cellWidth,
+    relCellHeight: state.teamtable.calculatedDimensions.relCellHeight,
   };
 };
 
@@ -165,6 +132,7 @@ const mapDispatchToProps = dispatch => {
     setStart,
     setEnd,
     setDimensions,
+    setCellDimensions,
     dispatch
   };
 };

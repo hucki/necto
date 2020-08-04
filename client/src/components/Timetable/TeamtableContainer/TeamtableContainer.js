@@ -18,15 +18,9 @@ const renderCustomEvent = (event,
   );
 };
 
-const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, width, height, top, rowId, startOfDay}) => {
-  // const [dimensions, setDimensions] = useState({dimensions: {
-  //   width: -1,
-  //   height: -1,
-  // }});
-  // const { width, height, top } = dimensions.dimensions
+const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, width, height, top, timeScaleWidth, rowId, startOfDay}) => {
   const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1)
   const [numOfCols, setNumOfCols] = useState(Object.keys(events).length);
-  const [timeScaleWidth, setTimeScaleWidth] = useState(50);
   const [cellHeight, setCellHeight] = useState(height/numOfHours);
   const [cellWidth, setCellWidth] = useState((width-timeScaleWidth)/numOfCols);
   const [cellStyle, setCellStyle] = useState({height: `${cellHeight}px`, width: `${cellWidth}px`})
@@ -160,6 +154,7 @@ const mapStateToProps = state => {
     width: state.teamtable.viewportDimensions.width,
     height: state.teamtable.viewportDimensions.height,
     top: state.teamtable.viewportDimensions.top,
+    timeScaleWidth: state.teamtable.settings.timeScaleWidth,
   };
 };
 

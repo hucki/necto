@@ -123,14 +123,14 @@ export const initialState = {
   },
   teamtable: {
     viewportDimensions: {
-      width: -1,
-      height: -1,
-      top: -1,
+      width: 0,
+      height: 0,
+      top: 0,
     },
-    calculatedDimension: {
-      cellHeight: -1,
-      cellWidth: -1,
-      relCellHeight: -1,
+    calculatedDimensions: {
+      cellHeight: 0,
+      cellWidth: 0,
+      relCellHeight: 0,
     },
     settings: {
       daysToShow: ['Mon','Tue','Wed','Thu','Fri'],
