@@ -1,5 +1,7 @@
 export const ADD_APPOINTMENT = 'ADD_APPOINTMENT';
 export const DELETE_APPOINTMENT = 'DELETE_APPOINTMENT';
+export const ADD_TEAMMEMBER = 'ADD_TEAMMEMBER';
+export const UPDATE_TEAMMEMBER = 'UPDATE_TEAMMEMBER';
 export const CHANGE_DATE = 'CHANGE_DATE';
 export const TOGGLE_VISIBLE = 'TOGGLE_VISIBLE';
 export const CLICK_ROW = 'CLICK_ROW';
@@ -20,7 +22,12 @@ export function setHours (newHours) {
 export function addAppointment (newAppointment) {
   return { type: ADD_APPOINTMENT, payload: newAppointment };
 }
-
+export function addTeammember (newMember) {
+  return { type: ADD_TEAMMEMBER, payload: newMember };
+}
+export function updateTeammember (updateMember) {
+  return { type: UPDATE_TEAMMEMBER, payload: updateMember };
+}
 export function deleteAppointment (appointmentId) {
   return { type: DELETE_APPOINTMENT, payload: appointmentId };
 }

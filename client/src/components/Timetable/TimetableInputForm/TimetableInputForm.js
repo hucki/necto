@@ -116,7 +116,6 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
       dtstart: new Date(form.getFieldValue('startTime'))
     })
     dispatch(setRrule(rrule.toString()));
-    console.log('after setRR', newRrule)
     return rrule.toString();
   }
 

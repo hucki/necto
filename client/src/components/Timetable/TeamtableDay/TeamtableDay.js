@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import classes from './TeamtableDay.module.css';
 import TeamTableItem from '../TeamTableItem/TeamTableItem';
 import dayjs from 'dayjs';
+import { Progress } from 'antd';
 
 const TeamtableDay = ({events, headerArray, cellWidth, cellHeight, hoursInterval}) => {
 
@@ -41,8 +42,10 @@ const TeamtableDay = ({events, headerArray, cellWidth, cellHeight, hoursInterval
           }}>
         <div className={classes.dayHeader} style={{
       ...relCellHeightStyle,
-      width: `${cellWidth}px`}}>{rowTitle}</div>
-        {events[rowTitle].map(event => renderCustomEvent(event, getItemStyle(event)))}
+      width: `${cellWidth}px`}}>
+        <div className={classes.dayHeaderText}>{rowTitle} </div>
+      </div>
+      {events[rowTitle].map(event => renderCustomEvent(event, getItemStyle(event)))}
     </div>);
 
   return (

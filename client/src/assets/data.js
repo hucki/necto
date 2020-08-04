@@ -4,11 +4,11 @@ dayjs.extend(weekday);
 
 
 export const teamMembers = [
-  { id: 1, firstName: 'Anja', lastName: 'Bidmead', appointmentsPerWeek: 30, color: 'blue'},
-  { id: 2, firstName: 'Biene', lastName: 'Blitzer', appointmentsPerWeek: 30, color: 'red'},
-  { id: 3, firstName: 'Biggi', lastName: 'Bernollet', appointmentsPerWeek: 20, color: 'green'},
-  { id: 4, firstName: 'Charlie', lastName: 'Horsburgh', appointmentsPerWeek: 15, color: 'yellow'},
-  { id: 5, firstName: 'Forbes', lastName: 'Elgy', appointmentsPerWeek: 20, color: 'grey'}
+  { id: 1, firstName: 'Anja', lastName: 'Bidmead', appointmentsPerWeek: 30, color: 'blue', planningProgress: 0},
+  { id: 2, firstName: 'Biene', lastName: 'Blitzer', appointmentsPerWeek: 30, color: 'red', planningProgress: 0},
+  { id: 3, firstName: 'Biggi', lastName: 'Bernollet', appointmentsPerWeek: 20, color: 'green', planningProgress: 0},
+  { id: 4, firstName: 'Charlie', lastName: 'Horsburgh', appointmentsPerWeek: 15, color: 'yellow', planningProgress: 0},
+  { id: 5, firstName: 'Forbes', lastName: 'Elgy', appointmentsPerWeek: 20, color: 'grey', planningProgress: 0}
 ];
 export const pureEvents = [
   {
@@ -106,7 +106,8 @@ export const initialState = {
     events: events(teamMembers, pureEvents),
     maxId: pureEvents.length
   },
-  current: { currentDate: dayjs() },
+  current: {
+    currentDate: dayjs() },
   settings: {
     hoursInterval: [ 7, 19 ],
     currentView: 'Appointments'
