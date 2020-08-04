@@ -2,42 +2,32 @@ import React, { useEffect, useState } from 'react';
 import Measure from 'react-measure';
 import { connect } from 'react-redux';
 import classes from './TeamtableContainer.module.css';
-import { toggleVisible, clickRow, setStart, setEnd, setDimensions } from '../../../actions/actions';
+import { toggleVisible, clickRow, setStart, setEnd, setDimensions, setCellDimensions } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
-import TeamTableItem from '../TeamTableItem/TeamTableItem';
+import TeamtableDay from '../TeamtableDay/TeamtableDay';
 
-
-const renderCustomEvent = (event,
-                          styles) => {
-  return (
-    <TeamTableItem
-      key={event.id}
-      event={event}
-      styles={styles}/>
-  );
-};
-
-const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, width, height, top, timeScaleWidth, rowId, startOfDay}) => {
-  const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1)
+const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, width, height, top, timeScaleWidth, rowId, startOfDay, cellHeight, cellWidth, relCellHeight}) => {
+  const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1);
   const [numOfCols, setNumOfCols] = useState(Object.keys(events).length);
-  const [cellHeight, setCellHeight] = useState(height/numOfHours);
-  const [cellWidth, setCellWidth] = useState((width-timeScaleWidth)/numOfCols);
-  const [cellStyle, setCellStyle] = useState({height: `${cellHeight}px`, width: `${cellWidth}px`})
+  const [dimensionsCalculated, setDimensionsCalculated] = useState({width: -1, height: -1})
+
 
   useEffect(() => {
     calcDimensions()
-  },[cellHeight, cellWidth])
+  },[dimensionsCalculated])
 
   function calcDimensions() {
-    setCellHeight(height/numOfHours);
-    setCellWidth((width-timeScaleWidth)/numOfCols);
-    setCellStyle({height: `${cellHeight}px`, width: `${cellWidth}px`});
+    dispatch(setCellDimensions({
+      cellHeight: height/numOfHours,
+      cellWidth:(width-timeScaleWidth)/numOfCols,
+      relCellHeight: 100/numOfHours
+    }))
   }
 
   function getPosition (e) {
     e.preventDefault();
-
+    console.log('clicked',e.clientY, e.clientX)
     if((typeof e.target.className) !== 'string') return;
     const clickOnFreeTime = !e.target.className.indexOf('TeamtableContainer_day__');
 
@@ -54,37 +44,15 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
       dispatch(toggleVisible());
     }
   }
-  function getItemStyle(event) {
-    const minsFromStartOfDay = dayjs(event.startTime).diff(startOfDay, 'minute');
-    const minsDuration = dayjs(event.endTime).diff(event.startTime, 'minute');
-    const pxPerMinute = cellHeight / 60;
-    const pxFromStartOfDay = (pxPerMinute * minsFromStartOfDay) + cellHeight;
-    const pxItemHeight = pxPerMinute * minsDuration;
-    const itemStyle = {
-      top: `${parseInt(pxFromStartOfDay)}px`,
-      height: `${parseInt(pxItemHeight)}px`
-    }
-      ;
-    return itemStyle;
-  }
+
+  const relCellHeightStyle = {height: `${relCellHeight}%`}
+
   const hoursScale = Array(hoursInterval[1]-hoursInterval[0]).fill(null).map((hour, index) =>
     <div  key={index+hoursInterval[0]}
           className={classes.hour}
-          style={{height: cellHeight, width: `${timeScaleWidth}px`}}> {index+hoursInterval[0]}:00</div>);
-
-  const days = Object.keys(events).map(personId =>
-    <div  key={personId}
-          className={`${classes.day} ${personId}`}
           style={{
-            height: `100%`,
-            width: `${cellWidth}px`,
-            backgroundSize: '1px ' + 2 * cellHeight + 'px',
-          }}>
-        <div className={classes.dayHeader} style={{
-      height: `${cellHeight}px`,
-      width: `${cellWidth}px`}}>{personId}</div>
-        {events[personId].map(event => renderCustomEvent(event, getItemStyle(event)))}
-    </div>);
+            ...relCellHeightStyle,
+            width: `${timeScaleWidth}px`}}> {index+hoursInterval[0]}:00</div>);
 
   return (
     <>
@@ -95,35 +63,30 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
           width: Math.floor(contentRect.bounds.width),
           height: Math.floor(contentRect.bounds.height),
           top: Math.floor(contentRect.bounds.top)
-      }));
-      setCellHeight(height/numOfHours);
-      setCellWidth(width/numOfCols);
-    }}>
+        }));
+        dispatch(setCellDimensions({
+          cellHeight: height/numOfHours,
+          cellWidth:(width-timeScaleWidth)/numOfCols,
+          relCellHeight: 100/numOfHours
+        }));
+        setDimensionsCalculated({
+          width: Math.floor(contentRect.bounds.width),
+          height: Math.floor(contentRect.bounds.height)
+        });
+      }}>
       {({ measureRef }) => (
-          <div className={classes.TeamtableContainer} onClick={getPosition} ref={measureRef} style={{backgroundSize: '1px ' + 2 * cellHeight + 'px'}}>
+          <div className={classes.TeamtableContainer} onClick={getPosition} ref={measureRef} style={{
+            backgroundSize: '1px ' + `${2 * relCellHeight}%`
+            }}>
             <div className={classes.hoursScale}>
-              <div className={classes.hoursScaleHeader} style={{height: cellStyle.height, width: `${timeScaleWidth}px`}}> Time</div>
+              <div className={classes.hoursScaleHeader} style={{
+                height: `${100/numOfHours}%`,
+                width: `${timeScaleWidth}px`}}> Time</div>
               {hoursScale}
             </div>
-            {days}
+            <TeamtableDay events={events} headerArray={Object.keys(events)}/>
           </div>
         )}
-      {/* <div className={classes.TeamtableContainer} onClick={getPosition}>
-
-        {hoursScale}
-        </div>
-        <div className='teamtimes'></div>
-        <div></div>
-        <Teamscale />
-        <Teamtable
-          timeLabel={dayjs(currentDate).format('ddd DD.MM.')}
-          hoursInterval={hoursInterval}
-          events={events}
-          renderEvent={renderCustomEvent}
-          styles={classes}
-        />
-        <TimetableInputForm visible={visible}/>
-      </div> */}
     </Measure>
     <TimetableInputForm visible={visible}/>
     </>
@@ -155,6 +118,9 @@ const mapStateToProps = state => {
     height: state.teamtable.viewportDimensions.height,
     top: state.teamtable.viewportDimensions.top,
     timeScaleWidth: state.teamtable.settings.timeScaleWidth,
+    cellHeight: state.teamtable.calculatedDimensions.cellHeight,
+    cellWidth: state.teamtable.calculatedDimensions.cellWidth,
+    relCellHeight: state.teamtable.calculatedDimensions.relCellHeight,
   };
 };
 
@@ -165,6 +131,7 @@ const mapDispatchToProps = dispatch => {
     setStart,
     setEnd,
     setDimensions,
+    setCellDimensions,
     dispatch
   };
 };

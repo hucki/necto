@@ -24,7 +24,7 @@ const TeamtableDay = ({events, headerArray, cellWidth, cellHeight, hoursInterval
       top: `${pxFromStartOfDay}px`,
       height: `${pxItemHeight}px`
     };
-    console.log(minsFromStartOfDay, minsDuration, pxPerMinute,pxFromStartOfDay)
+    // console.log(cellHeight, minsFromStartOfDay, minsDuration, parseInt(pxPerMinute) ,parseInt(pxFromStartOfDay))
     return itemStyle;
   }
 
@@ -56,7 +56,6 @@ const mapStateToProps = state => {
     hoursInterval: state.settings.hoursInterval,
     cellWidth: state.teamtable.calculatedDimensions.cellWidth,
     cellHeight: state.teamtable.calculatedDimensions.cellHeight,
-    headerArray: state.teamtable.settings.daysToShow
   };
 };
 

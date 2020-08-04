@@ -12,11 +12,12 @@ dayjs.extend(isBetween);
 const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, dispatch, visible, width, height, top, timeScaleWidth, cellHeight, cellWidth, relCellHeight, rowId}) => {
   const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1);
   const [numOfCols, setNumOfCols] = useState(daysToShow.length);
+  const [dimensionsCalculated, setDimensionsCalculated] = useState({width: -1, height: -1})
   const [startOfDay, setStartOfDay] = useState(currentDate.clone().set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0))
 
   useEffect(() => {
     calcDimensions()
-  },[cellHeight, cellWidth])
+  },[dimensionsCalculated])
 
   function calcDimensions() {
     dispatch(setCellDimensions({
@@ -28,7 +29,7 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, 
 
   function getPosition (e) {
     e.preventDefault();
-
+    console.log('clicked',e.clientY, e.clientX)
     if((typeof e.target.className) !== 'string') return;
     const clickOnFreeTime = !e.target.className.indexOf('UserCalendarContainer_day__');
 
@@ -60,17 +61,21 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, 
     <Measure
       bounds
       onResize={contentRect => {
-      dispatch(setDimensions({
+        dispatch(setDimensions({
           width: Math.floor(contentRect.bounds.width),
           height: Math.floor(contentRect.bounds.height),
           top: Math.floor(contentRect.bounds.top)
-      }));
-      dispatch(setCellDimensions({
-        cellHeight: height/numOfHours,
-        cellWidth:(width-timeScaleWidth)/numOfCols,
-        relCellHeight: 100/numOfHours
-      }));
-    }}>
+        }));
+        dispatch(setCellDimensions({
+          cellHeight: height/numOfHours,
+          cellWidth:(width-timeScaleWidth)/numOfCols,
+          relCellHeight: 100/numOfHours
+        }));
+        setDimensionsCalculated({
+          width: Math.floor(contentRect.bounds.width),
+          height: Math.floor(contentRect.bounds.height)
+        });
+      }}>
       {({ measureRef }) => (
           <div className={classes.UserCalendarContainer} onClick={getPosition} ref={measureRef} style={{
             backgroundSize: '1px ' + `${2 * relCellHeight}%`
@@ -81,7 +86,7 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, 
                 width: `${timeScaleWidth}px`}}> Time</div>
               {hoursScale}
             </div>
-            <TeamtableDay events={events} />
+            <TeamtableDay events={events} headerArray={daysToShow}/>
           </div>
         )}
     </Measure>
