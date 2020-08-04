@@ -120,7 +120,8 @@ export const initialState = {
     rrule: ''
   },
   userData: {
-    currentUser: 'Biggi'
+    currentUser: 'Biggi',
+    currentUserId: 3
   },
   teamtable: {
     viewportDimensions: {
