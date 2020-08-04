@@ -4,11 +4,11 @@ dayjs.extend(weekday);
 
 
 export const teamMembers = [
-  { id: 1, firstName: 'Anja', lastName: 'Bidmead', color: 'blue'},
-  { id: 2, firstName: 'Biene', lastName: 'Blitzer', color: 'red'},
-  { id: 3, firstName: 'Biggi', lastName: 'Bernollet', color: 'green'},
-  { id: 4, firstName: 'Charlie', lastName: 'Horsburgh', color: 'yellow'},
-  { id: 5, firstName: 'Forbes', lastName: 'Elgy', color: 'grey'}
+  { id: 1, firstName: 'Anja', lastName: 'Bidmead', appointmentsPerWeek: 30, color: 'blue'},
+  { id: 2, firstName: 'Biene', lastName: 'Blitzer', appointmentsPerWeek: 30, color: 'red'},
+  { id: 3, firstName: 'Biggi', lastName: 'Bernollet', appointmentsPerWeek: 20, color: 'green'},
+  { id: 4, firstName: 'Charlie', lastName: 'Horsburgh', appointmentsPerWeek: 15, color: 'yellow'},
+  { id: 5, firstName: 'Forbes', lastName: 'Elgy', appointmentsPerWeek: 20, color: 'grey'}
 ];
 export const pureEvents = [
   {

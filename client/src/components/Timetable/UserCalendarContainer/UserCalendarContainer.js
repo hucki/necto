@@ -10,13 +10,11 @@ import TeamTableItem from '../TeamTableItem/TeamTableItem';
 dayjs.extend(isBetween);
 
 const renderCustomEvent = (event,
-                          /*defaultAttributes,*/
                           styles) => {
   return (
     <TeamTableItem
       key={event.id}
       event={event}
-      // defaultAttributes={defaultAttributes}
       styles={styles}/>
   );
 };
@@ -25,13 +23,15 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
   const [dimensions, setDimensions] = useState({dimensions: {
     width: -1,
     height: -1,
+    top: -1
   }});
   const { width, height, top } = dimensions.dimensions
   const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1)
-  const [daysToShow, setDaysToShow] = useState(['Mon','Tue','Wed','Thu','Fri'])
+  const [daysToShow, setDaysToShow] = useState(['Mon','Tue','Wed','Thu','Fri']) // TODO move to Settings
   const [numOfCols, setNumOfCols] = useState(daysToShow.length);
   const [timeScaleWidth, setTimeScaleWidth] = useState(50);
   const [cellHeight, setCellHeight] = useState(height/numOfHours);
+  const [relCellHeight, setRelCellHeight] = useState(100/numOfHours);
   const [cellWidth, setCellWidth] = useState((width-timeScaleWidth)/numOfCols);
   const [cellStyle, setCellStyle] = useState({height: `${cellHeight}px`, width: `${cellWidth}px`})
   const [startOfDay, setStartOfDay] = useState(currentDate.clone().set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0))
@@ -42,9 +42,11 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
   },[cellHeight, cellWidth])
 
   function calcDimensions() {
-//    setCellHeight(height/numOfHours);
+    setCellHeight(height/numOfHours);
     setCellWidth((width-timeScaleWidth)/numOfCols);
-    setCellStyle({height: `${cellHeight}px`, width: `${cellWidth}px`});
+    setCellStyle({
+      height: `${relCellHeight}%`,
+      width: `${cellWidth}px`});
   }
 
   function getPosition (e) {
@@ -73,8 +75,8 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
     const pxFromStartOfDay = (pxPerMinute * minsFromStartOfDay) + cellHeight;
     const pxItemHeight = pxPerMinute * minsDuration;
     const itemStyle = {
-      top: `${parseInt(pxFromStartOfDay)}px`,
-      height: `${parseInt(pxItemHeight)}px`
+      top: `${pxFromStartOfDay}px`,
+      height: `${pxItemHeight}px`
     }
       ;
     return itemStyle;
@@ -82,7 +84,9 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
   const hoursScale = Array(hoursInterval[1]-hoursInterval[0]).fill(null).map((hour, index) =>
     <div  key={index+hoursInterval[0]}
           className={classes.hour}
-          style={{height: cellHeight, width: `${timeScaleWidth}px`}}> {index+hoursInterval[0]}:00</div>);
+          style={{
+            height: `${relCellHeight}%`,
+            width: `${timeScaleWidth}px`}}> {index+hoursInterval[0]}:00</div>);
 
   const days = daysToShow.map(day =>
     <div  key={day}
@@ -90,10 +94,9 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
           style={{
             height: `100%`,
             width: `${cellWidth}px`,
-            backgroundSize: '1px ' + 2 * cellHeight + 'px',
           }}>
         <div className={classes.dayHeader} style={{
-      height: `${cellHeight}px`,
+      height: `${relCellHeight}%`,
       width: `${cellWidth}px`}}>{day}</div>
         {events[day].map(event => renderCustomEvent(event, getItemStyle(event)))}
     </div>);
@@ -103,14 +106,23 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
     <Measure
       bounds
       onResize={contentRect => {
-      setDimensions({ dimensions: contentRect.bounds });
+      setDimensions({
+        dimensions: {
+          width: Math.floor(contentRect.bounds.width),
+          height: Math.floor(contentRect.bounds.height),
+          top: Math.floor(contentRect.bounds.top)
+        } });
       setCellHeight(height/numOfHours);
       setCellWidth(width/numOfCols);
     }}>
       {({ measureRef }) => (
-          <div className={classes.UserCalendarContainer} onClick={getPosition} ref={measureRef} style={{backgroundSize: '1px ' + 2 * cellHeight + 'px'}}>
+          <div className={classes.UserCalendarContainer} onClick={getPosition} ref={measureRef} style={{
+            backgroundSize: '1px ' + `${2 * relCellHeight}%`
+            }}>
             <div className={classes.hoursScale}>
-              <div className={classes.hoursScaleHeader} style={{height: cellStyle.height, width: `${timeScaleWidth}px`}}> Time</div>
+              <div className={classes.hoursScaleHeader} style={{
+                height: `${100/numOfHours}%`,
+                width: `${timeScaleWidth}px`}}> Time</div>
               {hoursScale}
             </div>
             {days}
