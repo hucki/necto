@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Measure from 'react-measure';
 import { connect } from 'react-redux';
-import Timetable from 'react-timetable-events';
 import classes from './TeamtableContainer.module.css';
-import TimetableItem from '../TimetableItem/TimetableItem';
 import { toggleVisible, clickRow, setStart, setEnd } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';

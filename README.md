@@ -38,6 +38,11 @@ https://www.chartjs.org
 - [x] delete appointments
 - [x] implement combineReducers()
 - [x] add home Visit option
+- [ ] fix default values of InputForm
+- [ ] fix rendering half of screen on ipad (device)
+- [ ] fully remove react-timeline-events
+- [ ]
+another time
 - [ ] create week view
 - [ ] connect API
 - [ ] color schema

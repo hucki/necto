@@ -196,11 +196,15 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
           </Form.Item>
           <Form.Item label='Time'>
             <Input.Group compact >
-              <Form.Item  ><DatePicker name='startTime' value={dayjs(startTime)} {...datePickerFormat} onChange={onStartTimeChange}/> -&nbsp;</Form.Item>
-              <Form.Item > <TimePicker name='endTime' disabled value={dayjs(endTime)} format={dateTimeFormat.time}/></Form.Item>
+              <Form.Item  ><DatePicker name='startTime'
+                value={dayjs(startTime)}
+                {...datePickerFormat} onChange={onStartTimeChange}/> -&nbsp;</Form.Item>
+              <Form.Item > <TimePicker name='endTime' disabled
+              value={dayjs(endTime)}
+              format={dateTimeFormat.time}/></Form.Item>
             </Input.Group>
             <Form.Item label='Duration'>
-              <Radio.Group onChange={onDurationChange} name='duration' inline>
+              <Radio.Group onChange={onDurationChange} name='duration' inline defaultValue={45}>
                 <Radio value={45}> 0:45</Radio>
                 <Radio value={30}> 0:30</Radio>
               </Radio.Group>
@@ -220,16 +224,17 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
           <Form.Item label='Frequency'>
             <Input.Group compact >
               <Form.Item >
-                <Select {...switcheroo} name='frequency' style={{ width: 120 }} onChange={onFrequencyChangeHandler}>
+                <Select {...switcheroo} name='frequency' style={{ width: 120 }} onChange={onFrequencyChangeHandler} defaultValue='WEEKLY'>
                   <Select.Option value='WEEKLY'>weekly</Select.Option>
                   <Select.Option value='MONTHLY' disabled>monthly</Select.Option>
                 </Select>
               </Form.Item>
-              <Form.Item>
+              <Form.Item >
                   <Input  name='count' {...switcheroo}
                           style={{ width: '50%' }}
                           prefix='x'
-                          onChange={onRecurrenceChangeHandler}/>
+                          onChange={onRecurrenceChangeHandler}
+                          defaultValue={10}/>
               </Form.Item>
               <Popover content={timeline} trigger='click'>
                 <Button {...switcheroo} onClick={onBuildTimelineHandler}>show Result</Button>

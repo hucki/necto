@@ -4,7 +4,7 @@ import classes from '../Teamtable.module.css';
 import {Modal, message} from 'antd';
 import dayjs from 'dayjs';
 import { deleteAppointment } from '../../../actions/actions';
-import { SyncTwoTone, HomeOutlined, HomeTwoTone, ApiTwoTone } from '@ant-design/icons';
+import { HomeTwoTone, ApiTwoTone } from '@ant-design/icons';
 
 const TeamtableItem = ({event, styles,  dispatch}) => {
   // TODO: put delete dialog in a separate Component
@@ -35,7 +35,6 @@ const TeamtableItem = ({event, styles,  dispatch}) => {
   return (
     <div
       style={styles}
-      // {...defaultAttributes}
       title={event.name}
       key={event.id}
       onClick={() => onClickHandler(event)}
