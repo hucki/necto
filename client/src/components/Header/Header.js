@@ -8,6 +8,7 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 function Header () {
   return (
     <div className={classes.Header + ' box'}>
+      <h1 className={classes.logo}>necto</h1>
       <UserInfo />
       <ProgressBar />
       <NavBar />

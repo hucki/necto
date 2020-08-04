@@ -14,13 +14,18 @@ const AppMenu = ({currentDate, currentView, user, dispatch}) => {
   };
 
   return (
-    <AntSider collapsible collapsed={true} theme='light'>
-      <h1 className={classes.logo}>necto</h1>
-      <Menu theme='light' defaultSelectedKeys={[currentView]} mode="inline">
+    <AntSider
+      collapsible
+      theme='dark'
+      breakpoint='lg'
+      collapsedWidth='0'
+      >
+      <h1 className={classes.menu}>Menu</h1>
+      <Menu theme='dark' defaultSelectedKeys={[currentView]} mode="inline">
         <Menu.Item key='Appointments' icon={<DesktopOutlined />} onClick={onClickHandler}> Appointments</Menu.Item>
         {user !== 'Guest' && <Menu.Item key='Personal' icon={<UserOutlined />} onClick={onClickHandler}> Personal Calendar </Menu.Item>}
         <Menu.Item key='Team' icon={<TeamOutlined />} onClick={onClickHandler}> Team Member</Menu.Item>
-        <Menu.Item key='Settings' icon={<SettingOutlined />} onClick={onClickHandler}> Settings </Menu.Item>
+        <Menu.Item disabled key='Settings' icon={<SettingOutlined />} onClick={onClickHandler}> Settings </Menu.Item>
       </Menu>
     </AntSider>
   )

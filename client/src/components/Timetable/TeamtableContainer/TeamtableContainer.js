@@ -80,7 +80,7 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
             <div className={classes.hoursScale}>
               <div className={classes.hoursScaleHeader} style={{
                 height: `${100/numOfHours}%`,
-                width: `${timeScaleWidth}px`}}> Time</div>
+                width: `${timeScaleWidth}px`}}> </div>
               {hoursScale}
             </div>
             <TeamtableDay events={events} headerArray={Object.keys(events)}/>
