@@ -188,6 +188,7 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
   }
 
   return (
+
     <Modal forceRender visible={visible} onOk={onOkHandler} onCancel={onClose}>
         <Form form={form} {...layout} {...initialValues}>
           <h3>{rowId}</h3>

@@ -1,6 +1,5 @@
 import React from 'react';
-import classes from './App.module.css';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout } from 'antd';
 import Header from '../components/Header/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
@@ -9,14 +8,11 @@ import reducer from '../reducers/index';
 import { Provider } from 'react-redux';
 import AppMenu from '../components/AppMenu/AppMenu';
 
-const { Header: AntHeader, Content: AntContent, Footer: AntFooter, Sider: AntSider } = Layout;
-const { SubMenu: AntSubMenu } = Menu;
+const { Content: AntContent } = Layout;
 
 const store = createStore(reducer);
 store.subscribe(() => console.log('NEW STATE', store.getState()));
 function App () {
-
-
   return (
     <Provider store = { store }>
       <Layout style={{ minHeight: '100vh' }}>

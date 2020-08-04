@@ -1,0 +1,30 @@
+.UserCalendarContainer {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  background-color: #fff;
+  background-image: linear-gradient(#f0f2f5 50%, transparent 50%);
+}
+
+.day {
+  position: relative;
+  height: 100%;
+  float: left;
+
+}
+.dayHeader {
+
+}
+
+.hour {
+  border-top: 1px solid #3333;
+  width: 100px;
+
+}
+.hoursScale {
+  background-color: #f0f2f5;
+}
+.hoursScaleHeader {
+
+}
