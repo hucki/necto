@@ -120,5 +120,21 @@ export const initialState = {
   },
   userData: {
     currentUser: 'Biggi'
+  },
+  teamtable: {
+    viewportDimensions: {
+      width: -1,
+      height: -1,
+      top: -1,
+    },
+    calculatedDimension: {
+      cellHeight: -1,
+      cellWidth: -1,
+      relCellHeight: -1,
+    },
+    settings: {
+      daysToShow: ['Mon','Tue','Wed','Thu','Fri'],
+      timeScaleWidth: 50,
+    }
   }
 };

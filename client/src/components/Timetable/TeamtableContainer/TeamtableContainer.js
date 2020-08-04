@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Measure from 'react-measure';
 import { connect } from 'react-redux';
 import classes from './TeamtableContainer.module.css';
-import { toggleVisible, clickRow, setStart, setEnd } from '../../../actions/actions';
+import { toggleVisible, clickRow, setStart, setEnd, setDimensions } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
 import TeamTableItem from '../TeamTableItem/TeamTableItem';
@@ -18,12 +18,12 @@ const renderCustomEvent = (event,
   );
 };
 
-const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, rowId, startOfDay}) => {
-  const [dimensions, setDimensions] = useState({dimensions: {
-    width: -1,
-    height: -1,
-  }});
-  const { width, height, top } = dimensions.dimensions
+const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, width, height, top, rowId, startOfDay}) => {
+  // const [dimensions, setDimensions] = useState({dimensions: {
+  //   width: -1,
+  //   height: -1,
+  // }});
+  // const { width, height, top } = dimensions.dimensions
   const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1)
   const [numOfCols, setNumOfCols] = useState(Object.keys(events).length);
   const [timeScaleWidth, setTimeScaleWidth] = useState(50);
@@ -97,7 +97,11 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
     <Measure
       bounds
       onResize={contentRect => {
-      setDimensions({ dimensions: contentRect.bounds });
+        dispatch(setDimensions({
+          width: Math.floor(contentRect.bounds.width),
+          height: Math.floor(contentRect.bounds.height),
+          top: Math.floor(contentRect.bounds.top)
+      }));
       setCellHeight(height/numOfHours);
       setCellWidth(width/numOfCols);
     }}>
@@ -152,7 +156,10 @@ const mapStateToProps = state => {
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,
     rowId: state.newAppointment.clickedRowId,
-    startOfDay: state.current.currentDate.clone().set('hour', state.settings.hoursInterval[0]).set('minutes', 0).set('seconds', 0)
+    startOfDay: state.current.currentDate.clone().set('hour', state.settings.hoursInterval[0]).set('minutes', 0).set('seconds', 0),
+    width: state.teamtable.viewportDimensions.width,
+    height: state.teamtable.viewportDimensions.height,
+    top: state.teamtable.viewportDimensions.top,
   };
 };
 
@@ -162,6 +169,7 @@ const mapDispatchToProps = dispatch => {
     clickRow,
     setStart,
     setEnd,
+    setDimensions,
     dispatch
   };
 };

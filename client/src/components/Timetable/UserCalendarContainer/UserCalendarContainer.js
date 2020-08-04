@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Measure from 'react-measure';
 import { connect } from 'react-redux';
 import classes from './UserCalendarContainer.module.css';
-import { toggleVisible, clickRow, setStart, setEnd } from '../../../actions/actions';
+import { toggleVisible, clickRow, setStart, setEnd, setDimensions } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
@@ -19,17 +19,11 @@ const renderCustomEvent = (event,
   );
 };
 
-const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, visible, rowId}) => {
-  const [dimensions, setDimensions] = useState({dimensions: {
-    width: -1,
-    height: -1,
-    top: -1
-  }});
-  const { width, height, top } = dimensions.dimensions
+const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, visible, width, height, top, rowId}) => {
   const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1)
-  const [daysToShow, setDaysToShow] = useState(['Mon','Tue','Wed','Thu','Fri']) // TODO move to Settings
+  const [daysToShow, setDaysToShow] = useState(['Mon','Tue','Wed','Thu','Fri']) // TODO move to state-ettings
   const [numOfCols, setNumOfCols] = useState(daysToShow.length);
-  const [timeScaleWidth, setTimeScaleWidth] = useState(50);
+  const [timeScaleWidth, setTimeScaleWidth] = useState(50); // TODO move to state-settings
   const [cellHeight, setCellHeight] = useState(height/numOfHours);
   const [relCellHeight, setRelCellHeight] = useState(100/numOfHours);
   const [cellWidth, setCellWidth] = useState((width-timeScaleWidth)/numOfCols);
@@ -106,12 +100,11 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
     <Measure
       bounds
       onResize={contentRect => {
-      setDimensions({
-        dimensions: {
+      dispatch(setDimensions({
           width: Math.floor(contentRect.bounds.width),
           height: Math.floor(contentRect.bounds.height),
           top: Math.floor(contentRect.bounds.top)
-        } });
+      }));
       setCellHeight(height/numOfHours);
       setCellWidth(width/numOfCols);
     }}>
@@ -125,6 +118,7 @@ const UserCalendarContainer = ({events, currentDate, hoursInterval, dispatch, vi
                 width: `${timeScaleWidth}px`}}> Time</div>
               {hoursScale}
             </div>
+            {console.log(width, height, top)}
             {days}
           </div>
         )}
@@ -157,7 +151,10 @@ const mapStateToProps = state => {
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,
     rowId: state.newAppointment.clickedRowId,
-    user: state.userData.currentUser
+    user: state.userData.currentUser,
+    width: state.teamtable.viewportDimensions.width,
+    height: state.teamtable.viewportDimensions.height,
+    top: state.teamtable.viewportDimensions.top,
   };
 };
 
@@ -167,6 +164,7 @@ const mapDispatchToProps = dispatch => {
     clickRow,
     setStart,
     setEnd,
+    setDimensions,
     dispatch
   };
 };
