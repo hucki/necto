@@ -9,12 +9,12 @@ import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
 import TeamtableDay from '../TeamtableDay/TeamtableDay';
 dayjs.extend(isBetween);
 
-const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, dispatch, visible, width, height, top, timeScaleWidth, cellHeight, cellWidth, relCellHeight, user, rowId}) => {
+const UserCalendarContainer = ({events, currentDate, hoursInterval, daysToShow, dispatch, visible, width, height, top, timeScaleWidth, cellHeight, cellWidth, relCellHeight, user, rowId, allEvents}) => {
   const [numOfHours, setNumOfHours] = useState(hoursInterval[1]-hoursInterval[0]+1);
   const [numOfCols, setNumOfCols] = useState(daysToShow.length);
   const [dimensionsCalculated, setDimensionsCalculated] = useState({width: -1, height: -1})
   const [startOfDay, setStartOfDay] = useState(currentDate.clone().set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0))
-
+  console.log(allEvents)
   useEffect(() => {
     calcDimensions()
   },[dimensionsCalculated])
@@ -115,6 +115,7 @@ function userEvents (events, currentDate, user) {
 const mapStateToProps = state => {
   return {
     events: userEvents(state.appointments.events, state.current.currentDate, state.userData.currentUser),
+    allEvents: state.appointments.events,
     currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,

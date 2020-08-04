@@ -24,7 +24,7 @@ const TimetableItem = ({event, defaultAttributes, dispatch}) => {
       </div>),
       onOk () {
         dispatch(deleteAppointment(id));
-        message.success(`Appointment ${id} deleted`);
+        message.success(`Appointment ${id} deleted`,1);
       },
       onCancel () {
         console.log('delete process cancelled'); // eslint-disable-line no-console

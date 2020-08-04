@@ -157,7 +157,8 @@ const TimetableInputForm = ({visible, events, dispatch, rowId, startTime, endTim
             successMsg.push(`${dayjs(date).format('ddd DD.MM HH:mm')} - ${dayjs(date).add(form.getFieldValue('duration'), 'm').format('HH:mm')}`)
           })
         }
-        message.success(successMsg.map(date => <><p>{date}</p></>))
+        const outputMsg = successMsg.map(date => <><p>{date}</p></>)
+        message.success(outputMsg,2)
       }
     } else {
       dispatch(addAppointment({
