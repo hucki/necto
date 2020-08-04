@@ -9,18 +9,16 @@ import TeamTableItem from '../TeamTableItem/TeamTableItem';
 
 
 const renderCustomEvent = (event,
-                          /*defaultAttributes,*/
                           styles) => {
   return (
     <TeamTableItem
       key={event.id}
       event={event}
-      // defaultAttributes={defaultAttributes}
       styles={styles}/>
   );
 };
 
-const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, rowId}) => {
+const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visible, rowId, startOfDay}) => {
   const [dimensions, setDimensions] = useState({dimensions: {
     width: -1,
     height: -1,
@@ -32,8 +30,6 @@ const TeamtableContainer = ({events, currentDate, hoursInterval, dispatch, visib
   const [cellHeight, setCellHeight] = useState(height/numOfHours);
   const [cellWidth, setCellWidth] = useState((width-timeScaleWidth)/numOfCols);
   const [cellStyle, setCellStyle] = useState({height: `${cellHeight}px`, width: `${cellWidth}px`})
-  const [startOfDay, setStartOfDay] = useState(currentDate.clone().set('hour', hoursInterval[0]).set('minutes', 0).set('seconds', 0))
-
 
   useEffect(() => {
     calcDimensions()
@@ -155,7 +151,8 @@ const mapStateToProps = state => {
     currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,
-    rowId: state.newAppointment.clickedRowId
+    rowId: state.newAppointment.clickedRowId,
+    startOfDay: state.current.currentDate.clone().set('hour', state.settings.hoursInterval[0]).set('minutes', 0).set('seconds', 0)
   };
 };
 
