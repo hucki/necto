@@ -714,8 +714,8 @@ const exampleData = {
       type: 'custom',
       rowId: 'Biggi',
       name: 'Linda',
-      startTime: dayjs('2020-08-04T10:00:00.666Z'),
-      endTime: dayjs('2020-08-04T10:45:00.666Z'),
+      startTime: dayjs('2020-08-04T15:00:00.666Z'),
+      endTime: dayjs('2020-08-04T15:45:00.666Z'),
       rrule: '',
       homeVisit: false,
       bgcolor: 'bg_green'
@@ -726,8 +726,8 @@ const exampleData = {
       type: 'custom',
       rowId: 'Biggi',
       name: 'Erica',
-      startTime: dayjs('2020-08-04T05:30:00.793Z'),
-      endTime: dayjs('2020-08-04T06:15:00.793Z'),
+      startTime: dayjs('2020-08-04T14:00:00.793Z'),
+      endTime: dayjs('2020-08-04T14:45:00.793Z'),
       rrule: '',
       homeVisit: false,
       bgcolor: 'bg_green'

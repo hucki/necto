@@ -3,12 +3,8 @@ import weekday from 'dayjs/plugin/weekday';
 import exampleData from './events';
 dayjs.extend(weekday);
 
-
-
-console.log(exampleData)
 const pureEvents = [];
 Object.keys(exampleData).map(memberEvents => exampleData[memberEvents].map(event => pureEvents.push(event)));
-console.log(pureEvents)
 export const teamMembers = [
   { id: 1, firstName: 'Anja', lastName: 'Bidmead', appointmentsPerWeek: 30, color: 'blue', planningProgress: 0},
   { id: 2, firstName: 'Biene', lastName: 'Blitzer', appointmentsPerWeek: 30, color: 'red', planningProgress: 0},
@@ -16,69 +12,6 @@ export const teamMembers = [
   { id: 4, firstName: 'Charlie', lastName: 'Horsburgh', appointmentsPerWeek: 15, color: 'yellow', planningProgress: 0},
   { id: 5, firstName: 'Forbes', lastName: 'Elgy', appointmentsPerWeek: 20, color: 'grey', planningProgress: 0}
 ];
-
-// export const pureEvents = [
-//   {
-//     id: 1,
-//     personId: 1,
-//     name: 'Mr. Miller',
-//     type: 'custom',
-//     startTime: dayjs().set('hours',11).set('minutes',30),
-//     endTime: dayjs().set('hours',12).set('minutes',15),
-//     rrule: '',
-//     homeVisit: false
-//   },
-//   {
-//     id: 4,
-//     personId: 1,
-//     name: 'Mrs. Smith',
-//     type: 'custom',
-//     startTime: dayjs().set('hours',12).set('minutes',30),
-//     endTime: dayjs().set('hours',13).set('minutes',15),
-//     rrule: '',
-//     homeVisit: false
-//   },
-//   {
-//     id: 2,
-//     personId: 2,
-//     name: 'Lisa',
-//     type: 'custom',
-//     startTime: dayjs().set('hours',12).set('minutes',30),
-//     endTime: dayjs().set('hours',14).set('minutes',30),
-//     rrule: '',
-//     homeVisit: true
-//   },
-//   {
-//     id: 3,
-//     personId: 2,
-//     name: 'Paul',
-//     type: 'custom',
-//     startTime: dayjs().set('hours',14).set('minutes',45),
-//     endTime: dayjs().set('hours',15).set('minutes',30),
-//     rrule: '',
-//     homeVisit: false
-//   },
-//   {
-//     id: 5,
-//     personId: 3,
-//     name: 'Jack',
-//     type: 'custom',
-//     startTime: dayjs().set('hours',8).set('minutes',30),
-//     endTime: dayjs().set('hours',10).set('minutes',30),
-//     rrule: '',
-//     homeVisit: false
-//   },
-//   {
-//     id: 6,
-//     personId: 3,
-//     name: 'Jill',
-//     type: 'custom',
-//     startTime: dayjs().set('hours',10).set('minutes',45),
-//     endTime: dayjs().set('hours',11).set('minutes',30),
-//     rrule: '',
-//     homeVisit: true
-//   }
-// ];
 
 export const groups = [
   { id: 1, title: 'group 1' },
