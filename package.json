@@ -1,0 +1,23 @@
+{
+  "name": "necto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hucki/necto.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hucki/necto/issues"
+  },
+  "homepage": "https://github.com/hucki/necto#readme",
+  "prettier": {
+    "singleQuote": true
+  }
+}
