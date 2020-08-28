@@ -11,10 +11,6 @@
   position: relative;
   height: 100%;
   float: left;
-
-}
-.dayHeader {
-
 }
 
 .hour {
@@ -24,7 +20,4 @@
 }
 .hoursScale {
   background-color: #f0f2f5;
-}
-.hoursScaleHeader {
-
 }
