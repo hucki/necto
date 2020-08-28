@@ -1,4 +1,6 @@
 # necto
+[![shields.io](https://img.shields.io/github/languages/top/hucki/necto?style=flat-square)](https://shields.io)
+[![shields.io](https://img.shields.io/badge/made%20with-🍕-green?style=flat-square)](https://shields.io)
 
 📅 Appointment Scheduling for Teams of Therapists
 
@@ -38,12 +40,12 @@ https://www.chartjs.org
 - [x] delete appointments
 - [x] implement combineReducers()
 - [x] add home Visit option
-- [ ] fix default values of InputForm
+- [x] fix default values of InputForm
 - [ ] fix rendering half of screen on ipad (device)
-- [ ] fully remove react-timeline-events
+- [x] fully remove react-timeline-events
 - [ ]
 another time
-- [ ] create week view
+- [x] create week view
 - [ ] connect API
 - [ ] color schema
 - [ ] translate
