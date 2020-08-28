@@ -4,7 +4,7 @@ import classes from './Footer.module.css';
 function Footer () {
   return (
     <div className={classes.Footer}>
-      <p>i am a Footer</p>
+      <p>made with 🍍🍕 by Hucki</p>
     </div>
   );
 }
