@@ -1,17 +1,29 @@
 # necto
+
 [![shields.io](https://img.shields.io/github/languages/top/hucki/necto?style=flat-square)](https://shields.io)
 [![shields.io](https://img.shields.io/badge/made%20with-🍕-green?style=flat-square)](https://shields.io)
 
-📅 Appointment Scheduling for Teams of Therapists
+📅 Appointment scheduling for teams of therapists
+
+![](./public/Necto.png)
+
+necto provides teams with the ability to schedule appointments with patients/clients on a weekly basis. The number of weekly appointment a team member has to fulfill can be indivdually defined. Every Appointment can be defined as in House or as a home visit.
+
+## Getting started
+
+-> where you explain to someone who has never seen your project
 
 ## TODO
+
 andre's comment:
+
 > I would suggest to focus on implementing the adding appointments with different frequencies to a calendar in a way that would be great for the users. Once you have that working well, then I would focus on implementing the team features. Overall I think you are in the right track and I'm looking forward to following your progress
 
 https://github.com/atlassian/react-beautiful-dnd
 https://www.chartjs.org
 
 **general**
+
 - [ ] setup OSS license (GPL / MIT)
 - [x] decide which calendar to use
   - [x] antd and react-timeline-events
@@ -23,6 +35,7 @@ https://www.chartjs.org
     - [o] ToastUI Calendar -> no multiple resources
 
 **frontend**
+
 - [x] define Structure (components)
 - [x] create-react-app
 - [x] install libraries
@@ -44,7 +57,7 @@ https://www.chartjs.org
 - [ ] fix rendering half of screen on ipad (device)
 - [x] fully remove react-timeline-events
 - [ ]
-another time
+  another time
 - [x] create week view
 - [ ] connect API
 - [ ] color schema
@@ -52,20 +65,23 @@ another time
 - [ ] antd Popconfirm to delete
 
 **data**
+
 - [x] untie persons and appointments and dynamically generate event for timetable
 - [ ] use iCal [ics](https://www.npmjs.com/package/ics)
 - [x] use recurrence Rules [rrule](https://www.npmjs.com/package/rrule)
 - [ ]
 
 **backend**
+
 - [ ] define Models
 - [ ] setup express/mongoose
 
-
 **authentication**
+
 - [ ]
 
 ## FrontEnd structure
+
 ```
 |_APP
   |_Header
@@ -85,6 +101,7 @@ another time
 
 
 ```
+
 ## Project description
 
 App to keep track of the appointments of a team of therapists, where each appointment has a defined frequency (i.e. weekly) and a number of recurrences (i.e. 10 times). The App provides an overview of appointments for the hole team, as well as personal views for each team member. Single appointments can be moved to different dates/times/therapists without necessarily affecting the rest of the recurring appointments.
@@ -98,19 +115,12 @@ Additional features could include:
   - waiting list for new clients / patients
 - time tracking and statistics for team members
 
-## MVP
-
-Users should be able to create, read, update and delete their own appointments and view the appointments of their team.
-
 ## Tech stack
+
 ### Front End:
 
 - React
-- possible calendar components:
-  - react calendar timeline
-  - Fullcalenbdar.io scheduler license: schedulerLicenseKey= 'GPL-My-Project-Is-Open-Source'
-  - ToastUI Calendar
-- styles: AntD + Day.js (instead of moment.js)
+- styles: AntD + Day.js
 
 ### Back End:
 
@@ -120,10 +130,15 @@ Users should be able to create, read, update and delete their own appointments a
 - Mongoose
 
 ### Data sources
+
 - local holidays: date-holidays
 - additional mock Data: Mock Data
   i.e. Team Members / appointments
 
-  ## License
+## Contributors
+
+[Stefan Huckschlag](https://github.com/hucki)
+
+## License
 
 MIT © [Stefan Huckschlag](https://github.com/hucki)
