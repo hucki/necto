@@ -3,7 +3,7 @@
 [![shields.io](https://img.shields.io/github/languages/top/hucki/necto?style=flat-square)](https://shields.io)
 [![shields.io](https://img.shields.io/badge/made%20with-🍕-green?style=flat-square)](https://shields.io)
 
-📅 Appointment scheduling for teams of therapists
+📅 Appointment scheduling for teams in a health care environment
 
 ![](./public/Necto.png)
 
@@ -11,7 +11,19 @@ necto provides teams with the ability to schedule appointments with patients/cli
 
 ## Getting started
 
--> where you explain to someone who has never seen your project
+1. clone the repo
+
+`git clone https://github.com/hucki/necto.git`
+
+2. install the dependencies
+
+`npm install`
+
+3. start necto
+
+`npm start`
+
+4. enjoy scheduling 📅!
 
 ## TODO
 
