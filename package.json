@@ -20,5 +20,6 @@
   "homepage": "https://github.com/hucki/necto#readme",
   "prettier": {
     "singleQuote": true
-  }
+  },
+  "devDependencies": {}
 }
