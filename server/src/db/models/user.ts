@@ -1,57 +1,99 @@
-module.exports = (sequelize, DataTypes) => {
-  const user = sequelize.define('user', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true
-    },
+import {
+  Model,
+  DataTypes,
+  HasManyGetAssociationsMixin,
+  HasManyAddAssociationMixin,
+  HasManyHasAssociationMixin,
+  Association,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  Optional,
+} from 'sequelize';
+import { Event } from './Event';
 
-    full_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    first_name: {
-      type: DataTypes.STRING
-    },
-    last_name: {
-      type: DataTypes.STRING
-    },
-    valid_until: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      primaryKey: true,
-      validate: {
-        notEmpty: true,
-        isDate: true,
-      },
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        isDate: true,
-      },
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-        isDate: true,
-      },
-    },
-  });
+export interface UserAttributes {
+  id: number;
+  firstName: string;
+  lastName: string;
+  validUntil: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-  user.associate = (model) => {
-    user.hasMany(model.event , {foreignKey: "user_id"});
-    user.hasOne(model.user_setting, {foreignKey: "user_id"});
-    user.hasOne(model.contract, {foreignKey: "user_id"});
+interface UserCreationAttributes
+  extends Optional<UserAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+
+export class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes {
+  public id!: number;
+  public firstName!: string;
+  public lastName!: string;
+
+  // timestamps!
+  public validUntil!: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+
+  public getEvents!: HasManyGetAssociationsMixin<Event>;
+  public addEvent!: HasManyAddAssociationMixin<Event, number>;
+  public hasEvent!: HasManyHasAssociationMixin<Event, number>;
+  public countEvents!: HasManyCountAssociationsMixin;
+  public createEvent!: HasManyCreateAssociationMixin<Event>;
+
+  public static associations: {
+    events: Association<User, Event>;
   };
+}
 
-  return user;
+export const userFields = {
+  id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  firstName: {
+    type: DataTypes.STRING(64),
+  },
+  lastName: {
+    type: DataTypes.STRING(64),
+  },
+  validUntil: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    primaryKey: true,
+    validate: {
+      notEmpty: true,
+      isDate: true,
+    },
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      isDate: true,
+    },
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      isDate: true,
+    },
+  },
 };
+
+User.hasMany(Event, {
+  sourceKey: 'id',
+  foreignKey: 'userId',
+  as: 'events',
+});
+
+// user.associate = (model) => {
+//   user.hasMany(model.event, { foreignKey: 'user_id' });
+//   user.hasOne(model.user_setting, { foreignKey: 'user_id' });
+//   user.hasOne(model.contract, { foreignKey: 'user_id' });
+// };
