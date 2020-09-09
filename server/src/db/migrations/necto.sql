@@ -1,15 +1,15 @@
-CREATE TABLE "users" ("id" SERIAL PRIMARY KEY, "full_name" varchar, "first_name" varchar, "last_name" varchar, "valid_until" timestamp, "created_at" timestamp, "updated_at" timestamp);
+CREATE TABLE "users" ("id" SERIAL PRIMARY KEY, "fullName" varchar, "firstName" varchar, "lastName" varchar, "validUntil" timestamp, "createdAt" timestamp, "updatedAt" timestamp);
 
-CREATE TABLE "contracts" ("user_id" int UNIQUE NOT NULL, "hours_per_week" int, "appointments_per_week" int);
+CREATE TABLE "contracts" ("userId" int UNIQUE NOT NULL, "hoursPerWeek" int, "appointmentsPerWeek" int);
 
-CREATE TABLE "user_settings" ("user_id" int UNIQUE NOT NULL, "bg_color" varchar);
+CREATE TABLE "userSettings" ("userId" int UNIQUE NOT NULL, "bgColor" varchar);
 
-CREATE TABLE "settings" ("cal_days" varchar, "cal_hours_start" int, "cal_hours_end" int, "timescale_width" int);
+CREATE TABLE "settings" ("calDays" varchar, "calHoursStart" int, "calHoursEnd" int, "timescaleWidth" int);
 
-CREATE TABLE "events" ("id" int, "user_id" int, "type" varchar, "start_time" timestamp, "end_time" timestamp, "rrule" varchar, "home_visit" boolean);
+CREATE TABLE "events" ("id" int, "userId" int, "type" varchar, "name" varchar, "startTime" timestamp, "endTime" timestamp, "rrule" varchar, "homeVisit" boolean);
 
-ALTER TABLE "contracts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "contracts" ADD FOREIGN KEY ("userId") REFERENCES "users" ("id");
 
-ALTER TABLE "user_settings" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "userSettings" ADD FOREIGN KEY ("userId") REFERENCES "users" ("id");
 
-ALTER TABLE "events" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "events" ADD FOREIGN KEY ("userId") REFERENCES "users" ("id");
