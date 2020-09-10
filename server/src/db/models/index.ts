@@ -7,6 +7,7 @@ import config from '../config/config';
 import { User, userFields } from './User';
 import { Event, eventFields } from './Event';
 import { Contract, contractFields } from './Contract';
+import { Settings, settingsFields } from './Settings';
 
 const sequelize = new Sequelize(
   config[env].database,
@@ -53,6 +54,10 @@ Event.init(eventFields, {
 });
 Contract.init(contractFields, {
   tableName: 'contracts',
+  sequelize,
+});
+Settings.init(settingsFields, {
+  tableName: 'settings',
   sequelize,
 });
 User.hasMany(Event, {
