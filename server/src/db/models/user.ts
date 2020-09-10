@@ -10,6 +10,7 @@ import {
   Optional,
 } from 'sequelize';
 import { Event } from './Event';
+import { Contract } from './Contract';
 
 export interface UserAttributes {
   id: number;
@@ -43,6 +44,7 @@ export class User
 
   public static associations: {
     events: Association<User, Event>;
+    contracts: Association<User, Contract>;
   };
 }
 

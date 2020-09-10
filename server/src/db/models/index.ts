@@ -6,6 +6,7 @@ const env = process.env.NODE_ENV;
 import config from '../config/config';
 import { User, userFields } from './User';
 import { Event, eventFields } from './Event';
+import { Contract, contractFields } from './Contract';
 
 const sequelize = new Sequelize(
   config[env].database,
@@ -50,9 +51,18 @@ Event.init(eventFields, {
   tableName: 'events',
   sequelize,
 });
+Contract.init(contractFields, {
+  tableName: 'contracts',
+  sequelize,
+});
 User.hasMany(Event, {
   sourceKey: 'id',
   foreignKey: 'userId',
   as: 'events',
+});
+User.hasMany(Contract, {
+  sourceKey: 'id',
+  foreignKey: 'userId',
+  as: 'contracts',
 });
 module.exports = db;
