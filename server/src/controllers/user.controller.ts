@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-const UserModel = require('../db/models/user')(sequelize, DataTypes);
+import { User } from '../db/models/User';
 
 export const getAllUsers = async (
   req: Request,
@@ -8,7 +8,7 @@ export const getAllUsers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const users = await UserModel.findAll();
+    const users = await User.findAll();
     res.json(users);
     res.status(200);
     return;
