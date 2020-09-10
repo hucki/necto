@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-  "module": "commonjs",
-  "esModuleInterop": true,
-  "target": "es6",
-  "moduleResolution": "node",
-  "sourceMap": true,
-  "outDir": "dist/src"
- },
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist/src"
+  },
   "lib": ["es2015"],
-  "include": [
-    "src/**/*.ts"
-  ]
- }
+  "include": ["src/**/*.ts", "src/db/config/config.ts"]
+}
