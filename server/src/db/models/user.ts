@@ -85,15 +85,3 @@ export const userFields = {
     },
   },
 };
-
-User.hasMany(Event, {
-  sourceKey: 'id',
-  foreignKey: 'userId',
-  as: 'events',
-});
-
-// user.associate = (model) => {
-//   user.hasMany(model.event, { foreignKey: 'user_id' });
-//   user.hasOne(model.user_setting, { foreignKey: 'user_id' });
-//   user.hasOne(model.contract, { foreignKey: 'user_id' });
-// };

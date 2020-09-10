@@ -3,7 +3,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV;
-import { config } from '../config/config';
+import config from '../config/config';
 import { User, userFields } from './User';
 import { Event, eventFields } from './Event';
 
@@ -50,5 +50,9 @@ Event.init(eventFields, {
   tableName: 'events',
   sequelize,
 });
-
+User.hasMany(Event, {
+  sourceKey: 'id',
+  foreignKey: 'userId',
+  as: 'events',
+});
 module.exports = db;
