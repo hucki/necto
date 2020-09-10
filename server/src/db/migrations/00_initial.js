@@ -13,13 +13,13 @@ module.exports = {
       .split(/\r?\n/);
 
     for (let sqlStatement of sql) {
-      await query.query(sqlStatement);
+      await query.sequelize.query(sqlStatement);
     }
   },
   down: async (query) => {
     await query.dropTable('events', { cascade: true });
     await query.dropTable('settings', { cascade: true });
-    await query.dropTable('user_settings', { cascade: true });
+    await query.dropTable('userSettings', { cascade: true });
     await query.dropTable('contracts', { cascade: true });
     await query.dropTable('users', { cascade: true });
   },
