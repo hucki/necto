@@ -8,6 +8,7 @@ import { User, userFields } from './User';
 import { Event, eventFields } from './Event';
 import { Contract, contractFields } from './Contract';
 import { Settings, settingsFields } from './Settings';
+import { UserSettings, userSettingsFields } from './UserSettings';
 
 const sequelize = new Sequelize(
   config[env].database,
@@ -56,6 +57,10 @@ Contract.init(contractFields, {
   tableName: 'contracts',
   sequelize,
 });
+UserSettings.init(userSettingsFields, {
+  tableName: 'userSettings',
+  sequelize,
+});
 Settings.init(settingsFields, {
   tableName: 'settings',
   sequelize,
@@ -69,5 +74,10 @@ User.hasMany(Contract, {
   sourceKey: 'id',
   foreignKey: 'userId',
   as: 'contracts',
+});
+User.hasMany(UserSettings, {
+  sourceKey: 'id',
+  foreignKey: 'userId',
+  as: 'userSettings',
 });
 module.exports = db;
