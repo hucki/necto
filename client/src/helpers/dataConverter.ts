@@ -1,5 +1,6 @@
 import { User, TeamMember } from '../types/User';
 import { UserSettings, Contract } from '../types/UserSettings';
+import { Event, Appointment } from '../types/Event';
 
 interface User2TeamMemberAttributes {
   user: User;
@@ -22,4 +23,25 @@ export function user2TeamMember({
     planningProgress: 0,
   };
   return teamMember;
+}
+
+interface Appointment2EventAttributes {
+  appointment: Appointment;
+  userId: number;
+}
+export function appointment2Event(
+  appointment: Appointment,
+  userId: number
+): Event | undefined {
+  const newEvent = {
+    userId: userId,
+    name: appointment.name,
+    type: 'custom',
+    homeVisit: appointment.homeVisit,
+    rrule: appointment.rrule,
+    startTime: appointment.startTime,
+    endTime: appointment.endTime,
+  };
+  console.log(newEvent);
+  return newEvent;
 }
