@@ -13,6 +13,7 @@ router.get('/users', userController.getAllUsers);
 
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
+router.get('/events', eventController.getAllEvents);
 router.post('/events', eventController.addEvent);
 //router.delete('/events/:eventId', eventController.deleteOneEvent);
 

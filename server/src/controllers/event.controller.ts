@@ -18,3 +18,18 @@ export const addEvent = async (
     next(e);
   }
 };
+
+export const getAllEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const events = await Event.findAll();
+    res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
