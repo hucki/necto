@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 const exampleData = {
   Anja: [
@@ -11,7 +11,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T10:15:59.700Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 4,
@@ -22,7 +22,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T11:15:59.700Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 7,
@@ -32,9 +32,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-08-04T05:45:00.000Z'),
       endTime: dayjs('2020-08-04T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 8,
@@ -44,9 +45,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-08-11T05:45:00.000Z'),
       endTime: dayjs('2020-08-11T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 9,
@@ -56,9 +58,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-08-18T05:45:00.000Z'),
       endTime: dayjs('2020-08-18T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 10,
@@ -68,9 +71,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-08-25T05:45:00.000Z'),
       endTime: dayjs('2020-08-25T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 11,
@@ -80,9 +84,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-09-01T05:45:00.000Z'),
       endTime: dayjs('2020-09-01T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 12,
@@ -92,9 +97,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-09-08T05:45:00.000Z'),
       endTime: dayjs('2020-09-08T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 13,
@@ -104,9 +110,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-09-15T05:45:00.000Z'),
       endTime: dayjs('2020-09-15T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 14,
@@ -116,9 +123,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-09-22T05:45:00.000Z'),
       endTime: dayjs('2020-09-22T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 15,
@@ -128,9 +136,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-09-29T05:45:00.000Z'),
       endTime: dayjs('2020-09-29T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 16,
@@ -140,9 +149,10 @@ const exampleData = {
       name: 'Max',
       startTime: dayjs('2020-10-06T05:45:00.000Z'),
       endTime: dayjs('2020-10-06T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 17,
@@ -152,9 +162,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-08-04T06:45:00.000Z'),
       endTime: dayjs('2020-08-04T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 18,
@@ -164,9 +175,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-08-11T06:45:00.000Z'),
       endTime: dayjs('2020-08-11T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 19,
@@ -176,9 +188,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-08-18T06:45:00.000Z'),
       endTime: dayjs('2020-08-18T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 20,
@@ -188,9 +201,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-08-25T06:45:00.000Z'),
       endTime: dayjs('2020-08-25T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 21,
@@ -200,9 +214,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-09-01T06:45:00.000Z'),
       endTime: dayjs('2020-09-01T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 22,
@@ -212,9 +227,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-09-08T06:45:00.000Z'),
       endTime: dayjs('2020-09-08T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 23,
@@ -224,9 +240,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-09-15T06:45:00.000Z'),
       endTime: dayjs('2020-09-15T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 24,
@@ -236,9 +253,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-09-22T06:45:00.000Z'),
       endTime: dayjs('2020-09-22T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 25,
@@ -248,9 +266,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-09-29T06:45:00.000Z'),
       endTime: dayjs('2020-09-29T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 26,
@@ -260,9 +279,10 @@ const exampleData = {
       name: 'Peter',
       startTime: dayjs('2020-10-06T06:45:00.000Z'),
       endTime: dayjs('2020-10-06T07:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T064500\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 27,
@@ -272,9 +292,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-08-04T08:00:00.000Z'),
       endTime: dayjs('2020-08-04T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 28,
@@ -284,9 +305,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-08-11T08:00:00.000Z'),
       endTime: dayjs('2020-08-11T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 29,
@@ -296,9 +318,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-08-18T08:00:00.000Z'),
       endTime: dayjs('2020-08-18T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 30,
@@ -308,9 +331,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-08-25T08:00:00.000Z'),
       endTime: dayjs('2020-08-25T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 31,
@@ -320,9 +344,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-09-01T08:00:00.000Z'),
       endTime: dayjs('2020-09-01T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 32,
@@ -332,9 +357,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-09-08T08:00:00.000Z'),
       endTime: dayjs('2020-09-08T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 33,
@@ -344,9 +370,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-09-15T08:00:00.000Z'),
       endTime: dayjs('2020-09-15T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 34,
@@ -356,9 +383,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-09-22T08:00:00.000Z'),
       endTime: dayjs('2020-09-22T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 35,
@@ -368,9 +396,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-09-29T08:00:00.000Z'),
       endTime: dayjs('2020-09-29T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 36,
@@ -380,9 +409,10 @@ const exampleData = {
       name: 'John',
       startTime: dayjs('2020-10-06T08:00:00.000Z'),
       endTime: dayjs('2020-10-06T08:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T080000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: true,
-      bgcolor: 'bg_blue'
+      bgcolor: 'bg_blue',
     },
     {
       id: 37,
@@ -394,8 +424,8 @@ const exampleData = {
       endTime: dayjs('2020-08-04T12:30:00.003Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_blue'
-    }
+      bgcolor: 'bg_blue',
+    },
   ],
   Biene: [
     {
@@ -407,7 +437,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T12:30:59.700Z'),
       rrule: '',
       homeVisit: true,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 3,
@@ -418,7 +448,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T13:30:59.701Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 38,
@@ -430,7 +460,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T06:45:00.803Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 39,
@@ -442,7 +472,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T08:00:00.459Z'),
       rrule: '',
       homeVisit: true,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 40,
@@ -452,9 +482,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-08-04T08:30:00.000Z'),
       endTime: dayjs('2020-08-04T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 41,
@@ -464,9 +495,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-08-11T08:30:00.000Z'),
       endTime: dayjs('2020-08-11T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 42,
@@ -476,9 +508,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-08-18T08:30:00.000Z'),
       endTime: dayjs('2020-08-18T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 43,
@@ -488,9 +521,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-08-25T08:30:00.000Z'),
       endTime: dayjs('2020-08-25T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 44,
@@ -500,9 +534,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-09-01T08:30:00.000Z'),
       endTime: dayjs('2020-09-01T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 45,
@@ -512,9 +547,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-09-08T08:30:00.000Z'),
       endTime: dayjs('2020-09-08T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 46,
@@ -524,9 +560,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-09-15T08:30:00.000Z'),
       endTime: dayjs('2020-09-15T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 47,
@@ -536,9 +573,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-09-22T08:30:00.000Z'),
       endTime: dayjs('2020-09-22T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 48,
@@ -548,9 +586,10 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-09-29T08:30:00.000Z'),
       endTime: dayjs('2020-09-29T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
+      bgcolor: 'bg_red',
     },
     {
       id: 49,
@@ -560,10 +599,11 @@ const exampleData = {
       name: 'Lucy',
       startTime: dayjs('2020-10-06T08:30:00.000Z'),
       endTime: dayjs('2020-10-06T09:15:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T083000\nRRULE:FREQ=WEEKLY;COUNT=10',
       homeVisit: false,
-      bgcolor: 'bg_red'
-    }
+      bgcolor: 'bg_red',
+    },
   ],
   Biggi: [
     {
@@ -575,7 +615,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T08:30:59.701Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 6,
@@ -586,7 +626,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T09:30:59.701Z'),
       rrule: '',
       homeVisit: true,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 50,
@@ -598,7 +638,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T06:15:00.465Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 51,
@@ -610,7 +650,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T11:15:00.173Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 52,
@@ -622,7 +662,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T12:30:00.850Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 53,
@@ -634,7 +674,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T13:45:00.593Z'),
       rrule: '',
       homeVisit: true,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 64,
@@ -646,7 +686,7 @@ const exampleData = {
       endTime: dayjs('2020-08-03T06:30:00.496Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 65,
@@ -658,7 +698,7 @@ const exampleData = {
       endTime: dayjs('2020-08-03T07:30:00.300Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 66,
@@ -670,7 +710,7 @@ const exampleData = {
       endTime: dayjs('2020-08-03T08:45:00.540Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 67,
@@ -682,7 +722,7 @@ const exampleData = {
       endTime: dayjs('2020-08-03T09:45:00.909Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 68,
@@ -694,7 +734,7 @@ const exampleData = {
       endTime: dayjs('2020-08-03T11:00:00.370Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 69,
@@ -706,7 +746,7 @@ const exampleData = {
       endTime: dayjs('2020-08-03T12:00:00.738Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 70,
@@ -718,7 +758,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T15:45:00.666Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 71,
@@ -730,7 +770,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T14:45:00.793Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 72,
@@ -742,7 +782,7 @@ const exampleData = {
       endTime: dayjs('2020-08-03T13:15:00.848Z'),
       rrule: '',
       homeVisit: true,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 73,
@@ -754,7 +794,7 @@ const exampleData = {
       endTime: dayjs('2020-08-05T07:00:00.070Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 74,
@@ -766,7 +806,7 @@ const exampleData = {
       endTime: dayjs('2020-08-05T08:15:00.836Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 75,
@@ -778,7 +818,7 @@ const exampleData = {
       endTime: dayjs('2020-08-05T09:30:00.122Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
+      bgcolor: 'bg_green',
     },
     {
       id: 76,
@@ -790,8 +830,8 @@ const exampleData = {
       endTime: dayjs('2020-08-05T10:45:00.666Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_green'
-    }
+      bgcolor: 'bg_green',
+    },
   ],
   Charlie: [
     {
@@ -804,7 +844,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T06:30:00.683Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_yellow'
+      bgcolor: 'bg_yellow',
     },
     {
       id: 55,
@@ -816,7 +856,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T07:45:00.306Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_yellow'
+      bgcolor: 'bg_yellow',
     },
     {
       id: 56,
@@ -828,7 +868,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T09:00:00.037Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_yellow'
+      bgcolor: 'bg_yellow',
     },
     {
       id: 57,
@@ -840,7 +880,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T11:00:00.042Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_yellow'
+      bgcolor: 'bg_yellow',
     },
     {
       id: 58,
@@ -852,8 +892,8 @@ const exampleData = {
       endTime: dayjs('2020-08-04T12:15:00.719Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_yellow'
-    }
+      bgcolor: 'bg_yellow',
+    },
   ],
   Forbes: [
     {
@@ -864,9 +904,10 @@ const exampleData = {
       name: 'New Appointment',
       startTime: dayjs('2020-08-04T05:45:00.000Z'),
       endTime: dayjs('2020-08-04T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=3',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=3',
       homeVisit: true,
-      bgcolor: 'bg_grey'
+      bgcolor: 'bg_grey',
     },
     {
       id: 60,
@@ -876,9 +917,10 @@ const exampleData = {
       name: 'New Appointment',
       startTime: dayjs('2020-08-11T05:45:00.000Z'),
       endTime: dayjs('2020-08-11T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=3',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=3',
       homeVisit: true,
-      bgcolor: 'bg_grey'
+      bgcolor: 'bg_grey',
     },
     {
       id: 61,
@@ -888,9 +930,10 @@ const exampleData = {
       name: 'New Appointment',
       startTime: dayjs('2020-08-18T05:45:00.000Z'),
       endTime: dayjs('2020-08-18T06:30:00.000Z'),
-      rrule: 'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=3',
+      rrule:
+        'DTSTART;TZID=Europe/Brussels:20200804T054500\nRRULE:FREQ=WEEKLY;COUNT=3',
       homeVisit: true,
-      bgcolor: 'bg_grey'
+      bgcolor: 'bg_grey',
     },
     {
       id: 62,
@@ -902,7 +945,7 @@ const exampleData = {
       endTime: dayjs('2020-08-04T07:30:00.251Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_grey'
+      bgcolor: 'bg_grey',
     },
     {
       id: 63,
@@ -914,9 +957,9 @@ const exampleData = {
       endTime: dayjs('2020-08-04T08:15:00.622Z'),
       rrule: '',
       homeVisit: false,
-      bgcolor: 'bg_grey'
-    }
-  ]
-}
+      bgcolor: 'bg_grey',
+    },
+  ],
+};
 
 export default exampleData;
