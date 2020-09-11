@@ -1,8 +1,13 @@
-import { useQuery, QueryResult } from 'react-query';
+import {
+  useQuery,
+  QueryResult,
+  useMutation,
+  MutationResultPair,
+} from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { Event } from '../types/Event';
 
-export function useUser(
+export function useEvent(
   id: number
 ): QueryResult<Event> & { event: Event | undefined } {
   const client = useAuthenticatedClient<Event>();
@@ -29,4 +34,17 @@ export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
     events,
     ...eventsQuery,
   };
+}
+
+export function useCreateEvent(): MutationResultPair<
+  Event,
+  Error,
+  { event: Event },
+  string
+> {
+  const client = useAuthenticatedClient<Event>();
+  const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
+    return client('events', { data: event });
+  };
+  return useMutation(createEvent);
 }

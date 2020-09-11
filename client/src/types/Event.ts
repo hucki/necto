@@ -10,3 +10,12 @@ export type Event = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+export type Appointment = {
+  rowId: string;
+  name: string;
+  startTime: Date;
+  endTime: Date;
+  rrule: string;
+  homeVisit: boolean;
+};
