@@ -20,6 +20,7 @@ const TeamContainer = ({ teamMembers, events, currentDate }) => {
       return event;
     });
     return {
+      key: member.id,
       id: member.id,
       'First Name': member.firstName,
       'Last Name': member.lastName,
@@ -51,7 +52,11 @@ const TeamContainer = ({ teamMembers, events, currentDate }) => {
       };
     }
   });
-  return <Table dataSource={dataSource} columns={columns} size="small" />;
+  return (
+    <>
+      <Table dataSource={dataSource} columns={columns} size="small" />
+    </>
+  );
 };
 
 const MapStateToProps = (state) => {
