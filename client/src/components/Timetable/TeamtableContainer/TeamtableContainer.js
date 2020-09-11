@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Measure from 'react-measure';
+import useDimensions from 'react-use-dimensions';
 import { connect } from 'react-redux';
 import classes from './TeamtableContainer.module.css';
 import {
@@ -32,14 +32,22 @@ const TeamtableContainer = ({
 }) => {
   const [numOfHours] = useState(hoursInterval[1] - hoursInterval[0] + 1);
   const [numOfCols] = useState(Object.keys(events).length);
+  const [ref, dimensions] = useDimensions();
   //eslint-disable-next-line no-unused-vars
   const [dimensionsCalculated, setDimensionsCalculated] = useState({
     width: -1,
     height: -1,
   });
-
+  // console.log(dimensions);
   useEffect(() => {
     const calcDimensions = () => {
+      dispatch(
+        setDimensions({
+          width: Math.floor(dimensions.width),
+          height: Math.floor(dimensions.height),
+          top: Math.floor(dimensions.top),
+        })
+      );
       dispatch(
         setCellDimensions({
           cellHeight: height / numOfHours,
@@ -47,18 +55,29 @@ const TeamtableContainer = ({
           relCellHeight: 100 / numOfHours,
         })
       );
+      setDimensionsCalculated({
+        width: Math.floor(dimensions.width),
+        height: Math.floor(dimensions.height),
+      });
     };
     calcDimensions();
-  }, [height, numOfHours, numOfCols, timeScaleWidth, width, dispatch]);
+  }, [
+    height,
+    numOfHours,
+    numOfCols,
+    timeScaleWidth,
+    width,
+    dispatch,
+    dimensions,
+  ]);
 
   function getPosition(e) {
     e.preventDefault();
     if (typeof e.target.className !== 'string') return;
     const clickOnFreeTime = !e.target.className.indexOf('TeamtableDay_day__');
-    cellHeight = height / numOfHours;
     if (clickOnFreeTime) {
       dispatch(clickRow(e.target.className.split(' ')[1]));
-      const y = e.clientY - top;
+      const y = e.screenY - dimensions.top - cellHeight;
       const clickTimeMin = (y - cellHeight) / (cellHeight / 60);
       const clickTime = startOfDay
         .clone()
@@ -94,54 +113,29 @@ const TeamtableContainer = ({
 
   return (
     <>
-      <Measure
-        bounds
-        onResize={(contentRect) => {
-          dispatch(
-            setDimensions({
-              width: Math.floor(contentRect.bounds.width),
-              height: Math.floor(contentRect.bounds.height),
-              top: Math.floor(contentRect.bounds.top),
-            })
-          );
-          dispatch(
-            setCellDimensions({
-              cellHeight: height / numOfHours,
-              cellWidth: (width - timeScaleWidth) / numOfCols,
-              relCellHeight: 100 / numOfHours,
-            })
-          );
-          setDimensionsCalculated({
-            width: Math.floor(contentRect.bounds.width),
-            height: Math.floor(contentRect.bounds.height),
-          });
+      <div
+        className={classes.TeamtableContainer}
+        onClick={getPosition}
+        ref={ref}
+        style={{
+          backgroundSize: `1px ${2 * relCellHeight}%`,
         }}
       >
-        {({ measureRef }) => (
+        <div className={classes.hoursScale}>
           <div
-            className={classes.TeamtableContainer}
-            onClick={getPosition}
-            ref={measureRef}
+            className={classes.hoursScaleHeader}
             style={{
-              backgroundSize: `1px ${2 * relCellHeight}%`,
+              height: `${100 / numOfHours}%`,
+              width: `${timeScaleWidth}px`,
             }}
           >
-            <div className={classes.hoursScale}>
-              <div
-                className={classes.hoursScaleHeader}
-                style={{
-                  height: `${100 / numOfHours}%`,
-                  width: `${timeScaleWidth}px`,
-                }}
-              >
-                {' '}
-              </div>
-              {hoursScale}
-            </div>
-            <TeamtableDay events={events} headerArray={Object.keys(events)} />
+            {' '}
           </div>
-        )}
-      </Measure>
+          {hoursScale}
+        </div>
+        <TeamtableDay events={events} headerArray={Object.keys(events)} />
+      </div>
+
       <TimetableInputForm visible={visible} rowId={rowId} />
     </>
   );
