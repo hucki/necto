@@ -1,6 +1,6 @@
 import express from 'express';
-import * as userController from '../controllers/user.controller'
-//import * as eventController from './controllers/event.controller';
+import * as userController from '../controllers/user.controller';
+import * as eventController from '../controllers/event.controller';
 //import * as settingsController from './controllers/settings.controller';
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.get('/users', userController.getAllUsers);
 
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
-//router.post('/events', eventController.addComment);
+router.post('/events', eventController.addEvent);
 //router.delete('/events/:eventId', eventController.deleteOneEvent);
 
 // settings routes
