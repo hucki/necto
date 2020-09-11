@@ -55,7 +55,7 @@ const TeamtableContainer = ({
     e.preventDefault();
     if (typeof e.target.className !== 'string') return;
     const clickOnFreeTime = !e.target.className.indexOf('TeamtableDay_day__');
-
+    cellHeight = height / numOfHours;
     if (clickOnFreeTime) {
       dispatch(clickRow(e.target.className.split(' ')[1]));
       const y = e.clientY - top;
@@ -68,7 +68,6 @@ const TeamtableContainer = ({
       const clickTimeFQH = clickTime
         .set('minutes', 0)
         .add(fullQuarterHour, 'm');
-
       dispatch(setStart(clickTimeFQH));
       dispatch(setEnd(clickTimeFQH.add(45, 'm')));
       dispatch(toggleVisible());
