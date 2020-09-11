@@ -16,6 +16,7 @@ import {
 import { DatePicker, TimePicker } from '../../../elements/index';
 import { connect } from 'react-redux';
 import { RRule, rrulestr } from 'rrule';
+import { useCreateEvent } from '../../../hooks/events';
 import {
   addAppointment,
   toggleVisible,
@@ -25,6 +26,7 @@ import {
 } from '../../../actions/actions';
 import dayjs from 'dayjs';
 import { HomeTwoTone, HomeOutlined } from '@ant-design/icons';
+import { appointment2Event } from '../../../helpers/dataConverter';
 
 const TimetableInputForm = ({
   visible,
@@ -34,13 +36,16 @@ const TimetableInputForm = ({
   startTime,
   endTime,
   newRrule,
+  teamMembers,
 }) => {
   const [form] = Form.useForm();
   const [switcheroo, setSwitcheroo] = useState({ disabled: true });
   const [timeline, setTimeline] = useState([]);
+  const [userId, setUserId] = useState(0);
   const [isRecurring, setIsRecurring] = useState(false);
   const [isHomeVisit, setIsHomeVisit] = useState(false);
-
+  // eslint-disable-next-line no-unused-vars
+  const [createEvent, { error: savingError }] = useCreateEvent();
   useEffect(() => {
     if (visible) {
       form.setFieldsValue({
@@ -54,8 +59,11 @@ const TimetableInputForm = ({
         count: 10,
         rruleString: '',
       });
+      setUserId(
+        teamMembers.filter((member) => member.firstName === rowId)[0].id
+      );
     }
-  }, [visible, endTime, form, startTime]);
+  }, [visible, endTime, form, startTime, rowId, teamMembers]);
 
   // Form Layout Options
   const layout = {
@@ -191,16 +199,19 @@ const TimetableInputForm = ({
           rrulestr(currentRrule)
             .all()
             .map((date) => {
-              dispatch(
-                addAppointment({
-                  rowId: rowId,
-                  name: form.getFieldValue('name'),
-                  startTime: dayjs(date),
-                  endTime: dayjs(date).add(form.getFieldValue('duration'), 'm'),
-                  rrule: currentRrule,
-                  homeVisit: isHomeVisit,
-                })
-              );
+              const newAppointment = {
+                rowId: rowId,
+                name: form.getFieldValue('name'),
+                startTime: dayjs(date),
+                endTime: dayjs(date).add(form.getFieldValue('duration'), 'm'),
+                rrule: currentRrule,
+                homeVisit: isHomeVisit,
+              };
+              const newEvent = appointment2Event(newAppointment, userId);
+              createEvent({
+                event: newEvent,
+              });
+              dispatch(addAppointment(newAppointment));
               successMsg.push(
                 `${dayjs(date).format('ddd DD.MM HH:mm')} - ${dayjs(date)
                   .add(form.getFieldValue('duration'), 'm')
@@ -217,16 +228,19 @@ const TimetableInputForm = ({
         message.success(outputMsg, 2);
       }
     } else {
-      dispatch(
-        addAppointment({
-          rowId: rowId,
-          name: form.getFieldValue('name'),
-          startTime: form.getFieldValue('startTime'),
-          endTime: form.getFieldValue('endTime'),
-          rrule: '',
-          homeVisit: isHomeVisit,
-        })
-      );
+      const newAppointment = {
+        rowId: rowId,
+        name: form.getFieldValue('name'),
+        startTime: form.getFieldValue('startTime'),
+        endTime: form.getFieldValue('endTime'),
+        rrule: '',
+        homeVisit: isHomeVisit,
+      };
+      const newEvent = appointment2Event(newAppointment, userId);
+      createEvent({
+        event: newEvent,
+      });
+      dispatch(addAppointment(newAppointment));
     }
     dispatch(toggleVisible());
     setDefaults();
@@ -379,6 +393,7 @@ const MapStateToProps = (state) => {
     startTime: state.newAppointment.startTime,
     endTime: state.newAppointment.endTime,
     newRrule: state.newAppointment.rrule,
+    teamMembers: state.appointments.teamMembers,
   };
 };
 
