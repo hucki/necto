@@ -11,7 +11,10 @@ import { ReactQueryDevtools } from 'react-query-devtools';
 
 const { Content: AntContent } = Layout;
 
-const store = createStore(reducer);
+const store = createStore(
+  reducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 store.subscribe(() => {
   /*console.log('NEW STATE', store.getState())*/
 });
