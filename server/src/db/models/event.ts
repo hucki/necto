@@ -13,13 +13,13 @@ export interface EventAttributes {
   updatedAt: Date;
 }
 
-interface EventCreationAttributes
+export interface EventCreationAttributes
   extends Optional<EventAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
 
 export class Event
   extends Model<EventAttributes, EventCreationAttributes>
   implements EventAttributes {
-  public id!: number;
+  public readonly id!: number;
   public userId!: number;
   public name!: string;
   public type!: string;

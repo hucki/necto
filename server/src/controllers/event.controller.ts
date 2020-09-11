@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { Event } from '../db/models/Event';
+import { Event, EventCreationAttributes } from '../db/models/Event';
 
 export const addEvent = async (
   req: Request,
