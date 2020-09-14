@@ -25,10 +25,6 @@ export function user2TeamMember({
   return teamMember;
 }
 
-interface Appointment2EventAttributes {
-  appointment: Appointment;
-  userId: number;
-}
 export function appointment2Event(
   appointment: Appointment,
   userId: number
@@ -44,4 +40,27 @@ export function appointment2Event(
   };
   console.log(newEvent);
   return newEvent;
+}
+
+export function events2Appointments(
+  events: Event[],
+  users: User[]
+): { [k: string]: Appointment[] } | undefined {
+  const newAppointments: { [k: string]: Appointment[] } = {};
+  if (!events.length || !users.length) return newAppointments;
+
+  for (let i = 0; i < events.length; i++) {
+    const current = users.filter((user) => (user.id = events[i].userId))[0]
+      .firstName;
+    if (!newAppointments[current]) newAppointments[current] = [];
+    newAppointments[current].push({
+      rowId: current,
+      name: events[i].name,
+      homeVisit: events[i].homeVisit,
+      rrule: events[i].rrule,
+      startTime: events[i].startTime,
+      endTime: events[i].endTime,
+    });
+  }
+  return newAppointments;
 }
