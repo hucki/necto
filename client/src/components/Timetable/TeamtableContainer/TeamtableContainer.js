@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useDimensions from 'react-use-dimensions';
+import { useWeeksEvents } from '../../../hooks/events';
+import { events2Appointments } from '../../../helpers/dataConverter';
 import { connect } from 'react-redux';
 import classes from './TeamtableContainer.module.css';
 import {
@@ -11,11 +13,14 @@ import {
   setCellDimensions,
 } from '../../../actions/actions';
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import TimetableInputForm from '../TimetableInputForm/TimetableInputForm';
 import TeamtableDay from '../TeamtableDay/TeamtableDay';
+dayjs.extend(isoWeek);
 
 const TeamtableContainer = ({
-  events,
+  // events,
+  users,
   currentDate,
   hoursInterval,
   dispatch,
@@ -30,15 +35,20 @@ const TeamtableContainer = ({
   cellWidth,
   relCellHeight,
 }) => {
-  const [numOfHours] = useState(hoursInterval[1] - hoursInterval[0] + 1);
-  const [numOfCols] = useState(Object.keys(events).length);
+  const numOfHours = hoursInterval[1] - hoursInterval[0] + 1;
+  const numOfCols = users.length;
+  // console.log(numOfHours, numOfCols);
   const [ref, dimensions] = useDimensions();
   //eslint-disable-next-line no-unused-vars
   const [dimensionsCalculated, setDimensionsCalculated] = useState({
     width: -1,
     height: -1,
   });
-  // console.log(dimensions);
+  const { rawEventsIsLoading, rawEventsError, rawEvents } = useWeeksEvents(
+    dayjs(currentDate).format('YYYY'),
+    dayjs(currentDate).isoWeek()
+  );
+
   useEffect(() => {
     const calcDimensions = () => {
       dispatch(
@@ -70,6 +80,11 @@ const TeamtableContainer = ({
     dispatch,
     dimensions,
   ]);
+  if (rawEventsIsLoading) return <div>Loading...</div>;
+  if (rawEventsError)
+    return <div>Error getting events: {rawEventsError.message}</div>;
+  if (!rawEvents) return null;
+  const events = events2Appointments(rawEvents, users);
 
   function getPosition(e) {
     e.preventDefault();
