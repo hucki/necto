@@ -36,6 +36,23 @@ export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
   };
 }
 
+export function useWeeksEvents(
+  year: number,
+  week: number
+): QueryResult<Event[]> & { rawEvents: Event[] } {
+  const client = useAuthenticatedClient<Event[]>();
+
+  const eventsQuery = useQuery(['events', year, week], async () => {
+    return client(`events/${year}/${week}`);
+  });
+
+  const rawEvents = eventsQuery.data ?? [];
+  return {
+    rawEvents,
+    ...eventsQuery,
+  };
+}
+
 export function useCreateEvent(): MutationResultPair<
   Event,
   Error,
