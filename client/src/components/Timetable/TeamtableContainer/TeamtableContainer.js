@@ -35,9 +35,8 @@ const TeamtableContainer = ({
   cellWidth,
   relCellHeight,
 }) => {
-  const numOfHours = hoursInterval[1] - hoursInterval[0] + 1;
+  const [numOfHours] = useState(hoursInterval[1] - hoursInterval[0] + 1);
   const numOfCols = users.length;
-  // console.log(numOfHours, numOfCols);
   const [ref, dimensions] = useDimensions();
   //eslint-disable-next-line no-unused-vars
   const [dimensionsCalculated, setDimensionsCalculated] = useState({
@@ -55,7 +54,7 @@ const TeamtableContainer = ({
         setDimensions({
           width: Math.floor(dimensions.width),
           height: Math.floor(dimensions.height),
-          top: Math.floor(dimensions.top),
+          top: Math.floor(dimensions.y),
         })
       );
       dispatch(
@@ -80,6 +79,7 @@ const TeamtableContainer = ({
     dispatch,
     dimensions,
   ]);
+
   if (rawEventsIsLoading) return <div>Loading...</div>;
   if (rawEventsError)
     return <div>Error getting events: {rawEventsError.message}</div>;
@@ -92,8 +92,8 @@ const TeamtableContainer = ({
     const clickOnFreeTime = !e.target.className.indexOf('TeamtableDay_day__');
     if (clickOnFreeTime) {
       dispatch(clickRow(e.target.className.split(' ')[1]));
-      const y = e.screenY - dimensions.top - cellHeight;
-      const clickTimeMin = (y - cellHeight) / (cellHeight / 60);
+      const y = e.pageY - dimensions.y - cellHeight;
+      const clickTimeMin = y / (cellHeight / 60);
       const clickTime = startOfDay
         .clone()
         .add(clickTimeMin, 'm')
@@ -125,7 +125,8 @@ const TeamtableContainer = ({
         {index + hoursInterval[0]}:00
       </div>
     ));
-
+  if (!users.length) return null;
+  const headerArray = users.map((user) => user.firstName);
   return (
     <>
       <div
@@ -148,7 +149,7 @@ const TeamtableContainer = ({
           </div>
           {hoursScale}
         </div>
-        <TeamtableDay events={events} headerArray={Object.keys(events)} />
+        <TeamtableDay events={events} headerArray={headerArray} />
       </div>
 
       <TimetableInputForm visible={visible} rowId={rowId} />
