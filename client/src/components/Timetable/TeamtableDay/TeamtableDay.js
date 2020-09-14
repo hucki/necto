@@ -52,9 +52,12 @@ const TeamtableDay = ({
       >
         <div className={classes.dayHeaderText}>{rowTitle} </div>
       </div>
-      {events[rowTitle].map((event) =>
-        renderCustomEvent(event, getItemStyle(event))
-      )}
+
+      {events[rowTitle]
+        ? events[rowTitle].map((event) =>
+            renderCustomEvent(event, getItemStyle(event))
+          )
+        : null}
     </div>
   ));
 
