@@ -52,7 +52,8 @@ const TeamtableItem = ({ event, styles, dispatch }) => {
         <div className={classes.icon_container}>{icons}</div>
       </div>
       <span className={classes.event_info}>
-        {event.startTime.format('HH:mm')} - {event.endTime.format('HH:mm')}
+        {dayjs(event.startTime).format('HH:mm')} -{' '}
+        {dayjs(event.endTime).format('HH:mm')}
       </span>
     </div>
   );
