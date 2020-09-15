@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useDimensions from 'react-use-dimensions';
+import { useWeeksEvents } from '../../../hooks/events';
+import { events2Appointments } from '../../../helpers/dataConverter';
 import { connect } from 'react-redux';
 import classes from './UserCalendarContainer.module.css';
 import {
@@ -17,7 +19,6 @@ import TeamtableDay from '../TeamtableDay/TeamtableDay';
 dayjs.extend(isBetween);
 
 const UserCalendarContainer = ({
-  events,
   currentDate,
   hoursInterval,
   daysToShow,
@@ -32,7 +33,7 @@ const UserCalendarContainer = ({
   relCellHeight,
   user,
   rowId,
-  allEvents,
+  users,
 }) => {
   const [numOfHours] = useState(hoursInterval[1] - hoursInterval[0] + 1);
   const [numOfCols] = useState(daysToShow.length);
@@ -42,6 +43,10 @@ const UserCalendarContainer = ({
     width: -1,
     height: -1,
   });
+  const { rawEventsIsLoading, rawEventsError, rawEvents } = useWeeksEvents(
+    dayjs(currentDate).format('YYYY'),
+    dayjs(currentDate).isoWeek()
+  );
   //eslint-disable-next-line no-unused-vars
   const [startOfDay, setStartOfDay] = useState(
     currentDate
@@ -82,7 +87,19 @@ const UserCalendarContainer = ({
     width,
     dimensions,
   ]);
+  if (rawEventsIsLoading) return <div>Loading...</div>;
+  if (rawEventsError)
+    return <div>Error getting events: {rawEventsError.message}</div>;
+  if (!rawEvents) return null;
 
+  const events = userEvents(
+    events2Appointments(
+      rawEvents,
+      users.filter((el) => el.firstName === user)
+    ),
+    currentDate,
+    user
+  );
   function getPosition(e) {
     e.preventDefault();
     if (typeof e.target.className !== 'string') return;
@@ -196,12 +213,6 @@ function userEvents(events, currentDate, user) {
 
 const mapStateToProps = (state) => {
   return {
-    events: userEvents(
-      state.appointments.events,
-      state.current.currentDate,
-      state.userData.currentUser
-    ),
-    allEvents: state.appointments.events,
     currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,
