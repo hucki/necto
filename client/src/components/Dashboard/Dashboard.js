@@ -21,9 +21,9 @@ const Dashboard = ({ currentView }) => {
       case 'Team':
         return <TeamContainer />;
       case 'Settings':
-        return <TeamtableContainer />;
+        return <TeamtableContainer users={users} />;
       default:
-        return <TeamtableContainer />;
+        return <TeamtableContainer users={users} />;
     }
   };
 
