@@ -12,6 +12,7 @@ export type Event = {
 };
 
 export type Appointment = {
+  id?: number;
   rowId: string;
   name: string;
   startTime: Date;
