@@ -12,6 +12,7 @@ const TeamtableItem = ({ event, styles, dispatch }) => {
   const [icons, setIcons] = useState([]);
 
   useEffect(() => {
+    setIcons([]);
     if (event.rrule !== '')
       setIcons((icons) => [...icons, <ApiTwoTone key="rruleIcon" />]);
     if (event.homeVisit)
