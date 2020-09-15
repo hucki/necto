@@ -16,7 +16,7 @@ router.get('/users', userController.getAllUsers);
 // router.get('/events', eventController.getAllEvents);
 router.get('/events/:year/:week', eventController.getWeeksEvents);
 router.post('/events', eventController.addEvent);
-//router.delete('/events/:eventId', eventController.deleteOneEvent);
+router.delete('/events/:eventId', eventController.deleteEvent);
 
 // settings routes
 //router.get('/settings', settingsController.getSettings);

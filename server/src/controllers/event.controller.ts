@@ -5,6 +5,10 @@ import { Request, Response, NextFunction } from 'express';
 import { Event, EventCreationAttributes } from '../db/models/Event';
 dayjs.extend(isoWeek);
 
+/**
+ * add one Event
+ *  @param {Event} req.body
+ */
 export const addEvent = async (
   req: Request,
   res: Response,
@@ -23,9 +27,33 @@ export const addEvent = async (
 };
 
 /**
+ * delete one Event by eventId
+ *  @param {string} req.params.eventId
+ */
+export const deleteEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const eventId: number = parseInt(req.params.eventId);
+    const deletedCount = await Event.destroy({ where: { id: eventId } });
+    res.json(
+      `deleted ${deletedCount} event${
+        deletedCount !== 1 ? 's' : ''
+      } with eventId=${eventId}`
+    );
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
  * get all Events that are taking place in the given year/week combination
- *  @param {string} year
- *  @param {string} week
+ *  @param {string} req.params.year
+ *  @param {string} req.params.week
  */
 export const getWeeksEvents = async (
   req: Request,
@@ -54,6 +82,10 @@ export const getWeeksEvents = async (
     next(e);
   }
 };
+
+/**
+ * get all Events
+ */
 export const getAllEvents = async (
   req: Request,
   res: Response,
