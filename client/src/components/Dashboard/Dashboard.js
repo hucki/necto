@@ -17,7 +17,7 @@ const Dashboard = ({ currentView }) => {
       case 'Appointments':
         return <TeamtableContainer users={users} />;
       case 'Personal':
-        return <UserCalendarContainer />;
+        return <UserCalendarContainer users={users} />;
       case 'Team':
         return <TeamContainer />;
       case 'Settings':
