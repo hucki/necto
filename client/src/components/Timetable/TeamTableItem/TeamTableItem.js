@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import classes from '../Teamtable.module.css';
 import { Modal, message } from 'antd';
 import dayjs from 'dayjs';
-import { deleteAppointment } from '../../../actions/actions';
 import { HomeTwoTone, ApiTwoTone } from '@ant-design/icons';
+import { useDeleteEvent } from '../../../hooks/events';
 
-const TeamtableItem = ({ event, styles, dispatch }) => {
+const TeamtableItem = ({ event, styles }) => {
   // TODO: put delete dialog in a separate Component
   const { confirm } = Modal;
   const [icons, setIcons] = useState([]);
+  const [deleteEvent] = useDeleteEvent();
 
   useEffect(() => {
     setIcons([]);
@@ -31,7 +31,7 @@ const TeamtableItem = ({ event, styles, dispatch }) => {
         </div>
       ),
       onOk() {
-        dispatch(deleteAppointment(id));
+        deleteEvent({ id });
         message.success(`Appointment ${id} deleted`, 1);
       },
       onCancel() {
@@ -60,11 +60,4 @@ const TeamtableItem = ({ event, styles, dispatch }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    deleteAppointment: deleteAppointment,
-    dispatch,
-  };
-};
-
-export default connect(null, mapDispatchToProps)(TeamtableItem);
+export default TeamtableItem;
