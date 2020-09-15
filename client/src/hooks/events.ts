@@ -3,6 +3,7 @@ import {
   QueryResult,
   useMutation,
   MutationResultPair,
+  queryCache,
 } from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { Event } from '../types/Event';
@@ -19,6 +20,26 @@ export function useEvent(
     event,
     ...eventQuery,
   };
+}
+
+export function useDeleteEvent(
+  id: number
+): MutationResultPair<{ message: string }, Error, { id: number }, string> {
+  const client = useAuthenticatedClient<{ message: string }>();
+
+  const deleteEvent = async ({
+    id,
+  }: {
+    id: number;
+  }): Promise<{ message: string }> => {
+    return client(`events/${id}`, { method: 'DELETE' });
+  };
+
+  return useMutation(deleteEvent, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('events');
+    },
+  });
 }
 
 export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
@@ -63,5 +84,9 @@ export function useCreateEvent(): MutationResultPair<
   const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client('events', { data: event });
   };
-  return useMutation(createEvent);
+  return useMutation(createEvent, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('events');
+    },
+  });
 }
