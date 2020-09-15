@@ -38,7 +38,6 @@ export function appointment2Event(
     startTime: appointment.startTime,
     endTime: appointment.endTime,
   };
-  console.log(newEvent);
   return newEvent;
 }
 
@@ -50,18 +49,20 @@ export function events2Appointments(
   if (!events.length || !users.length) return newAppointments;
 
   for (let i = 0; i < events.length; i++) {
-    const current = users.filter((user) => user.id === events[i].userId)[0]
-      .firstName;
-    if (!newAppointments[current]) newAppointments[current] = [];
-    newAppointments[current].push({
-      id: events[i].id,
-      rowId: current,
-      name: events[i].name,
-      homeVisit: events[i].homeVisit,
-      rrule: events[i].rrule,
-      startTime: events[i].startTime,
-      endTime: events[i].endTime,
-    });
+    const current = users.filter((user) => user.id === events[i].userId)[0];
+    if (current && current.firstName) {
+      if (!newAppointments[current.firstName])
+        newAppointments[current.firstName] = [];
+      newAppointments[current.firstName].push({
+        id: events[i].id,
+        rowId: current.firstName,
+        name: events[i].name,
+        homeVisit: events[i].homeVisit,
+        rrule: events[i].rrule,
+        startTime: events[i].startTime,
+        endTime: events[i].endTime,
+      });
+    }
   }
   return newAppointments;
 }
