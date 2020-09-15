@@ -106,8 +106,8 @@ const UserCalendarContainer = ({
           .set('seconds', 0)
       );
       dispatch(clickRow(e.target.className.split(' ')[1]));
-      const y = e.screenY - dimensions.top - cellHeight;
-      const clickTimeMin = (y - cellHeight) / (cellHeight / 60);
+      const y = e.pageY - dimensions.y - cellHeight;
+      const clickTimeMin = y / (cellHeight / 60);
       const clickTime = clickedDay
         .clone()
         .add(clickTimeMin, 'm')
