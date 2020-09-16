@@ -4,26 +4,26 @@ import classes from './Dashboard.module.css';
 import UserCalendarContainer from '../Timetable/UserCalendarContainer/UserCalendarContainer';
 import TeamContainer from '../Team/TeamContainer/TeamContainer';
 import TeamtableContainer from '../Timetable/TeamtableContainer/TeamtableContainer';
-import { useAllUsers } from '../../hooks/user';
+import { useAllTeamMembers } from '../../hooks/user';
 
 const Dashboard = ({ currentView }) => {
-  const { usersIsLoading, usersError, users } = useAllUsers();
-  if (usersIsLoading) return <div>Loading...</div>;
-  if (usersError) return <div>Error getting users: {usersError.message}</div>;
-  if (!users) return null;
+  const { isLoading, error, teamMembers } = useAllTeamMembers();
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error getting teamMembers: {error.message}</div>;
+  if (!teamMembers) return null;
 
   const showContent = () => {
     switch (currentView) {
       case 'Appointments':
-        return <TeamtableContainer users={users} />;
+        return <TeamtableContainer teamMembers={teamMembers} />;
       case 'Personal':
-        return <UserCalendarContainer users={users} />;
+        return <UserCalendarContainer teamMembers={teamMembers} />;
       case 'Team':
         return <TeamContainer />;
       case 'Settings':
-        return <TeamtableContainer users={users} />;
+        return <TeamtableContainer teamMembers={teamMembers} />;
       default:
-        return <TeamtableContainer users={users} />;
+        return <TeamtableContainer teamMembers={teamMembers} />;
     }
   };
 
