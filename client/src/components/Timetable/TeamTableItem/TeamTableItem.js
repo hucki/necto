@@ -39,14 +39,13 @@ const TeamtableItem = ({ event, styles }) => {
       },
     });
   };
-
   return (
     <div
       style={styles}
       title={event.name}
       key={event.id}
       onClick={() => onClickHandler(event)}
-      className={`${classes.event} ${classes[event.bgcolor]}`}
+      className={`${classes.event} ${classes['bg_' + event.bgColor]}`}
     >
       <div className={classes.event_container}>
         <span className={classes.event_info}>{event.name}</span>
