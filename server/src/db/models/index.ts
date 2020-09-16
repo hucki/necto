@@ -9,7 +9,7 @@ import { Event, eventFields } from './Event';
 import { Contract, contractFields } from './Contract';
 import { Settings, settingsFields } from './Settings';
 import { UserSettings, userSettingsFields } from './UserSettings';
-
+console.log(config[env]);
 const sequelize = new Sequelize(
   config[env].database,
   config[env].username,
@@ -75,9 +75,11 @@ User.hasMany(Contract, {
   foreignKey: 'userId',
   as: 'contracts',
 });
+Contract.belongsTo(User, { targetKey: 'id' });
+UserSettings.belongsTo(User, { targetKey: 'id' });
 User.hasMany(UserSettings, {
   sourceKey: 'id',
   foreignKey: 'userId',
   as: 'userSettings',
 });
-module.exports = db;
+export default db;

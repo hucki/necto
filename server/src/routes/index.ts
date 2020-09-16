@@ -1,6 +1,7 @@
 import express from 'express';
 import * as userController from '../controllers/user.controller';
 import * as eventController from '../controllers/event.controller';
+import * as teamMemberController from '../controllers/teamMember.controller';
 //import * as settingsController from './controllers/settings.controller';
 
 const router = express.Router();
@@ -11,6 +12,7 @@ router.get('/users', userController.getAllUsers);
 // router.post('/users', userController.addUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
 
+router.get('/teammembers', teamMemberController.getAllTeamMembers);
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
 // router.get('/events', eventController.getAllEvents);

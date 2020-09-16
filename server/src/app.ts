@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import router from './routes';
 dotenv.config();
-const db = require('./db/models');
+import db from './db/models';
 
 db.sequelize.sync(); //{force: true}
 const host = process.env.HOST || 'localhost';
