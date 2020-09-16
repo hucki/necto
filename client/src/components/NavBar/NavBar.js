@@ -8,42 +8,41 @@ import classes from './NavBar.module.css';
 import dayjs from 'dayjs';
 
 const NavBar = (props) => {
-
-  function onChangeHandler (date) {
+  function onChangeHandler(date) {
     props.dispatch(changeDate(date));
   }
-  function todayClickHandler () {
+  function todayClickHandler() {
     props.dispatch(changeDate(dayjs()));
   }
-  function prevDayHandler () {
+  function prevDayHandler() {
     props.dispatch(changeDate(dayjs(props.currentDate).subtract(1, 'day')));
   }
-  function nextDayHandler () {
+  function nextDayHandler() {
     props.dispatch(changeDate(dayjs(props.currentDate).add(1, 'day')));
   }
 
   return (
     <div className={classes.NavBar}>
       <Button onClick={todayClickHandler}>Today</Button>
-      <Tooltip title='previous Day'>
+      <Tooltip title="previous Day">
         <Button icon={<CaretLeftOutlined />} onClick={prevDayHandler}></Button>
       </Tooltip>
-      <DatePicker onChange={onChangeHandler} value={props.currentDate}/>
-      <Tooltip title='next Day'>
+      <DatePicker onChange={onChangeHandler} value={props.currentDate} />
+      <Tooltip title="next Day">
         <Button icon={<CaretRightOutlined />} onClick={nextDayHandler}></Button>
       </Tooltip>
     </div>
   );
 };
 
-const MapStateToProps = state => {
+const MapStateToProps = (state) => {
   const { currentDate } = state.current;
   return { currentDate };
 };
-const MapDispatchToProps = dispatch => {
+const MapDispatchToProps = (dispatch) => {
   return {
     changeDate,
-    dispatch
+    dispatch,
   };
 };
 
