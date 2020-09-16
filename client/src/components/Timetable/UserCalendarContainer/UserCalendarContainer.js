@@ -33,7 +33,7 @@ const UserCalendarContainer = ({
   relCellHeight,
   user,
   rowId,
-  users,
+  teamMembers,
 }) => {
   const [numOfHours] = useState(hoursInterval[1] - hoursInterval[0] + 1);
   const [numOfCols] = useState(daysToShow.length);
@@ -95,7 +95,7 @@ const UserCalendarContainer = ({
   const events = userEvents(
     events2Appointments(
       rawEvents,
-      users.filter((el) => el.firstName === user)
+      teamMembers.filter((el) => el.firstName === user)
     ),
     currentDate,
     user

@@ -20,7 +20,7 @@ dayjs.extend(isoWeek);
 
 const TeamtableContainer = ({
   // events,
-  users,
+  teamMembers,
   currentDate,
   hoursInterval,
   dispatch,
@@ -36,7 +36,7 @@ const TeamtableContainer = ({
   relCellHeight,
 }) => {
   const [numOfHours] = useState(hoursInterval[1] - hoursInterval[0] + 1);
-  const numOfCols = users.length;
+  const numOfCols = teamMembers.length;
   const [ref, dimensions] = useDimensions();
   //eslint-disable-next-line no-unused-vars
   const [dimensionsCalculated, setDimensionsCalculated] = useState({
@@ -84,8 +84,7 @@ const TeamtableContainer = ({
   if (rawEventsError)
     return <div>Error getting events: {rawEventsError.message}</div>;
   if (!rawEvents) return null;
-  const events = events2Appointments(rawEvents, users);
-
+  const events = events2Appointments(rawEvents, teamMembers);
   function getPosition(e) {
     e.preventDefault();
     if (typeof e.target.className !== 'string') return;
@@ -125,8 +124,8 @@ const TeamtableContainer = ({
         {index + hoursInterval[0]}:00
       </div>
     ));
-  if (!users.length) return null;
-  const headerArray = users.map((user) => user.firstName);
+  if (!teamMembers.length) return null;
+  const headerArray = teamMembers.map((member) => member.firstName);
   return (
     <>
       <div
