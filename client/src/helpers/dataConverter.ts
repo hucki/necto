@@ -1,29 +1,5 @@
-import { User, TeamMember } from '../types/User';
-import { UserSettings, Contract } from '../types/UserSettings';
+import { TeamMember } from '../types/User';
 import { Event, Appointment } from '../types/Event';
-
-interface User2TeamMemberAttributes {
-  user: User;
-  userSettings: UserSettings;
-  contract: Contract;
-}
-
-export function user2TeamMember({
-  user,
-  userSettings,
-  contract,
-}: User2TeamMemberAttributes): TeamMember | undefined {
-  if (!user.id) return;
-  const teamMember: TeamMember = {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    appointmentsPerWeek: contract.appointmentsPerWeek,
-    color: userSettings.bgColor,
-    planningProgress: 0,
-  };
-  return teamMember;
-}
 
 export function appointment2Event(
   appointment: Appointment,
@@ -43,7 +19,7 @@ export function appointment2Event(
 
 export function events2Appointments(
   events: Event[],
-  users: User[]
+  users: TeamMember[]
 ): { [k: string]: Appointment[] } | undefined {
   const newAppointments: { [k: string]: Appointment[] } = {};
   if (!events.length || !users.length) return newAppointments;
@@ -60,6 +36,7 @@ export function events2Appointments(
         homeVisit: events[i].homeVisit,
         rrule: events[i].rrule,
         startTime: events[i].startTime,
+        bgColor: current.bgColor,
         endTime: events[i].endTime,
       });
     }
