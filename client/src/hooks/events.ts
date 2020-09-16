@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   useQuery,
   QueryResult,
@@ -64,13 +65,31 @@ export function useWeeksEvents(
   const client = useAuthenticatedClient<Event[]>();
 
   const eventsQuery = useQuery(['events', year, week], async () => {
-    return client(`events/${year}/${week}`);
+    return client(`events/w/${year}/${week}`);
   });
 
   const rawEvents = eventsQuery.data ?? [];
   return {
     rawEvents,
     ...eventsQuery,
+  };
+}
+
+export function useDaysEvents(
+  currentDate: Date
+): QueryResult<Event[]> & { rawEvents: Event[] } {
+  const client = useAuthenticatedClient<Event[]>();
+  const year = dayjs(currentDate).format('YYYY');
+  const month = dayjs(currentDate).format('MM');
+  const day = dayjs(currentDate).format('DD');
+  const eventsDayQuery = useQuery(['events', currentDate], async () => {
+    return client(`events/d/${year}/${month}/${day}`);
+  });
+
+  const rawEvents = eventsDayQuery.data ?? [];
+  return {
+    rawEvents,
+    ...eventsDayQuery,
   };
 }
 
