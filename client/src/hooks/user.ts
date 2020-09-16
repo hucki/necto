@@ -1,6 +1,6 @@
 import { useQuery, QueryResult } from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
-import { User } from '../types/User';
+import { TeamMember, User } from '../types/User';
 
 export function useUser(
   id: number
@@ -28,5 +28,22 @@ export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
   return {
     users,
     ...usersQuery,
+  };
+}
+
+export function useAllTeamMembers(): QueryResult<TeamMember[]> & {
+  teamMembers: TeamMember[];
+} {
+  const client = useAuthenticatedClient<TeamMember[]>();
+
+  const teamMembersQuery = useQuery('teamMembers', async () => {
+    return client('teamMembers');
+  });
+
+  const teamMembers = teamMembersQuery.data ?? [];
+
+  return {
+    teamMembers,
+    ...teamMembersQuery,
   };
 }

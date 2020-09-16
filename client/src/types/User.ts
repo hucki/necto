@@ -11,7 +11,11 @@ export type TeamMember = {
   id: number;
   firstName: string;
   lastName: string;
-  appointmentsPerWeek: number;
-  color: string;
-  planningProgress: number;
+  validUntil: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  hoursPerWeek: number | null;
+  appointmentsPerWeek: number | null;
+  bgColor: string;
+  planningProgress?: number;
 };

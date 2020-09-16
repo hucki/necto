@@ -18,5 +18,6 @@ export type Appointment = {
   startTime: Date;
   endTime: Date;
   rrule: string;
+  bgColor: string;
   homeVisit: boolean;
 };
