@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDimensions from 'react-use-dimensions';
-import { useWeeksEvents } from '../../../hooks/events';
+import { useDaysEvents } from '../../../hooks/events';
 import { events2Appointments } from '../../../helpers/dataConverter';
 import { connect } from 'react-redux';
 import classes from './TimetableContainer.module.css';
@@ -42,9 +42,8 @@ const TimetableContainer = ({
     width: -1,
     height: -1,
   });
-  const { rawEventsIsLoading, rawEventsError, rawEvents } = useWeeksEvents(
-    dayjs(currentDate).format('YYYY'),
-    dayjs(currentDate).isoWeek()
+  const { rawEventsIsLoading, rawEventsError, rawEvents } = useDaysEvents(
+    currentDate
   );
 
   useEffect(() => {
