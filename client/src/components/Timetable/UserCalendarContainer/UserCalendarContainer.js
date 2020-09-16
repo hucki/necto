@@ -199,19 +199,21 @@ function userEvents(events, currentDate, user) {
     Sat: [],
     Sun: [],
   };
-  events[user].map((event) => {
-    if (
-      dayjs(event.startTime).isBetween(
-        dayjs(currentDate).startOf('week'),
-        dayjs(currentDate).endOf('week')
+  if (events[user]) {
+    events[user].map((event) => {
+      if (
+        dayjs(event.startTime).isBetween(
+          dayjs(currentDate).startOf('week'),
+          dayjs(currentDate).endOf('week')
+        )
       )
-    )
-      filtered[dayjs(event.startTime).format('ddd')] = [
-        ...filtered[dayjs(event.startTime).format('ddd')],
-        event,
-      ];
-    return event;
-  });
+        filtered[dayjs(event.startTime).format('ddd')] = [
+          ...filtered[dayjs(event.startTime).format('ddd')],
+          event,
+        ];
+      return event;
+    });
+  }
   return filtered;
 }
 
