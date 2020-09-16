@@ -180,7 +180,11 @@ const UserCalendarContainer = ({
         </div>
         <TeamtableDay events={events} headerArray={daysToShow} />
       </div>
-      <TimetableInputForm visible={visible} rowId={user} />
+      <TimetableInputForm
+        visible={visible}
+        rowId={user}
+        unfilteredEvents={events}
+      />
     </>
   );
 };

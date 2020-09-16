@@ -19,7 +19,6 @@ import TeamtableDay from '../TeamtableDay/TeamtableDay';
 dayjs.extend(isoWeek);
 
 const TimetableContainer = ({
-  // events,
   teamMembers,
   currentDate,
   hoursInterval,
@@ -151,31 +150,18 @@ const TimetableContainer = ({
         <TeamtableDay events={events} headerArray={headerArray} />
       </div>
 
-      <TimetableInputForm visible={visible} rowId={rowId} />
+      <TimetableInputForm
+        visible={visible}
+        rowId={rowId}
+        unfilteredEvents={events}
+        teamMembers={teamMembers}
+      />
     </>
   );
 };
 
-function filteredEvents(events, currentDate) {
-  const filtered = {};
-  Object.keys(events).map((stateKey) => {
-    filtered[stateKey] = [];
-    events[stateKey].map((event) => {
-      if (dayjs(event.startTime).isSame(currentDate, 'day'))
-        filtered[stateKey] = [...filtered[stateKey], event];
-      return event;
-    });
-    return stateKey;
-  });
-  return filtered;
-}
-
 const mapStateToProps = (state) => {
   return {
-    events: filteredEvents(
-      state.appointments.events,
-      state.current.currentDate
-    ),
     currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,

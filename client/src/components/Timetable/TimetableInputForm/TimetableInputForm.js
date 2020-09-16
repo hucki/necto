@@ -18,7 +18,6 @@ import { connect } from 'react-redux';
 import { RRule, rrulestr } from 'rrule';
 import { useCreateEvent } from '../../../hooks/events';
 import {
-  addAppointment,
   toggleVisible,
   setRrule,
   setStart,
@@ -27,10 +26,11 @@ import {
 import dayjs from 'dayjs';
 import { HomeTwoTone, HomeOutlined } from '@ant-design/icons';
 import { appointment2Event } from '../../../helpers/dataConverter';
+import currentDate from '../../../reducers/currentDate';
 
 const TimetableInputForm = ({
   visible,
-  events,
+  unfilteredEvents,
   dispatch,
   rowId,
   startTime,
@@ -38,6 +38,7 @@ const TimetableInputForm = ({
   newRrule,
   teamMembers,
 }) => {
+  const events = filteredEvents(unfilteredEvents, currentDate);
   const [form] = Form.useForm();
   const [switcheroo, setSwitcheroo] = useState({ disabled: true });
   const [timeline, setTimeline] = useState([]);
@@ -116,7 +117,7 @@ const TimetableInputForm = ({
   }
 
   function checkOverlap() {
-    if (!events[rowId].length) return false;
+    if (!events[rowId] || !events[rowId].length) return false;
     const checkStart = form.getFieldValue('startTime');
     const checkEnd = form.getFieldValue('endTime');
     const result = events[rowId].filter(
@@ -211,7 +212,6 @@ const TimetableInputForm = ({
               createEvent({
                 event: newEvent,
               });
-              dispatch(addAppointment(newAppointment));
               successMsg.push(
                 `${dayjs(date).format('ddd DD.MM HH:mm')} - ${dayjs(date)
                   .add(form.getFieldValue('duration'), 'm')
@@ -240,7 +240,6 @@ const TimetableInputForm = ({
       createEvent({
         event: newEvent,
       });
-      dispatch(addAppointment(newAppointment));
     }
     dispatch(toggleVisible());
     setDefaults();
@@ -383,23 +382,17 @@ function filteredEvents(events, currentDate) {
 
 const MapStateToProps = (state) => {
   return {
-    events: filteredEvents(
-      state.appointments.events,
-      state.current.currentDate
-    ),
     currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
     visible: state.newAppointment.inputFormVisible,
     startTime: state.newAppointment.startTime,
     endTime: state.newAppointment.endTime,
     newRrule: state.newAppointment.rrule,
-    teamMembers: state.appointments.teamMembers,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addAppointment,
     setStart,
     setEnd,
     setRrule,
