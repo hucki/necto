@@ -16,7 +16,9 @@ router.get('/teammembers', teamMemberController.getAllTeamMembers);
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
 // router.get('/events', eventController.getAllEvents);
-router.get('/events/:year/:week', eventController.getWeeksEvents);
+router.get('/events/d/:year/:month/:day', eventController.getDaysEvents);
+router.get('/events/w/:year/:week', eventController.getWeeksEvents);
+
 router.post('/events', eventController.addEvent);
 router.delete('/events/:eventId', eventController.deleteEvent);
 

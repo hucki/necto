@@ -9,7 +9,7 @@ import { Event, eventFields } from './Event';
 import { Contract, contractFields } from './Contract';
 import { Settings, settingsFields } from './Settings';
 import { UserSettings, userSettingsFields } from './UserSettings';
-console.log(config[env]);
+
 const sequelize = new Sequelize(
   config[env].database,
   config[env].username,

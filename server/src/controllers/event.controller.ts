@@ -49,6 +49,47 @@ export const deleteEvent = async (
     next(e);
   }
 };
+/**
+ * get all Events that are taking place in the given year/week combination
+ *  @param {string} req.params.year
+ *  @param {string} req.params.month
+ *  @param {string} req.params.day
+ */
+export const getDaysEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const startDate = dayjs(
+      `${req.params.year}-${req.params.month}-${req.params.day}`
+    )
+      .set('hour', 0)
+      .set('minute', 0)
+      .set('second', 1);
+    const endDate = startDate.add(24, 'h');
+
+    const events = await Event.findAll({
+      where: {
+        startTime: {
+          [Op.and]: [
+            {
+              [Op.gte]: startDate.toISOString(),
+            },
+            {
+              [Op.lt]: endDate.toISOString(),
+            },
+          ],
+        },
+      },
+    });
+    res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
 
 /**
  * get all Events that are taking place in the given year/week combination
