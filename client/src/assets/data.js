@@ -1,12 +1,7 @@
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
-// import exampleData from './events';
 dayjs.extend(weekday);
 
-// const pureEvents = [];
-// Object.keys(exampleData).map((memberEvents) =>
-//   exampleData[memberEvents].map((event) => pureEvents.push(event))
-// );
 export const teamMembers = [
   {
     id: 1,
@@ -81,7 +76,6 @@ export const items = [
 export const initialState = {
   appointments: {
     teamMembers: teamMembers,
-    // maxId: pureEvents.length,
   },
   current: {
     currentDate: dayjs(),
