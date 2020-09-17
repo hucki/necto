@@ -1,5 +1,6 @@
 # necto
 
+[![shields.io](https://img.shields.io/github/last-commit/hucki/necto?style=flat-square)](https://shields.io)
 [![shields.io](https://img.shields.io/github/languages/top/hucki/necto?style=flat-square)](https://shields.io)
 [![shields.io](https://img.shields.io/badge/made%20with-🍕-green?style=flat-square)](https://shields.io)
 
@@ -19,100 +20,17 @@ necto provides teams with the ability to schedule appointments with patients/cli
 
 `npm install`
 
-3. start necto
+3. setup a postgres Database
+
+4. setup `/server/.env` file (see `/server/.env.example`)
+
+to get started set `NODE_ENV=development` and use the .env Variables prefixed with `DEV_DB_[...]` for your DB
+
+5. start necto
 
 `npm start`
 
-4. enjoy scheduling 📅!
-
-## TODO
-
-andre's comment:
-
-> I would suggest to focus on implementing the adding appointments with different frequencies to a calendar in a way that would be great for the users. Once you have that working well, then I would focus on implementing the team features. Overall I think you are in the right track and I'm looking forward to following your progress
-
-https://github.com/atlassian/react-beautiful-dnd
-https://www.chartjs.org
-
-**general**
-
-- [ ] setup OSS license (GPL / MIT)
-- [x] decide which calendar to use
-  - [x] antd and react-timeline-events
-    - [o] react-big-calendar -> no. even more deprecated ans unsafe methods used
-    - [o] react-calendar-timeline -> second try, although uses deprecated context API (https://reactjs.org/docs/context.html#legacy-api)
-    - [o] semantic-ui-react -> i will not build the calendar by hand
-    - [o] DHTMLX Scheduler -> mutliple resources only iin pro version
-    - [o] Fullcalendar.io scheduler license: schedulerLicenseKey= 'GPL-My-Project-Is-Open-Source'
-    - [o] ToastUI Calendar -> no multiple resources
-
-**frontend**
-
-- [x] define Structure (components)
-- [x] create-react-app
-- [x] install libraries
-  - [x] redux for state manangement
-- [x] add new appointments to calendar
-  - [o] move add button to the right (removed it)
-- [x] connect date / week picker to App State (redux)
-- [x] connect App state to displayed schedule (redux)
-- [x] datePicker and prev/nextDay Buttons
-- [x] replace endTime in form with fixed minutes amount [30, 45]
-- [x] show name in form
-- [x] add Today button
-- [x] prevent overlapping events (single event)
-- [x] put input form in separate component
-- [x] delete appointments
-- [x] implement combineReducers()
-- [x] add home Visit option
-- [x] fix default values of InputForm
-- [ ] fix rendering half of screen on ipad (device)
-- [x] fully remove react-timeline-events
-- [ ]
-  another time
-- [x] create week view
-- [ ] connect API
-- [ ] color schema
-- [ ] translate
-- [ ] antd Popconfirm to delete
-
-**data**
-
-- [x] untie persons and appointments and dynamically generate event for timetable
-- [ ] use iCal [ics](https://www.npmjs.com/package/ics)
-- [x] use recurrence Rules [rrule](https://www.npmjs.com/package/rrule)
-- [ ]
-
-**backend**
-
-- [ ] define Models
-- [ ] setup express/mongoose
-
-**authentication**
-
-- [ ]
-
-## FrontEnd structure
-
-```
-|_APP
-  |_Header
-  | |_Logo
-  | |_Menu
-  |_Dashboard
-  | |_Calendar
-  |   |_AppointmentView
-  |     |_AppointmentDefinition
-  |_Teams
-  | |_TeamsList
-  |   |_TeamMemberList
-  |     |_TeamMemberView
-  |       |_TeamMemberDefinition
-  |_Footer
-      |_Imprint
-
-
-```
+6. enjoy scheduling 📅!
 
 ## Project description
 
@@ -131,21 +49,26 @@ Additional features could include:
 
 ### Front End:
 
-- React
-- styles: AntD + Day.js
+- [React](https://reactjs.org)
+- [React Redux](https://react-redux.js.org/)
+- [React Query](https://github.com/tannerlinsley/react-query)
+- (wip): [TypeScript](https://www.typescriptlang.org)
+- [Day.js](https://day.js.org)
+- [Ant Design](https://ant.design)
 
 ### Back End:
 
-- NodeJS
-- Express
-- MongoDB
-- Mongoose
+- [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com)
+- [TypeScript](https://www.typescriptlang.org)
+- [Sequelize ORM](https://sequelize.org)
+- [PostgreSQL](https://www.postgresql.org)
 
-### Data sources
+## Future Plans
 
-- local holidays: date-holidays
-- additional mock Data: Mock Data
-  i.e. Team Members / appointments
+- [ ] implement Authentication
+- [ ] convert FrontEnd to Typescript
+- [ ] embed local holidays: [date-holidays](https://www.npmjs.com/package/date-holidays)
 
 ## Contributors
 
