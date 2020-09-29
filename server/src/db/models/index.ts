@@ -7,6 +7,7 @@ import config from '../config/config';
 import { User, userFields } from './User';
 import { Event, eventFields } from './Event';
 import { Contract, contractFields } from './Contract';
+import { Company, companyFields } from './Company';
 import { Settings, settingsFields } from './Settings';
 import { UserSettings, userSettingsFields } from './UserSettings';
 
@@ -55,6 +56,10 @@ Event.init(eventFields, {
 });
 Contract.init(contractFields, {
   tableName: 'contracts',
+  sequelize,
+});
+Company.init(companyFields, {
+  tableName: 'companies',
   sequelize,
 });
 UserSettings.init(userSettingsFields, {
