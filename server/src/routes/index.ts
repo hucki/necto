@@ -2,7 +2,8 @@ import express from 'express';
 import * as userController from '../controllers/user.controller';
 import * as eventController from '../controllers/event.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
-//import * as settingsController from './controllers/settings.controller';
+import * as appSettingsController from '../controllers/appSettings.controller';
+import * as tenantController from '../controllers/tenant.controller';
 
 const router = express.Router();
 
@@ -23,7 +24,11 @@ router.post('/events', eventController.addEvent);
 router.delete('/events/:eventId', eventController.deleteEvent);
 
 // settings routes
-//router.get('/settings', settingsController.getSettings);
-//router.put('/settings', settingsController.updateSettings);
+router.post('/appsettings', appSettingsController.addAppSettings);
+//router.get('/appsettings', settingsController.getAppSettings);
+//router.put('/appsettings', settingsController.updateAppSettings);
+
+// tenant routes
+router.post('/tenant', tenantController.addTenant);
 
 export default router;
