@@ -2,7 +2,8 @@ import { Model, DataTypes, Optional } from 'sequelize';
 
 export interface CompanyAttributes {
   id: number;
-  name: number;
+  name: string;
+  tenantId: number;
   validUntil: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -15,8 +16,8 @@ export class Company
   extends Model<CompanyAttributes, CompanyCreationAttributes>
   implements CompanyAttributes {
   public id!: number;
-  public name!: number;
-
+  public name!: string;
+  public tenantId!: number;
   public validUntil!: Date;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -31,6 +32,10 @@ export const companyFields = {
   },
   name: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  tenantId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   validUntil: {

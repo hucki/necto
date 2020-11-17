@@ -75,6 +75,11 @@ Settings.init(settingsFields, {
   tableName: 'settings',
   sequelize,
 });
+Tenant.hasMany(Company, {
+  sourceKey: 'id',
+  foreignKey: 'tenantId',
+  as: 'companies'
+})
 User.hasMany(Event, {
   sourceKey: 'id',
   foreignKey: 'userId',
