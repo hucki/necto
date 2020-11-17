@@ -184,6 +184,7 @@ const UserCalendarContainer = ({
         visible={visible}
         rowId={user}
         unfilteredEvents={events}
+        teamMembers={teamMembers}
       />
     </>
   );
