@@ -8,6 +8,7 @@ import { User, userFields } from './User';
 import { Event, eventFields } from './Event';
 import { Contract, contractFields } from './Contract';
 import { Company, companyFields } from './Company';
+import { Tenant, tenantFields } from './Tenants';
 import { Settings, settingsFields } from './Settings';
 import { UserSettings, userSettingsFields } from './UserSettings';
 
@@ -60,6 +61,10 @@ Contract.init(contractFields, {
 });
 Company.init(companyFields, {
   tableName: 'companies',
+  sequelize,
+});
+Tenant.init(tenantFields, {
+  tableName: 'tenants',
   sequelize,
 });
 UserSettings.init(userSettingsFields, {
