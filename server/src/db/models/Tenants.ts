@@ -1,7 +1,8 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Model, DataTypes, Optional } from 'sequelize';
 
 export interface TenantAttributes {
-  id: number;
+  id: typeof uuidv4;
   name: string;
   description: string;
   validUntil: Date;
@@ -15,7 +16,7 @@ interface TenantCreationAttributes
 export class Tenant
   extends Model<TenantAttributes, TenantCreationAttributes>
   implements TenantAttributes {
-  public id!: number;
+  public id!: typeof uuidv4;
   public name!: string;
   public description!: string;
 
@@ -26,9 +27,8 @@ export class Tenant
 
 export const tenantFields = {
   id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
   name: {
@@ -41,16 +41,16 @@ export const tenantFields = {
   },
   validUntil: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     secondaryKey: true,
     validate: {
-      notEmpty: true,
       isDate: true,
     },
   },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
+    defaultValue: DataTypes.NOW,
     validate: {
       notEmpty: true,
       isDate: true,
@@ -59,6 +59,7 @@ export const tenantFields = {
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: false,
+    defaultValue: DataTypes.NOW,
     validate: {
       notEmpty: true,
       isDate: true,

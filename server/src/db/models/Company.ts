@@ -1,9 +1,10 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Model, DataTypes, Optional } from 'sequelize';
 
 export interface CompanyAttributes {
   id: number;
   name: string;
-  tenantId: number;
+  tenantId: typeof uuidv4;
   validUntil: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -17,7 +18,7 @@ export class Company
   implements CompanyAttributes {
   public id!: number;
   public name!: string;
-  public tenantId!: number;
+  public tenantId!: typeof uuidv4;
   public validUntil!: Date;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -35,7 +36,7 @@ export const companyFields = {
     allowNull: false,
   },
   tenantId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
   },
   validUntil: {
