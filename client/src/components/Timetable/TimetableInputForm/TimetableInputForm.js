@@ -50,7 +50,7 @@ const TimetableInputForm = ({
   useEffect(() => {
     if (visible) {
       form.setFieldsValue({
-        name: 'New Appointment',
+        title: 'New Appointment',
         startTime: startTime,
         duration: 45,
         endTime: endTime,
@@ -202,11 +202,11 @@ const TimetableInputForm = ({
             .map((date) => {
               const newAppointment = {
                 rowId: rowId,
-                name: form.getFieldValue('name'),
+                title: form.getFieldValue('title'),
                 startTime: dayjs(date),
                 endTime: dayjs(date).add(form.getFieldValue('duration'), 'm'),
                 rrule: currentRrule,
-                homeVisit: isHomeVisit,
+                isHomeVisit: isHomeVisit,
               };
               const newEvent = appointment2Event(newAppointment, userId);
               createEvent({
@@ -230,11 +230,11 @@ const TimetableInputForm = ({
     } else {
       const newAppointment = {
         rowId: rowId,
-        name: form.getFieldValue('name'),
+        title: form.getFieldValue('title'),
         startTime: form.getFieldValue('startTime'),
         endTime: form.getFieldValue('endTime'),
         rrule: '',
-        homeVisit: isHomeVisit,
+        isHomeVisit: isHomeVisit,
       };
       const newEvent = appointment2Event(newAppointment, userId);
       createEvent({
@@ -263,7 +263,7 @@ const TimetableInputForm = ({
         <h3>{rowId}</h3>
         <Form.Item
           label="Title"
-          name="name"
+          name="title"
           rules={[
             {
               required: true,

@@ -7,9 +7,13 @@ export function appointment2Event(
 ): Event | undefined {
   const newEvent = {
     userId: userId,
-    name: appointment.name,
+    title: appointment.title,
     type: 'custom',
-    homeVisit: appointment.homeVisit,
+    isHomeVisit: appointment.isHomeVisit,
+    isRecurring: appointment.rrule ? true : false,
+    isAllDay: false,
+    isCancelled: false,
+    isCancelledReason: '',
     rrule: appointment.rrule,
     startTime: appointment.startTime,
     endTime: appointment.endTime,
@@ -32,8 +36,8 @@ export function events2Appointments(
       newAppointments[current.firstName].push({
         id: events[i].id,
         rowId: current.firstName,
-        name: events[i].name,
-        homeVisit: events[i].homeVisit,
+        title: events[i].title,
+        isHomeVisit: events[i].isHomeVisit,
         rrule: events[i].rrule,
         startTime: events[i].startTime,
         bgColor: current.bgColor,

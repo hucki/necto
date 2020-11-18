@@ -15,7 +15,7 @@ const TeamtableItem = ({ event, styles }) => {
     setIcons([]);
     if (event.rrule !== '')
       setIcons((icons) => [...icons, <ApiTwoTone key="rruleIcon" />]);
-    if (event.homeVisit)
+    if (event.isHomeVisit)
       setIcons((icons) => [...icons, <HomeTwoTone key="homeVisitIcon" />]);
   }, [event]);
 
@@ -42,13 +42,13 @@ const TeamtableItem = ({ event, styles }) => {
   return (
     <div
       style={styles}
-      title={event.name}
+      title={event.title}
       key={event.id}
       onClick={() => onClickHandler(event)}
       className={`${classes.event} ${classes['bg_' + event.bgColor]}`}
     >
       <div className={classes.event_container}>
-        <span className={classes.event_info}>{event.name}</span>
+        <span className={classes.event_info}>{event.title}</span>
         <div className={classes.icon_container}>{icons}</div>
       </div>
       <span className={classes.event_info}>

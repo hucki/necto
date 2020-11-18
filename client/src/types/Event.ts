@@ -1,9 +1,15 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export type Event = {
   id?: number;
   userId: number;
-  name: string;
+  title: string;
   type: string;
-  homeVisit: boolean;
+  isHomeVisit: boolean;
+  isAllDay: boolean;
+  isRecurring: boolean;
+  isCancelled: boolean;
+  isCancelledReason: string;
   rrule: string;
   startTime: Date;
   endTime: Date;
@@ -14,10 +20,10 @@ export type Event = {
 export type Appointment = {
   id?: number;
   rowId: string;
-  name: string;
+  title: string;
   startTime: Date;
   endTime: Date;
   rrule: string;
   bgColor: string;
-  homeVisit: boolean;
+  isHomeVisit: boolean;
 };
