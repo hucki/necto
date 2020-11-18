@@ -5,9 +5,13 @@ import { commonFieldsWithoutValidity } from './commonFields';
 export interface EventAttributes {
   id: number;
   userId: number;
-  name: string;
+  title: string;
   type: string;
-  homeVisit: boolean;
+  isHomeVisit: boolean;
+  isAllDay: boolean;
+  isRecurring: boolean;
+  isCancelled: boolean;
+  isCancelledReason: string;
   rrule: string;
   startTime: Date;
   endTime: Date;
@@ -24,9 +28,13 @@ export class Event
   implements EventAttributes {
   public readonly id!: number;
   public userId!: number;
-  public name!: string;
+  public title!: string;
   public type!: string;
-  public homeVisit!: boolean;
+  public isHomeVisit!: boolean;
+  public isAllDay!: boolean;
+  public isRecurring!: boolean;
+  public isCancelled!: boolean;
+  public isCancelledReason!: string;
   public rrule!: string;
   public startTime!: Date;
   public endTime!: Date;
@@ -50,13 +58,34 @@ export const eventFields = {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  name: {
+  title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  homeVisit: {
+  isHomeVisit: {
     type: DataTypes.BOOLEAN,
+    defaultValue: false,
     allowNull: false,
+  },
+  isAllDay: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  },
+  isRecurring: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  },
+  isCancelled: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  },
+  isCancelledReason: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+    allowNull: true,
   },
   rrule: {
     type: DataTypes.STRING,
