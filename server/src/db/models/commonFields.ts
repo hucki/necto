@@ -1,16 +1,9 @@
-import {DataTypes} from 'sequelize'
-export const commonFields = {
+import { DataTypes } from 'sequelize'
+
+export const commonFieldsWithoutValidity = {
   tenantId: {
     type: DataTypes.UUID,
     allowNull: false,
-  },
-  validUntil: {
-    type: DataTypes.DATE,
-    allowNull: true,
-    secondaryKey: true,
-    validate: {
-      isDate: true,
-    },
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -30,4 +23,16 @@ export const commonFields = {
       isDate: true,
     },
   },
+}
+
+export const commonFields = {
+  validUntil: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    secondaryKey: true,
+    validate: {
+      isDate: true,
+    },
+  },
+  ...commonFieldsWithoutValidity,
 }
