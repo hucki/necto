@@ -1,4 +1,6 @@
 import { Model, DataTypes, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
+import { commonFields } from './commonFields';
 
 export interface ContractAttributes {
   id: number;
@@ -8,6 +10,7 @@ export interface ContractAttributes {
   validUntil: Date;
   createdAt: Date;
   updatedAt: Date;
+  tenantId: typeof uuidv4;
 }
 
 interface ContractCreationAttributes
@@ -24,6 +27,7 @@ export class Contract
   public validUntil!: Date;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+  public tenantId!: typeof uuidv4;
 }
 
 export const contractFields = {
@@ -43,29 +47,5 @@ export const contractFields = {
   appointmentsPerWeek: {
     type: DataTypes.INTEGER,
   },
-  validUntil: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    secondaryKey: true,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
+  ...commonFields
 };

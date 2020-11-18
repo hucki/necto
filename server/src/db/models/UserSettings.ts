@@ -1,4 +1,6 @@
 import { Model, DataTypes, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
+import { commonFields } from './commonFields';
 
 export interface UserSettingsAttributes {
   id: number;
@@ -7,6 +9,7 @@ export interface UserSettingsAttributes {
   validUntil: Date;
   createdAt: Date;
   updatedAt: Date;
+  tenantId: typeof uuidv4;
 }
 
 interface UserSettingsCreationAttributes
@@ -19,6 +22,7 @@ export class UserSettings
   public userId!: number;
   public bgColor!: string;
   public validUntil!: Date;
+  public tenantId!: typeof uuidv4;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -37,29 +41,5 @@ export const userSettingsFields = {
   bgColor: {
     type: DataTypes.STRING,
   },
-  validUntil: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    primaryKey: true,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
+  ...commonFields
 };

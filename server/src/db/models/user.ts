@@ -11,6 +11,8 @@ import {
 } from 'sequelize';
 import { Event } from './Event';
 import { Contract } from './Contract';
+import { v4 as uuidv4 } from 'uuid';
+import { commonFields } from './commonFields';
 
 export interface UserAttributes {
   id: number;
@@ -19,6 +21,7 @@ export interface UserAttributes {
   validUntil: Date;
   createdAt: Date;
   updatedAt: Date;
+  tenantId: typeof uuidv4;
 }
 
 interface UserCreationAttributes
@@ -30,11 +33,10 @@ export class User
   public id!: number;
   public firstName!: string;
   public lastName!: string;
-
-  // timestamps!
   public validUntil!: Date;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+  public tenantId!: typeof uuidv4;
 
   public getEvents!: HasManyGetAssociationsMixin<Event>;
   public addEvent!: HasManyAddAssociationMixin<Event, number>;
@@ -61,29 +63,5 @@ export const userFields = {
   lastName: {
     type: DataTypes.STRING(64),
   },
-  validUntil: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    primaryKey: true,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      isDate: true,
-    },
-  },
+  ...commonFields
 };
