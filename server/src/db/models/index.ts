@@ -75,16 +75,15 @@ AppSettings.init(appSettingsFields, {
   tableName: 'appSettings',
   sequelize,
 });
-Tenant.hasMany(Company, {
-  sourceKey: 'id',
-  foreignKey: 'tenantId',
-  as: 'companies'
-});
-Tenant.hasMany(AppSettings, {
-  sourceKey: 'id',
-  foreignKey: 'tenantId',
-  as: 'appSettings'
-})
+
+// Tenant Relations
+Tenant.hasMany(Company, { sourceKey: 'id', foreignKey: 'tenantId', as: 'companies' });
+Tenant.hasMany(AppSettings, { sourceKey: 'id', foreignKey: 'tenantId', as: 'appSettings' })
+Tenant.hasMany(UserSettings, { sourceKey: 'id', foreignKey: 'tenantId', as: 'userSettings' })
+Tenant.hasMany(Event, { sourceKey: 'id', foreignKey: 'tenantId', as: 'events' })
+Tenant.hasMany(User, { sourceKey: 'id', foreignKey: 'tenantId', as: 'users' })
+Tenant.hasMany(Contract, { sourceKey: 'id', foreignKey: 'tenantId', as: 'contracts' })
+
 User.hasMany(Event, {
   sourceKey: 'id',
   foreignKey: 'userId',
