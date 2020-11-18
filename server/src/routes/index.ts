@@ -4,6 +4,7 @@ import * as contractController from '../controllers/contract.controller';
 import * as eventController from '../controllers/event.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
+import * as userSettingsController from '../controllers/userSettings.controller';
 import * as tenantController from '../controllers/tenant.controller';
 
 const router = express.Router();
@@ -28,7 +29,9 @@ router.delete('/events/:eventId', eventController.deleteEvent);
 router.post('/contracts', contractController.addContract);
 
 // settings routes
-router.post('/appsettings', appSettingsController.addAppSettings);
+router.post('/settings/app', appSettingsController.addAppSettings);
+router.post('/settings/user', userSettingsController.addUserSettings);
+
 //router.get('/appsettings', settingsController.getAppSettings);
 //router.put('/appsettings', settingsController.updateAppSettings);
 
