@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
+const tenantId = process.env.TENANT_UUID;
 import db from '../db/models';
 
 export const getAllTeamMembers = async (
@@ -12,9 +13,7 @@ export const getAllTeamMembers = async (
     const [results, metadata] = await db.sequelize.query(
       `SELECT
           users.id AS id,
-          users."fullName" AS "fullName",
           users."firstName" AS "firstName",
-          users."lastName" AS "lastName",
           users."lastName" AS "lastName",
           users."validUntil" AS "validUntil",
           users."createdAt" AS "createdAt",
@@ -22,9 +21,14 @@ export const getAllTeamMembers = async (
           contracts."hoursPerWeek" AS "hoursPerWeek",
           contracts."appointmentsPerWeek" AS "appointmentsPerWeek",
           "userSettings"."bgColor" AS "bgColor"
-       FROM users
-       INNER JOIN contracts ON users.id=contracts."userId"
-       INNER JOIN "userSettings" ON users.id="userSettings"."userId"`
+      FROM users
+      LEFT JOIN contracts
+        ON users.id=contracts."userId"
+        AND users."tenantId"=contracts."tenantId"
+      LEFT JOIN "userSettings"
+        ON users.id="userSettings"."userId"
+        AND users."tenantId"="userSettings"."tenantId"
+      WHERE users."tenantId" = '${tenantId}'`
     );
     res.json(results);
     res.status(200);

@@ -3,6 +3,9 @@ import { Op } from 'sequelize';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import { Event, EventCreationAttributes } from '../db/models/Event';
+import dotenv from 'dotenv';
+dotenv.config();
+const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
 
 /**
@@ -16,7 +19,7 @@ export const addEvent = async (
 ): Promise<void> => {
   try {
     const createdEvent = await Event.create({
-      tenantId: "f4c2a988-2f7a-45f9-b8ac-bdb7eb230a07",
+      tenantId: tenantId,
       ...req.body,
     });
     res.json(createdEvent);

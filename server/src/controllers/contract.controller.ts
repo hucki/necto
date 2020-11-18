@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-
 import { Contract } from '../db/models/Contract';
+import dotenv from 'dotenv';
+dotenv.config();
+const tenantId = process.env.TENANT_UUID;
 
 export const getAllContracts = async (
   req: Request,
@@ -28,7 +30,7 @@ export const addContract = async (
 ): Promise<void> => {
   try {
     const createdContract = await Contract.create({
-      tenantId: "f4c2a988-2f7a-45f9-b8ac-bdb7eb230a07",
+      tenantId: tenantId,
       ...req.body,
     });
     res.json(createdContract);

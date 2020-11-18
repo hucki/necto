@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-
 import { User } from '../db/models/User';
+import dotenv from 'dotenv';
+dotenv.config();
+const tenantId = process.env.TENANT_UUID;
 
 export const getAllUsers = async (
   req: Request,
@@ -18,7 +20,7 @@ export const getAllUsers = async (
 };
 
 /**
- * add one Event
+ * add one User
  *  @param {User} req.body
  */
 export const addUser = async (
@@ -28,7 +30,7 @@ export const addUser = async (
 ): Promise<void> => {
   try {
     const createdUser = await User.create({
-      tenantId: "f4c2a988-2f7a-45f9-b8ac-bdb7eb230a07",
+      tenantId: tenantId,
       ...req.body,
     });
     res.json(createdUser);
