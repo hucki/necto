@@ -14,7 +14,7 @@ export interface ContractAttributes {
 }
 
 interface ContractCreationAttributes
-  extends Optional<ContractAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+  extends Optional<ContractAttributes, 'id' | 'validUntil' | 'createdAt' | 'updatedAt'> {}
 
 export class Contract
   extends Model<ContractAttributes, ContractCreationAttributes>

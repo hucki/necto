@@ -1,5 +1,6 @@
 import express from 'express';
 import * as userController from '../controllers/user.controller';
+import * as contractController from '../controllers/contract.controller';
 import * as eventController from '../controllers/event.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
@@ -22,6 +23,9 @@ router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 
 router.post('/events', eventController.addEvent);
 router.delete('/events/:eventId', eventController.deleteEvent);
+
+// contractss routes
+router.post('/contracts', contractController.addContract);
 
 // settings routes
 router.post('/appsettings', appSettingsController.addAppSettings);
