@@ -7,6 +7,7 @@
     "sourceMap": true,
     "outDir": "dist/src"
   },
+  "compileOnSave": true,
   "lib": ["es2015"],
   "include": ["src/**/*.ts", "src/db/config/config.ts"]
 }
