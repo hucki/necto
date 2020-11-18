@@ -10,13 +10,13 @@ const router = express.Router();
 // user routes
 // router.get('/users/:userId', userController.getOneUser);
 router.get('/users', userController.getAllUsers);
-// router.post('/users', userController.addUser);
+router.post('/users', userController.addUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
 
 router.get('/teammembers', teamMemberController.getAllTeamMembers);
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
-// router.get('/events', eventController.getAllEvents);
+router.get('/events/a', eventController.getAllEvents);
 router.get('/events/d/:year/:month/:day', eventController.getDaysEvents);
 router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 

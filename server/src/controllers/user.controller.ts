@@ -16,3 +16,25 @@ export const getAllUsers = async (
     next(e);
   }
 };
+
+/**
+ * add one Event
+ *  @param {User} req.body
+ */
+export const addUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const createdUser = await User.create({
+      tenantId: "f4c2a988-2f7a-45f9-b8ac-bdb7eb230a07",
+      ...req.body,
+    });
+    res.json(createdUser);
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
