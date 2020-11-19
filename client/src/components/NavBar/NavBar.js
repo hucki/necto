@@ -23,7 +23,7 @@ const NavBar = (props) => {
 
   return (
     <div className={classes.NavBar}>
-      <Button onClick={todayClickHandler}>Today</Button>
+      <Button disabled={dayjs().isSame(dayjs(props.currentDate), 'day')} onClick={todayClickHandler}>Today</Button>
       <Tooltip title="previous Day">
         <Button icon={<CaretLeftOutlined />} onClick={prevDayHandler}></Button>
       </Tooltip>
