@@ -26,9 +26,9 @@ import {
 import dayjs from 'dayjs';
 import { HomeTwoTone, HomeOutlined } from '@ant-design/icons';
 import { appointment2Event } from '../../../helpers/dataConverter';
-import currentDate from '../../../reducers/currentDate';
 
 const TimetableInputForm = ({
+  currentDate,
   visible,
   unfilteredEvents,
   dispatch,
@@ -122,8 +122,8 @@ const TimetableInputForm = ({
     const checkEnd = form.getFieldValue('endTime');
     const result = events[rowId].filter(
       (event) =>
-        (checkStart >= event.startTime && checkStart <= event.endTime) ||
-        (checkEnd >= event.startTime && checkEnd <= event.endTime)
+        (dayjs(checkStart) >= dayjs(event.startTime) && dayjs(checkStart) <= dayjs(event.endTime)) ||
+        (dayjs(checkEnd) >= dayjs(event.startTime) && dayjs(checkEnd) <= dayjs(event.endTime))
     );
     if (!result.length) return false;
     return true;
