@@ -10,7 +10,7 @@ const { Content: AntContent } = Layout;
 function AuthenticatedApp(): JSX.Element {
   return (
     <>
-    <AppMenu />
+      <AppMenu />
       <Layout className="site-layout">
         <Header />
         <AntContent style={{ margin: '0 16px' }}>
