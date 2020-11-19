@@ -18,7 +18,7 @@ const Dashboard = () => {
 
       <Switch>
         <Route exact path="/">
-          <TimetableContainer teamMembers={teamMembers} />
+          <h1>Welcome home</h1>
         </Route>
         <Route path="/appointments">
           <TimetableContainer teamMembers={teamMembers} />
