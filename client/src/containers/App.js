@@ -1,15 +1,11 @@
-import React from 'react';
-import { Layout } from 'antd';
-import Header from '../components/Header/Header';
-import Dashboard from '../components/Dashboard/Dashboard';
-import Footer from '../components/Footer/Footer';
+import React, { useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { createStore } from 'redux';
 import reducer from '../reducers/index';
 import { Provider } from 'react-redux';
-import AppMenu from '../components/AppMenu/AppMenu';
+import { Layout } from 'antd';
 import { ReactQueryDevtools } from 'react-query-devtools';
-
-const { Content: AntContent } = Layout;
+import AuthenticatedApp from './AuthenticatedApp';
 
 const store = createStore(
   reducer,
@@ -19,17 +15,17 @@ store.subscribe(() => {
   /*console.log('NEW STATE', store.getState())*/
 });
 function App() {
+  const [isAuthenticated] = useState(true);
+
+  if (!isAuthenticated) return (
+    <div>not authenticated</div>
+  )
   return (
     <Provider store={store}>
       <Layout style={{ minHeight: '100vh' }}>
-        <AppMenu />
-        <Layout className="site-layout">
-          <Header />
-          <AntContent style={{ margin: '0 16px' }}>
-            <Dashboard style={{ height: '100%' }} />
-          </AntContent>
-          <Footer />
-        </Layout>
+        <Router>
+          <AuthenticatedApp />
+        </Router>
       </Layout>
       <ReactQueryDevtools initialIsOpen />
     </Provider>

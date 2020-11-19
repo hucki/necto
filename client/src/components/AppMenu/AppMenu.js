@@ -9,11 +9,14 @@ import { Menu, Layout } from 'antd';
 import classes from './AppMenu.module.css';
 import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
+import { useHistory } from 'react-router';
 
 const { Sider: AntSider } = Layout;
 
 const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
+  let history = useHistory();
   const onClickHandler = (e) => {
+    history.push(e.key)
     dispatch(switchView(e.key));
   };
 
@@ -22,7 +25,7 @@ const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
       <h1 className={classes.menu}>Menu</h1>
       <Menu theme="dark" defaultSelectedKeys={[currentView]} mode="inline">
         <Menu.Item
-          key="Appointments"
+          key="/appointments"
           icon={<DesktopOutlined />}
           onClick={onClickHandler}
         >
@@ -31,7 +34,7 @@ const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
         </Menu.Item>
         {user !== 'Guest' && (
           <Menu.Item
-            key="Personal"
+            key="/personal"
             icon={<UserOutlined />}
             onClick={onClickHandler}
           >
@@ -39,13 +42,13 @@ const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
             Personal Calendar{' '}
           </Menu.Item>
         )}
-        <Menu.Item key="Team" icon={<TeamOutlined />} onClick={onClickHandler}>
+        <Menu.Item key="/team" icon={<TeamOutlined />} onClick={onClickHandler}>
           {' '}
           Team Member
         </Menu.Item>
         <Menu.Item
           disabled
-          key="Settings"
+          key="/settings"
           icon={<SettingOutlined />}
           onClick={onClickHandler}
         >
