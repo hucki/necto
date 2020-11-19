@@ -1,20 +1,21 @@
 import React from 'react';
 import {
-  DesktopOutlined,
   TeamOutlined,
   SettingOutlined,
   UserOutlined,
+  HomeOutlined
 } from '@ant-design/icons';
 import { Menu, Layout } from 'antd';
 import classes from './AppMenu.module.css';
 import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 
 const { Sider: AntSider } = Layout;
 
-const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
-  let history = useHistory();
+const AppMenu = ({ currentDate, user, dispatch }) => {
+  const {pathname: currentView} = useLocation();
+  const history = useHistory();
   const onClickHandler = (e) => {
     history.push(e.key)
     dispatch(switchView(e.key));
@@ -25,12 +26,20 @@ const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
       <h1 className={classes.menu}>Menu</h1>
       <Menu theme="dark" defaultSelectedKeys={[currentView]} mode="inline">
         <Menu.Item
-          key="/appointments"
-          icon={<DesktopOutlined />}
+          key="/"
+          icon={<HomeOutlined />}
           onClick={onClickHandler}
         >
           {' '}
-          Appointments
+          Home
+        </Menu.Item>
+        <Menu.Item
+          key="/appointments"
+          icon={<TeamOutlined />}
+          onClick={onClickHandler}
+        >
+          {' '}
+          Team Calendar{' '}
         </Menu.Item>
         {user !== 'Guest' && (
           <Menu.Item
@@ -42,11 +51,11 @@ const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
             Personal Calendar{' '}
           </Menu.Item>
         )}
-        <Menu.Item key="/team" icon={<TeamOutlined />} onClick={onClickHandler}>
+        <Menu.Item key="/team" icon={<SettingOutlined />} onClick={onClickHandler}>
           {' '}
-          Team Member
+          Settings
         </Menu.Item>
-        <Menu.Item
+        {/* <Menu.Item
           disabled
           key="/settings"
           icon={<SettingOutlined />}
@@ -54,7 +63,7 @@ const AppMenu = ({ currentDate, currentView, user, dispatch }) => {
         >
           {' '}
           Settings{' '}
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
     </AntSider>
   );
