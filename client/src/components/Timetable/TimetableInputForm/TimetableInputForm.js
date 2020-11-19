@@ -30,7 +30,7 @@ import { appointment2Event } from '../../../helpers/dataConverter';
 const TimetableInputForm = ({
   currentDate,
   visible,
-  unfilteredEvents,
+  unfilteredEvents: events,
   dispatch,
   rowId,
   startTime,
@@ -38,7 +38,6 @@ const TimetableInputForm = ({
   newRrule,
   teamMembers,
 }) => {
-  const events = filteredEvents(unfilteredEvents, currentDate);
   const [form] = Form.useForm();
   const [switcheroo, setSwitcheroo] = useState({ disabled: true });
   const [timeline, setTimeline] = useState([]);
@@ -117,9 +116,12 @@ const TimetableInputForm = ({
   }
 
   function checkOverlap() {
+    // TODO: fix overlap for PersonalCalendar
+    // console.log(rowId, events)
     if (!events[rowId] || !events[rowId].length) return false;
     const checkStart = form.getFieldValue('startTime');
     const checkEnd = form.getFieldValue('endTime');
+    // console.log(checkStart, checkEnd, events)
     const result = events[rowId].filter(
       (event) =>
         (dayjs(checkStart) >= dayjs(event.startTime) && dayjs(checkStart) <= dayjs(event.endTime)) ||
@@ -365,20 +367,6 @@ const TimetableInputForm = ({
     </Modal>
   );
 };
-
-function filteredEvents(events, currentDate) {
-  const filtered = {};
-  Object.keys(events).map((stateKey) => {
-    filtered[stateKey] = [];
-    events[stateKey].map((event) => {
-      if (dayjs(event.startTime).isSame(currentDate, 'day'))
-        filtered[stateKey] = [...filtered[stateKey], event];
-      return event;
-    });
-    return stateKey;
-  });
-  return filtered;
-}
 
 const MapStateToProps = (state) => {
   return {
