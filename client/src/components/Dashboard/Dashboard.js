@@ -6,12 +6,14 @@ import UserCalendarContainer from '../Timetable/UserCalendarContainer/UserCalend
 import TeamContainer from '../Team/TeamContainer/TeamContainer';
 import TimetableContainer from '../Timetable/TimetableContainer/TimetableContainer';
 import { useAllTeamMembers } from '../../hooks/user';
+import UserProfile from '../UserProfile/UserProfile';
 
-const Dashboard = () => {
+const Dashboard = ({a0Id}) => {
   const { isLoading, error, teamMembers } = useAllTeamMembers();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error getting teamMembers: {error.message}</div>;
   if (!teamMembers) return null;
+
 
   return (
     <div className={classes.Dashboard}>
@@ -28,6 +30,9 @@ const Dashboard = () => {
         </Route>
         <Route path="/team">
           <TeamContainer teamMembers={teamMembers} />
+        </Route>
+        <Route path="/profile">
+          <UserProfile a0Id={a0Id} />
         </Route>
         <Route path="*">
           <div>Route nor found</div>

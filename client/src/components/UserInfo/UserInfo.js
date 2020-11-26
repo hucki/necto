@@ -5,10 +5,10 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 dayjs.extend(isBetween);
 
-const UserInfo = ({ user }) => {
+const UserInfo = ({ user, userName }) => {
   return (
     <div>
-      <div className={classes.userInfo}> Hi {user}! </div>
+      <div className={classes.userInfo}> Hi {userName}! </div>
     </div>
   );
 };
