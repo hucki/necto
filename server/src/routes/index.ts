@@ -7,8 +7,18 @@ import * as appSettingsController from '../controllers/appSettings.controller';
 import * as userSettingsController from '../controllers/userSettings.controller';
 import * as tenantController from '../controllers/tenant.controller';
 import * as authController from '../controllers/auth.controller';
-
+import { jwtCheck } from '../middleware/authentication';
 const router = express.Router();
+
+// unauthenticated routes
+// NONE
+
+// check Authentication
+router.use(jwtCheck);
+
+// authenticated routes
+
+router.get('/teammembers', teamMemberController.getAllTeamMembers);
 
 // auth routes
 router.get('/auth/is', authController.isAuthenticated);
@@ -20,7 +30,6 @@ router.get('/users', userController.getAllUsers);
 router.post('/users', userController.addUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
 
-router.get('/teammembers', teamMemberController.getAllTeamMembers);
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
 router.get('/events/a', eventController.getAllEvents);
