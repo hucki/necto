@@ -6,8 +6,12 @@ import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
 import * as userSettingsController from '../controllers/userSettings.controller';
 import * as tenantController from '../controllers/tenant.controller';
+import * as authController from '../controllers/auth.controller';
 
 const router = express.Router();
+
+// auth routes
+router.get('/auth/is', authController.isAuthenticated);
 
 // user routes
 // router.get('/users/:userId', userController.getOneUser);
