@@ -17,9 +17,7 @@ store.subscribe(() => {
   /*console.log('NEW STATE', store.getState())*/
 });
 function App() {
-  const {isAuthenticated, user} = useAuth0();
-  console.log(isAuthenticated, user)
-  // const [isAuthenticated] = useState(true);
+  const {isAuthenticated} = useAuth0();
   return (
     <Provider store={store}>
       <Layout style={{ minHeight: '100vh' }}>
