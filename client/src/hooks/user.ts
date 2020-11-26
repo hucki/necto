@@ -16,6 +16,20 @@ export function useUser(
   };
 }
 
+export function useAuth0User(
+  a0Id: string
+): QueryResult<User> & { user: User | undefined } {
+  const client = useAuthenticatedClient<User>();
+  const userQuery = useQuery(['a0user', a0Id], async () => {
+    return client(`a0users/${a0Id}`);
+  });
+  const user = userQuery.data;
+  return {
+    user,
+    ...userQuery,
+  };
+}
+
 export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
   const client = useAuthenticatedClient<User[]>();
 

@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const serverApiUrl =
   process.env.NODE_ENV === 'production'
@@ -72,20 +73,20 @@ type ClientFunction<T, P = T> = (
 ) => Promise<P>;
 
 export function useAuthenticatedClient<T, P = T>(): ClientFunction<T, P> {
-  // const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   return useCallback(
     async (endpoint, config) => {
       const accessToken =
-        'MockOauth2TokenForLocaldevelopmentnW0TRghneR7dGI9sSodkSIOEFNDSgEI3';
-      //  isAuthenticated
-      //   ? await getAccessTokenSilently()
-      //   : undefined;
+        // 'MockOauth2TokenForLocaldevelopmentnW0TRghneR7dGI9sSodkSIOEFNDSgEI3';
+       isAuthenticated
+        ? await getAccessTokenSilently()
+        : undefined;
 
       return client<T, P>(endpoint, { ...config, accessToken });
     },
     [
-      /*isAuthenticated, getAccessTokenSilently*/
+      isAuthenticated, getAccessTokenSilently
     ]
   );
 }

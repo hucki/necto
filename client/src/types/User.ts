@@ -1,5 +1,6 @@
 export type User = {
   id?: number;
+  a0Id: string;
   firstName: string;
   lastName: string;
   validUntil: Date;
@@ -9,6 +10,7 @@ export type User = {
 
 export type TeamMember = {
   id: number;
+  a0Id: string;
   firstName: string;
   lastName: string;
   validUntil: Date;
