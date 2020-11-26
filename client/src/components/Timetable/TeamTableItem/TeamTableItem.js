@@ -19,14 +19,14 @@ const TeamtableItem = ({ event, styles }) => {
       setIcons((icons) => [...icons, <HomeTwoTone key="homeVisitIcon" />]);
   }, [event]);
 
-  const onClickHandler = ({ id, name, startTime, endTime }) => {
+  const onClickHandler = ({ id, title, startTime, endTime }) => {
     confirm({
       content: (
         <div>
           <p>Delete Appointment id: {id}?</p>
           <p>
             {dayjs(startTime).format('HH:mm')} -{' '}
-            {dayjs(endTime).format('HH:mm')}: <b>{name}</b>
+            {dayjs(endTime).format('HH:mm')}: <b>{title}</b>
           </p>
         </div>
       ),
