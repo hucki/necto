@@ -12,7 +12,6 @@ const { Content: AntContent } = Layout;
 function AuthenticatedApp(): JSX.Element {
   const { user: auth0User } = useAuth0();
   const { user } = useAuth0User(auth0User.sub);
-  console.log(user);
   return (
     <>
       <AppMenu />
