@@ -78,11 +78,9 @@ export function useAuthenticatedClient<T, P = T>(): ClientFunction<T, P> {
   return useCallback(
     async (endpoint, config) => {
       const accessToken =
-        // 'MockOauth2TokenForLocaldevelopmentnW0TRghneR7dGI9sSodkSIOEFNDSgEI3';
        isAuthenticated
-        ? await getAccessTokenSilently()
+        ? await getAccessTokenSilently({audience: "https://necto.de/api"})
         : undefined;
-
       return client<T, P>(endpoint, { ...config, accessToken });
     },
     [
