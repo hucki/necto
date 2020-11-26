@@ -6,19 +6,22 @@ import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useAuth0User } from '../hooks/user';
+import UserProfile from '../components/UserProfile/UserProfile';
 
 const { Content: AntContent } = Layout;
 
 function AuthenticatedApp(): JSX.Element {
   const { user: auth0User } = useAuth0();
+  const a0Id = auth0User.sub;
   const { user } = useAuth0User(auth0User.sub);
+
   return (
     <>
       <AppMenu />
       <Layout className="site-layout">
-        <Header />
+        <Header userName={!user ? 'new User' : user.firstName}/>
         <AntContent style={{ margin: '0 16px' }}>
-          <Dashboard style={{ height: '100%' }} />
+          {!user ? <UserProfile purpose="new" a0Id={a0Id}/>: <Dashboard style={{ height: '100%' }} a0Id={a0Id} />}
         </AntContent>
         <Footer />
       </Layout>
