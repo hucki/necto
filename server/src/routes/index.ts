@@ -14,6 +14,7 @@ const router = express.Router();
 router.get('/auth/is', authController.isAuthenticated);
 
 // user routes
+router.get('/a0users/:a0Id', userController.getOneUserByAuth0Id);
 // router.get('/users/:userId', userController.getOneUser);
 router.get('/users', userController.getAllUsers);
 router.post('/users', userController.addUser);
