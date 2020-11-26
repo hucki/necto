@@ -29,7 +29,7 @@ export const getOneUserByAuth0Id = async (
 ): Promise<void> => {
   try {
     const user = await User.findOne({where: {a0Id: req.params.a0Id}})
-    res.json(req.params.a0Id);
+    res.json(user);
     res.status(200);
     return;
   } catch (e) {
