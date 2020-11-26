@@ -3,14 +3,15 @@ import {
   TeamOutlined,
   SettingOutlined,
   UserOutlined,
-  HomeOutlined
+  HomeOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { Menu, Layout } from 'antd';
 import classes from './AppMenu.module.css';
 import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
 import { useHistory, useLocation } from 'react-router';
-
+import { useAuth0 } from "@auth0/auth0-react";
 const { Sider: AntSider } = Layout;
 
 const AppMenu = ({ currentDate, user, dispatch }) => {
@@ -20,7 +21,7 @@ const AppMenu = ({ currentDate, user, dispatch }) => {
     history.push(e.key)
     dispatch(switchView(e.key));
   };
-
+  const { logout } = useAuth0();
   return (
     <AntSider collapsible theme="dark" breakpoint="lg" collapsedWidth="0">
       <h1 className={classes.menu}>Menu</h1>
@@ -54,6 +55,11 @@ const AppMenu = ({ currentDate, user, dispatch }) => {
         <Menu.Item key="/team" icon={<SettingOutlined />} onClick={onClickHandler}>
           {' '}
           Settings
+        </Menu.Item>
+        <Menu.Item key="/logout" icon={<LogoutOutlined />}
+          onClick={() => logout({ returnTo: window.location.origin })}>
+          {' '}
+          LogOut
         </Menu.Item>
         {/* <Menu.Item
           disabled
