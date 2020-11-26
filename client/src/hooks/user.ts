@@ -1,4 +1,8 @@
-import { useQuery, QueryResult } from 'react-query';
+import { useQuery,
+  QueryResult,
+  useMutation,
+  MutationResultPair,
+  queryCache } from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { TeamMember, User } from '../types/User';
 
@@ -15,6 +19,24 @@ export function useUser(
     ...userQuery,
   };
 }
+
+export function useAddUser(): MutationResultPair<
+  User,
+  Error,
+  { user: User },
+  string
+> {
+  const client = useAuthenticatedClient<User>();
+  const createUser = async ({ user }: { user: User }): Promise<User> => {
+    return client('users', { data: user });
+  };
+  return useMutation(createUser, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('users');
+    },
+  });
+}
+
 
 export function useAuth0User(
   a0Id: string

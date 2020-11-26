@@ -3,7 +3,7 @@ export type User = {
   a0Id: string;
   firstName: string;
   lastName: string;
-  validUntil: Date;
+  validUntil?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 };
