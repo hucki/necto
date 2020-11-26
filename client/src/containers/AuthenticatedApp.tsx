@@ -4,10 +4,13 @@ import AppMenu from '../components/AppMenu/AppMenu';
 import Header from '../components/Header/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const { Content: AntContent } = Layout;
 
 function AuthenticatedApp(): JSX.Element {
+  const { user } = useAuth0();
+  console.log(user);
   return (
     <>
       <AppMenu />
