@@ -4,7 +4,8 @@ import {
   SettingOutlined,
   UserOutlined,
   HomeOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  ProfileOutlined
 } from '@ant-design/icons';
 import { Menu, Layout } from 'antd';
 import classes from './AppMenu.module.css';
@@ -55,6 +56,10 @@ const AppMenu = ({ currentDate, user, dispatch }) => {
         <Menu.Item key="/team" icon={<SettingOutlined />} onClick={onClickHandler}>
           {' '}
           Settings
+        </Menu.Item>
+        <Menu.Item key="/profile" icon={<ProfileOutlined />} onClick={onClickHandler}>
+          {' '}
+          Profile
         </Menu.Item>
         <Menu.Item key="/logout" icon={<LogoutOutlined />}
           onClick={() => logout({ returnTo: window.location.origin })}>
