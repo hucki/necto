@@ -16,6 +16,7 @@ import { commonFields } from './commonFields';
 
 export interface UserAttributes {
   id: number;
+  a0Id: string;
   firstName: string;
   lastName: string;
   validUntil: Date;
@@ -31,6 +32,7 @@ export class User
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes {
   public id!: number;
+  public a0Id!: string;
   public firstName!: string;
   public lastName!: string;
   public validUntil!: Date;
@@ -56,6 +58,10 @@ export const userFields = {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
+  },
+  a0Id: {
+    type: DataTypes.STRING(64),
+    allowNull: false,
   },
   firstName: {
     type: DataTypes.STRING(64),
