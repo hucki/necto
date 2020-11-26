@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/auth0": "^2.20.9",
     "@types/express": "^4.17.8",
     "@types/node": "^14.6.4",
     "@types/sequelize": "^4.28.9",
