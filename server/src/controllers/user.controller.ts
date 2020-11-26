@@ -18,6 +18,25 @@ export const getAllUsers = async (
     next(e);
   }
 };
+/**
+ * get one User with the given Auth0 ID
+ *  @param {string} req.params.a0Id
+ */
+export const getOneUserByAuth0Id = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user = await User.findOne({where: {a0Id: req.params.a0Id}})
+    res.json(req.params.a0Id);
+    res.status(200);
+    return;
+  } catch (e) {
+    console.log(e)
+    next(e);
+  }
+};
 
 /**
  * add one User
