@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-redux": "^7.1.11",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
     "@types/uuid": "^8.3.0",
