@@ -79,7 +79,7 @@ export function useAuthenticatedClient<T, P = T>(): ClientFunction<T, P> {
     async (endpoint, config) => {
       const accessToken =
        isAuthenticated
-        ? await getAccessTokenSilently({audience: "https://necto.de/api"})
+        ? await getAccessTokenSilently({audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL})
         : undefined;
       return client<T, P>(endpoint, { ...config, accessToken });
     },
