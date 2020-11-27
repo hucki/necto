@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { Layout } from 'antd';
 import AppMenu from '../components/AppMenu/AppMenu';
 import Header from '../components/Header/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
+import { connect } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useAuth0User } from '../hooks/user';
 import UserProfile from '../components/UserProfile/UserProfile';
+import { logIn } from '../actions/actions';
 
 const { Content: AntContent } = Layout;
 
-function AuthenticatedApp(): JSX.Element {
-  const { user: auth0User } = useAuth0();
+interface AuthenticatedAppInputProps {
+  userData: ()=>{},
+  dispatch: Dispatch<any>
+}
+
+function AuthenticatedApp({userData, dispatch}: AuthenticatedAppInputProps): JSX.Element {
+  const { user: auth0User, isLoading } = useAuth0();
   const a0Id = auth0User.sub;
   const { user } = useAuth0User(auth0User.sub);
+  useEffect(() => {
+    if(!user) return;
+    dispatch(logIn(user))
+  }, [user, dispatch]);
+  if(isLoading) return <div>fetching Data</div>
 
   return (
     <>
@@ -29,4 +41,11 @@ function AuthenticatedApp(): JSX.Element {
   );
 }
 
-export default AuthenticatedApp;
+const MapDispatchToProps = (dispatch: Dispatch<any>) => {
+  return {
+    logIn,
+    dispatch
+  }
+}
+
+export default connect(null,MapDispatchToProps)(AuthenticatedApp);
