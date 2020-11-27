@@ -4,7 +4,7 @@ import React, { FormEvent, useState } from "react";
 import { useAddUser, useAuth0User } from "../../hooks/user";
 
 interface UserProfileProps {
-  purpose: string,
+  purpose?: string,
   a0Id: string,
 };
 
