@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from 'react-query-devtools';
 import AuthenticatedApp from './AuthenticatedApp';
 import UnauthenticatedApp from './UnauthenticatedApp';
 import { useAuth0 } from '@auth0/auth0-react';
+import { FullPageSpinner } from '../components/Library';
 
 const store = createStore(
   reducer,
@@ -17,7 +18,8 @@ store.subscribe(() => {
   /*console.log('NEW STATE', store.getState())*/
 });
 function App() {
-  const {isAuthenticated} = useAuth0();
+  const {isAuthenticated, isLoading } = useAuth0();
+  if(isLoading) return <FullPageSpinner />
   return (
     <Provider store={store}>
       <Layout style={{ minHeight: '100vh' }}>
@@ -25,7 +27,7 @@ function App() {
           {isAuthenticated ? <AuthenticatedApp />: <UnauthenticatedApp /> }
         </Router>
       </Layout>
-      <ReactQueryDevtools initialIsOpen />
+      <ReactQueryDevtools initialIsOpen="false" />
     </Provider>
   );
 }
