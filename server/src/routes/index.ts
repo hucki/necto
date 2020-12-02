@@ -6,9 +6,13 @@ import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
 import * as userSettingsController from '../controllers/userSettings.controller';
 import * as tenantController from '../controllers/tenant.controller';
-import * as authController from '../controllers/auth.controller';
+import * as errorController from '../controllers/error.controller';
 import { jwtCheck } from '../middleware/authentication';
 const router = express.Router();
+const errorRouter = express.Router();
+errorRouter.get('*', errorController.getError);
+errorRouter.post('*', errorController.postError);
+errorRouter.delete('*', errorController.deleteError);
 
 // unauthenticated routes
 // NONE
@@ -21,7 +25,7 @@ router.use(jwtCheck);
 router.get('/teammembers', teamMemberController.getAllTeamMembers);
 
 // auth routes
-router.get('/auth/is', authController.isAuthenticated);
+//router.get('/auth/is', authController.isAuthenticated);
 
 // user routes
 router.get('/a0users/:a0Id', userController.getOneUserByAuth0Id);
@@ -52,4 +56,4 @@ router.post('/settings/user', userSettingsController.addUserSettings);
 // tenant routes
 router.post('/tenant', tenantController.addTenant);
 
-export default router;
+export {router, errorRouter};
