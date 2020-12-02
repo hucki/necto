@@ -13,14 +13,14 @@ import { logIn } from '../actions/actions';
 const { Content: AntContent } = Layout;
 
 interface AuthenticatedAppInputProps {
-  userData: ()=>{},
-  dispatch: Dispatch<any>
+  userData: ()=>{};
+  dispatch: Dispatch<any>;
 }
 
-function AuthenticatedApp({userData, dispatch}: AuthenticatedAppInputProps): JSX.Element {
+function AuthenticatedApp({ userData, dispatch }: AuthenticatedAppInputProps): JSX.Element {
   const { user: auth0User, isLoading } = useAuth0();
   const a0Id = auth0User.sub;
-  const { user } = useAuth0User(auth0User.sub);
+  const { user, isError } = useAuth0User(auth0User.sub);
   useEffect(() => {
     if(!user) return;
     dispatch(logIn(user))
@@ -33,7 +33,7 @@ function AuthenticatedApp({userData, dispatch}: AuthenticatedAppInputProps): JSX
       <Layout className="site-layout">
         <Header userName={!user ? 'new User' : user.firstName}/>
         <AntContent style={{ margin: '0 16px' }}>
-          {!user ? <UserProfile purpose="new" a0Id={a0Id}/>: <Dashboard style={{ height: '100%' }} a0Id={a0Id} />}
+          {isError ? <div>Error connecting to backend. Please try again later!</div> : !user ? <UserProfile purpose="new" a0Id={a0Id}/>: <Dashboard style={{ height: '100%' }} a0Id={a0Id} />}
         </AntContent>
         <Footer />
       </Layout>
