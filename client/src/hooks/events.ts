@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import {
   useQuery,
   QueryResult,
@@ -76,7 +76,7 @@ export function useWeeksEvents(
 }
 
 export function useDaysEvents(
-  currentDate: Date
+  currentDate: Dayjs
 ): QueryResult<Event[]> & { rawEvents: Event[] } {
   const client = useAuthenticatedClient<Event[]>();
   const year = dayjs(currentDate).format('YYYY');
