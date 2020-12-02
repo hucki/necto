@@ -9,9 +9,6 @@ import { useAllTeamMembers } from '../../hooks/user';
 import UserProfile from '../UserProfile/UserProfile';
 import { AppState } from '../../types/AppState';
 import TeamCalendar from '../../views/TeamCalendar/TeamCalendar';
-import currentDate from '../../reducers/currentDate';
-import { Dayjs } from 'dayjs';
-
 
 interface DashboardInputProps {
   a0Id: string;
