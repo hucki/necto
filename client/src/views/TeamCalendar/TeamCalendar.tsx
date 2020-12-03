@@ -1,37 +1,42 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import { connect } from 'react-redux';
-import { CalendarContainer } from '../../components/Calendar/CalendarContainer';
+import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents } from '../../hooks/events';
 import dayjs, { Dayjs } from 'dayjs';
 import { FullPageSpinner } from '../../components/Library';
+import { TeamMember } from '../../types/User';
+import { Ressource } from '../../types/Ressource';
+import { useState } from 'react';
 
 interface TeamCalendarInputProps {
-  currentDate?: Dayjs
+  currentDate?: Dayjs;
+  teamMembers: TeamMember[];
 }
 
-function TeamCalendar({currentDate}: TeamCalendarInputProps):JSX.Element {
+function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.Element {
+  const [calendarDate, setCalendarDate] = useState(currentDate ? currentDate : dayjs())
   const { isLoading, rawEvents } = useDaysEvents(
-    currentDate ? currentDate : dayjs()
+    calendarDate
   );
-
+  const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName}))
   if (isLoading) return <FullPageSpinner />
   console.log(rawEvents)
 
   return (
     <div
       css={{
-        height: '100vh',
-        width: '100vw',
+        height: '100%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
       }}
     >
-      TeamCalendar {currentDate?.format('DD.MM.YYYY')}
-      <CalendarContainer events={rawEvents} />
+      TeamCalendar {calendarDate.format('DD.MM.YYYY')}
+      <CalendarContainer events={rawEvents} ressources={ressources} daysRange={[calendarDate, calendarDate]}/>
     </div>
   )
 }
@@ -39,6 +44,7 @@ function TeamCalendar({currentDate}: TeamCalendarInputProps):JSX.Element {
 const mapStateToProps = (state: AppState) => {
   return {
     currentDate: state.current.currentDate,
+    hoursInterval: state.settings.hoursInterval,
   };
 };
 
