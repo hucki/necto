@@ -17,18 +17,43 @@ interface CalendarInputProps {
 const currentDayjs = dayjs();
 
 function CalendarContainer({events, hoursInterval, ressources, currentDate, daysRange = [currentDayjs, currentDayjs]}: CalendarInputProps):JSX.Element {
+  const [ numOfDays ] = useState(dayjs(daysRange[0]).diff(daysRange[1], 'day')+1);
+  const [ totalRows ] = useState((1 + (numOfDays * ressources.length)));
   const [ currentHoursInterval, setCurrentHoursInterval ] = useState(hoursInterval);
+  const [ numOfHours ] = useState(currentHoursInterval === undefined ? 0 : currentHoursInterval[1]-currentHoursInterval[0]);
+
   const days : string[] = [];
   events.map(event => {
     return dayjs(event.startTime).format('YYYY-MM-DD')
   })
   const dayRows = days.map(day => <div>day</div>)
-  const ressourceRows = ressources.map(ressource => <div id={`${ressource.id}`}>{ressource.shortDescription}</div>)
-  console.log(ressourceRows)
+  const ressourceColsHeader = ressources.map(ressource =>
+    <div
+      id={`rcolHeader_${ressource.id}`}
+      css={{
+        width: `calc(100% / ${ressources.length})`,
+        textAlign: 'center',
+      }}
+    >
+      {ressource.shortDescription}
+    </div>
+  )
+  const ressourceColsBody = ressources.map(ressource =>
+    <div
+      id={`rcolBody_${ressource.id}`}
+      css={{
+        width: `calc(100% / ${ressources.length})`,
+        height: '100%'
+      }}
+    >
+      content
+    </div>
+  )
+
   // calculate boundaries to fit all events
   events.forEach(event => {
     const newStart = dayjs(event.startTime).hour();
-    const newEnd = dayjs(event.endTime).hour() + 1;
+    const newEnd = dayjs(event.endTime).hour();
     console.log([newStart, newEnd])
     if (currentHoursInterval === undefined) {
       setCurrentHoursInterval([newStart, newEnd]);
@@ -42,6 +67,46 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
     }
   })
   if (currentHoursInterval === undefined) return <div>no hoursInterval</div>
+  const calendarScale = [];
+  for (let i = currentHoursInterval[0]; i<=currentHoursInterval[1]; i++) {
+    calendarScale.push(<div id={`CalendarScale_${i}`} css={{height: `calc(100% / ${numOfHours})`}}>{i}:00</div>)
+  }
+  const calendarDays = [];
+  let curCalendarDay = daysRange[0];
+  for (let i = 0; i <= dayjs(daysRange[0]).diff(daysRange[1], 'day'); i++) {
+    calendarDays.push(
+    <div id={`CalendarDay_${i}`}
+      css={{
+        width: `calc((100% - (100% / ${totalRows})) * ${numOfDays})`,
+        textAlign: 'center'
+      }}
+      >
+      <div id={`DayHeader_${i}`} css={{ height: `calc((100% / ${numOfHours+1}) / 2)`}}
+      >{curCalendarDay.format('DD.MM.YYYY')}</div>
+      <div id={`RessourceHeader_${i}`}
+        css={{
+          display: 'flex',
+          height: `calc((100% / ${numOfHours+1}) / 2)`,
+          flexDirection: 'row',
+        }}
+      >
+        {ressourceColsHeader}
+      </div>
+      <div id={`RessourceBody_${i}`}
+        css={{
+          display: 'flex',
+          height: `calc(100% / ${numOfHours+1} * ${numOfHours})`,
+          flexDirection: 'row',
+          //justifyContent: 'space-around',
+        }}
+      >
+        {ressourceColsBody}
+      </div>
+    </div>
+      )
+    curCalendarDay = curCalendarDay.add(1, 'day');
+  }
+
   return (
     <div id="containerDiv"
       css={{
@@ -49,17 +114,26 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
         height: '100%',
         width: '100%',
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center'
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        textAlign: 'right'
       }}
     >
-      <div id="CalendarScale">CalendarScale from {currentHoursInterval[0]} to {currentHoursInterval[1]} </div>
-      {dayRows}
-      <div id="CalendarDay">one CalendarDay per Date in Events Object
-      <div id="CalendarRow">one CalendarRow per Ressource/Person: {ressourceRows}</div>
+      <div id="CalendarScale"
+      css={{
+        width: `calc(100% / ${totalRows})`,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}>
+        <div id="CalendarScaleHeader"
+          css={{height: `calc(100% / ${numOfHours+1})`}}>
+          </div>
+        {calendarScale}
       </div>
+      {dayRows}
+      {calendarDays}
     </div>
   )
 }
