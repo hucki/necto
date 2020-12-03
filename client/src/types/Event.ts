@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
 export type Event = {
@@ -11,8 +12,8 @@ export type Event = {
   isCancelled: boolean;
   isCancelledReason: string;
   rrule: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: Dayjs;
+  endTime: Dayjs;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -21,8 +22,8 @@ export type Appointment = {
   id?: number;
   rowId: string;
   title: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: Dayjs;
+  endTime: Dayjs;
   rrule: string;
   bgColor: string;
   isHomeVisit: boolean;
