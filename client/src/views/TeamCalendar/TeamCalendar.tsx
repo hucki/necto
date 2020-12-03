@@ -16,7 +16,7 @@ interface TeamCalendarInputProps {
 }
 
 function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.Element {
-  const [calendarDate, setCalendarDate] = useState(currentDate ? currentDate : dayjs())
+  const [ calendarDate ] = useState(currentDate ? currentDate : dayjs())
   const { isLoading, rawEvents } = useDaysEvents(
     calendarDate
   );
@@ -35,7 +35,6 @@ function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.
         alignItems: 'center',
       }}
     >
-      TeamCalendar {calendarDate.format('DD.MM.YYYY')}
       <CalendarContainer events={rawEvents} ressources={ressources} daysRange={[calendarDate, calendarDate]}/>
     </div>
   )
