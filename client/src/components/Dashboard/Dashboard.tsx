@@ -29,7 +29,7 @@ const Dashboard = ({a0Id}: DashboardInputProps):JSX.Element => {
           <h1>Welcome home</h1>
         </Route>
         <Route path="/newcal">
-          <TeamCalendar />
+          <TeamCalendar teamMembers={teamMembers}/>
         </Route>
         <Route path="/appointments">
           <TimetableContainer teamMembers={teamMembers} />
