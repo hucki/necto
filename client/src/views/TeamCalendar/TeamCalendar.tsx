@@ -8,7 +8,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FullPageSpinner } from '../../components/Library';
 import { TeamMember } from '../../types/User';
 import { Ressource } from '../../types/Ressource';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface TeamCalendarInputProps {
   currentDate?: Dayjs;
@@ -16,10 +16,15 @@ interface TeamCalendarInputProps {
 }
 
 function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.Element {
-  const [ calendarDate ] = useState(currentDate ? currentDate : dayjs())
+  const [ calendarDate, setCalendarDate ] = useState(currentDate ? currentDate : dayjs())
   const { isLoading, rawEvents } = useDaysEvents(
     calendarDate
   );
+
+  useEffect(() => {
+    if(currentDate && calendarDate !== currentDate) setCalendarDate(currentDate)
+  },[currentDate, calendarDate, setCalendarDate])
+
   const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName}))
   if (isLoading) return <FullPageSpinner />
 
