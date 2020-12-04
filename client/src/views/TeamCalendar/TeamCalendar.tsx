@@ -20,12 +20,12 @@ function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.
   const { isLoading, rawEvents } = useDaysEvents(
     calendarDate
   );
-
+  teamMembers.forEach(member => console.log(member.bgColor))
   useEffect(() => {
     if(currentDate && calendarDate !== currentDate) setCalendarDate(currentDate)
   },[currentDate, calendarDate, setCalendarDate])
 
-  const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName}))
+  const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName, bgColor: member.bgColor}))
   if (isLoading) return <FullPageSpinner />
 
   return (
