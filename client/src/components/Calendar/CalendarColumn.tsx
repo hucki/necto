@@ -4,6 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { Ressource } from '../../types/Ressource';
 import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
+import * as colors from '../../styles/colors'
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -22,18 +23,17 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval}:Ca
     return <TeamtableItem key={event.id} event={event} styles={styles} />;
   };
   function getItemStyle(event: Event) {
+    const minsToday = numOfHours * 60;
     const minsFromStartOfDay = dayjs(event.startTime).diff(
       dayjs(event.startTime).startOf('day').add(hoursInterval[0], 'h'),
       'minute'
     );
     const minsDuration = dayjs(event.endTime).diff(event.startTime, 'minute');
-    // const pxPerMinute = cellHeight / 60;
-    // const pxFromStartOfDay = pxPerMinute * minsFromStartOfDay + cellHeight;
-    // const pxItemHeight = pxPerMinute * minsDuration;
+    const percentFromStartOfToday = minsFromStartOfDay / minsToday;
+    const percentOfToday = minsDuration / minsToday;
     const itemStyle = {
-      top: '0px',//`${pxFromStartOfDay}px`,
-      height: `calc(100% * ${(numOfHours * 60 / (numOfHours * 60 - minsDuration)) - 1})`//'30px'//`${pxItemHeight}px`,
-
+      top: `calc(100% * ${percentFromStartOfToday})`,
+      height: `calc(100% * ${percentOfToday})`
     };
     return itemStyle;
   }
@@ -44,6 +44,7 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval}:Ca
       css={{
         width: `calc(100% / ${ressources.length})`,
         textAlign: 'center',
+        backgroundColor: `${colors.bg.blue50}`, // TODO: get the real colors
       }}
     >
       {ressource.shortDescription}
