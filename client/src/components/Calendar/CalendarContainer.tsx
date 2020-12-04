@@ -20,12 +20,10 @@ const currentDayjs = dayjs();
 
 function CalendarContainer({events, hoursInterval, ressources, currentDate, daysRange = [currentDayjs, currentDayjs]}: CalendarInputProps):JSX.Element {
   const [ numOfDays ] = useState(dayjs(daysRange[1]).diff(daysRange[0], 'day')+1);
-  const [ totalRows ] = useState(numOfDays * ressources.length);
   const [ currentHoursInterval, setCurrentHoursInterval ] = useState(hoursInterval);
   const [ numOfHours ] = useState(currentHoursInterval === undefined ? 0 : currentHoursInterval[1]-currentHoursInterval[0] + 1);
   const scaleWidth = '3rem';
 
-  const days : string[] = [];
   events.map(event => {
     return dayjs(event.startTime).format('YYYY-MM-DD')
   })
@@ -34,7 +32,6 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
   events.forEach(event => {
     const newStart = dayjs(event.startTime).hour();
     const newEnd = dayjs(event.endTime).hour();
-    console.log([newStart, newEnd])
     if (currentHoursInterval === undefined) {
       setCurrentHoursInterval([newStart, newEnd]);
       return;
@@ -52,6 +49,7 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
     calendarScale.push(
       <div
         id={`CalendarScale_${i}`}
+        key={`CalendarScale_${i}`}
         css={{
           height: `calc(100% / ${numOfHours +1})`,
           fontStyle: 'italic',
@@ -66,12 +64,15 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
   const calendarDays = [];
   let curCalendarDay = daysRange[0];
   for (let i = 0; i < numOfDays; i++) {
-    calendarDays.push(<CalendarColumn date={curCalendarDay} ressources={ressources} numOfHours={numOfHours}/>)
+    const daysEvents = events.filter(event => dayjs(event.startTime).isSame(dayjs(curCalendarDay),'date') ? event : undefined);
+    calendarDays.push(<CalendarColumn key={`CalColumn_d${dayjs(curCalendarDay).format('YYYYMMDD')}`} date={curCalendarDay} events={daysEvents} ressources={ressources} numOfHours={numOfHours} hoursInterval={currentHoursInterval}/>)
     curCalendarDay = curCalendarDay.add(1, 'day');
   }
 
   return (
-    <div id="containerDiv"
+    <div
+      id="containerDiv"
+      key="containerDiv"
       css={{
         fontSize: '1rem',
         height: '100%',
@@ -86,14 +87,18 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
         backgroundSize: `1px calc(100% / ${numOfHours + 1} * 2)`
       }}
     >
-      <div id="CalendarScale"
-      css={{
-        width: scaleWidth,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}>
-        <div id="CalendarScaleHeader"
+      <div
+        id="CalendarScale"
+        key="CalendarScale"
+        css={{
+          width: scaleWidth,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}>
+        <div
+          id="CalendarScaleHeader"
+          key="CalendarScaleHeader"
           css={{height: `calc(100% / ${numOfHours+1})`}}>
           </div>
         {calendarScale}
