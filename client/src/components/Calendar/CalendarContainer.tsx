@@ -7,6 +7,7 @@ import { AppState } from '../../types/AppState';
 import { Ressource } from '../../types/Ressource';
 import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
+import * as colors from '../../styles/colors'
 
 interface CalendarInputProps {
   events: Event[];
@@ -28,7 +29,6 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
   events.map(event => {
     return dayjs(event.startTime).format('YYYY-MM-DD')
   })
-  // const dayRows = days.map((day, i)=> <div>day</div>)
 
   // calculate boundaries to fit all events
   events.forEach(event => {
@@ -49,7 +49,19 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
   if (currentHoursInterval === undefined) return <div>no hoursInterval</div>
   const calendarScale = [];
   for (let i = currentHoursInterval[0]; i<=currentHoursInterval[1]; i++) {
-    calendarScale.push(<div id={`CalendarScale_${i}`} css={{height: `calc(100% / ${numOfHours +1})`}}>{i}:00</div>)
+    calendarScale.push(
+      <div
+        id={`CalendarScale_${i}`}
+        css={{
+          height: `calc(100% / ${numOfHours +1})`,
+          fontStyle: 'italic',
+          fontSize: 'small',
+          backgroundColor: `${colors.background}`,
+          borderTop: `1px solid ${colors.border}`
+          }}>
+        {i}:00
+      </div>
+    )
   }
   const calendarDays = [];
   let curCalendarDay = daysRange[0];
@@ -68,7 +80,10 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'stretch',
-        textAlign: 'right'
+        textAlign: 'right',
+        backgroundColor: '#fff',
+        backgroundImage: 'linear-gradient(#f0f2f5 50%, transparent 50%)',
+        backgroundSize: `1px calc(100% / ${numOfHours + 1} * 2)`
       }}
     >
       <div id="CalendarScale"
@@ -83,7 +98,6 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
           </div>
         {calendarScale}
       </div>
-
       {calendarDays}
     </div>
   )
