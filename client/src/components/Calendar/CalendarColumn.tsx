@@ -29,7 +29,6 @@ function CalendarColumn({date, ressources, numOfHours}:CalendarColumnInputProps)
         height: '100%'
       }}
     >
-      content
     </div>
   )
 
