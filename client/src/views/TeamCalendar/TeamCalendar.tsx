@@ -20,7 +20,7 @@ function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.
   const { isLoading, rawEvents } = useDaysEvents(
     calendarDate
   );
-  teamMembers.forEach(member => console.log(member.bgColor))
+  // teamMembers.forEach(member => console.log(member.bgColor))
   useEffect(() => {
     if(currentDate && calendarDate !== currentDate) setCalendarDate(currentDate)
   },[currentDate, calendarDate, setCalendarDate])
