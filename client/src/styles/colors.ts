@@ -1,4 +1,7 @@
 export const base = 'white'
+export const background = '#f0f2f5'
+export const shadow = '#3333'
+export const border = '#3333'
 export const text = '#3338'
 export const gray = '#34495e'
 export const gray10 = '#f1f1f4'
