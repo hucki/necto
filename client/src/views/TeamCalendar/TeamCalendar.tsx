@@ -22,7 +22,6 @@ function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.
   );
   const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName}))
   if (isLoading) return <FullPageSpinner />
-  console.log(rawEvents)
 
   return (
     <div
