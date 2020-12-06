@@ -81,7 +81,7 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
                         setClickedId={setClickedId}
                         clickedDateTime={clickedDateTime}
                         setClickedDateTime={setClickedDateTime}
-                        inputIsOpen={isOpen}
+                        openModal={onOpen}
                         />)
     curCalendarDay = curCalendarDay.add(1, 'day');
   }
