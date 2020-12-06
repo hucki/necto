@@ -5,6 +5,7 @@ import { Event } from '../../types/Event';
 import { Ressource } from '../../types/Ressource';
 import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
 import * as colors from '../../styles/colors'
+import { Dispatch, SetStateAction } from 'react';
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -12,16 +13,38 @@ interface CalendarColumnInputProps {
   ressources: Ressource[];
   numOfHours: number;
   hoursInterval: [number, number];
+  clickedId: number;
+  setClickedId: Dispatch<SetStateAction<number>>;
+  clickedDateTime: Dayjs;
+  setClickedDateTime: Dispatch<SetStateAction<Dayjs>>;
+  inputIsOpen: boolean;
 }
 interface ItemStyle {
   top: string;
   height: string;
 }
 
-function CalendarColumn({date, events, ressources, numOfHours, hoursInterval}:CalendarColumnInputProps):JSX.Element {
+function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, clickedId, setClickedId, clickedDateTime, setClickedDateTime, inputIsOpen}:CalendarColumnInputProps):JSX.Element {
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
     return <TeamtableItem key={event.id} event={event} styles={styles} />;
   };
+
+  function getPosition(e: React.MouseEvent<HTMLDivElement, MouseEvent>) : void {
+    e.preventDefault();
+    if (e.target !== e.currentTarget) return;
+    setClickedId(parseInt(e.currentTarget.id.split(/_r/)[1]));
+    const clickedDate = dayjs(e.currentTarget.id.split(/_d/)[1].substr(0,8));
+    const {height, top } = e.currentTarget.getBoundingClientRect();
+    const startOfDay = clickedDate.add(hoursInterval[0], 'hour');
+    const pxPerHour = height / numOfHours;
+    const clickedPx = e.pageY - top < 0 ? 0 : e.pageY - top;
+    const clickedMinutesRounded = Math.round(clickedPx / (pxPerHour / 60)/15) * 15;
+    setClickedDateTime(startOfDay.add(clickedMinutesRounded, 'minute'))
+    setClickedId(clickedId)
+    inputIsOpen = true;
+    console.log('clicked ID:',clickedId,'date/time:',clickedDateTime.format('YYYYMMDD HH:mm'))
+  }
+
   function getItemStyle(event: Event) {
     const minsToday = numOfHours * 60;
     const minsFromStartOfDay = dayjs(event.startTime).diff(
@@ -59,6 +82,7 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval}:Ca
         height: '100%',
         position:  'relative'
       }}
+      onClick={getPosition}
     >
       { events.filter((event) => event.userId === ressource.id).map(event =>
           renderCustomEvent(event, getItemStyle(event)))}
