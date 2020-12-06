@@ -22,6 +22,22 @@ interface ButtonCallbackProps {
   variant?: string;
   disabled?: boolean;
 }
+
+const CircleButton = styled.button({
+  borderRadius: '30px',
+  padding: '0',
+  width: '40px',
+  height: '40px',
+  lineHeight: '1',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: colors.base,
+  color: colors.text,
+  border: `1px solid ${colors.gray10}`,
+  cursor: 'pointer',
+})
+
 const Button = styled.button(
   {
     padding: '10px 15px',
@@ -32,4 +48,4 @@ const Button = styled.button(
   ({variant = 'primary'}: ButtonCallbackProps) => buttonVariants[variant],
 )
 
-export { Button} ;
+export { Button, CircleButton } ;
