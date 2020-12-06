@@ -17,14 +17,14 @@ interface CalendarColumnInputProps {
   setClickedId: Dispatch<SetStateAction<number>>;
   clickedDateTime: Dayjs;
   setClickedDateTime: Dispatch<SetStateAction<Dayjs>>;
-  inputIsOpen: boolean;
+  openModal: () => void;
 }
 interface ItemStyle {
   top: string;
   height: string;
 }
 
-function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, clickedId, setClickedId, clickedDateTime, setClickedDateTime, inputIsOpen}:CalendarColumnInputProps):JSX.Element {
+function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, clickedId, setClickedId, clickedDateTime, setClickedDateTime, openModal}:CalendarColumnInputProps):JSX.Element {
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
     return <TeamtableItem key={event.id} event={event} styles={styles} />;
   };
@@ -39,10 +39,8 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, cl
     const pxPerHour = height / numOfHours;
     const clickedPx = e.pageY - top < 0 ? 0 : e.pageY - top;
     const clickedMinutesRounded = Math.round(clickedPx / (pxPerHour / 60)/15) * 15;
-    setClickedDateTime(startOfDay.add(clickedMinutesRounded, 'minute'))
-    setClickedId(clickedId)
-    inputIsOpen = true;
-    console.log('clicked ID:',clickedId,'date/time:',clickedDateTime.format('YYYYMMDD HH:mm'))
+    setClickedDateTime(startOfDay.add(clickedMinutesRounded, 'minute'));
+    openModal();
   }
 
   function getItemStyle(event: Event) {
