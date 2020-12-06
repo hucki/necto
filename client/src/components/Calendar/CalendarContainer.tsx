@@ -8,6 +8,8 @@ import { Ressource } from '../../types/Ressource';
 import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
 import * as colors from '../../styles/colors'
+import { useDisclosure } from '@chakra-ui/react';
+import CalendarEventInput from './CalendarEventInput';
 
 interface CalendarInputProps {
   events: Event[];
@@ -19,6 +21,9 @@ interface CalendarInputProps {
 const currentDayjs = dayjs();
 
 function CalendarContainer({events, hoursInterval, ressources, currentDate, daysRange = [currentDayjs, currentDayjs]}: CalendarInputProps):JSX.Element {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [ clickedId, setClickedId ] = useState(0);
+  const [ clickedDateTime, setClickedDateTime ] = useState(dayjs());
   const [ numOfDays ] = useState(dayjs(daysRange[1]).diff(daysRange[0], 'day')+1);
   const [ currentHoursInterval, setCurrentHoursInterval ] = useState(hoursInterval);
   const [ numOfHours ] = useState(currentHoursInterval === undefined ? 0 : currentHoursInterval[1]-currentHoursInterval[0] + 1);
@@ -65,10 +70,21 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
   let curCalendarDay = daysRange[0];
   for (let i = 0; i < numOfDays; i++) {
     const daysEvents = events.filter(event => dayjs(event.startTime).isSame(dayjs(curCalendarDay),'date') ? event : undefined);
-    calendarDays.push(<CalendarColumn key={`CalColumn_d${dayjs(curCalendarDay).format('YYYYMMDD')}`} date={curCalendarDay} events={daysEvents} ressources={ressources} numOfHours={numOfHours} hoursInterval={currentHoursInterval}/>)
+    calendarDays.push(<CalendarColumn
+                        key={`CalColumn_d${dayjs(curCalendarDay).format('YYYYMMDD')}`}
+                        date={curCalendarDay}
+                        events={daysEvents}
+                        ressources={ressources}
+                        numOfHours={numOfHours}
+                        hoursInterval={currentHoursInterval}
+                        clickedId={clickedId}
+                        setClickedId={setClickedId}
+                        clickedDateTime={clickedDateTime}
+                        setClickedDateTime={setClickedDateTime}
+                        inputIsOpen={isOpen}
+                        />)
     curCalendarDay = curCalendarDay.add(1, 'day');
   }
-
   return (
     <div
       id="containerDiv"
@@ -104,6 +120,7 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
         {calendarScale}
       </div>
       {calendarDays}
+      <CalendarEventInput id={clickedId} dateTime={clickedDateTime} isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
     </div>
   )
 }
