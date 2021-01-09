@@ -8,10 +8,11 @@ import TimetableContainer from '../Timetable/TimetableContainer/TimetableContain
 import { useAllTeamMembers } from '../../hooks/user';
 import UserProfile from '../UserProfile/UserProfile';
 import { AppState } from '../../types/AppState';
+import TeamCalendar from '../../views/TeamCalendar/TeamCalendar';
 
 interface DashboardInputProps {
-  a0Id: string,
-  style?: CSSProperties
+  a0Id: string;
+  style?: CSSProperties;
 }
 const Dashboard = ({a0Id}: DashboardInputProps):JSX.Element => {
   const { isLoading, error, teamMembers } = useAllTeamMembers();
@@ -26,6 +27,9 @@ const Dashboard = ({a0Id}: DashboardInputProps):JSX.Element => {
       <Switch>
         <Route exact path="/">
           <h1>Welcome home</h1>
+        </Route>
+        <Route path="/newcal">
+          <TeamCalendar teamMembers={teamMembers}/>
         </Route>
         <Route path="/appointments">
           <TimetableContainer teamMembers={teamMembers} />

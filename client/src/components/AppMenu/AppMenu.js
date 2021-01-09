@@ -43,6 +43,14 @@ const AppMenu = ({ currentDate, user, dispatch }) => {
           {' '}
           Team Calendar{' '}
         </Menu.Item>
+        <Menu.Item
+          key="/newcal"
+          icon={<TeamOutlined />}
+          onClick={onClickHandler}
+        >
+          {' '}
+          New Team Calendar{' '}
+        </Menu.Item>
         {user !== 'Guest' && (
           <Menu.Item
             key="/personal"
