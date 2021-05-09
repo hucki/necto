@@ -8,7 +8,7 @@ import { AppState } from '../../types/AppState';
 import { Ressource } from '../../types/Ressource';
 import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
-import * as colors from '../../styles/colors'
+import * as colors from '../../styles/colors';
 import { useDisclosure } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
 
@@ -21,7 +21,7 @@ interface CalendarInputProps {
 }
 const currentDayjs = dayjs();
 
-function CalendarContainer({events, hoursInterval, ressources, currentDate, daysRange = [currentDayjs, currentDayjs]}: CalendarInputProps):JSX.Element {
+function CalendarContainer ({events, hoursInterval, ressources, currentDate, daysRange = [currentDayjs, currentDayjs]}: CalendarInputProps):JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [ clickedId, setClickedId ] = useState(0);
   const [ clickedDateTime, setClickedDateTime ] = useState(dayjs());
@@ -31,8 +31,8 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
   const scaleWidth = '3rem';
 
   events.map(event => {
-    return dayjs(event.startTime).format('YYYY-MM-DD')
-  })
+    return dayjs(event.startTime).format('YYYY-MM-DD');
+  });
 
   // calculate boundaries to fit all events
   events.forEach(event => {
@@ -48,8 +48,8 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
     if (currentHoursInterval && newEnd > currentHoursInterval[1] ) {
       setCurrentHoursInterval(current => [current === undefined ? newStart : current[0], newEnd]);
     }
-  })
-  if (currentHoursInterval === undefined) return <div>no hoursInterval</div>
+  });
+  if (currentHoursInterval === undefined) return <div>no hoursInterval</div>;
   const calendarScale = [];
   for (let i = currentHoursInterval[0]; i<=currentHoursInterval[1]; i++) {
     calendarScale.push(
@@ -62,28 +62,28 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
           fontSize: 'small',
           backgroundColor: `${colors.background}`,
           borderTop: `1px solid ${colors.border}`
-          }}>
+        }}>
         {i}:00
       </div>
-    )
+    );
   }
   const calendarDays = [];
   let curCalendarDay = daysRange[0];
   for (let i = 0; i < numOfDays; i++) {
     const daysEvents = events.filter(event => dayjs(event.startTime).isSame(dayjs(curCalendarDay),'date') ? event : undefined);
     calendarDays.push(<CalendarColumn
-                        key={`CalColumn_d${dayjs(curCalendarDay).format('YYYYMMDD')}`}
-                        date={curCalendarDay}
-                        events={daysEvents}
-                        ressources={ressources}
-                        numOfHours={numOfHours}
-                        hoursInterval={currentHoursInterval}
-                        clickedId={clickedId}
-                        setClickedId={setClickedId}
-                        clickedDateTime={clickedDateTime}
-                        setClickedDateTime={setClickedDateTime}
-                        openModal={onOpen}
-                        />)
+      key={`CalColumn_d${dayjs(curCalendarDay).format('YYYYMMDD')}`}
+      date={curCalendarDay}
+      events={daysEvents}
+      ressources={ressources}
+      numOfHours={numOfHours}
+      hoursInterval={currentHoursInterval}
+      clickedId={clickedId}
+      setClickedId={setClickedId}
+      clickedDateTime={clickedDateTime}
+      setClickedDateTime={setClickedDateTime}
+      openModal={onOpen}
+    />);
     curCalendarDay = curCalendarDay.add(1, 'day');
   }
   return (
@@ -117,13 +117,13 @@ function CalendarContainer({events, hoursInterval, ressources, currentDate, days
           id="CalendarScaleHeader"
           key="CalendarScaleHeader"
           css={{height: `calc(100% / ${numOfHours+1})`}}>
-          </div>
+        </div>
         {calendarScale}
       </div>
       {calendarDays}
       <CalendarEventInput id={clickedId} dateTime={clickedDateTime} isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
     </div>
-  )
+  );
 }
 const mapStateToProps = (state: AppState) => {
   return {

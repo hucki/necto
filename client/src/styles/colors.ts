@@ -1,19 +1,19 @@
-export const base = 'white'
-export const background = '#f0f2f5'
-export const shadow = '#3333'
-export const border = '#3333'
-export const text = '#3338'
-export const gray = '#34495e'
-export const gray10 = '#f1f1f4'
-export const gray20 = '#e4e5e9'
-export const gray80 = '#6f7077'
-export const indigo = '#3f51b5'
-export const indigoDarken10 = '#364495'
-export const indigoLighten80 = '#b7c1f8'
-export const yellow = '#ffc107'
-export const green = '#4caf50'
-export const danger = '#ef5350'
-export const orange = 'orange'
+export const base = 'white';
+export const background = '#f0f2f5';
+export const shadow = '#3333';
+export const border = '#3333';
+export const text = '#3338';
+export const gray = '#34495e';
+export const gray10 = '#f1f1f4';
+export const gray20 = '#e4e5e9';
+export const gray80 = '#6f7077';
+export const indigo = '#3f51b5';
+export const indigoDarken10 = '#364495';
+export const indigoLighten80 = '#b7c1f8';
+export const yellow = '#ffc107';
+export const green = '#4caf50';
+export const danger = '#ef5350';
+export const orange = 'orange';
 export const bg = {
   blue50: '#EFF6FF',
   blue500: '#3B82F6',
@@ -29,4 +29,4 @@ export const bg = {
   cyan500:  '#06B6D4',
   magenta50: '#FDF4FF',
   magenta500: '#D946EF'
-}
+};

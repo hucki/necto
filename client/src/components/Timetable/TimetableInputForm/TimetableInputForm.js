@@ -91,7 +91,7 @@ const TimetableInputForm = ({
     minuteStep: 15,
   };
 
-  function onDurationChange(e) {
+  function onDurationChange (e) {
     const value = e.target.value;
     const newTime = startTime.add(value, 'm');
     dispatch(setEnd(newTime));
@@ -102,7 +102,7 @@ const TimetableInputForm = ({
     return;
   }
 
-  function onStartTimeChange(e) {
+  function onStartTimeChange (e) {
     dispatch(setStart(e));
     const value = form.getFieldValue('duration');
     const newTime = e.add(value, 'm');
@@ -115,7 +115,7 @@ const TimetableInputForm = ({
     return;
   }
 
-  function checkOverlap() {
+  function checkOverlap () {
     // TODO: fix overlap for PersonalCalendar
     // console.log(rowId, events)
     if (!events[rowId] || !events[rowId].length) return false;
@@ -130,21 +130,21 @@ const TimetableInputForm = ({
     if (!result.length) return false;
     return true;
   }
-  function onSwitchRecurring(checked) {
+  function onSwitchRecurring (checked) {
     setIsRecurring(checked);
     setSwitcheroo({ disabled: !checked });
   }
 
-  function onSwitchHomeVisit(checked) {
+  function onSwitchHomeVisit (checked) {
     setIsHomeVisit(checked);
   }
 
-  function onFrequencyChangeHandler() {}
+  function onFrequencyChangeHandler () {}
 
-  function onRecurrenceChangeHandler(e) {
+  function onRecurrenceChangeHandler (e) {
     form.setFieldsValue({ count: e.target.value });
   }
-  function buildRrule() {
+  function buildRrule () {
     if (isNaN(form.getFieldValue('count')) || form.getFieldValue('count') < 1)
       return false;
     const rrule = new RRule({
@@ -160,7 +160,7 @@ const TimetableInputForm = ({
     return rrule.toString();
   }
 
-  function onBuildTimelineHandler() {
+  function onBuildTimelineHandler () {
     const rrule = new RRule({
       freq:
         form.getFieldValue('frequency') === 'WEEKLY'
@@ -174,7 +174,7 @@ const TimetableInputForm = ({
     setTimeline(
       <Timeline>
         {rrule.all().map((date) => (
-          <Timeline.Item>
+          <Timeline.Item key="date">
             {dayjs(date).format('ddd DD.MM.YYYY HH:mm')}
           </Timeline.Item>
         ))}
@@ -182,7 +182,7 @@ const TimetableInputForm = ({
     );
   }
 
-  function onOkHandler() {
+  function onOkHandler () {
     if (checkOverlap()) {
       message.error(
         'Overlapping Appointments are not allowed. Please check again'
@@ -196,7 +196,7 @@ const TimetableInputForm = ({
         return false;
       } else {
         const successMsg = [
-          <div>added appointments {rrulestr(currentRrule).toText()}:</div>,
+          <div key="currentRrule">added appointments {rrulestr(currentRrule).toText()}:</div>,
         ];
         if (currentRrule !== '') {
           rrulestr(currentRrule)
@@ -247,13 +247,13 @@ const TimetableInputForm = ({
     setDefaults();
   }
 
-  function onClose(e) {
+  function onClose (e) {
     setDefaults();
     e.stopPropagation();
     dispatch(toggleVisible());
   }
 
-  function setDefaults() {
+  function setDefaults () {
     setIsRecurring(false);
     setIsHomeVisit(false);
     setSwitcheroo({ disabled: true });

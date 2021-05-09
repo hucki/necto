@@ -17,15 +17,15 @@ interface AuthenticatedAppInputProps {
   dispatch: Dispatch<any>;
 }
 
-function AuthenticatedApp({ userData, dispatch }: AuthenticatedAppInputProps): JSX.Element {
+function AuthenticatedApp ({ userData, dispatch }: AuthenticatedAppInputProps): JSX.Element {
   const { user: auth0User, isLoading } = useAuth0();
   const a0Id = auth0User.sub;
   const { user, isError } = useAuth0User(auth0User.sub);
   useEffect(() => {
-    if(!user) return;
-    dispatch(logIn(user))
+    if (!user) return;
+    dispatch(logIn(user));
   }, [user, dispatch]);
-  if(isLoading) return <div>fetching Data</div>
+  if (isLoading) return <div>fetching Data</div>;
 
   return (
     <>
@@ -45,7 +45,7 @@ const MapDispatchToProps = (dispatch: Dispatch<any>) => {
   return {
     logIn,
     dispatch
-  }
-}
+  };
+};
 
 export default connect(null,MapDispatchToProps)(AuthenticatedApp);

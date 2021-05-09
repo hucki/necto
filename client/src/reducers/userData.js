@@ -1,10 +1,10 @@
-import { LOG_IN } from "../actions/actions";
-import { LOG_OUT } from "../actions/actions";
+import { LOG_IN } from '../actions/actions';
+import { LOG_OUT } from '../actions/actions';
 import { initialState } from '../assets/data';
 
-export default function userData(state = initialState.userData, {type, payload}) {
+export default function userData (state = initialState.userData, {type, payload}) {
   const newState = {};
-  switch(type) {
+  switch (type) {
     case LOG_IN:
       newState.currentUser = payload.firstName;
       newState.currentUserId = payload.id;

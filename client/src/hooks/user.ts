@@ -6,7 +6,7 @@ import { useQuery,
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { TeamMember, User } from '../types/User';
 
-export function useUser(
+export function useUser (
   id: number
 ): QueryResult<User> & { user: User | undefined } {
   const client = useAuthenticatedClient<User>();
@@ -20,12 +20,12 @@ export function useUser(
   };
 }
 
-export function useAddUser(): MutationResultPair<
+export function useAddUser (): MutationResultPair<
   User,
   Error,
   { user: User },
   string
-> {
+  > {
   const client = useAuthenticatedClient<User>();
   const createUser = async ({ user }: { user: User }): Promise<User> => {
     return client('users', { data: user });
@@ -38,7 +38,7 @@ export function useAddUser(): MutationResultPair<
 }
 
 
-export function useAuth0User(
+export function useAuth0User (
   a0Id: string
 ): QueryResult<User> & { user: User | undefined } {
   const client = useAuthenticatedClient<User>();
@@ -52,7 +52,7 @@ export function useAuth0User(
   };
 }
 
-export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
+export function useAllUsers (): QueryResult<User[]> & { users: User[] } {
   const client = useAuthenticatedClient<User[]>();
 
   const usersQuery = useQuery('users', async () => {
@@ -67,9 +67,9 @@ export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
   };
 }
 
-export function useAllTeamMembers(): QueryResult<TeamMember[]> & {
+export function useAllTeamMembers (): QueryResult<TeamMember[]> & {
   teamMembers: TeamMember[];
-} {
+  } {
   const client = useAuthenticatedClient<TeamMember[]>();
 
   const teamMembersQuery = useQuery('teamMembers', async () => {

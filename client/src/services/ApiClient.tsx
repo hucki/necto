@@ -17,7 +17,7 @@ type ClientConfigOptions<T> = {
   queryParams?: QueryParams;
 };
 
-export async function client<T, P = T>(
+export async function client<T, P = T> (
   endpoint: string,
   {
     apiBaseUrl = serverApiUrl,
@@ -72,15 +72,15 @@ type ClientFunction<T, P = T> = (
   config?: ClientConfigOptions<T> & RequestInit
 ) => Promise<P>;
 
-export function useAuthenticatedClient<T, P = T>(): ClientFunction<T, P> {
+export function useAuthenticatedClient<T, P = T> (): ClientFunction<T, P> {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   return useCallback(
     async (endpoint, config) => {
       const accessToken =
        isAuthenticated
-        ? await getAccessTokenSilently({audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL})
-        : undefined;
+         ? await getAccessTokenSilently({audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL})
+         : undefined;
       return client<T, P>(endpoint, { ...config, accessToken });
     },
     [

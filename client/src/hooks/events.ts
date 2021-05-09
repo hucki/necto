@@ -9,7 +9,7 @@ import {
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { Event } from '../types/Event';
 
-export function useEvent(
+export function useEvent (
   id: number
 ): QueryResult<Event> & { event: Event | undefined } {
   const client = useAuthenticatedClient<Event>();
@@ -23,7 +23,7 @@ export function useEvent(
   };
 }
 
-export function useDeleteEvent(
+export function useDeleteEvent (
   id: number
 ): MutationResultPair<{ message: string }, Error, { id: number }, string> {
   const client = useAuthenticatedClient<{ message: string }>();
@@ -43,7 +43,7 @@ export function useDeleteEvent(
   });
 }
 
-export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
+export function useAllEvents (): QueryResult<Event[]> & { events: Event[] } {
   const client = useAuthenticatedClient<Event[]>();
 
   const eventsQuery = useQuery('events', async () => {
@@ -58,7 +58,7 @@ export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
   };
 }
 
-export function useWeeksEvents(
+export function useWeeksEvents (
   year: number,
   week: number
 ): QueryResult<Event[]> & { rawEvents: Event[] } {
@@ -75,7 +75,7 @@ export function useWeeksEvents(
   };
 }
 
-export function useDaysEvents(
+export function useDaysEvents (
   currentDate: Dayjs
 ): QueryResult<Event[]> & { rawEvents: Event[] } {
   const client = useAuthenticatedClient<Event[]>();
@@ -93,12 +93,12 @@ export function useDaysEvents(
   };
 }
 
-export function useCreateEvent(): MutationResultPair<
+export function useCreateEvent (): MutationResultPair<
   Event,
   Error,
   { event: Event },
   string
-> {
+  > {
   const client = useAuthenticatedClient<Event>();
   const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client('events', { data: event });

@@ -1,5 +1,5 @@
-import styled from '@emotion/styled/macro'
-import * as colors from '../../styles/colors'
+import styled from '@emotion/styled/macro';
+import * as colors from '../../styles/colors';
 
 interface ButtonVariants {
   [key: string]: {
@@ -17,7 +17,8 @@ const buttonVariants: ButtonVariants = {
     background: colors.gray,
     color: colors.text,
   },
-}
+};
+
 interface ButtonCallbackProps {
   variant?: string;
   disabled?: boolean;
@@ -36,7 +37,7 @@ const CircleButton = styled.button({
   color: colors.text,
   border: `1px solid ${colors.gray10}`,
   cursor: 'pointer',
-})
+});
 
 const Button = styled.button(
   {
@@ -46,6 +47,6 @@ const Button = styled.button(
     borderRadius: '3px',
   },
   ({variant = 'primary'}: ButtonCallbackProps) => buttonVariants[variant],
-)
+);
 
 export { Button, CircleButton } ;

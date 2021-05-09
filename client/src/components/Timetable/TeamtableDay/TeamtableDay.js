@@ -14,7 +14,7 @@ const TeamtableDay = ({
   const renderCustomEvent = (event, styles) => {
     return <TeamTableItem key={event.id} event={event} styles={styles} />;
   };
-  function getItemStyle(event) {
+  function getItemStyle (event) {
     const minsFromStartOfDay = dayjs(event.startTime).diff(
       dayjs(event.startTime).startOf('day').add(hoursInterval[0], 'h'),
       'minute'
@@ -39,7 +39,7 @@ const TeamtableDay = ({
       id={index}
       className={`${classes.day} ${rowTitle}`}
       style={{
-        height: `100%`,
+        height: '100%',
         width: `${cellWidth}px`,
       }}
     >
@@ -55,8 +55,8 @@ const TeamtableDay = ({
 
       {events[rowTitle]
         ? events[rowTitle].map((event) =>
-            renderCustomEvent(event, getItemStyle(event))
-          )
+          renderCustomEvent(event, getItemStyle(event))
+        )
         : null}
     </div>
   ));

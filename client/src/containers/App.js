@@ -17,9 +17,9 @@ const store = createStore(
 store.subscribe(() => {
   /*console.log('NEW STATE', store.getState())*/
 });
-function App() {
+function App () {
   const {isAuthenticated, isLoading } = useAuth0();
-  if(isLoading) return <FullPageSpinner />
+  if (isLoading) return <FullPageSpinner />;
   return (
     <Provider store={store}>
       <Layout style={{ minHeight: '100vh' }}>

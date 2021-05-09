@@ -5,7 +5,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { Ressource } from '../../types/Ressource';
 import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
-import * as colors from '../../styles/colors'
+import * as colors from '../../styles/colors';
 import { Dispatch, SetStateAction } from 'react';
 
 interface CalendarColumnInputProps {
@@ -25,12 +25,12 @@ interface ItemStyle {
   height: string;
 }
 
-function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, clickedId, setClickedId, clickedDateTime, setClickedDateTime, openModal}:CalendarColumnInputProps):JSX.Element {
+function CalendarColumn ({date, events, ressources, numOfHours, hoursInterval, clickedId, setClickedId, clickedDateTime, setClickedDateTime, openModal}:CalendarColumnInputProps):JSX.Element {
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
     return <TeamtableItem key={event.id} event={event} styles={styles} />;
   };
 
-  function getPosition(e: React.MouseEvent<HTMLDivElement, MouseEvent>) : void {
+  function getPosition (e: React.MouseEvent<HTMLDivElement, MouseEvent>) : void {
     e.preventDefault();
     if (e.target !== e.currentTarget) return;
     setClickedId(parseInt(e.currentTarget.id.split(/_r/)[1]));
@@ -44,7 +44,7 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, cl
     openModal();
   }
 
-  function getItemStyle(event: Event) {
+  function getItemStyle (event: Event) {
     const minsToday = numOfHours * 60;
     const minsFromStartOfDay = dayjs(event.startTime).diff(
       dayjs(event.startTime).startOf('day').add(hoursInterval[0], 'h'),
@@ -71,7 +71,7 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, cl
     >
       {ressource.shortDescription}
     </div>
-  )
+  );
   const ressourceColsBody = ressources.map(ressource =>
     <div
       id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.id}`}
@@ -84,19 +84,19 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, cl
       onClick={getPosition}
     >
       { events.filter((event) => event.userId === ressource.id).map(event =>
-          renderCustomEvent(event, getItemStyle(event)))}
+        renderCustomEvent(event, getItemStyle(event)))}
     </div>
-  )
+  );
 
   return (
     <div
       id={`CalendarDay_d${date.format('YYYYMMDD')}`}
       key={`CalendarDay_d${date.format('YYYYMMDD')}`}
       css={{
-        width: `100%`,
+        width: '100%',
         textAlign: 'center'
       }}
-      >
+    >
       <div
         id={`DayHeader_d${date.format('YYYYMMDD')}`}
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
@@ -130,7 +130,7 @@ function CalendarColumn({date, events, ressources, numOfHours, hoursInterval, cl
         {ressourceColsBody}
       </div>
     </div>
-  )
+  );
 }
 
 export {CalendarColumn};

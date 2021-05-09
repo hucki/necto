@@ -8,7 +8,7 @@ import Header from '../components/Header/Header';
 import { FullPageSpinner } from '../components/Library';
 
 
-function UnauthenticatedApp(): JSX.Element {
+function UnauthenticatedApp (): JSX.Element {
   const { isLoading } = useAuth0();
   return (
     <div>
@@ -17,15 +17,15 @@ function UnauthenticatedApp(): JSX.Element {
         {isLoading
           ? <FullPageSpinner />
           : <Switch>
-              <Route path="/verify">
-                <VerifySignup />
-              </Route>
-              <Route path="*">
-                <h1>Welcome</h1>
-                <div>Please login</div>
-                <LoginButton />
-              </Route>
-            </Switch>
+            <Route path="/verify">
+              <VerifySignup />
+            </Route>
+            <Route path="*">
+              <h1>Welcome</h1>
+              <div>Please login</div>
+              <LoginButton />
+            </Route>
+          </Switch>
         }
       </Layout>
     </div>

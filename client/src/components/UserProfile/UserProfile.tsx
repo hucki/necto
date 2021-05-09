@@ -1,16 +1,16 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {jsx} from '@emotion/react'
-import { EditOutlined } from "@ant-design/icons";
-import React, { FormEvent, useState } from "react";
+import {jsx} from '@emotion/react';
+import { EditOutlined } from '@ant-design/icons';
+import React, { FormEvent, useState } from 'react';
 
-import { useAddUser, useAuth0User } from "../../hooks/user";
+import { useAddUser, useAuth0User } from '../../hooks/user';
 import { FormGroup, Input, Button, Label } from '../Library';
 
 interface UserProfileProps {
   purpose?: string,
   a0Id: string,
-};
+}
 
 
 const UserProfile = ({purpose = 'view', a0Id}: UserProfileProps):JSX.Element => {
@@ -26,22 +26,21 @@ const UserProfile = ({purpose = 'view', a0Id}: UserProfileProps):JSX.Element => 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) : void => {
     e.preventDefault();
     setUserState(currentState => ({
-        ...currentState,
-        [e.target.name]: e.target.value
-      }))
-  }
+      ...currentState,
+      [e.target.name]: e.target.value
+    }));
+  };
   const onSubmitHandler = (e: FormEvent) : void => {
     e.preventDefault();
     state === 'new' ? createUser({user: userState}) : console.log('Update function coming later');
     toggleEdit(e);
-
-  }
+  };
   const toggleEdit = (e: FormEvent) : void => {
     e.preventDefault();
-    setState(currentState => currentState === 'view' ? 'edit' : 'view')
-  }
+    setState(currentState => currentState === 'view' ? 'edit' : 'view');
+  };
 
-  if (isLoading) return <div>fetching data</div>
+  if (isLoading) return <div>fetching data</div>;
   return (
     <div>
       <form onSubmit={onSubmitHandler}
@@ -55,24 +54,24 @@ const UserProfile = ({purpose = 'view', a0Id}: UserProfileProps):JSX.Element => 
             maxWidth: '300px',
           },
         }}>
-          <FormGroup>
-            <Label htmlFor="firstName">First Name</Label>
-            <Input
-              disabled={state === 'view'}
-              type="text"
-              name="firstName"
-              value={userState.firstName}
-              onChange={onChangeHandler}/>
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              disabled={state === 'view'}
-              type="text"
-              name="lastName"
-              value={userState.lastName}
-              onChange={onChangeHandler}/>
-          </FormGroup>
+        <FormGroup>
+          <Label htmlFor="firstName">First Name</Label>
+          <Input
+            disabled={state === 'view'}
+            type="text"
+            name="firstName"
+            value={userState.firstName}
+            onChange={onChangeHandler}/>
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="lastName">Last Name</Label>
+          <Input
+            disabled={state === 'view'}
+            type="text"
+            name="lastName"
+            value={userState.lastName}
+            onChange={onChangeHandler}/>
+        </FormGroup>
         {state === 'view' ? <Button onClick={toggleEdit}><EditOutlined /></Button> : <Button type="submit">{state === 'new' ? 'Create User' : 'Save changes'}</Button>}
       </form>
 

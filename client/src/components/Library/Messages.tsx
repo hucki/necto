@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {jsx} from '@emotion/react'
-import * as colors from '../../styles/colors'
+import {jsx} from '@emotion/react';
+import * as colors from '../../styles/colors';
 
 interface ErrorMessageVariants {
   [key: string]: {display: string}
@@ -9,7 +9,7 @@ interface ErrorMessageVariants {
 const errorMessageVariants: ErrorMessageVariants= {
   stack: {display: 'block'},
   inline: {display: 'inline-block'},
-}
+};
 
 interface ErrorInputProps {
   error: {
@@ -17,7 +17,7 @@ interface ErrorInputProps {
   };
   variant?: string;
 }
-function ErrorMessage({error, variant = 'stacked', ...props}: ErrorInputProps): JSX.Element {
+function ErrorMessage ({error, variant = 'stacked', ...props}: ErrorInputProps): JSX.Element {
   return (
     <div
       role="alert"
@@ -34,7 +34,7 @@ function ErrorMessage({error, variant = 'stacked', ...props}: ErrorInputProps): 
         {error.message}
       </pre>
     </div>
-  )
+  );
 }
 
 export {ErrorMessage};

@@ -1,9 +1,9 @@
-import { SET_DIMENSIONS, SET_CELL_DIMENSIONS } from "../actions/actions";
+import { SET_DIMENSIONS, SET_CELL_DIMENSIONS } from '../actions/actions';
 import { initialState } from '../assets/data';
 
-export default function teamtable(state = initialState.teamtable, {type, payload}) {
+export default function teamtable (state = initialState.teamtable, {type, payload}) {
   const newState = {...state};
-  switch(type) {
+  switch (type) {
     case SET_DIMENSIONS:
       newState.viewportDimensions = {...payload};
       return newState;

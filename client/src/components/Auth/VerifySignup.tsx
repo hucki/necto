@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import LogoutButton from './LogoutButton';
 
 const VerifySignup = ():JSX.Element => {
 

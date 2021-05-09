@@ -30,11 +30,11 @@ const TeamtableItem = ({ event, styles }) => {
           </p>
         </div>
       ),
-      onOk() {
+      onOk () {
         deleteEvent({ id });
         message.success(`Appointment ${id} deleted`, 1);
       },
-      onCancel() {
+      onCancel () {
         console.log('delete process cancelled'); // eslint-disable-line no-console
       },
     });

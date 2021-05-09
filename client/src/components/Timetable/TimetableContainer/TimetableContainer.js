@@ -83,7 +83,7 @@ const TimetableContainer = ({
     return <div>Error getting events: {rawEventsError.message}</div>;
   if (!rawEvents) return null;
   const events = events2Appointments(rawEvents, teamMembers);
-  function getPosition(e) {
+  function getPosition (e) {
     e.preventDefault();
     if (typeof e.target.className !== 'string') return;
     const clickOnFreeTime = !e.target.className.indexOf('TeamtableDay_day__');

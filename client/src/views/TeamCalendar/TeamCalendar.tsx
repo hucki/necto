@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
+import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
 import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
@@ -16,18 +16,18 @@ interface TeamCalendarInputProps {
   teamMembers: TeamMember[];
 }
 
-function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.Element {
-  const [ calendarDate, setCalendarDate ] = useState(currentDate ? currentDate : dayjs())
+function TeamCalendar ({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.Element {
+  const [ calendarDate, setCalendarDate ] = useState(currentDate ? currentDate : dayjs());
   const { isLoading, rawEvents } = useDaysEvents(
     calendarDate
   );
   // teamMembers.forEach(member => console.log(member.bgColor))
   useEffect(() => {
-    if(currentDate && calendarDate !== currentDate) setCalendarDate(currentDate)
-  },[currentDate, calendarDate, setCalendarDate])
+    if (currentDate && calendarDate !== currentDate) setCalendarDate(currentDate);
+  },[currentDate, calendarDate, setCalendarDate]);
 
-  const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName, bgColor: member.bgColor}))
-  if (isLoading) return <FullPageSpinner />
+  const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName, bgColor: member.bgColor}));
+  if (isLoading) return <FullPageSpinner />;
 
   return (
     <div
@@ -42,7 +42,7 @@ function TeamCalendar({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.
     >
       <CalendarContainer events={rawEvents} ressources={ressources} daysRange={[calendarDate, calendarDate]}/>
     </div>
-  )
+  );
 }
 
 const mapStateToProps = (state: AppState) => {

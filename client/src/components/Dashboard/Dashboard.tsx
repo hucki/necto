@@ -35,7 +35,7 @@ const Dashboard = ({a0Id}: DashboardInputProps):JSX.Element => {
           <TimetableContainer teamMembers={teamMembers} />
         </Route>
         <Route path="/personal">
-        <UserCalendarContainer teamMembers={teamMembers} />
+          <UserCalendarContainer teamMembers={teamMembers} />
         </Route>
         <Route path="/team">
           <TeamContainer teamMembers={teamMembers} />

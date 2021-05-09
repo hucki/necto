@@ -12,14 +12,14 @@ import classes from './AppMenu.module.css';
 import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
 import { useHistory, useLocation } from 'react-router';
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 const { Sider: AntSider } = Layout;
 
-const AppMenu = ({ currentDate, user, dispatch }) => {
+const AppMenu = ({ /* currentDate, */ user, dispatch }) => {
   const {pathname: currentView} = useLocation();
   const history = useHistory();
   const onClickHandler = (e) => {
-    history.push(e.key)
+    history.push(e.key);
     dispatch(switchView(e.key));
   };
   const { logout } = useAuth0();
@@ -90,7 +90,7 @@ const AppMenu = ({ currentDate, user, dispatch }) => {
 
 const MapStateToProps = (state) => {
   return {
-    currentDate: state.current.currentDate,
+    // currentDate: state.current.currentDate,
     currentView: state.settings.currentView,
     user: state.userData.currentUser,
   };

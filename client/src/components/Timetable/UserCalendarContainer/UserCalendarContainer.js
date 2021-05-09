@@ -100,7 +100,7 @@ const UserCalendarContainer = ({
     currentDate,
     user
   );
-  function getPosition(e) {
+  function getPosition (e) {
     e.preventDefault();
     if (typeof e.target.className !== 'string') return;
     const clickOnFreeTime = !e.target.className.indexOf('TeamtableDay_day__');
@@ -190,7 +190,7 @@ const UserCalendarContainer = ({
   );
 };
 
-function userEvents(events, currentDate, user) {
+function userEvents (events, currentDate, user) {
   const filtered = {
     Mon: [],
     Tue: [],

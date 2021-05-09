@@ -8,16 +8,16 @@ import classes from './NavBar.module.css';
 import dayjs from 'dayjs';
 
 const NavBar = (props) => {
-  function onChangeHandler(date) {
+  function onChangeHandler (date) {
     props.dispatch(changeDate(date));
   }
-  function todayClickHandler() {
+  function todayClickHandler () {
     props.dispatch(changeDate(dayjs()));
   }
-  function prevDayHandler() {
+  function prevDayHandler () {
     props.dispatch(changeDate(dayjs(props.currentDate).subtract(1, 'day')));
   }
-  function nextDayHandler() {
+  function nextDayHandler () {
     props.dispatch(changeDate(dayjs(props.currentDate).add(1, 'day')));
   }
 

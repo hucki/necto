@@ -22,8 +22,8 @@ interface CalendarEventInputProps {
   onClose: () => void;
 }
 
-function CalendarEventInput({id, dateTime, isOpen, onOpen, onClose}: CalendarEventInputProps): JSX.Element {
-  console.log(id, dateTime.format('YYYYMMDD hh:mm'))
+function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEventInputProps): JSX.Element {
+  console.log(id, dateTime.format('YYYYMMDD hh:mm'));
   return (
     <div>
       <Modal
@@ -61,7 +61,7 @@ function CalendarEventInput({id, dateTime, isOpen, onOpen, onClose}: CalendarEve
         </ModalOverlay>
       </Modal>
     </div>
-  )
+  );
 }
 
 export default CalendarEventInput;
