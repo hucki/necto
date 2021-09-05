@@ -18,13 +18,13 @@ store.subscribe(() => {
   /*console.log('NEW STATE', store.getState())*/
 });
 function App () {
-  const {isAuthenticated, isLoading } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
   if (isLoading) return <FullPageSpinner />;
   return (
     <Provider store={store}>
       <Layout style={{ minHeight: '100vh' }}>
         <Router>
-          {isAuthenticated ? <AuthenticatedApp />: <UnauthenticatedApp /> }
+          {isAuthenticated ? <AuthenticatedApp a0Id={user.sub}/>: <UnauthenticatedApp /> }
         </Router>
       </Layout>
       <ReactQueryDevtools initialIsOpen="false" />
