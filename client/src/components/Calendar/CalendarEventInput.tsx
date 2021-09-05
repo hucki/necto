@@ -10,7 +10,7 @@ import {
   ModalBody,
   ModalCloseButton
 } from '@chakra-ui/react';
-import { Button, CircleButton } from '../Library';
+import { Button, CircleButton, FormGroup, Input, Label } from '../Library';
 import * as mq from '../../styles/media-queries';
 import { Dayjs } from 'dayjs';
 
@@ -50,6 +50,10 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
             {/* <ModalCloseButton /> */}
             <ModalBody>
               New Appointment for User: {id} starting {dateTime.format('YYYYMMDD hh:mm')}
+              <FormGroup>
+                <Label>Title</Label>
+                <Input />
+              </FormGroup>
             </ModalBody>
 
             <ModalFooter>
