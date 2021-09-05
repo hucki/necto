@@ -5,7 +5,7 @@ import Header from '../components/Header/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
 import { connect } from 'react-redux';
-import { useAuth0 } from '@auth0/auth0-react';
+import { User } from '@auth0/auth0-react';
 import { useAuth0User } from '../hooks/user';
 import UserProfile from '../components/UserProfile/UserProfile';
 import { logIn } from '../actions/actions';
@@ -13,19 +13,17 @@ import { logIn } from '../actions/actions';
 const { Content: AntContent } = Layout;
 
 interface AuthenticatedAppInputProps {
-  userData: ()=>{};
+  userData: User,
+  a0Id: string,
   dispatch: Dispatch<any>;
 }
 
-function AuthenticatedApp ({ userData, dispatch }: AuthenticatedAppInputProps): JSX.Element {
-  const { user: auth0User, isLoading } = useAuth0();
-  const a0Id = auth0User.sub;
-  const { user, isError } = useAuth0User(auth0User.sub);
+function AuthenticatedApp ({ a0Id, dispatch }: AuthenticatedAppInputProps): JSX.Element {
+  const { user, isError } = useAuth0User(a0Id);
   useEffect(() => {
     if (!user) return;
     dispatch(logIn(user));
   }, [user, dispatch]);
-  if (isLoading) return <div>fetching Data</div>;
 
   return (
     <>
