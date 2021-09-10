@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton
 } from '@chakra-ui/react';
 import { Button, CircleButton, FormGroup, Input, Label } from '../Library';
 import * as mq from '../../styles/media-queries';
@@ -21,9 +20,20 @@ interface CalendarEventInputProps {
   onOpen: () => void;
   onClose: () => void;
 }
+interface FormElements extends HTMLFormControlsCollection {
+  eventTitleInput: HTMLInputElement
+}
+interface eventTitleFormElement extends HTMLFormElement {
+  elements: FormElements
+}
 
 function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEventInputProps): JSX.Element {
   console.log(id, dateTime.format('YYYYMMDD hh:mm'));
+
+  function handleSubmit (event: React.FormEvent<eventTitleFormElement>) {
+    event.preventDefault();
+    console.log(event.currentTarget.elements.eventTitleInput.value);
+  }
   return (
     <div>
       <Modal
@@ -39,28 +49,33 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
               backgroundColor: 'white',
               boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
               margin: '20vh auto',
+              padding: '1rem',
               [mq.small]: {
                 width: '100%',
                 margin: '10vh auto',
               }
             }}
           >
-            <ModalHeader>New Appointment {dateTime.format('YYYYMMDD')}</ModalHeader>
-            <CircleButton />
-            {/* <ModalCloseButton /> */}
-            <ModalBody>
-              New Appointment for User: {id} starting {dateTime.format('YYYYMMDD hh:mm')}
-              <FormGroup>
-                <Label>Title</Label>
-                <Input />
-              </FormGroup>
-            </ModalBody>
+            <form onSubmit={handleSubmit} >
+              <ModalHeader>New Appointment {dateTime.format('YYYYMMDD')}</ModalHeader>
+              <CircleButton onClick={onClose}>X</CircleButton>
+              <ModalBody>
+                New Appointment for User: {id} starting {dateTime.format('YYYYMMDD hh:mm')}
+                <FormGroup>
+                  <Label htmlFor="eventTitleInput">Title</Label>
+                  <Input id="eventTitleInput" name="title"/>
+                </FormGroup>
+              </ModalBody>
 
-            <ModalFooter>
-              <Button onClick={onClose}>
-                Close
-              </Button>
-            </ModalFooter>
+              <ModalFooter>
+                <Button onClick={onClose}>
+                  Close
+                </Button>
+                <Button type="submit">
+                  Submit
+                </Button>
+              </ModalFooter>
+            </form>
           </ModalContent>
         </ModalOverlay>
       </Modal>
