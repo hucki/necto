@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import {jsx} from '@emotion/react';
+import { useTranslation } from 'react-i18next';
 import {
   Modal,
   ModalOverlay,
@@ -29,7 +30,7 @@ interface eventTitleFormElement extends HTMLFormElement {
 
 function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEventInputProps): JSX.Element {
   console.log(id, dateTime.format('YYYYMMDD hh:mm'));
-
+  const { t } = useTranslation();
   function handleSubmit (event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
     console.log(event.currentTarget.elements.eventTitleInput.value);
@@ -57,7 +58,7 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
             }}
           >
             <form onSubmit={handleSubmit} >
-              <ModalHeader>New Appointment {dateTime.format('YYYYMMDD')}</ModalHeader>
+              <ModalHeader>{t('calendar.event.newAppointmentTitle')} {dateTime.format('YYYYMMDD')}</ModalHeader>
               <CircleButton onClick={onClose}>X</CircleButton>
               <ModalBody>
                 New Appointment for User: {id} starting {dateTime.format('YYYYMMDD hh:mm')}
@@ -69,10 +70,10 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
 
               <ModalFooter>
                 <Button onClick={onClose}>
-                  Close
+                  {t('button.close')}
                 </Button>
                 <Button type="submit">
-                  Submit
+                  {t('button.save')}
                 </Button>
               </ModalFooter>
             </form>
