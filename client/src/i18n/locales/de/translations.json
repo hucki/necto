@@ -3,5 +3,10 @@
     "event": {
       "newAppointmentTitle": "Neuer Termin"
     }
+  },
+  "button": {
+    "close": "schliessen",
+    "save": "speichern",
+    "cancel": "abbrechen"
   }
 }
