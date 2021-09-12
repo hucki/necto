@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2020: true,
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  extends: ['eslint:recommended', 'plugin:react/recommended', 'prettier'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -18,7 +18,7 @@ module.exports = {
     },
   },
   rules: {
-    indent: ['error', 2, { SwitchCase: 1 }],
+    indent: ['error', 2, { SwitchCase: 1}],
     'keyword-spacing': 'error',
     'linebreak-style': ['error', 'unix'],
     'no-undef': 0,
@@ -29,7 +29,7 @@ module.exports = {
     'react/display-name': 0,
     semi: ['error', 'always'],
     'space-before-blocks': 'error',
-    'space-before-function-paren': 'error',
+    // 'space-before-function-paren': 'error',
     'no-unused-vars': 'warn',
   },
 };
