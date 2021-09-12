@@ -58,7 +58,10 @@
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.25.1",
+    "prettier": "^2.4.0",
     "react-query": "^2.26.4",
     "react-query-devtools": "^2.6.3",
     "react-use-dimensions": "^1.2.1"
