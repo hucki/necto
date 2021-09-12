@@ -26,7 +26,7 @@ export const bg = {
   grey50: '#FAFAFA',
   grey500: '#71717A',
   cyan50: '#ECFEFF',
-  cyan500:  '#06B6D4',
+  cyan500: '#06B6D4',
   magenta50: '#FDF4FF',
-  magenta500: '#D946EF'
+  magenta500: '#D946EF',
 };
