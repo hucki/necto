@@ -16,17 +16,26 @@ interface TeamCalendarInputProps {
   teamMembers: TeamMember[];
 }
 
-function TeamCalendar ({ currentDate, teamMembers }: TeamCalendarInputProps):JSX.Element {
-  const [ calendarDate, setCalendarDate ] = useState(currentDate ? currentDate : dayjs());
-  const { isLoading, rawEvents } = useDaysEvents(
-    calendarDate
+function TeamCalendar({
+  currentDate,
+  teamMembers,
+}: TeamCalendarInputProps): JSX.Element {
+  const [calendarDate, setCalendarDate] = useState(
+    currentDate ? currentDate : dayjs()
   );
+  const { isLoading, rawEvents } = useDaysEvents(calendarDate);
   // teamMembers.forEach(member => console.log(member.bgColor))
   useEffect(() => {
-    if (currentDate && calendarDate !== currentDate) setCalendarDate(currentDate);
-  },[currentDate, calendarDate, setCalendarDate]);
+    if (currentDate && calendarDate !== currentDate)
+      setCalendarDate(currentDate);
+  }, [currentDate, calendarDate, setCalendarDate]);
 
-  const ressources: Ressource[] = teamMembers.map(member => ({id: member.id, shortDescription: member.firstName, longDescription: member.firstName + ' ' + member.lastName, bgColor: member.bgColor}));
+  const ressources: Ressource[] = teamMembers.map((member) => ({
+    id: member.id,
+    shortDescription: member.firstName,
+    longDescription: member.firstName + ' ' + member.lastName,
+    bgColor: member.bgColor,
+  }));
   if (isLoading) return <FullPageSpinner />;
 
   return (
@@ -40,7 +49,11 @@ function TeamCalendar ({ currentDate, teamMembers }: TeamCalendarInputProps):JSX
         alignItems: 'center',
       }}
     >
-      <CalendarContainer events={rawEvents} ressources={ressources} daysRange={[calendarDate, calendarDate]}/>
+      <CalendarContainer
+        events={rawEvents}
+        ressources={ressources}
+        daysRange={[calendarDate, calendarDate]}
+      />
     </div>
   );
 }
