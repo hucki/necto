@@ -139,7 +139,7 @@ const TimetableInputForm = ({
     setIsHomeVisit(checked);
   }
 
-  function onFrequencyChangeHandler () {}
+  // function onFrequencyChangeHandler () {}
 
   function onRecurrenceChangeHandler (e) {
     form.setFieldsValue({ count: e.target.value });
