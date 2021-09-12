@@ -52,13 +52,22 @@ function CalendarEventInput({
     rruleString: '',
   });
 
+  function handleChange(event: React.FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    setNewEvent({
+      ...newEvent,
+      [event.currentTarget.name]: event.currentTarget.value,
+    });
+  }
+
   function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const fieldValues = Object.fromEntries(formData.entries());
-    // console.log(event.currentTarget.elements.eventTitleInput.value);
-    console.log(fieldValues);
+    setNewEvent({ ...newEvent, ...fieldValues });
+    console.log({ ...newEvent, ...fieldValues });
   }
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -93,6 +102,7 @@ function CalendarEventInput({
                     id="eventTitleInput"
                     name="title"
                     value={newEvent.title}
+                    onChange={handleChange}
                   />
                 </FormGroup>
                 <FormGroup>
