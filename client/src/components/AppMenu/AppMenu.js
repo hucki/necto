@@ -5,7 +5,7 @@ import {
   UserOutlined,
   HomeOutlined,
   LogoutOutlined,
-  ProfileOutlined
+  ProfileOutlined,
 } from '@ant-design/icons';
 import { Menu, Layout } from 'antd';
 import classes from './AppMenu.module.css';
