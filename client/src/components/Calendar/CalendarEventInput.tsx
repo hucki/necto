@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
+import { jsx } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import {
   Modal,
@@ -25,13 +25,19 @@ interface CalendarEventInputProps {
   onClose: () => void;
 }
 interface FormElements extends HTMLFormControlsCollection {
-  eventTitleInput: HTMLInputElement
+  eventTitleInput: HTMLInputElement;
 }
 interface eventTitleFormElement extends HTMLFormElement {
-  elements: FormElements
+  elements: FormElements;
 }
 
-function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEventInputProps): JSX.Element {
+function CalendarEventInput({
+  id,
+  dateTime,
+  isOpen,
+  onOpen,
+  onClose,
+}: CalendarEventInputProps): JSX.Element {
   console.log(id, dateTime.format('YYYYMMDD hh:mm'));
   const { t } = useTranslation();
   const [newEvent, setNewEvent] = useState({
@@ -46,7 +52,7 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
     rruleString: '',
   });
 
-  function handleSubmit (event: React.FormEvent<eventTitleFormElement>) {
+  function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const fieldValues = Object.fromEntries(formData.entries());
@@ -55,10 +61,7 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
   }
   return (
     <div>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-      >
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay>
           <ModalContent
             css={{
@@ -72,17 +75,25 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
               [mq.small]: {
                 width: '100%',
                 margin: '10vh auto',
-              }
+              },
             }}
           >
-            <form onSubmit={handleSubmit} >
-              <ModalHeader>{t('calendar.event.newAppointmentTitle')} {newEvent.startTime.format('YYYYMMDD')}</ModalHeader>
+            <form onSubmit={handleSubmit}>
+              <ModalHeader>
+                {t('calendar.event.newAppointmentTitle')}{' '}
+                {newEvent.startTime.format('YYYYMMDD')}
+              </ModalHeader>
               <CircleButton onClick={onClose}>X</CircleButton>
               <ModalBody>
-                New Appointment for User: {id} starting {newEvent.startTime.format('YYYYMMDD hh:mm')}
+                New Appointment for User: {id} starting{' '}
+                {newEvent.startTime.format('YYYYMMDD hh:mm')}
                 <FormGroup>
                   <Label htmlFor="eventTitleInput">Title</Label>
-                  <Input id="eventTitleInput" name="title" value={newEvent.title} />
+                  <Input
+                    id="eventTitleInput"
+                    name="title"
+                    value={newEvent.title}
+                  />
                 </FormGroup>
                 <FormGroup>
                   <Label htmlFor="eventStartDatePicker">Start</Label>
@@ -94,17 +105,14 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
                     timeIntervals={15}
                     dateFormat="Pp"
                     selected={newEvent.startTime.toDate()}
-                    onChange={date => console.log(date)}/>
+                    onChange={(date) => console.log(date)}
+                  />
                 </FormGroup>
               </ModalBody>
 
               <ModalFooter>
-                <Button onClick={onClose}>
-                  {t('button.close')}
-                </Button>
-                <Button type="submit">
-                  {t('button.save')}
-                </Button>
+                <Button onClick={onClose}>{t('button.close')}</Button>
+                <Button type="submit">{t('button.save')}</Button>
               </ModalFooter>
             </form>
           </ModalContent>
