@@ -13,6 +13,8 @@ import {
 import { Button, CircleButton, FormGroup, Input, Label } from '../Library';
 import * as mq from '../../styles/media-queries';
 import { Dayjs } from 'dayjs';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface CalendarEventInputProps {
   id: number;
@@ -65,6 +67,7 @@ function CalendarEventInput ({id, dateTime, isOpen, onOpen, onClose}: CalendarEv
                 <FormGroup>
                   <Label htmlFor="eventTitleInput">Title</Label>
                   <Input id="eventTitleInput" name="title"/>
+                  <DatePicker selected={new Date(dateTime.toISOString())} onChange={date => console.log(date)}/>
                 </FormGroup>
               </ModalBody>
 
