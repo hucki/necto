@@ -60,12 +60,19 @@ function CalendarEventInput({
     });
   }
 
+  function handleStartTimeChange(
+    date: Date | [Date | null, Date | null] | null
+  ) {
+    if (typeof date !== 'object')
+      setNewEvent({ ...newEvent, startTime: dayjs(date) });
+  }
   function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const fieldValues = Object.fromEntries(formData.entries());
     setNewEvent({ ...newEvent, ...fieldValues });
-    console.log({ ...newEvent, ...fieldValues });
+    console.log('submit fV', { ...fieldValues });
+    console.log('submit nE', { ...newEvent });
   }
 
   return (
@@ -115,7 +122,7 @@ function CalendarEventInput({
                     timeIntervals={15}
                     dateFormat="Pp"
                     selected={newEvent.startTime.toDate()}
-                    onChange={(date) => console.log(date)}
+                    onChange={(date) => handleStartTimeChange(date)}
                   />
                 </FormGroup>
               </ModalBody>
