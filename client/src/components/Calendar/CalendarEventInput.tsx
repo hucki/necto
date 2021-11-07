@@ -96,7 +96,6 @@ function CalendarEventInput({
               backgroundColor: 'white',
               boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
               margin: '20vh auto',
-              padding: '1rem',
               [mq.small]: {
                 width: '100%',
                 margin: '10vh auto',
@@ -104,12 +103,32 @@ function CalendarEventInput({
             }}
           >
             <form onSubmit={handleSubmit}>
-              <ModalHeader>
-                {t('calendar.event.newAppointmentTitle')}{' '}
-                {newEvent.startTime.format('l')}
+              <ModalHeader
+                css={{
+                  fontSize: '1.1rem',
+                  fontWeight: 'bold',
+                  color: 'white',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: 'cornflowerblue',
+                  padding: '0.5rem',
+                }}
+              >
+                <div className="modal-title">
+                  {t('calendar.event.newAppointmentTitle')}{' '}
+                  {newEvent.startTime.format('l')}
+                </div>
+                <CircleButton className="modal-close" onClick={onClose}>
+                  X
+                </CircleButton>
               </ModalHeader>
-              <CircleButton onClick={onClose}>X</CircleButton>
-              <ModalBody>
+              <ModalBody
+                css={{
+                  padding: '0.5rem',
+                }}
+              >
                 {t('calendar.event.newAppointmentTitle')} {t('dict.for')} User:{' '}
                 {id} starting {newEvent.startTime.format('lll')}
                 <FormGroup>
