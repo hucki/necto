@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, CircleButton, FormGroup, Input, Label } from '../Library';
 import * as mq from '../../styles/media-queries';
 import dayjs, { Dayjs } from 'dayjs';
@@ -38,7 +38,6 @@ function CalendarEventInput({
   onOpen,
   onClose,
 }: CalendarEventInputProps): JSX.Element {
-  console.log(id, dateTime.format('YYYYMMDD hh:mm'));
   const { t } = useTranslation();
   const [newEvent, setNewEvent] = useState({
     title: t('calendar.event.newAppointmentTitle'),
@@ -51,6 +50,14 @@ function CalendarEventInput({
     count: 10,
     rruleString: '',
   });
+
+  useEffect(() => {
+    setNewEvent({
+      ...newEvent,
+      startTime: dateTime,
+      endTime: dayjs(dateTime).add(45, 'minute'),
+    });
+  }, [dateTime]);
 
   function handleChange(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
