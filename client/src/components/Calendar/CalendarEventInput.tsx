@@ -14,8 +14,10 @@ import { useState, useEffect } from 'react';
 import { Button, CircleButton, FormGroup, Input, Label } from '../Library';
 import * as mq from '../../styles/media-queries';
 import dayjs, { Dayjs } from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+dayjs.extend(LocalizedFormat);
 
 interface CalendarEventInputProps {
   id: number;
@@ -104,12 +106,12 @@ function CalendarEventInput({
             <form onSubmit={handleSubmit}>
               <ModalHeader>
                 {t('calendar.event.newAppointmentTitle')}{' '}
-                {newEvent.startTime.format('YYYYMMDD')}
+                {newEvent.startTime.format('l')}
               </ModalHeader>
               <CircleButton onClick={onClose}>X</CircleButton>
               <ModalBody>
-                New Appointment for User: {id} starting{' '}
-                {newEvent.startTime.format('YYYYMMDD hh:mm')}
+                {t('calendar.event.newAppointmentTitle')} {t('dict.for')} User:{' '}
+                {id} starting {newEvent.startTime.format('lll')}
                 <FormGroup>
                   <Label htmlFor="eventTitleInput">Title</Label>
                   <Input
