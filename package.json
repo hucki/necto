@@ -25,7 +25,7 @@
     "singleQuote": true
   },
   "devDependencies": {
-    "concurrently": "^5.3.0"
+    "concurrently": "^6.3.0"
   },
   "dependencies": {}
 }
