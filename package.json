@@ -29,8 +29,6 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.1.2",
-    "framer-motion": "^2.9.5",
-    "i18next": "^20.6.1",
-    "react-i18next": "^11.12.0"
+    "framer-motion": "^2.9.5"
   }
 }
