@@ -13,7 +13,7 @@
     "@testing-library/user-event": "^7.2.1",
     "antd": "^4.16.13",
     "dayjs": "^1.10.6",
-    "framer-motion": "^5.2.1",
+    "framer-motion": "^4.1.17",
     "i18next": "^21.4.0",
     "i18next-browser-languagedetector": "^6.1.2",
     "interactjs": "^1.10.11",
