@@ -8,5 +8,8 @@
     "close": "schliessen",
     "save": "speichern",
     "cancel": "abbrechen"
+  },
+  "dict": {
+    "for": "für"
   }
 }
