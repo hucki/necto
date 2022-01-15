@@ -1,12 +1,13 @@
 import { TeamMember } from '../types/User';
 import { Event, Appointment } from '../types/Event';
 
-export function appointment2Event (
+export function appointment2Event(
   appointment: Appointment,
   userId: number
 ): Event | undefined {
   const newEvent = {
     userId: userId,
+    ressourceId: userId,
     title: appointment.title,
     type: 'custom',
     isHomeVisit: appointment.isHomeVisit,
@@ -21,7 +22,7 @@ export function appointment2Event (
   return newEvent;
 }
 
-export function events2Appointments (
+export function events2Appointments(
   events: Event[],
   users: TeamMember[]
 ): { [k: string]: Appointment[] } | undefined {
