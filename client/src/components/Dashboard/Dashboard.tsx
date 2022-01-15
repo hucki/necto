@@ -9,27 +9,29 @@ import { useAllTeamMembers } from '../../hooks/user';
 import UserProfile from '../UserProfile/UserProfile';
 import { AppState } from '../../types/AppState';
 import TeamCalendar from '../../views/TeamCalendar/TeamCalendar';
+import Rooms from '../../views/Rooms/Rooms';
 
 interface DashboardInputProps {
   a0Id: string;
   style?: CSSProperties;
 }
-const Dashboard = ({a0Id}: DashboardInputProps):JSX.Element => {
+const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
   const { isLoading, error, teamMembers } = useAllTeamMembers();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error getting teamMembers: {error}</div>;
   if (!teamMembers) return <div>Data missing</div>;
 
-
   return (
     <div className={classes.Dashboard}>
-
       <Switch>
         <Route exact path="/">
           <h1>Welcome home</h1>
         </Route>
+        <Route path="/rooms">
+          <Rooms />
+        </Route>
         <Route path="/newcal">
-          <TeamCalendar teamMembers={teamMembers}/>
+          <TeamCalendar teamMembers={teamMembers} />
         </Route>
         <Route path="/appointments">
           <TimetableContainer teamMembers={teamMembers} />
@@ -44,10 +46,11 @@ const Dashboard = ({a0Id}: DashboardInputProps):JSX.Element => {
           <UserProfile a0Id={a0Id} />
         </Route>
         <Route path="*">
-          <div>Route nor found</div>
+          <div>Route not found</div>
         </Route>
       </Switch>
-    </div>);
+    </div>
+  );
 };
 
 const mapStateToProps = (state: AppState) => {
