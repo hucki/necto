@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { HomeTwoTone, ApiTwoTone } from '@ant-design/icons';
 import { useDeleteEvent } from '../../../hooks/events';
 
-const TeamtableItem = ({ event, styles }) => {
+const TeamtableItem = ({ event, styles, readOnly = false }) => {
   // TODO: put delete dialog in a separate Component
   const { confirm } = Modal;
   const [icons, setIcons] = useState([]);
@@ -18,7 +18,6 @@ const TeamtableItem = ({ event, styles }) => {
     if (event.isHomeVisit)
       setIcons((icons) => [...icons, <HomeTwoTone key="homeVisitIcon" />]);
   }, [event]);
-
   const onClickHandler = ({ id, title, startTime, endTime }) => {
     confirm({
       content: (
@@ -30,11 +29,11 @@ const TeamtableItem = ({ event, styles }) => {
           </p>
         </div>
       ),
-      onOk () {
+      onOk() {
         deleteEvent({ id });
         message.success(`Appointment ${id} deleted`, 1);
       },
-      onCancel () {
+      onCancel() {
         console.log('delete process cancelled'); // eslint-disable-line no-console
       },
     });
@@ -44,8 +43,10 @@ const TeamtableItem = ({ event, styles }) => {
       style={styles}
       title={event.title}
       key={event.id}
-      onClick={() => onClickHandler(event)}
-      className={`${classes.event} ${classes['bg_' + event.bgColor]}`}
+      onClick={readOnly ? undefined : () => onClickHandler(event)}
+      className={`${classes.event} ${classes['bg_' + event.bgColor]} ${
+        readOnly ? 'read-only' : ''
+      }`}
     >
       <div className={classes.event_container}>
         <span className={classes.event_info}>{event.title}</span>
