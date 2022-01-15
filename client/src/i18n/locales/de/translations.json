@@ -1,7 +1,9 @@
 {
   "calendar": {
     "event": {
-      "newAppointmentTitle": "Neuer Termin"
+      "newAppointmentTitle": "Neuer Termin",
+      "start": "Start",
+      "end": "Ende"
     }
   },
   "button": {
