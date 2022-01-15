@@ -1,9 +1,11 @@
 import { Dayjs } from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
+import { BgColor } from './Colors';
 
 export type Event = {
   id?: number;
   userId: number;
+  ressourceId: number;
   title: string;
   type: string;
   isHomeVisit: boolean;
@@ -16,6 +18,7 @@ export type Event = {
   endTime: Dayjs;
   createdAt?: Date;
   updatedAt?: Date;
+  bgColor?: BgColor;
 };
 
 export type Appointment = {
