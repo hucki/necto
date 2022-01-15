@@ -1,6 +1,5 @@
-
 .time_table_wrapper {
-  display:flex;
+  display: flex;
   height: 100%;
   margin: 0;
   font-family: 'Open Sans', sans-serif;
@@ -13,21 +12,22 @@
   height: 100%;
   float: left;
   background-color: #fff;
-  background-image: linear-gradient(rgba(0,0,0,.08) 50%, transparent 50%);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.08) 50%, transparent 50%);
 }
 
 .day_title {
   background-color: #34495e;
-  font-size: .7rem;
+  font-size: 0.7rem;
   font-weight: 600;
   display: flex;
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  z-index: 2;}
+  z-index: 2;
+}
 
 .hour {
-  color: rgba(52, 73, 94,0.9);
+  color: rgba(52, 73, 94, 0.9);
   font-size: 12px;
   text-align: center;
   width: 5rem;
@@ -40,8 +40,8 @@
   min-height: 2rem;
   /* height: 15vh; */
   /* line-height: 15vh; */
-  background-color: rgba(255,255,255,0.5);
-  font-size: .7em;
+  background-color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7em;
   font-weight: 300;
   justify-content: center;
   display: flex;
@@ -52,7 +52,8 @@
   box-shadow: 0 0 3px #3333;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
-.event:hover, .event:focus {
+.event:hover,
+.event:focus {
   border-color: inherit;
   border-top: 2px solid;
   box-shadow: 0 0 15px #3333;
@@ -77,15 +78,17 @@
 }
 
 .bg_grey {
-  border-color: rgb(47,79,79,0.3);
+  border-color: rgb(47, 79, 79, 0.3);
+  background-color: rgb(47, 79, 79, 0.2);
 }
 .bg_grey > span,
 .bg_grey > div > span {
-  color: rgb(47,79,79,1);
+  color: rgb(47, 79, 79, 1);
 }
 
 .bg_green {
-  border-color: rgba(0,128,0.3);
+  border-color: rgba(0, 128, 0.3);
+  background-color: rgba(0, 128, 0, 0.2);
 }
 
 .bg_green > span,
@@ -94,16 +97,18 @@
 }
 
 .bg_red {
-  border-color: rgba(255,0,0,0.3);
+  border-color: rgba(255, 0, 0, 0.3);
+  background-color: rgba(255, 0, 0, 0.2);
 }
 
 .bg_red > span,
 .bg_red > div > span {
-  color: rgba(255,0,0,1);
+  color: rgba(255, 0, 0, 1);
 }
 
 .bg_yellow {
-  border-color: rgba(200,200,0,0.3);
+  border-color: rgba(200, 200, 0, 0.3);
+  background-color: rgba(200, 200, 0, 0.2);
 }
 .bg_yellow > span,
 .bg_yellow > div > span {
@@ -111,10 +116,21 @@
 }
 
 .bg_blue {
-  border-color: rgba(0, 128, 255,0.3);
+  border-color: rgba(0, 128, 255, 0.3);
+  background-color: rgba(0, 128, 255, 0.2);
 }
 
 .bg_blue > span,
 .bg_blue > div > span {
-  color: rgba(0, 128, 255,1);
+  color: rgba(0, 128, 255, 1);
+}
+
+.bg_purple {
+  border-color: rgba(234, 0, 255, 0.3);
+  background-color: rgba(234, 0, 255, 0.2);
+}
+
+.bg_purple > span,
+.bg_purple > div > span {
+  color: rgba(234, 0, 255, 1);
 }
