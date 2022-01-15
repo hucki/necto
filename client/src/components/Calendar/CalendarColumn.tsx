@@ -19,32 +19,50 @@ interface CalendarColumnInputProps {
   clickedDateTime: Dayjs;
   setClickedDateTime: Dispatch<SetStateAction<Dayjs>>;
   openModal: () => void;
+  readOnly?: boolean;
+  useWeekdayAsHeader?: boolean;
 }
 interface ItemStyle {
   top: string;
   height: string;
 }
 
-function CalendarColumn ({date, events, ressources, numOfHours, hoursInterval, clickedId, setClickedId, clickedDateTime, setClickedDateTime, openModal}:CalendarColumnInputProps):JSX.Element {
+function CalendarColumn({
+  date,
+  events,
+  ressources,
+  numOfHours,
+  hoursInterval,
+  clickedId,
+  setClickedId,
+  clickedDateTime,
+  setClickedDateTime,
+  openModal,
+  readOnly = false,
+  useWeekdayAsHeader = false,
+}: CalendarColumnInputProps): JSX.Element {
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
-    return <TeamtableItem key={event.id} event={event} styles={styles} />;
+    return (
+      <TeamtableItem readOnly key={event.id} event={event} styles={styles} />
+    );
   };
 
-  function getPosition (e: React.MouseEvent<HTMLDivElement, MouseEvent>) : void {
+  function getPosition(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
     e.preventDefault();
     if (e.target !== e.currentTarget) return;
     setClickedId(parseInt(e.currentTarget.id.split(/_r/)[1]));
-    const clickedDate = dayjs(e.currentTarget.id.split(/_d/)[1].substr(0,8));
-    const {height, top } = e.currentTarget.getBoundingClientRect();
+    const clickedDate = dayjs(e.currentTarget.id.split(/_d/)[1].substr(0, 8));
+    const { height, top } = e.currentTarget.getBoundingClientRect();
     const startOfDay = clickedDate.add(hoursInterval[0], 'hour');
     const pxPerHour = height / numOfHours;
     const clickedPx = e.pageY - top < 0 ? 0 : e.pageY - top;
-    const clickedMinutesRounded = Math.round(clickedPx / (pxPerHour / 60)/15) * 15;
+    const clickedMinutesRounded =
+      Math.round(clickedPx / (pxPerHour / 60) / 15) * 15;
     setClickedDateTime(startOfDay.add(clickedMinutesRounded, 'minute'));
     openModal();
   }
 
-  function getItemStyle (event: Event) {
+  function getItemStyle(event: Event) {
     const minsToday = numOfHours * 60;
     const minsFromStartOfDay = dayjs(event.startTime).diff(
       dayjs(event.startTime).startOf('day').add(hoursInterval[0], 'h'),
@@ -55,11 +73,11 @@ function CalendarColumn ({date, events, ressources, numOfHours, hoursInterval, c
     const percentOfToday = minsDuration / minsToday;
     const itemStyle = {
       top: `calc(100% * ${percentFromStartOfToday})`,
-      height: `calc(100% * ${percentOfToday})`
+      height: `calc(100% * ${percentOfToday})`,
     };
     return itemStyle;
   }
-  const ressourceColsHeader = ressources.map(ressource =>
+  const ressourceColsHeader = ressources.map((ressource) => (
     <div
       id={`rcolHeader_r${ressource.id}`}
       key={`rcolHeader_r${ressource.id}`}
@@ -69,24 +87,27 @@ function CalendarColumn ({date, events, ressources, numOfHours, hoursInterval, c
         backgroundColor: `${colors.bg.blue50}`, // TODO: get the real colors
       }}
     >
-      {ressource.shortDescription}
+      {ressource.displayName}
     </div>
-  );
-  const ressourceColsBody = ressources.map(ressource =>
+  ));
+  const ressourceColsBody = ressources.map((ressource, index) => (
     <div
       id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.id}`}
       key={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.id}`}
       css={{
         width: `calc(100% / ${ressources.length})`,
         height: '100%',
-        position:  'relative'
+        position: 'relative',
+        borderRight:
+          index === ressources.length - 1 ? '1px solid gray' : undefined,
       }}
-      onClick={getPosition}
+      onClick={readOnly ? () => null : getPosition}
     >
-      { events.filter((event) => event.userId === ressource.id).map(event =>
-        renderCustomEvent(event, getItemStyle(event)))}
+      {events
+        .filter((event) => event.ressourceId === ressource.id)
+        .map((event) => renderCustomEvent(event, getItemStyle(event)))}
     </div>
-  );
+  ));
 
   return (
     <div
@@ -94,25 +115,27 @@ function CalendarColumn ({date, events, ressources, numOfHours, hoursInterval, c
       key={`CalendarDay_d${date.format('YYYYMMDD')}`}
       css={{
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
       }}
     >
       <div
         id={`DayHeader_d${date.format('YYYYMMDD')}`}
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
         css={{
-          height: `calc((100% / ${numOfHours+1}) / 2)`,
+          height: `calc((100% / ${numOfHours + 1}) / 2)`,
           backgroundColor: 'orange',
           color: 'white',
           fontWeight: 'bold',
         }}
-      >{date.format('DD.MM.YYYY')}</div>
+      >
+        {useWeekdayAsHeader ? date.format('dddd') : date.format('DD.MM.YYYY')}
+      </div>
       <div
         id={`RessourceHeader_d${date.format('YYYYMMDD')}`}
         key={`RessourceHeader_d${date.format('YYYYMMDD')}`}
         css={{
           display: 'flex',
-          height: `calc((100% / ${numOfHours+1}) / 2)`,
+          height: `calc((100% / ${numOfHours + 1}) / 2)`,
           flexDirection: 'row',
         }}
       >
@@ -123,7 +146,7 @@ function CalendarColumn ({date, events, ressources, numOfHours, hoursInterval, c
         key={`RessourceBody_d${date.format('YYYYMMDD')}`}
         css={{
           display: 'flex',
-          height: `calc(100% / ${numOfHours+1} * ${numOfHours})`,
+          height: `calc(100% / ${numOfHours + 1} * ${numOfHours})`,
           flexDirection: 'row',
         }}
       >
@@ -133,4 +156,4 @@ function CalendarColumn ({date, events, ressources, numOfHours, hoursInterval, c
   );
 }
 
-export {CalendarColumn};
+export { CalendarColumn };
