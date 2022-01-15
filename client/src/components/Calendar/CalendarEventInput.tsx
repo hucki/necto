@@ -14,10 +14,12 @@ import { useState, useEffect } from 'react';
 import { Button, CircleButton, FormGroup, Input, Label } from '../Library';
 import * as mq from '../../styles/media-queries';
 import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/de';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 dayjs.extend(LocalizedFormat);
+dayjs.locale('de');
 
 interface CalendarEventInputProps {
   id: number;
@@ -52,7 +54,7 @@ function CalendarEventInput({
     count: 10,
     rruleString: '',
   });
-
+  // console.log('startEnd', newEvent.startTime, newEvent.endTime);
   useEffect(() => {
     setNewEvent({
       ...newEvent,
@@ -69,12 +71,14 @@ function CalendarEventInput({
     });
   }
 
-  function handleStartTimeChange(
-    date: Date | [Date | null, Date | null] | null
-  ) {
-    if (typeof date !== 'object')
-      setNewEvent({ ...newEvent, startTime: dayjs(date) });
+  function handleStartTimeChange(date: Date) {
+    setNewEvent({ ...newEvent, startTime: dayjs(date) });
   }
+
+  function handleEndTimeChange(date: Date) {
+    setNewEvent({ ...newEvent, endTime: dayjs(date) });
+  }
+
   function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -102,6 +106,7 @@ function CalendarEventInput({
               },
             }}
           >
+            {newEvent.startTime.format('lll')}
             <form onSubmit={handleSubmit}>
               <ModalHeader
                 css={{
@@ -141,7 +146,9 @@ function CalendarEventInput({
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label htmlFor="eventStartDatePicker">Start</Label>
+                  <Label htmlFor="eventStartDatePicker">
+                    {t('calendar.event.start')}
+                  </Label>
                   <DatePicker
                     id="eventStartDatePicker"
                     name="startDate"
@@ -150,7 +157,24 @@ function CalendarEventInput({
                     timeIntervals={15}
                     dateFormat="Pp"
                     selected={newEvent.startTime.toDate()}
-                    onChange={(date) => handleStartTimeChange(date)}
+                    onChange={(date) => {
+                      if (date) handleStartTimeChange(date);
+                    }}
+                  />
+                  <Label htmlFor="eventEndDatePicker">
+                    {t('calendar.event.end')}
+                  </Label>
+                  <DatePicker
+                    id="eventEndDatePicker"
+                    name="endDate"
+                    showTimeSelect
+                    timeFormat="p"
+                    timeIntervals={15}
+                    dateFormat="Pp"
+                    selected={newEvent.endTime.toDate()}
+                    onChange={(date) => {
+                      if (date) handleEndTimeChange(date);
+                    }}
                   />
                 </FormGroup>
               </ModalBody>
