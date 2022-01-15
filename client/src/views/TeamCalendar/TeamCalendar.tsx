@@ -32,6 +32,7 @@ function TeamCalendar({
 
   const ressources: Ressource[] = teamMembers.map((member) => ({
     id: member.id,
+    displayName: member.firstName,
     shortDescription: member.firstName,
     longDescription: member.firstName + ' ' + member.lastName,
     bgColor: member.bgColor,
