@@ -6,6 +6,7 @@ import {
   HomeOutlined,
   LogoutOutlined,
   ProfileOutlined,
+  FolderOpenOutlined,
 } from '@ant-design/icons';
 import { Menu, Layout } from 'antd';
 import classes from './AppMenu.module.css';
@@ -16,7 +17,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 const { Sider: AntSider } = Layout;
 
 const AppMenu = ({ /* currentDate, */ user, dispatch }) => {
-  const {pathname: currentView} = useLocation();
+  const { pathname: currentView } = useLocation();
   const history = useHistory();
   const onClickHandler = (e) => {
     history.push(e.key);
@@ -27,13 +28,17 @@ const AppMenu = ({ /* currentDate, */ user, dispatch }) => {
     <AntSider collapsible theme="dark" breakpoint="lg" collapsedWidth="0">
       <h1 className={classes.menu}>Menu</h1>
       <Menu theme="dark" defaultSelectedKeys={[currentView]} mode="inline">
+        <Menu.Item key="/" icon={<HomeOutlined />} onClick={onClickHandler}>
+          {' '}
+          Home
+        </Menu.Item>
         <Menu.Item
-          key="/"
-          icon={<HomeOutlined />}
+          key="/rooms"
+          icon={<FolderOpenOutlined />}
           onClick={onClickHandler}
         >
           {' '}
-          Home
+          Rooms{' '}
         </Menu.Item>
         <Menu.Item
           key="/appointments"
@@ -61,16 +66,27 @@ const AppMenu = ({ /* currentDate, */ user, dispatch }) => {
             Personal Calendar{' '}
           </Menu.Item>
         )}
-        <Menu.Item key="/team" icon={<SettingOutlined />} onClick={onClickHandler}>
+        <Menu.Item
+          key="/team"
+          icon={<SettingOutlined />}
+          onClick={onClickHandler}
+        >
           {' '}
           Settings
         </Menu.Item>
-        <Menu.Item key="/profile" icon={<ProfileOutlined />} onClick={onClickHandler}>
+        <Menu.Item
+          key="/profile"
+          icon={<ProfileOutlined />}
+          onClick={onClickHandler}
+        >
           {' '}
           Profile
         </Menu.Item>
-        <Menu.Item key="/logout" icon={<LogoutOutlined />}
-          onClick={() => logout({ returnTo: window.location.origin })}>
+        <Menu.Item
+          key="/logout"
+          icon={<LogoutOutlined />}
+          onClick={() => logout({ returnTo: window.location.origin })}
+        >
           {' '}
           LogOut
         </Menu.Item>
