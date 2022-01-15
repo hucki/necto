@@ -1,3 +1,5 @@
+import { BgColor } from './Colors';
+
 export type User = {
   id?: number;
   a0Id: string;
@@ -18,6 +20,6 @@ export type TeamMember = {
   updatedAt: Date;
   hoursPerWeek: number | null;
   appointmentsPerWeek: number | null;
-  bgColor: string;
+  bgColor: BgColor;
   planningProgress?: number;
 };
