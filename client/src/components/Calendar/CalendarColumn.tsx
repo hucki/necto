@@ -43,7 +43,12 @@ function CalendarColumn({
 }: CalendarColumnInputProps): JSX.Element {
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
     return (
-      <TeamtableItem readOnly key={event.id} event={event} styles={styles} />
+      <TeamtableItem
+        readOnly={readOnly}
+        key={event.id}
+        event={event}
+        styles={styles}
+      />
     );
   };
 
