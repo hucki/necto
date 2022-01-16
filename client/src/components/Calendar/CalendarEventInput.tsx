@@ -18,6 +18,9 @@ import 'dayjs/locale/de';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useCreateEvent } from '../../hooks/events';
+import { Event } from '../../types/Event';
+import { appointment2Event } from '../../helpers/dataConverter';
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
 
@@ -44,6 +47,8 @@ function CalendarEventInput({
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
   const [newEvent, setNewEvent] = useState({
+    rowId: id.toString(),
+    ressourceId: id,
     title: t('calendar.event.newAppointmentTitle'),
     startTime: dateTime,
     duration: 45,
@@ -53,7 +58,11 @@ function CalendarEventInput({
     frequency: 'WEEKLY',
     count: 10,
     rruleString: '',
+    rrule: '',
+    bgColor: 'grey',
   });
+  const [createEvent, { error: savingError }] = useCreateEvent();
+
   // console.log('startEnd', newEvent.startTime, newEvent.endTime);
   useEffect(() => {
     setNewEvent({
@@ -86,6 +95,15 @@ function CalendarEventInput({
     setNewEvent({ ...newEvent, ...fieldValues });
     console.log('submit fV', { ...fieldValues });
     console.log('submit nE', { ...newEvent });
+    const submitEvent: Event | undefined = appointment2Event(
+      { ...newEvent, ...fieldValues },
+      id
+    );
+    if (submitEvent)
+      createEvent({
+        event: submitEvent,
+      });
+    onClose();
   }
 
   return (
@@ -125,7 +143,11 @@ function CalendarEventInput({
                   {t('calendar.event.newAppointmentTitle')}{' '}
                   {newEvent.startTime.format('l')}
                 </div>
-                <CircleButton className="modal-close" onClick={onClose}>
+                <CircleButton
+                  type="button"
+                  className="modal-close"
+                  onClick={onClose}
+                >
                   X
                 </CircleButton>
               </ModalHeader>
@@ -180,7 +202,9 @@ function CalendarEventInput({
               </ModalBody>
 
               <ModalFooter>
-                <Button onClick={onClose}>{t('button.close')}</Button>
+                <Button type="button" onClick={onClose}>
+                  {t('button.close')}
+                </Button>
                 <Button type="submit">{t('button.save')}</Button>
               </ModalFooter>
             </form>
