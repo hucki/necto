@@ -6,7 +6,7 @@ CREATE TABLE "userSettings" ("id" int UNIQUE NOT NULL, "userId" int, "bgColor" v
 
 CREATE TABLE "settings" ("calDays" varchar, "calHoursStart" int, "calHoursEnd" int, "timescaleWidth" int);
 
-CREATE TABLE "events" ("id" int UNIQUE NOT NULL, "userId" int, "type" varchar, "name" varchar, "startTime" timestamp, "endTime" timestamp, "rrule" varchar, "homeVisit" boolean, "createdAt" timestamp, "updatedAt" timestamp);
+CREATE TABLE "events" ("id" SERIAL UNIQUE NOT NULL, "userId" int, "ressourceId" int, "title" varchar, "type" varchar, "isHomeVisit" boolean, "isAllDay" boolean, "isRecurring" boolean, "isCancelled" boolean, "isCancelledReason" varchar, "rrule" varchar, "startTime" timestamp, "endTime" timestamp, "bgColor" varchar, "createdAt" timestamp, "updatedAt" timestamp, "tenantId" varchar);
 
 ALTER TABLE "contracts" ADD FOREIGN KEY ("userId") REFERENCES "users" ("id");
 
