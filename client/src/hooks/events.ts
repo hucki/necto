@@ -28,7 +28,7 @@ export function useDeleteEvent(): MutationResultPair<
   Error,
   { id: number },
   string
-> {
+  > {
   const client = useAuthenticatedClient<{ message: string }>();
 
   const deleteEvent = async ({
@@ -101,7 +101,7 @@ export function useCreateEvent(): MutationResultPair<
   Error,
   { event: Event },
   string
-> {
+  > {
   const client = useAuthenticatedClient<Event>();
   const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client('events', { data: event });
