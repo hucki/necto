@@ -3,9 +3,14 @@ import { connect } from 'react-redux';
 import classes from './UserInfo.module.css';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+import { AppState } from '../../types/AppState';
 dayjs.extend(isBetween);
 
-const UserInfo = ({ user, userName }) => {
+interface UserInfoProps {
+  userName: string;
+}
+
+const UserInfo = ({ userName }: UserInfoProps) => {
   return (
     <div>
       <div className={classes.userInfo}> Hi {userName}! </div>
@@ -13,7 +18,7 @@ const UserInfo = ({ user, userName }) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppState) => {
   return {
     user: state.userData.currentUser,
   };
