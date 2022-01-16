@@ -3,18 +3,41 @@ import { connect } from 'react-redux';
 import classes from './TeamtableDay.module.css';
 import TeamTableItem from '../TeamTableItem/TeamTableItem';
 import dayjs from 'dayjs';
+import { Event } from '../../../types/Event';
+import { AppState } from '../../../types/AppState';
 
+type ItemStyle = {
+  top: string;
+  height: string;
+};
+
+interface TeamtableDayProps {
+  events: {
+    [key: string]: Event[];
+  };
+  headerArray: string[];
+  cellWidth: number;
+  cellHeight: number;
+  hoursInterval: [number, number];
+}
 const TeamtableDay = ({
   events,
   headerArray,
   cellWidth,
   cellHeight,
   hoursInterval,
-}) => {
-  const renderCustomEvent = (event, styles) => {
-    return <TeamTableItem key={event.id} event={event} styles={styles} />;
+}: TeamtableDayProps) => {
+  const renderCustomEvent = (event: Event, styles: ItemStyle) => {
+    return (
+      <TeamTableItem
+        readOnly={false}
+        key={event.id}
+        event={event}
+        styles={styles}
+      />
+    );
   };
-  function getItemStyle (event) {
+  function getItemStyle(event: Event) {
     const minsFromStartOfDay = dayjs(event.startTime).diff(
       dayjs(event.startTime).startOf('day').add(hoursInterval[0], 'h'),
       'minute'
@@ -36,7 +59,7 @@ const TeamtableDay = ({
   const days = headerArray.map((rowTitle, index) => (
     <div
       key={rowTitle}
-      id={index}
+      id={`${index}`}
       className={`${classes.day} ${rowTitle}`}
       style={{
         height: '100%',
@@ -54,9 +77,9 @@ const TeamtableDay = ({
       </div>
 
       {events[rowTitle]
-        ? events[rowTitle].map((event) =>
-          renderCustomEvent(event, getItemStyle(event))
-        )
+        ? events[rowTitle].map((event: Event) =>
+            renderCustomEvent(event, getItemStyle(event))
+          )
         : null}
     </div>
   ));
@@ -64,7 +87,7 @@ const TeamtableDay = ({
   return <>{days}</>;
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppState) => {
   return {
     hoursInterval: state.settings.hoursInterval,
     cellWidth: state.teamtable.calculatedDimensions.cellWidth,
