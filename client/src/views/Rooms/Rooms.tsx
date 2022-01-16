@@ -40,13 +40,13 @@ function getBookings(buildingId: number) {
               ressourceId: bookings[j].roomId,
               title: person.name,
               bgColor: person.bgColor,
-              type: 'string',
+              type: 'custom',
               isHomeVisit: false,
               isAllDay: false,
               isRecurring: false,
               isCancelled: false,
-              isCancelledReason: 'string',
-              rrule: 'string',
+              isCancelledReason: '',
+              rrule: '',
               startTime: dayjs(
                 day2date[person.days[i].name] + ' ' + bookings[j].start,
                 'DD.MM.YYYY HH:mm'
