@@ -57,7 +57,7 @@ const TeamtableItem = ({
       style={styles}
       title={event.title}
       key={event.id}
-      onClick={readOnly ? undefined : () => onClickHandler}
+      onClick={readOnly ? undefined : onClickHandler}
       className={`${classes.event} ${classes['bg_' + event.bgColor]} ${
         readOnly ? 'read-only' : ''
       }`}
