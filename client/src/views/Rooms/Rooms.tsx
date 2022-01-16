@@ -7,14 +7,14 @@ import { AppState } from '../../types/AppState';
 import { Event } from '../../types/Event';
 import dayjs, { Dayjs } from 'dayjs';
 import { Ressource } from '../../types/Ressource';
-import { useState } from 'react';
-import { bookingsPerPerson, rooms } from '../../assets/bookingsdata';
+import { useEffect, useState } from 'react';
+import { bookingsPerPerson, buildings, rooms } from '../../assets/bookingsdata';
 
 interface RoomsInputProps {
   currentDate?: Dayjs;
 }
 
-function getBookings() {
+function getBookings(buildingId: number) {
   const createBookings = () => {
     const res = [];
     const day2date = {
@@ -30,32 +30,36 @@ function getBookings() {
       for (let i = 0; i < person.days.length; i++) {
         const bookings = person.days[i].bookings;
         for (let j = 0; j < bookings.length; j++) {
-          console.log(person.days[i].name);
-          res.push({
-            id: count,
-            userId: person.userId,
-            ressourceId: bookings[j].roomId,
-            title: person.name,
-            bgColor: person.bgColor,
-            type: 'string',
-            isHomeVisit: false,
-            isAllDay: false,
-            isRecurring: false,
-            isCancelled: false,
-            isCancelledReason: 'string',
-            rrule: 'string',
-            startTime: dayjs(
-              day2date[person.days[i].name] + ' ' + bookings[j].start,
-              'DD.MM.YYYY HH:mm'
-            ),
-            endTime: dayjs(
-              day2date[person.days[i].name] + ' ' + bookings[j].end,
-              'DD.MM.YYYY HH:mm'
-            ),
-            createdAt: dayjs().toDate(),
-            updatedAt: undefined,
-          });
-          count++;
+          if (
+            rooms.filter((room) => room.id === bookings[j].roomId)[0]
+              .building === buildingId
+          ) {
+            res.push({
+              id: count,
+              userId: person.userId,
+              ressourceId: bookings[j].roomId,
+              title: person.name,
+              bgColor: person.bgColor,
+              type: 'string',
+              isHomeVisit: false,
+              isAllDay: false,
+              isRecurring: false,
+              isCancelled: false,
+              isCancelledReason: 'string',
+              rrule: 'string',
+              startTime: dayjs(
+                day2date[person.days[i].name] + ' ' + bookings[j].start,
+                'DD.MM.YYYY HH:mm'
+              ),
+              endTime: dayjs(
+                day2date[person.days[i].name] + ' ' + bookings[j].end,
+                'DD.MM.YYYY HH:mm'
+              ),
+              createdAt: dayjs().toDate(),
+              updatedAt: undefined,
+            });
+            count++;
+          }
         }
       }
     }
@@ -75,9 +79,20 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     dayjs('17.01.2022', 'DD.MM.YYYY')
   );
+  const [currentBuilding, setCurrentBuilding] = useState<number>(1);
+  const [events, setEvents] = useState<Event[]>(getBookings(currentBuilding));
+  const [ressources, setRessources] = useState<Ressource[]>(
+    getRooms(currentBuilding)
+  );
 
-  const rawEvents = getBookings();
-  const ressources: Ressource[] = getRooms(1);
+  const onBuildingChangeHandler = (event: any) => {
+    setCurrentBuilding(parseInt(event.target.value));
+  };
+
+  useEffect(() => {
+    setEvents(getBookings(currentBuilding));
+    setRessources(getRooms(currentBuilding));
+  }, [currentBuilding]);
 
   return (
     <div
@@ -90,9 +105,20 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
         alignItems: 'center',
       }}
     >
+      <select
+        name="building"
+        value={currentBuilding}
+        onChange={onBuildingChangeHandler}
+      >
+        {buildings.map((b) => (
+          <option key={b.id} value={b.id}>
+            {b.displayName}
+          </option>
+        ))}
+      </select>
       <CalendarContainer
         readOnly={true}
-        events={rawEvents}
+        events={events}
         ressources={ressources}
         daysRange={[calendarDate, calendarDate.add(4, 'day')]}
         useWeekdayAsHeader
