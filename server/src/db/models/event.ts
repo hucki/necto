@@ -5,6 +5,7 @@ import { commonFieldsWithoutValidity } from './commonFields';
 export interface EventAttributes {
   id: number;
   userId: number;
+  ressourceId: number;
   title: string;
   type: string;
   isHomeVisit: boolean;
@@ -15,6 +16,7 @@ export interface EventAttributes {
   rrule: string;
   startTime: Date;
   endTime: Date;
+  bgColor: string;
   createdAt: Date;
   updatedAt: Date;
   tenantId: typeof uuidv4;
@@ -25,9 +27,11 @@ export interface EventCreationAttributes
 
 export class Event
   extends Model<EventAttributes, EventCreationAttributes>
-  implements EventAttributes {
+  implements EventAttributes
+{
   public readonly id!: number;
   public userId!: number;
+  public ressourceId!: number;
   public title!: string;
   public type!: string;
   public isHomeVisit!: boolean;
@@ -36,6 +40,7 @@ export class Event
   public isCancelled!: boolean;
   public isCancelledReason!: string;
   public rrule!: string;
+  public bgColor!: string;
   public startTime!: Date;
   public endTime!: Date;
   public tenantId!: typeof uuidv4;
@@ -51,6 +56,10 @@ export const eventFields = {
     primaryKey: true,
   },
   userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  ressourceId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -87,6 +96,11 @@ export const eventFields = {
     defaultValue: null,
     allowNull: true,
   },
+  bgColor: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+    allowNull: true,
+  },
   rrule: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -107,5 +121,5 @@ export const eventFields = {
       isDate: true,
     },
   },
-  ...commonFieldsWithoutValidity
+  ...commonFieldsWithoutValidity,
 };
