@@ -2,7 +2,6 @@ import React from 'react';
 import {
   TeamOutlined,
   SettingOutlined,
-  UserOutlined,
   HomeOutlined,
   LogoutOutlined,
   ProfileOutlined,
@@ -16,7 +15,7 @@ import { useHistory, useLocation } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 const { Sider: AntSider } = Layout;
 
-const AppMenu = ({ /* currentDate, */ user, dispatch }) => {
+const AppMenu = ({ dispatch }) => {
   const { pathname: currentView } = useLocation();
   const history = useHistory();
   const onClickHandler = (e) => {
@@ -24,6 +23,7 @@ const AppMenu = ({ /* currentDate, */ user, dispatch }) => {
     dispatch(switchView(e.key));
   };
   const { logout } = useAuth0();
+  // TODO: add route to /personal again
   return (
     <AntSider collapsible theme="dark" breakpoint="lg" collapsedWidth="0">
       <h1 className={classes.menu}>Menu</h1>
@@ -41,31 +41,13 @@ const AppMenu = ({ /* currentDate, */ user, dispatch }) => {
           Rooms{' '}
         </Menu.Item>
         <Menu.Item
-          key="/appointments"
+          key="/teamcal"
           icon={<TeamOutlined />}
           onClick={onClickHandler}
         >
           {' '}
           Team Calendar{' '}
         </Menu.Item>
-        <Menu.Item
-          key="/newcal"
-          icon={<TeamOutlined />}
-          onClick={onClickHandler}
-        >
-          {' '}
-          New Team Calendar{' '}
-        </Menu.Item>
-        {user !== 'Guest' && (
-          <Menu.Item
-            key="/personal"
-            icon={<UserOutlined />}
-            onClick={onClickHandler}
-          >
-            {' '}
-            Personal Calendar{' '}
-          </Menu.Item>
-        )}
         <Menu.Item
           key="/team"
           icon={<SettingOutlined />}
