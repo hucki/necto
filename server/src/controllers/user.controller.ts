@@ -28,12 +28,12 @@ export const getOneUserByAuth0Id = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const user = await User.findOne({where: {a0Id: req.params.a0Id}})
+    const user = await User.findOne({ where: { a0Id: req.params.a0Id } });
     res.json(user);
     res.status(200);
     return;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     next(e);
   }
 };
@@ -48,10 +48,12 @@ export const addUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const currentUser = await User.findOne({where: {a0Id: req.params.a0Id}})
-    if(currentUser) {
+    const currentUser = await User.findOne({
+      where: { a0Id: req.params.a0Id },
+    });
+    if (currentUser) {
       res.status(403);
-      res.render('error', { error: 'User already exists' })
+      res.render('error', { error: 'User already exists' });
       return;
     }
     const createdUser = await User.create({
