@@ -24,10 +24,16 @@ export type Event = {
 export type Appointment = {
   id?: number;
   rowId: string;
+  ressourceId: number;
+  duration: number;
+  isRecurring: boolean;
+  frequency: string;
+  count: number;
   title: string;
   startTime: Dayjs;
   endTime: Dayjs;
   rrule: string;
-  bgColor: string;
+  rruleString: string;
+  bgColor: BgColor;
   isHomeVisit: boolean;
 };
