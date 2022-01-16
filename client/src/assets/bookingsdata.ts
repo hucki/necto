@@ -1,5 +1,16 @@
 import { Ressource } from '../types/Ressource';
-import { PersonBookings } from '../types/Rooms';
+import { Building, PersonBookings } from '../types/Rooms';
+
+export const buildings: Building[] = [
+  {
+    id: 1,
+    displayName: 'Mundwerk Arnsberg',
+  },
+  {
+    id: 2,
+    displayName: 'Mundwerk Neheim',
+  },
+];
 
 export const rooms: Ressource[] = [
   {
