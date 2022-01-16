@@ -4,34 +4,48 @@ import { Modal, message } from 'antd';
 import dayjs from 'dayjs';
 import { HomeTwoTone, ApiTwoTone } from '@ant-design/icons';
 import { useDeleteEvent } from '../../../hooks/events';
+import { Event } from '../../../types/Event';
 
-const TeamtableItem = ({ event, styles, readOnly = false }) => {
+interface TeamtableItemInputProps {
+  event: Event;
+  styles: any;
+  readOnly: boolean;
+}
+
+const TeamtableItem = ({
+  event,
+  styles,
+  readOnly = false,
+}: TeamtableItemInputProps) => {
   // TODO: put delete dialog in a separate Component
   const { confirm } = Modal;
-  const [icons, setIcons] = useState([]);
+  const [icons, setIcons] = useState<JSX.Element[] | []>([]);
   const [deleteEvent] = useDeleteEvent();
 
   useEffect(() => {
     setIcons([]);
     if (event.rrule !== '')
-      setIcons((icons) => [...icons, <ApiTwoTone key="rruleIcon" />]);
+      setIcons(() => [...icons, <ApiTwoTone key="rruleIcon" />]);
     if (event.isHomeVisit)
-      setIcons((icons) => [...icons, <HomeTwoTone key="homeVisitIcon" />]);
+      setIcons(() => [...icons, <HomeTwoTone key="homeVisitIcon" />]);
   }, [event]);
-  const onClickHandler = ({ id, title, startTime, endTime }) => {
+
+  const onClickHandler = () => {
     confirm({
       content: (
         <div>
-          <p>Delete Appointment id: {id}?</p>
+          <p>Delete Appointment id: {event.id}?</p>
           <p>
-            {dayjs(startTime).format('HH:mm')} -{' '}
-            {dayjs(endTime).format('HH:mm')}: <b>{title}</b>
+            {dayjs(event.startTime).format('HH:mm')} -{' '}
+            {dayjs(event.endTime).format('HH:mm')}: <b>{event.title}</b>
           </p>
         </div>
       ),
       onOk() {
-        deleteEvent({ id });
-        message.success(`Appointment ${id} deleted`, 1);
+        if (event.id) {
+          deleteEvent({ id: event.id });
+          message.success(`Appointment ${event.id} deleted`, 1);
+        }
       },
       onCancel() {
         console.log('delete process cancelled'); // eslint-disable-line no-console
@@ -43,7 +57,7 @@ const TeamtableItem = ({ event, styles, readOnly = false }) => {
       style={styles}
       title={event.title}
       key={event.id}
-      onClick={readOnly ? undefined : () => onClickHandler(event)}
+      onClick={readOnly ? undefined : () => onClickHandler}
       className={`${classes.event} ${classes['bg_' + event.bgColor]} ${
         readOnly ? 'read-only' : ''
       }`}
