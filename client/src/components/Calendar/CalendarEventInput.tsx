@@ -93,8 +93,6 @@ function CalendarEventInput({
     const formData = new FormData(event.currentTarget);
     const fieldValues = Object.fromEntries(formData.entries());
     setNewEvent({ ...newEvent, ...fieldValues });
-    console.log('submit fV', { ...fieldValues });
-    console.log('submit nE', { ...newEvent });
     const submitEvent: Event | undefined = appointment2Event(
       { ...newEvent, ...fieldValues },
       id
