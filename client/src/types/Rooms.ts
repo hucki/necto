@@ -23,3 +23,13 @@ export interface PersonBookings {
   bgColor: BgColor;
   days: BookingDay[];
 }
+
+export interface Building {
+  id: number;
+  displayName: string;
+  address?: {
+    street: string;
+    postcode: string;
+    town: string;
+  };
+}
