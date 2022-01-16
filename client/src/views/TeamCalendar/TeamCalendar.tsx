@@ -51,6 +51,7 @@ function TeamCalendar({
       }}
     >
       <CalendarContainer
+        readOnly={false}
         events={rawEvents}
         ressources={ressources}
         daysRange={[calendarDate, calendarDate]}
