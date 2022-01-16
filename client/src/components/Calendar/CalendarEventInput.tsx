@@ -19,7 +19,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
-import { Event } from '../../types/Event';
+import { Appointment, Event } from '../../types/Event';
 import { appointment2Event } from '../../helpers/dataConverter';
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -46,7 +46,7 @@ function CalendarEventInput({
   onClose,
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
-  const [newEvent, setNewEvent] = useState({
+  const [newEvent, setNewEvent] = useState<Appointment>({
     rowId: id.toString(),
     ressourceId: id,
     title: t('calendar.event.newAppointmentTitle'),
@@ -59,7 +59,7 @@ function CalendarEventInput({
     count: 10,
     rruleString: '',
     rrule: '',
-    bgColor: 'grey',
+    bgColor: 'green',
   });
   const [createEvent, { error: savingError }] = useCreateEvent();
 
