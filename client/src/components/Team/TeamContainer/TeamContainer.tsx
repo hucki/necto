@@ -2,9 +2,14 @@ import React from 'react';
 import { Table } from 'antd';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+import { TeamMember } from '../../../types/User';
 dayjs.extend(isBetween);
 
-const TeamContainer = ({ teamMembers }) => {
+interface TeamContainerProps {
+  teamMembers: TeamMember[];
+}
+
+const TeamContainer = ({ teamMembers }: TeamContainerProps) => {
   const dataSource = teamMembers.map((member) => {
     return {
       key: member.id,
