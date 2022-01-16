@@ -13,12 +13,14 @@ import { logIn } from '../actions/actions';
 const { Content: AntContent } = Layout;
 
 interface AuthenticatedAppInputProps {
-  userData: User,
-  a0Id: string,
+  a0Id: string;
   dispatch: Dispatch<any>;
 }
 
-function AuthenticatedApp ({ a0Id, dispatch }: AuthenticatedAppInputProps): JSX.Element {
+function AuthenticatedApp({
+  a0Id,
+  dispatch,
+}: AuthenticatedAppInputProps): JSX.Element {
   const { user, isError } = useAuth0User(a0Id);
   useEffect(() => {
     if (!user) return;
@@ -29,9 +31,15 @@ function AuthenticatedApp ({ a0Id, dispatch }: AuthenticatedAppInputProps): JSX.
     <>
       <AppMenu />
       <Layout className="site-layout">
-        <Header userName={!user ? 'new User' : user.firstName}/>
+        <Header userName={!user ? 'new User' : user.firstName} />
         <AntContent style={{ margin: '0 16px' }}>
-          {isError ? <div>Error connecting to backend. Please try again later!</div> : !user ? <UserProfile purpose="new" a0Id={a0Id}/>: <Dashboard style={{ height: '100%' }} a0Id={a0Id} />}
+          {isError ? (
+            <div>Error connecting to backend. Please try again later!</div>
+          ) : !user ? (
+            <UserProfile purpose="new" a0Id={a0Id} />
+          ) : (
+            <Dashboard style={{ height: '100%' }} a0Id={a0Id} />
+          )}
         </AntContent>
         <Footer />
       </Layout>
@@ -42,8 +50,8 @@ function AuthenticatedApp ({ a0Id, dispatch }: AuthenticatedAppInputProps): JSX.
 const MapDispatchToProps = (dispatch: Dispatch<any>) => {
   return {
     logIn,
-    dispatch
+    dispatch,
   };
 };
 
-export default connect(null,MapDispatchToProps)(AuthenticatedApp);
+export default connect(null, MapDispatchToProps)(AuthenticatedApp);
