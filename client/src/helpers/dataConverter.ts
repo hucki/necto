@@ -5,7 +5,7 @@ export function appointment2Event(
   appointment: Appointment,
   userId: number
 ): Event | undefined {
-  const newEvent = {
+  const newEvent: Event = {
     userId: userId,
     ressourceId: userId,
     title: appointment.title,
@@ -18,6 +18,7 @@ export function appointment2Event(
     rrule: appointment.rrule,
     startTime: appointment.startTime,
     endTime: appointment.endTime,
+    bgColor: appointment.bgColor,
   };
   return newEvent;
 }
@@ -40,9 +41,15 @@ export function events2Appointments(
         title: events[i].title,
         isHomeVisit: events[i].isHomeVisit,
         rrule: events[i].rrule,
+        rruleString: events[i].rrule,
         startTime: events[i].startTime,
         bgColor: current.bgColor,
         endTime: events[i].endTime,
+        ressourceId: events[i].userId,
+        duration: 45,
+        isRecurring: events[i].isRecurring,
+        frequency: 'WEEKLY',
+        count: 10,
       });
     }
   }
