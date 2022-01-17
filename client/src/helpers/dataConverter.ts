@@ -19,6 +19,7 @@ export function appointment2Event(
     startTime: appointment.startTime,
     endTime: appointment.endTime,
     bgColor: appointment.bgColor,
+    roomId: appointment.roomId,
   };
   return newEvent;
 }
