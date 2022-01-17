@@ -8,7 +8,7 @@ import { useDaysEvents } from '../../hooks/events';
 import dayjs, { Dayjs } from 'dayjs';
 import { FullPageSpinner } from '../../components/Library';
 import { TeamMember } from '../../types/User';
-import { Ressource } from '../../types/Ressource';
+import { Person } from '../../types/Ressource';
 import { useEffect, useState } from 'react';
 
 interface TeamCalendarInputProps {
@@ -30,7 +30,7 @@ function TeamCalendar({
       setCalendarDate(currentDate);
   }, [currentDate, calendarDate, setCalendarDate]);
 
-  const ressources: Ressource[] = teamMembers.map((member) => ({
+  const ressources: Person[] = teamMembers.map((member) => ({
     id: member.id,
     displayName: member.firstName,
     shortDescription: member.firstName,
