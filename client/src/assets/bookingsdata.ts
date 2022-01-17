@@ -48,7 +48,7 @@ export const rooms: Ressource[] = [
   {
     id: 5,
     building: 2,
-    displayName: '01',
+    displayName: '05',
     shortDescription: 'Wiebke',
     longDescription: 'Therapiezimmer rechts',
     bgColor: 'red',
@@ -57,14 +57,14 @@ export const rooms: Ressource[] = [
     id: 6,
     building: 2,
     shortDescription: 'Mitte',
-    displayName: '02',
+    displayName: '06',
     longDescription: 'Therapiezimmer Mitte',
     bgColor: 'grey',
   },
   {
     id: 7,
     building: 2,
-    displayName: '03',
+    displayName: '07',
     shortDescription: 'Links',
     longDescription: 'Therapiezimmer links',
     bgColor: 'green',
@@ -169,6 +169,11 @@ export const bookingsPerPerson: PersonBookings[] = [
           {
             roomId: 3,
             start: '08:15',
+            end: '09:00',
+          },
+          {
+            roomId: 2,
+            start: '09:00',
             end: '16:15',
           },
         ],
@@ -177,7 +182,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         name: 'wednesday',
         bookings: [
           {
-            roomId: 3,
+            roomId: 2,
             start: '14:15',
             end: '17:15',
           },
@@ -206,7 +211,7 @@ export const bookingsPerPerson: PersonBookings[] = [
     ],
   },
   {
-    userId: 3,
+    userId: 4,
     name: 'Biggi',
     bgColor: 'green',
     days: [
@@ -214,7 +219,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         name: 'tuesday',
         bookings: [
           {
-            roomId: 2,
+            roomId: 3,
             start: '12:15',
             end: '16:45',
           },
@@ -235,7 +240,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         name: 'friday',
         bookings: [
           {
-            roomId: 2,
+            roomId: 3,
             start: '13:00',
             end: '15:15',
           },
@@ -244,7 +249,7 @@ export const bookingsPerPerson: PersonBookings[] = [
     ],
   },
   {
-    userId: 4,
+    userId: 5,
     name: 'Nadine',
     bgColor: 'yellow',
     days: [
@@ -307,7 +312,7 @@ export const bookingsPerPerson: PersonBookings[] = [
     ],
   },
   {
-    userId: 2,
+    userId: 6,
     name: 'Biene',
     bgColor: 'purple',
     days: [
@@ -369,6 +374,90 @@ export const bookingsPerPerson: PersonBookings[] = [
             roomId: 2,
             start: '07:30',
             end: '12:00',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    userId: 7,
+    name: 'Evelyn',
+    bgColor: 'mint',
+    days: [
+      {
+        name: 'wednesday',
+        bookings: [
+          {
+            roomId: 3,
+            start: '12:00',
+            end: '16:00',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    userId: 8,
+    name: 'Wiebke',
+    bgColor: 'red',
+    days: [
+      {
+        name: 'monday',
+        bookings: [
+          {
+            roomId: 5,
+            start: '07:00',
+            end: '09:00',
+          },
+          {
+            roomId: 5,
+            start: '12:00',
+            end: '16:00',
+          },
+        ],
+      },
+      {
+        name: 'tuesday',
+        bookings: [
+          {
+            roomId: 5,
+            start: '07:00',
+            end: '17:00',
+          },
+        ],
+      },
+      {
+        name: 'wednesday',
+        bookings: [
+          {
+            roomId: 5,
+            start: '13:15',
+            end: '17:00',
+          },
+        ],
+      },
+      {
+        name: 'thursday',
+        bookings: [
+          {
+            roomId: 5,
+            start: '07:00',
+            end: '08:00',
+          },
+          {
+            roomId: 5,
+            start: '12:00',
+            end: '16:00',
+          },
+        ],
+      },
+      {
+        name: 'friday',
+        bookings: [
+          {
+            roomId: 5,
+            start: '07:30',
+            end: '10:00',
           },
         ],
       },
