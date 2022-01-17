@@ -9,6 +9,7 @@ export interface EventAttributes {
   title: string;
   type: string;
   isHomeVisit: boolean;
+  roomId: number;
   isAllDay: boolean;
   isRecurring: boolean;
   isCancelled: boolean;
@@ -35,6 +36,7 @@ export class Event
   public title!: string;
   public type!: string;
   public isHomeVisit!: boolean;
+  public roomId!: number;
   public isAllDay!: boolean;
   public isRecurring!: boolean;
   public isCancelled!: boolean;
@@ -56,6 +58,10 @@ export const eventFields = {
     primaryKey: true,
   },
   userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  roomId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
