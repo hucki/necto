@@ -60,6 +60,7 @@ function CalendarEventInput({
     rruleString: '',
     rrule: '',
     bgColor: 'green',
+    roomId: 1,
   });
   const [createEvent, { error: savingError }] = useCreateEvent();
 
