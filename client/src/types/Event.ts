@@ -16,6 +16,7 @@ export type Event = {
   rrule: string;
   startTime: Dayjs;
   endTime: Dayjs;
+  roomId?: number;
   createdAt?: Date;
   updatedAt?: Date;
   bgColor?: BgColor;
@@ -36,4 +37,5 @@ export type Appointment = {
   rruleString: string;
   bgColor: BgColor;
   isHomeVisit: boolean;
+  roomId?: number;
 };
