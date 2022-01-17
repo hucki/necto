@@ -6,7 +6,7 @@ import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { Event } from '../../types/Event';
 import dayjs, { Dayjs } from 'dayjs';
-import { Ressource } from '../../types/Ressource';
+import { Room } from '../../types/Ressource';
 import { useEffect, useState } from 'react';
 import { bookingsPerPerson, buildings, rooms } from '../../assets/bookingsdata';
 
@@ -81,7 +81,7 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
   );
   const [currentBuilding, setCurrentBuilding] = useState<number>(1);
   const [events, setEvents] = useState<Event[]>(getBookings(currentBuilding));
-  const [ressources, setRessources] = useState<Ressource[]>(
+  const [ressources, setRessources] = useState<Room[]>(
     getRooms(currentBuilding)
   );
 
