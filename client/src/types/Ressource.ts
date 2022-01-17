@@ -1,10 +1,16 @@
 import { BgColor } from './Colors';
 
-export type Ressource = {
+interface Ressource {
   id: number;
   displayName: string;
   shortDescription: string;
   longDescription: string;
   bgColor: BgColor;
+}
+
+export interface Person extends Ressource {
+  userId?: number;
+}
+export interface Room extends Ressource {
   building?: number;
-};
+}
