@@ -1,1 +1,8 @@
-export type BgColor = 'grey' | 'green' | 'red' | 'yellow' | 'blue' | 'purple';
+export type BgColor =
+  | 'grey'
+  | 'green'
+  | 'red'
+  | 'yellow'
+  | 'blue'
+  | 'purple'
+  | 'mint';
