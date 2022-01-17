@@ -1,4 +1,4 @@
-import { Ressource } from '../types/Ressource';
+import { Room } from '../types/Ressource';
 import { Building, PersonBookings } from '../types/Rooms';
 
 export const buildings: Building[] = [
@@ -12,7 +12,7 @@ export const buildings: Building[] = [
   },
 ];
 
-export const rooms: Ressource[] = [
+export const rooms: Room[] = [
   {
     id: 1,
     building: 1,
