@@ -134,3 +134,13 @@
 .bg_purple > div > span {
   color: rgba(234, 0, 255, 1);
 }
+
+.bg_mint {
+  border-color: rgba(0, 255, 255, 0.3);
+  background-color: rgba(0, 255, 255, 0.2);
+}
+
+.bg_mint > span,
+.bg_mint > div > span {
+  color: rgb(0, 100, 100);
+}
