@@ -70,6 +70,7 @@ export const rooms: Room[] = [
     bgColor: 'green',
   },
 ];
+
 export const bookingsPerPerson: PersonBookings[] = [
   {
     userId: 1,
@@ -458,6 +459,34 @@ export const bookingsPerPerson: PersonBookings[] = [
             roomId: 5,
             start: '07:30',
             end: '10:00',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    userId: 9,
+    name: 'Nicola',
+    bgColor: 'blue',
+    days: [
+      {
+        name: 'monday',
+        bookings: [
+          {
+            roomId: 6,
+            start: '07:00',
+            end: '11:00',
+          },
+        ],
+      },
+
+      {
+        name: 'wednesday',
+        bookings: [
+          {
+            roomId: 6,
+            start: '07:00',
+            end: '09:00',
           },
         ],
       },
