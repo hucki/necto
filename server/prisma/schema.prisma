@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SequelizeMeta {
+  name String @id @db.VarChar(255)
+}
+
+model appSettings {
+  id             Int      @id @default(autoincrement())
+  calDays        String   @db.VarChar(255)
+  calHoursStart  Int
+  calHoursEnd    Int
+  timescaleWidth Int
+  companyId      Int
+  tenantId       String   @db.Uuid
+  createdAt      DateTime @db.Timestamptz(6)
+  updatedAt      DateTime @db.Timestamptz(6)
+  tenants        tenants  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model companies {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  tenantId   String   @db.Uuid
+  validUntil DateTime @db.Timestamptz(6)
+  createdAt  DateTime @db.Timestamptz(6)
+  updatedAt  DateTime @db.Timestamptz(6)
+  tenants    tenants  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model contracts {
+  id                            Int       @id @default(autoincrement())
+  userId                        Int
+  hoursPerWeek                  Int?
+  appointmentsPerWeek           Int?
+  tenantId                      String    @db.Uuid
+  validUntil                    DateTime? @db.Timestamptz(6)
+  createdAt                     DateTime  @db.Timestamptz(6)
+  updatedAt                     DateTime  @db.Timestamptz(6)
+  UserId                        Int?
+  users_contracts_UserIdTousers users?    @relation("contracts_UserIdTousers", fields: [UserId], references: [id])
+  users_contracts_userIdTousers users     @relation("contracts_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model events {
+  id                Int       @unique @default(autoincrement())
+  userId            Int?
+  ressourceId       Int?
+  title             String?   @db.VarChar
+  type              String?   @db.VarChar
+  isHomeVisit       Boolean?
+  isAllDay          Boolean?
+  isRecurring       Boolean?
+  isCancelled       Boolean?
+  isCancelledReason String?   @db.VarChar
+  rrule             String?   @db.VarChar
+  startTime         DateTime? @db.Timestamp(6)
+  endTime           DateTime? @db.Timestamp(6)
+  bgColor           String?   @db.VarChar
+  createdAt         DateTime? @db.Timestamp(6)
+  updatedAt         DateTime? @db.Timestamp(6)
+  tenantId          String?   @db.VarChar
+  roomId            Int?
+}
+
+model tenants {
+  id          String        @id @db.Uuid
+  name        String        @db.VarChar(255)
+  description String?       @db.VarChar(255)
+  validUntil  DateTime?     @db.Timestamptz(6)
+  createdAt   DateTime      @db.Timestamptz(6)
+  updatedAt   DateTime      @db.Timestamptz(6)
+  appSettings appSettings[]
+  companies   companies[]
+}
+
+model userSettings {
+  id                               Int       @id @default(autoincrement())
+  userId                           Int
+  bgColor                          String?   @db.VarChar(255)
+  tenantId                         String    @db.Uuid
+  validUntil                       DateTime? @db.Timestamptz(6)
+  createdAt                        DateTime  @db.Timestamptz(6)
+  updatedAt                        DateTime  @db.Timestamptz(6)
+  UserId                           Int?
+  users_userSettings_UserIdTousers users?    @relation("userSettings_UserIdTousers", fields: [UserId], references: [id])
+  users_userSettings_userIdTousers users     @relation("userSettings_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model users {
+  id                                      Int            @id @default(autoincrement())
+  firstName                               String?        @db.VarChar(64)
+  lastName                                String?        @db.VarChar(64)
+  tenantId                                String         @db.Uuid
+  validUntil                              DateTime?      @db.Timestamptz(6)
+  createdAt                               DateTime       @db.Timestamptz(6)
+  updatedAt                               DateTime       @db.Timestamptz(6)
+  a0Id                                    String         @db.VarChar
+  contracts_contracts_UserIdTousers       contracts[]    @relation("contracts_UserIdTousers")
+  contracts_contracts_userIdTousers       contracts[]    @relation("contracts_userIdTousers")
+  userSettings_userSettings_UserIdTousers userSettings[] @relation("userSettings_UserIdTousers")
+  userSettings_userSettings_userIdTousers userSettings[] @relation("userSettings_userIdTousers")
+}
