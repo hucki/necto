@@ -1,8 +1,7 @@
 import dayjs from 'dayjs';
-import { Op } from 'sequelize';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
-import { Event, EventCreationAttributes } from '../db/models/Event';
+import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
@@ -18,9 +17,11 @@ export const addEvent = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const createdEvent = await Event.create({
-      tenantId: tenantId,
-      ...req.body,
+    const createdEvent = await prisma.event.create({
+      data: {
+        tenantId: tenantId,
+        ...req.body,
+      },
     });
     res.json(createdEvent);
     res.status(201);
@@ -40,13 +41,11 @@ export const deleteEvent = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const eventId: number = parseInt(req.params.eventId);
-    const deletedCount = await Event.destroy({ where: { id: eventId } });
-    res.json(
-      `deleted ${deletedCount} event${
-        deletedCount !== 1 ? 's' : ''
-      } with eventId=${eventId}`
-    );
+    const eventId = req.params.eventId;
+    const deletedEvent = await prisma.event.delete({
+      where: { uuid: eventId },
+    });
+    res.json(deletedEvent);
     res.status(200);
     return;
   } catch (e) {
@@ -73,18 +72,20 @@ export const getDaysEvents = async (
       .set('second', 1);
     const endDate = startDate.add(24, 'h');
 
-    const events = await Event.findAll({
+    const events = await prisma.event.findMany({
       where: {
-        startTime: {
-          [Op.and]: [
-            {
-              [Op.gte]: startDate.toISOString(),
+        AND: [
+          {
+            startTime: {
+              gte: startDate.toISOString(),
             },
-            {
-              [Op.lt]: endDate.toISOString(),
+          },
+          {
+            startTime: {
+              lt: endDate.toISOString(),
             },
-          ],
-        },
+          },
+        ],
       },
     });
     res.json(events);
@@ -110,14 +111,12 @@ export const getWeeksEvents = async (
     const week = parseInt(req.params.week);
     const firstOfWeek = dayjs().year(year).isoWeek(week).startOf('isoWeek');
     const lastOfWeek = firstOfWeek.endOf('isoWeek');
-    const events = await Event.findAll({
+    const events = await prisma.event.findMany({
       where: {
-        startTime: {
-          [Op.and]: [
-            { [Op.gte]: firstOfWeek.toISOString() },
-            { [Op.lte]: lastOfWeek.toISOString() },
-          ],
-        },
+        AND: [
+          { startTime: { gte: firstOfWeek.toISOString() } },
+          { startTime: { lte: lastOfWeek.toISOString() } },
+        ],
       },
     });
     res.json(events);
@@ -137,7 +136,7 @@ export const getAllEvents = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const events = await Event.findAll();
+    const events = await prisma.event.findMany();
     res.json(events);
     res.status(200);
     return;

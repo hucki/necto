@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Contract } from '../db/models/Contract';
+import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
@@ -10,7 +10,7 @@ export const getAllContracts = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const contracts = await Contract.findAll();
+    const contracts = await prisma.contract.findMany();
     res.json(contracts);
     res.status(200);
     return;
@@ -29,9 +29,11 @@ export const addContract = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const createdContract = await Contract.create({
-      tenantId: tenantId,
-      ...req.body,
+    const createdContract = await prisma.contract.create({
+      data: {
+        tenantId: tenantId,
+        ...req.body,
+      },
     });
     res.json(createdContract);
     res.status(201);

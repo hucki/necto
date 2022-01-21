@@ -1,8 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
-import { Tenant } from '../db/models/Tenants';
+import prisma from '../db/prisma';
 
 /**
- * add App Settings
+ * get App tenants
+ */
+export const getAllTenants = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const tenants = await prisma.tenant.findMany();
+    res.json(tenants);
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * add App Tenant
  *  @param {Tenant} req.body
  */
 export const addTenant = async (
@@ -11,8 +29,10 @@ export const addTenant = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const createdTenant = await Tenant.create({
-      ...req.body,
+    const createdTenant = await prisma.tenant.create({
+      data: {
+        ...req.body,
+      },
     });
     res.json(createdTenant);
     res.status(201);

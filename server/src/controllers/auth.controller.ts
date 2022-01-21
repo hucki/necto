@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppSettings } from '../db/models/AppSettings';
+import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,8 +9,10 @@ export const signupUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const createdSettings = await AppSettings.create({
-      ...req.body,
+    const createdSettings = await prisma.appSettings.create({
+      data: {
+        ...req.body,
+      },
     });
     res.json(createdSettings);
     res.status(201);
