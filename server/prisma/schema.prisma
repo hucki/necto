@@ -11,7 +11,7 @@ model SequelizeMeta {
   name String @id @db.VarChar(255)
 }
 
-model appSettings {
+model AppSettings {
   id             Int      @id @default(autoincrement())
   calDays        String   @db.VarChar(255)
   calHoursStart  Int
@@ -19,22 +19,26 @@ model appSettings {
   timescaleWidth Int
   companyId      Int
   tenantId       String   @db.Uuid
-  createdAt      DateTime @db.Timestamptz(6)
-  updatedAt      DateTime @db.Timestamptz(6)
-  tenant         tenant   @relation(fields: [tenantId], references: [uuid], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tenant         Tenant   @relation(fields: [tenantId], references: [uuid], onDelete: Cascade)
+
+  @@map("appSettings")
 }
 
-model company {
+model Company {
   uuid       String   @id @db.Uuid
   name       String   @db.VarChar(255)
   tenantId   String   @db.Uuid
   validUntil DateTime @db.Timestamptz(6)
-  createdAt  DateTime @db.Timestamptz(6)
-  updatedAt  DateTime @db.Timestamptz(6)
-  tenant     tenant   @relation(fields: [tenantId], references: [uuid], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  tenant     Tenant   @relation(fields: [tenantId], references: [uuid], onDelete: Cascade)
+
+  @@map("companies")
 }
 
-model building {
+model Building {
   uuid        String  @id @db.Uuid
   displayName String  @db.VarChar(64)
   description String? @db.VarChar(64)
@@ -42,71 +46,82 @@ model building {
   zip         String? @db.VarChar(10)
   city        String? @db.VarChar(64)
   tenantId    String  @db.Uuid
-  tenant      tenant  @relation(fields: [tenantId], references: [uuid])
-  rooms       room[]
+  tenant      Tenant  @relation(fields: [tenantId], references: [uuid])
+  rooms       Room[]
+
+  @@map("buildings")
 }
 
-model room {
+model Room {
   uuid        String   @id @db.Uuid
   displayName String   @db.VarChar(64)
   description String?  @db.VarChar(64)
   tenantId    String   @db.Uuid
   buildingId  String   @db.Uuid
-  building    building @relation(fields: [buildingId], references: [uuid])
+  building    Building @relation(fields: [buildingId], references: [uuid])
+
+  @@map("rooms")
 }
 
-model employee {
-  uuid         String         @id @db.Uuid
-  firstName    String?        @db.VarChar(64)
-  lastName     String?        @db.VarChar(64)
-  street       String?        @db.VarChar(64)
-  zip          String?        @db.VarChar(10)
-  city         String?        @db.VarChar(64)
-  birthday     DateTime?      @db.Timestamptz(6)
-  validUntil   DateTime?      @db.Timestamptz(6)
-  createdAt    DateTime       @db.Timestamptz(6)
-  updatedAt    DateTime       @db.Timestamptz(6)
-  companyId    String         @db.Uuid
-  tenantId     String         @db.Uuid
-  contract     contract[]     @relation("contracts_employeeIdToemployees")
-  userSettings userSettings?  @relation("userSettings_employeeIdToemployees")
-  contactData  contactData[]  @relation("contactData_referenceIdToemployees")
-  teams        employeeTeam[]
+model Employee {
+  uuid        String           @id @db.Uuid
+  firstName   String?          @db.VarChar(64)
+  lastName    String?          @db.VarChar(64)
+  street      String?          @db.VarChar(64)
+  zip         String?          @db.VarChar(10)
+  city        String?          @db.VarChar(64)
+  birthday    DateTime?        @db.Timestamptz(6)
+  validUntil  DateTime?        @db.Timestamptz(6)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  companyId   String           @db.Uuid
+  tenantId    String           @db.Uuid
+  contract    Contract[]       @relation("contracts_employeeIdToemployees")
+  user        UserSettings?    @relation("userSettings_employeeIdToemployees")
+  contactData ContactData[]    @relation("contactData_referenceIdToemployees")
+  teams       EmployeeToTeam[]
+
+  @@map("employees")
 }
 
-model employeeTeam {
+model EmployeeToTeam {
   teamId     String   @db.Uuid
-  team       team     @relation(fields: [teamId], references: [uuid])
+  team       Team     @relation(fields: [teamId], references: [uuid])
   employeeId String   @db.Uuid
-  employee   employee @relation(fields: [employeeId], references: [uuid])
+  employee   Employee @relation(fields: [employeeId], references: [uuid])
   tenantId   String   @db.Uuid
 
-  @@unique([employeeId, teamId])
+  @@id([employeeId, teamId])
+  @@map("employeeTeams")
 }
 
-model team {
-  uuid        String         @id @db.Uuid
-  displayName String         @db.VarChar(64)
-  description String?        @db.VarChar(64)
-  tenantId    String         @db.Uuid
-  companyId   String         @db.Uuid
-  employees   employeeTeam[]
+model Team {
+  uuid        String           @id @db.Uuid
+  displayName String           @db.VarChar(64)
+  description String?          @db.VarChar(64)
+  tenantId    String           @db.Uuid
+  companyId   String           @db.Uuid
+  employees   EmployeeToTeam[]
+
+  @@map("teams")
 }
 
-model contract {
-  id                                        Int       @id @default(autoincrement())
-  userId                                    String    @db.Uuid
-  hoursPerWeek                              Int?
-  appointmentsPerWeek                       Int?
-  tenantId                                  String    @db.Uuid
-  validUntil                                DateTime? @db.Timestamptz(6)
-  createdAt                                 DateTime  @db.Timestamptz(6)
-  updatedAt                                 DateTime  @db.Timestamptz(6)
-  employeeId                                String?   @db.Uuid
-  employees_contracts_employeeIdToemployees employee? @relation("contracts_employeeIdToemployees", fields: [employeeId], references: [uuid], onDelete: Cascade)
+model Contract {
+  id                  Int       @id @default(autoincrement())
+  userId              String    @db.Uuid
+  hoursPerWeek        Int?
+  appointmentsPerWeek Int?
+  tenantId            String    @db.Uuid
+  validUntil          DateTime? @db.Timestamptz(6)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  employeeId          String?   @db.Uuid
+  employee            Employee? @relation("contracts_employeeIdToemployees", fields: [employeeId], references: [uuid], onDelete: Cascade)
+
+  @@map("contracts")
 }
 
-model event {
+model Event {
   uuid              String    @id @db.Uuid
   userId            Int?
   ressourceId       Int?
@@ -121,85 +136,98 @@ model event {
   startTime         DateTime? @db.Timestamp(6)
   endTime           DateTime? @db.Timestamp(6)
   bgColor           String?   @db.VarChar
-  createdAt         DateTime? @db.Timestamp(6)
-  updatedAt         DateTime? @db.Timestamp(6)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
   tenantId          String?   @db.VarChar
   roomId            Int?
+
+  @@map("events")
 }
 
-model tenant {
+model Tenant {
   uuid        String        @id @db.Uuid
   name        String        @db.VarChar(255)
   description String?       @db.VarChar(255)
   validUntil  DateTime?     @db.Timestamptz(6)
-  createdAt   DateTime      @db.Timestamptz(6)
-  updatedAt   DateTime      @db.Timestamptz(6)
-  appSettings appSettings[]
-  companies   company[]
-  buildings   building[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  appSettings AppSettings[]
+  companies   Company[]
+  buildings   Building[]
+
+  @@map("tenants")
 }
 
-model userSettings {
+model UserSettings {
   id         Int       @id @default(autoincrement())
   userId     String    @db.Uuid
-  employeeId String?   @db.Uuid@unique
+  employeeId String?   @unique @db.Uuid
   bgColor    String?   @db.VarChar(255)
   tenantId   String    @db.Uuid
   validUntil DateTime? @db.Timestamptz(6)
-  createdAt  DateTime  @db.Timestamptz(6)
-  updatedAt  DateTime  @db.Timestamptz(6)
-  user       user      @relation("userSettings_userIdTousers", fields: [userId], references: [uuid], onDelete: Cascade)
-  employee   employee? @relation("userSettings_employeeIdToemployees", fields: [employeeId], references: [uuid])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User      @relation("userSettings_userIdTousers", fields: [userId], references: [uuid], onDelete: Cascade)
+  employee   Employee? @relation("userSettings_employeeIdToemployees", fields: [employeeId], references: [uuid])
+
+  @@map("userSettings")
 }
 
-model user {
-  uuid                                    String            @id @db.Uuid
-  firstName                               String?           @db.VarChar(64)
-  lastName                                String?           @db.VarChar(64)
-  tenantId                                String            @db.Uuid
-  validUntil                              DateTime?         @db.Timestamptz(6)
-  createdAt                               DateTime          @db.Timestamptz(6)
-  updatedAt                               DateTime          @db.Timestamptz(6)
-  a0Id                                    String            @db.VarChar
-  userSettings_userSettings_userIdTousers userSettings[]    @relation("userSettings_userIdTousers")
-  contactData                             contactData[]     @relation("contactData_referenceIdTousers")
-  permissions                             userPermissions[]
+model User {
+  uuid                                    String              @id @db.Uuid
+  firstName                               String?             @db.VarChar(64)
+  lastName                                String?             @db.VarChar(64)
+  tenantId                                String              @db.Uuid
+  validUntil                              DateTime?           @db.Timestamptz(6)
+  createdAt                               DateTime            @default(now())
+  updatedAt                               DateTime            @updatedAt
+  a0Id                                    String              @db.VarChar
+  userSettings_userSettings_userIdTousers UserSettings[]      @relation("userSettings_userIdTousers")
+  contactData                             ContactData[]       @relation("contactData_referenceIdTousers")
+  permissions                             UserToPermissions[]
+
+  @@map("users")
 }
 
-model userPermissions {
+model UserToPermissions {
   userId       String          @db.Uuid
-  user         user            @relation(fields: [userId], references: [uuid])
+  user         User            @relation(fields: [userId], references: [uuid])
   permissionId String          @db.Uuid
-  permission   permissionLevel @relation(fields: [permissionId], references: [uuid])
+  permission   PermissionLevel @relation(fields: [permissionId], references: [uuid])
   tenantId     String          @db.Uuid
 
-  @@unique([userId, permissionId])
+  @@id([userId, permissionId])
+  @@map("userPermissions")
 }
 
-model permissionLevel {
-  uuid        String            @id @db.Uuid
-  displayName String            @db.VarChar(64)
-  description String            @db.VarChar(255)
-  tenantId    String            @db.Uuid
-  users       userPermissions[]
+model PermissionLevel {
+  uuid        String              @id @db.Uuid
+  displayName String              @db.VarChar(64)
+  description String              @db.VarChar(255)
+  tenantId    String              @db.Uuid
+  users       UserToPermissions[]
+
+  @@map("permissionLevels")
 }
 
-model contactData {
+model ContactData {
   uuid       String    @id @db.Uuid
   userId     String?   @db.Uuid
   employeeId String?   @db.Uuid
   patientId  String?   @db.Uuid
   type       String    @db.VarChar(64)
   contact    String    @db.VarChar(255)
-  createdAt  DateTime  @db.Timestamptz(6)
-  updatedAt  DateTime  @db.Timestamptz(6)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   tenantId   String    @db.Uuid
-  user       user?     @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
-  employee   employee? @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
-  patient    patient?  @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
+  user       User?     @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
+  employee   Employee? @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
+  patient    Patient?  @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
+
+  @@map("contactData")
 }
 
-model patient {
+model Patient {
   uuid                String        @id @db.Uuid
   firstName           String?       @db.VarChar(64)
   lastName            String?       @db.VarChar(64)
@@ -220,9 +248,11 @@ model patient {
   addPayFreedFrom     DateTime?     @db.Timestamptz(6)
   addPayFreedUntil    DateTime?     @db.Timestamptz(6)
   validUntil          DateTime?     @db.Timestamptz(6)
-  createdAt           DateTime      @db.Timestamptz(6)
-  updatedAt           DateTime      @db.Timestamptz(6)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
   companyId           String        @db.Uuid
   tenantId            String        @db.Uuid
-  contactData         contactData[] @relation("contactData_referenceIdTopatient")
+  contactData         ContactData[] @relation("contactData_referenceIdTopatient")
+
+  @@map("patients")
 }
