@@ -27,7 +27,7 @@ model AppSettings {
 }
 
 model Company {
-  uuid       String   @id @db.Uuid
+  uuid       String   @id @default(uuid()) @db.Uuid
   name       String   @db.VarChar(255)
   tenantId   String   @db.Uuid
   validUntil DateTime @db.Timestamptz(6)
@@ -39,7 +39,7 @@ model Company {
 }
 
 model Building {
-  uuid        String  @id @db.Uuid
+  uuid        String  @id @default(uuid()) @db.Uuid
   displayName String  @db.VarChar(64)
   description String? @db.VarChar(64)
   street      String? @db.VarChar(64)
@@ -53,7 +53,7 @@ model Building {
 }
 
 model Room {
-  uuid        String   @id @db.Uuid
+  uuid        String   @id @default(uuid()) @db.Uuid
   displayName String   @db.VarChar(64)
   description String?  @db.VarChar(64)
   tenantId    String   @db.Uuid
@@ -64,13 +64,13 @@ model Room {
 }
 
 model Employee {
-  uuid        String           @id @db.Uuid
+  uuid        String           @id @default(uuid()) @db.Uuid
   firstName   String?          @db.VarChar(64)
   lastName    String?          @db.VarChar(64)
   street      String?          @db.VarChar(64)
   zip         String?          @db.VarChar(10)
   city        String?          @db.VarChar(64)
-  birthday    DateTime?        @db.Timestamptz(6)
+  birthday    DateTime?        @db.Date
   validUntil  DateTime?        @db.Timestamptz(6)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -96,7 +96,7 @@ model EmployeeToTeam {
 }
 
 model Team {
-  uuid        String           @id @db.Uuid
+  uuid        String           @id @default(uuid()) @db.Uuid
   displayName String           @db.VarChar(64)
   description String?          @db.VarChar(64)
   tenantId    String           @db.Uuid
@@ -122,7 +122,7 @@ model Contract {
 }
 
 model Event {
-  uuid              String    @id @db.Uuid
+  uuid              String    @id @default(uuid()) @db.Uuid
   userId            Int?
   ressourceId       Int?
   title             String?   @db.VarChar
@@ -145,7 +145,7 @@ model Event {
 }
 
 model Tenant {
-  uuid        String        @id @db.Uuid
+  uuid        String        @id @default(uuid()) @db.Uuid
   name        String        @db.VarChar(255)
   description String?       @db.VarChar(255)
   validUntil  DateTime?     @db.Timestamptz(6)
@@ -174,14 +174,14 @@ model UserSettings {
 }
 
 model User {
-  uuid                                    String              @id @db.Uuid
+  uuid                                    String              @id @default(uuid()) @db.Uuid
+  tenantId                                String              @db.Uuid
   firstName                               String?             @db.VarChar(64)
   lastName                                String?             @db.VarChar(64)
-  tenantId                                String              @db.Uuid
+  a0Id                                    String?             @db.VarChar
   validUntil                              DateTime?           @db.Timestamptz(6)
   createdAt                               DateTime            @default(now())
   updatedAt                               DateTime            @updatedAt
-  a0Id                                    String              @db.VarChar
   userSettings_userSettings_userIdTousers UserSettings[]      @relation("userSettings_userIdTousers")
   contactData                             ContactData[]       @relation("contactData_referenceIdTousers")
   permissions                             UserToPermissions[]
@@ -201,7 +201,7 @@ model UserToPermissions {
 }
 
 model PermissionLevel {
-  uuid        String              @id @db.Uuid
+  uuid        String              @id @default(uuid()) @db.Uuid
   displayName String              @db.VarChar(64)
   description String              @db.VarChar(255)
   tenantId    String              @db.Uuid
@@ -211,7 +211,7 @@ model PermissionLevel {
 }
 
 model ContactData {
-  uuid       String    @id @db.Uuid
+  uuid       String    @id @default(uuid()) @db.Uuid
   userId     String?   @db.Uuid
   employeeId String?   @db.Uuid
   patientId  String?   @db.Uuid
@@ -228,7 +228,7 @@ model ContactData {
 }
 
 model Patient {
-  uuid                String        @id @db.Uuid
+  uuid                String        @id @default(uuid()) @db.Uuid
   firstName           String?       @db.VarChar(64)
   lastName            String?       @db.VarChar(64)
   title               String?       @db.VarChar(64)
@@ -236,7 +236,7 @@ model Patient {
   street              String?       @db.VarChar(64)
   zip                 String?       @db.VarChar(10)
   city                String?       @db.VarChar(64)
-  birthday            DateTime?     @db.Timestamptz(6)
+  birthday            DateTime?     @db.Date
   insurance           String?       @db.VarChar(64)
   insuranceNumber     String?       @db.VarChar(64)
   insuranceCardNumber String?       @db.VarChar(64)
@@ -245,9 +245,9 @@ model Patient {
   careFacility        String?       @db.VarChar(64)
   state               String?       @db.VarChar(64)
   isAddpayFreed       Boolean
-  addPayFreedFrom     DateTime?     @db.Timestamptz(6)
-  addPayFreedUntil    DateTime?     @db.Timestamptz(6)
-  validUntil          DateTime?     @db.Timestamptz(6)
+  addPayFreedFrom     DateTime?     @db.Date
+  addPayFreedUntil    DateTime?     @db.Date
+  validUntil          DateTime?     @db.Date
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
   companyId           String        @db.Uuid
