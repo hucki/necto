@@ -54,6 +54,7 @@ router.post('/settings/user', userSettingsController.addUserSettings);
 //router.put('/appsettings', settingsController.updateAppSettings);
 
 // tenant routes
+router.get('/tenants', tenantController.getAllTenants);
 router.post('/tenant', tenantController.addTenant);
 
-export {router, errorRouter};
+export { router, errorRouter };
