@@ -21,35 +21,93 @@ model appSettings {
   tenantId       String   @db.Uuid
   createdAt      DateTime @db.Timestamptz(6)
   updatedAt      DateTime @db.Timestamptz(6)
-  tenants        tenants  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant         tenant   @relation(fields: [tenantId], references: [uuid], onDelete: Cascade)
 }
 
-model companies {
-  id         Int      @id @default(autoincrement())
+model company {
+  uuid       String   @id @db.Uuid
   name       String   @db.VarChar(255)
   tenantId   String   @db.Uuid
   validUntil DateTime @db.Timestamptz(6)
   createdAt  DateTime @db.Timestamptz(6)
   updatedAt  DateTime @db.Timestamptz(6)
-  tenants    tenants  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant     tenant   @relation(fields: [tenantId], references: [uuid], onDelete: Cascade)
 }
 
-model contracts {
-  id                            Int       @id @default(autoincrement())
-  userId                        Int
-  hoursPerWeek                  Int?
-  appointmentsPerWeek           Int?
-  tenantId                      String    @db.Uuid
-  validUntil                    DateTime? @db.Timestamptz(6)
-  createdAt                     DateTime  @db.Timestamptz(6)
-  updatedAt                     DateTime  @db.Timestamptz(6)
-  UserId                        Int?
-  users_contracts_UserIdTousers users?    @relation("contracts_UserIdTousers", fields: [UserId], references: [id])
-  users_contracts_userIdTousers users     @relation("contracts_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+model building {
+  uuid        String  @id @db.Uuid
+  displayName String  @db.VarChar(64)
+  description String? @db.VarChar(64)
+  street      String? @db.VarChar(64)
+  zip         String? @db.VarChar(10)
+  city        String? @db.VarChar(64)
+  tenantId    String  @db.Uuid
+  tenant      tenant  @relation(fields: [tenantId], references: [uuid])
+  rooms       room[]
 }
 
-model events {
-  id                Int       @unique @default(autoincrement())
+model room {
+  uuid        String   @id @db.Uuid
+  displayName String   @db.VarChar(64)
+  description String?  @db.VarChar(64)
+  tenantId    String   @db.Uuid
+  buildingId  String   @db.Uuid
+  building    building @relation(fields: [buildingId], references: [uuid])
+}
+
+model employee {
+  uuid         String         @id @db.Uuid
+  firstName    String?        @db.VarChar(64)
+  lastName     String?        @db.VarChar(64)
+  street       String?        @db.VarChar(64)
+  zip          String?        @db.VarChar(10)
+  city         String?        @db.VarChar(64)
+  birthday     DateTime?      @db.Timestamptz(6)
+  validUntil   DateTime?      @db.Timestamptz(6)
+  createdAt    DateTime       @db.Timestamptz(6)
+  updatedAt    DateTime       @db.Timestamptz(6)
+  companyId    String         @db.Uuid
+  tenantId     String         @db.Uuid
+  contract     contract[]     @relation("contracts_employeeIdToemployees")
+  userSettings userSettings?  @relation("userSettings_employeeIdToemployees")
+  contactData  contactData[]  @relation("contactData_referenceIdToemployees")
+  teams        employeeTeam[]
+}
+
+model employeeTeam {
+  teamId     String   @db.Uuid
+  team       team     @relation(fields: [teamId], references: [uuid])
+  employeeId String   @db.Uuid
+  employee   employee @relation(fields: [employeeId], references: [uuid])
+  tenantId   String   @db.Uuid
+
+  @@unique([employeeId, teamId])
+}
+
+model team {
+  uuid        String         @id @db.Uuid
+  displayName String         @db.VarChar(64)
+  description String?        @db.VarChar(64)
+  tenantId    String         @db.Uuid
+  companyId   String         @db.Uuid
+  employees   employeeTeam[]
+}
+
+model contract {
+  id                                        Int       @id @default(autoincrement())
+  userId                                    String    @db.Uuid
+  hoursPerWeek                              Int?
+  appointmentsPerWeek                       Int?
+  tenantId                                  String    @db.Uuid
+  validUntil                                DateTime? @db.Timestamptz(6)
+  createdAt                                 DateTime  @db.Timestamptz(6)
+  updatedAt                                 DateTime  @db.Timestamptz(6)
+  employeeId                                String?   @db.Uuid
+  employees_contracts_employeeIdToemployees employee? @relation("contracts_employeeIdToemployees", fields: [employeeId], references: [uuid], onDelete: Cascade)
+}
+
+model event {
+  uuid              String    @id @db.Uuid
   userId            Int?
   ressourceId       Int?
   title             String?   @db.VarChar
@@ -69,41 +127,102 @@ model events {
   roomId            Int?
 }
 
-model tenants {
-  id          String        @id @db.Uuid
+model tenant {
+  uuid        String        @id @db.Uuid
   name        String        @db.VarChar(255)
   description String?       @db.VarChar(255)
   validUntil  DateTime?     @db.Timestamptz(6)
   createdAt   DateTime      @db.Timestamptz(6)
   updatedAt   DateTime      @db.Timestamptz(6)
   appSettings appSettings[]
-  companies   companies[]
+  companies   company[]
+  buildings   building[]
 }
 
 model userSettings {
-  id                               Int       @id @default(autoincrement())
-  userId                           Int
-  bgColor                          String?   @db.VarChar(255)
-  tenantId                         String    @db.Uuid
-  validUntil                       DateTime? @db.Timestamptz(6)
-  createdAt                        DateTime  @db.Timestamptz(6)
-  updatedAt                        DateTime  @db.Timestamptz(6)
-  UserId                           Int?
-  users_userSettings_UserIdTousers users?    @relation("userSettings_UserIdTousers", fields: [UserId], references: [id])
-  users_userSettings_userIdTousers users     @relation("userSettings_userIdTousers", fields: [userId], references: [id], onDelete: Cascade)
+  id         Int       @id @default(autoincrement())
+  userId     String    @db.Uuid
+  employeeId String?   @db.Uuid@unique
+  bgColor    String?   @db.VarChar(255)
+  tenantId   String    @db.Uuid
+  validUntil DateTime? @db.Timestamptz(6)
+  createdAt  DateTime  @db.Timestamptz(6)
+  updatedAt  DateTime  @db.Timestamptz(6)
+  user       user      @relation("userSettings_userIdTousers", fields: [userId], references: [uuid], onDelete: Cascade)
+  employee   employee? @relation("userSettings_employeeIdToemployees", fields: [employeeId], references: [uuid])
 }
 
-model users {
-  id                                      Int            @id @default(autoincrement())
-  firstName                               String?        @db.VarChar(64)
-  lastName                                String?        @db.VarChar(64)
-  tenantId                                String         @db.Uuid
-  validUntil                              DateTime?      @db.Timestamptz(6)
-  createdAt                               DateTime       @db.Timestamptz(6)
-  updatedAt                               DateTime       @db.Timestamptz(6)
-  a0Id                                    String         @db.VarChar
-  contracts_contracts_UserIdTousers       contracts[]    @relation("contracts_UserIdTousers")
-  contracts_contracts_userIdTousers       contracts[]    @relation("contracts_userIdTousers")
-  userSettings_userSettings_UserIdTousers userSettings[] @relation("userSettings_UserIdTousers")
-  userSettings_userSettings_userIdTousers userSettings[] @relation("userSettings_userIdTousers")
+model user {
+  uuid                                    String            @id @db.Uuid
+  firstName                               String?           @db.VarChar(64)
+  lastName                                String?           @db.VarChar(64)
+  tenantId                                String            @db.Uuid
+  validUntil                              DateTime?         @db.Timestamptz(6)
+  createdAt                               DateTime          @db.Timestamptz(6)
+  updatedAt                               DateTime          @db.Timestamptz(6)
+  a0Id                                    String            @db.VarChar
+  userSettings_userSettings_userIdTousers userSettings[]    @relation("userSettings_userIdTousers")
+  contactData                             contactData[]     @relation("contactData_referenceIdTousers")
+  permissions                             userPermissions[]
+}
+
+model userPermissions {
+  userId       String          @db.Uuid
+  user         user            @relation(fields: [userId], references: [uuid])
+  permissionId String          @db.Uuid
+  permission   permissionLevel @relation(fields: [permissionId], references: [uuid])
+  tenantId     String          @db.Uuid
+
+  @@unique([userId, permissionId])
+}
+
+model permissionLevel {
+  uuid        String            @id @db.Uuid
+  displayName String            @db.VarChar(64)
+  description String            @db.VarChar(255)
+  tenantId    String            @db.Uuid
+  users       userPermissions[]
+}
+
+model contactData {
+  uuid       String    @id @db.Uuid
+  userId     String?   @db.Uuid
+  employeeId String?   @db.Uuid
+  patientId  String?   @db.Uuid
+  type       String    @db.VarChar(64)
+  contact    String    @db.VarChar(255)
+  createdAt  DateTime  @db.Timestamptz(6)
+  updatedAt  DateTime  @db.Timestamptz(6)
+  tenantId   String    @db.Uuid
+  user       user?     @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
+  employee   employee? @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
+  patient    patient?  @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
+}
+
+model patient {
+  uuid                String        @id @db.Uuid
+  firstName           String?       @db.VarChar(64)
+  lastName            String?       @db.VarChar(64)
+  title               String?       @db.VarChar(64)
+  gender              String?       @db.VarChar(10)
+  street              String?       @db.VarChar(64)
+  zip                 String?       @db.VarChar(10)
+  city                String?       @db.VarChar(64)
+  birthday            DateTime?     @db.Timestamptz(6)
+  insurance           String?       @db.VarChar(64)
+  insuranceNumber     String?       @db.VarChar(64)
+  insuranceCardNumber String?       @db.VarChar(64)
+  insuranceCardValid  String?       @db.VarChar(64)
+  notices             String?       @db.VarChar(255)
+  careFacility        String?       @db.VarChar(64)
+  state               String?       @db.VarChar(64)
+  isAddpayFreed       Boolean
+  addPayFreedFrom     DateTime?     @db.Timestamptz(6)
+  addPayFreedUntil    DateTime?     @db.Timestamptz(6)
+  validUntil          DateTime?     @db.Timestamptz(6)
+  createdAt           DateTime      @db.Timestamptz(6)
+  updatedAt           DateTime      @db.Timestamptz(6)
+  companyId           String        @db.Uuid
+  tenantId            String        @db.Uuid
+  contactData         contactData[] @relation("contactData_referenceIdTopatient")
 }
