@@ -18,7 +18,7 @@ model AppSettings {
   calHoursEnd    Int
   timescaleWidth Int
   companyId      Int
-  tenantId       String   @db.Uuid
+  tenantId       String   @unique @db.Uuid
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   tenant         Tenant   @relation(fields: [tenantId], references: [uuid], onDelete: Cascade)
