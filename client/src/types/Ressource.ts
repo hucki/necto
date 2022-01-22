@@ -1,7 +1,7 @@
 import { BgColor } from './Colors';
 
 interface Ressource {
-  id: number;
+  uuid: string;
   displayName: string;
   shortDescription: string;
   longDescription: string;
@@ -12,5 +12,5 @@ export interface Person extends Ressource {
   userId?: number;
 }
 export interface Room extends Ressource {
-  building?: number;
+  buildingId?: string;
 }

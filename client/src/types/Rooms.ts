@@ -1,7 +1,7 @@
 import { BgColor } from './Colors';
 
 interface Booking {
-  roomId: number;
+  roomId: string;
   start: string;
   end: string;
 }
@@ -18,14 +18,14 @@ interface BookingDay {
 }
 
 export interface PersonBookings {
-  userId: number;
+  employeeId: string;
   name: string;
   bgColor: BgColor;
   days: BookingDay[];
 }
 
 export interface Building {
-  id: number;
+  uuid: string;
   displayName: string;
   address?: {
     street: string;

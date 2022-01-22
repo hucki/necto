@@ -1,11 +1,10 @@
 import { Dayjs } from 'dayjs';
-import { v4 as uuidv4 } from 'uuid';
 import { BgColor } from './Colors';
 
 export type Event = {
-  id?: number;
-  userId: number;
-  ressourceId: number;
+  uuid?: string;
+  userId: string;
+  ressourceId: string;
   title: string;
   type: string;
   isHomeVisit: boolean;
@@ -16,16 +15,16 @@ export type Event = {
   rrule: string;
   startTime: Dayjs;
   endTime: Dayjs;
-  roomId?: number;
+  roomId?: string;
   createdAt?: Date;
   updatedAt?: Date;
   bgColor?: BgColor;
 };
 
 export type Appointment = {
-  id?: number;
+  uuid?: string;
   rowId: string;
-  ressourceId: number;
+  ressourceId: string;
   duration: number;
   isRecurring: boolean;
   frequency: string;
@@ -37,5 +36,5 @@ export type Appointment = {
   rruleString: string;
   bgColor: BgColor;
   isHomeVisit: boolean;
-  roomId?: number;
+  roomId?: string;
 };

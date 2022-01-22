@@ -1,7 +1,7 @@
-import { Dayjs } from "dayjs";
+import { Dayjs } from 'dayjs';
 
 interface TeamMembers {
-  id: number;
+  uuid: string;
   firstName: string;
   lastName: string;
   appointmentsPerWeek: number;
@@ -10,41 +10,41 @@ interface TeamMembers {
 }
 
 export type AppState = {
-    appointments: {
-      teamMembers: TeamMembers;
+  appointments: {
+    teamMembers: TeamMembers;
+  };
+  current: {
+    currentDate: Dayjs;
+  };
+  settings: {
+    hoursInterval: [number, number];
+    currentView: string;
+  };
+  newAppointment: {
+    inputFormVisible: boolean;
+    clickedRowId: string;
+    startTime: Dayjs;
+    endTime: Dayjs;
+    rrule: string;
+  };
+  userData: {
+    currentUser: string;
+    currentUserId: number;
+  };
+  teamtable: {
+    viewportDimensions: {
+      width: number;
+      height: number;
+      top: number;
     };
-    current: {
-      currentDate: Dayjs;
+    calculatedDimensions: {
+      cellHeight: number;
+      cellWidth: number;
+      relCellHeight: number;
     };
     settings: {
-      hoursInterval: [number, number];
-      currentView: string;
-    };
-    newAppointment: {
-      inputFormVisible: boolean;
-      clickedRowId: string;
-      startTime: Dayjs;
-      endTime: Dayjs;
-      rrule: string;
-    };
-    userData: {
-      currentUser: string;
-      currentUserId: number;
-    };
-    teamtable: {
-      viewportDimensions: {
-        width: number;
-        height: number;
-        top: number;
-      };
-      calculatedDimensions: {
-        cellHeight: number;
-        cellWidth: number;
-        relCellHeight: number;
-      };
-      settings: {
-        daysToShow: string[];
-        timeScaleWidth: number;
-      };
+      daysToShow: string[];
+      timeScaleWidth: number;
     };
   };
+};

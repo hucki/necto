@@ -1,7 +1,7 @@
 import { BgColor } from './Colors';
 
 export type User = {
-  id?: number;
+  uuid?: string;
   a0Id: string;
   firstName: string;
   lastName: string;
@@ -11,7 +11,7 @@ export type User = {
 };
 
 export type TeamMember = {
-  id: number;
+  uuid: string;
   a0Id: string;
   firstName: string;
   lastName: string;
