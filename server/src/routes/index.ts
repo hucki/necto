@@ -1,5 +1,8 @@
 import express from 'express';
 import * as userController from '../controllers/user.controller';
+import * as employeeController from '../controllers/employee.controller';
+import * as roomController from '../controllers/room.controller';
+import * as buildingController from '../controllers/building.controller';
 import * as contractController from '../controllers/contract.controller';
 import * as eventController from '../controllers/event.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
@@ -33,6 +36,18 @@ router.get('/a0users/:a0Id', userController.getOneUserByAuth0Id);
 router.get('/users', userController.getAllUsers);
 router.post('/users', userController.addUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
+
+// room routes
+router.get('/employees', employeeController.getAllEmployees);
+router.post('/employees', employeeController.addEmployee);
+
+// room routes
+router.get('/rooms', roomController.getAllRooms);
+router.post('/rooms', roomController.addRoom);
+
+// building routes
+router.get('/buildings', buildingController.getAllBuildings);
+router.post('/buildings', buildingController.addBuilding);
 
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
