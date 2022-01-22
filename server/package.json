@@ -9,6 +9,9 @@
     "start": "concurrently \"tsc -w\" \"nodemon dist/src/app.js\"",
     "start-once": "npx tsc && node dist/src/app.js"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,6 +24,7 @@
     "@types/uuid": "^8.3.4",
     "@types/validator": "^13.7.1",
     "concurrently": "^5.3.0",
+    "nodemon": "^2.0.15",
     "prisma": "^3.8.1",
     "sequelize-cli": "^6.4.1",
     "ts-node": "^9.1.1",
