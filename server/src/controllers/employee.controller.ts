@@ -11,7 +11,16 @@ export const getAllEmployees = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const employees = await prisma.employee.findMany({ where: { tenantId } });
+    const employees = await prisma.employee.findMany({
+      where: { tenantId },
+      include: {
+        contract: {
+          where: {
+            validUntil: null,
+          },
+        },
+      },
+    });
     res.json(employees);
     res.status(200);
     return;
@@ -34,8 +43,31 @@ export const addEmployee = async (
       data: {
         tenantId: tenantId,
         ...req.body,
+        create: {
+          contract: {
+            tenantId: tenantId,
+          },
+        },
+      },
+      include: {
+        contract: {
+          where: {
+            validUntil: null,
+          },
+        },
       },
     });
+
+    // let createdContract = null;
+    // if (!createdEmployee.contract.length) {
+    //   createdContract = await prisma.contract.create({
+    //     data: {
+    //       employeeId: createdEmployee.uuid,
+    //       tenantId: tenantId,
+    //     },
+    //   });
+    // }
+
     res.json(createdEmployee);
     res.status(201);
     return;

@@ -34,8 +34,40 @@ export const addContract = async (
         tenantId: tenantId,
         ...req.body,
       },
+      include: {
+        employee: true,
+      },
     });
     res.json(createdContract);
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * update one Contract
+ *  @param {Contract} req.body
+ */
+export const updateContract = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const updatedContract = await prisma.contract.update({
+      where: {
+        id: req.body.id,
+      },
+      data: {
+        ...req.body,
+      },
+      include: {
+        employee: true,
+      },
+    });
+    res.json(updatedContract);
     res.status(201);
     return;
   } catch (e) {
