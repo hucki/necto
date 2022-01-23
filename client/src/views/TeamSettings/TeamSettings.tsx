@@ -15,7 +15,6 @@ const TeamSettings = () => {
       setCurrentTeam(teams[0]);
     }
   }, [isLoading]);
-
   const onTeamChangeHandler = (event: any) => {
     setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
   };
@@ -38,11 +37,10 @@ const TeamSettings = () => {
         ))}
       </select>
       {currentTeam.employees?.length ? (
-        currentTeam.employees.map((e, i) => <div key={i}>{e.firstName}</div>)
+        currentTeam.employees.map((e, i) => <div key={i}>{e.employee.firstName}</div>)
       ) : (
         <div>no peeps in this team</div>
       )}
-      <pre>loaded</pre>
     </>
   );
 };

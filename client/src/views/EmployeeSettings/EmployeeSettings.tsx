@@ -33,7 +33,7 @@ const EmployeeOverview = ({ employee }: EmployeeOverviewProps) => {
           <h4>current teams</h4>
           <ul>
             {employee.teams.map((t, i) => (
-              <li key={i}>{t.displayName}</li>
+              <li key={i}>{t.team.displayName}</li>
             ))}
           </ul>
         </>
@@ -45,18 +45,22 @@ const EmployeeOverview = ({ employee }: EmployeeOverviewProps) => {
 };
 
 const EmployeeSettings = () => {
-  const { isLoading, error, employees } = useAllEmployees();
+  const { isLoading, error, employees,refetch } = useAllEmployees();
   const { isLoading: isLoadingTeams, error: errorTeams, teams } = useAllTeams();
   const [addEmployeeToTeam, { error: savingError }] = useAddEmployeeToTeam();
-
   const [currentEmployee, setCurrentemployee] = useState<
     Employee | undefined
   >();
+  const [currentTeam, setCurrentTeam] = useState<Team | undefined>();
+
   useEffect(() => {
     if (!isLoading && employees.length) {
       setCurrentemployee(employees[0]);
     }
-  }, [isLoading]);
+    if (!isLoadingTeams && teams.length) {
+      setCurrentTeam(teams[0]);
+    }
+  }, [isLoading, isLoadingTeams]);
 
   const onemployeeChangeHandler = (event: any) => {
     setCurrentemployee(
@@ -64,13 +68,8 @@ const EmployeeSettings = () => {
     );
   };
 
-  const [currentTeam, setCurrentTeam] = useState<Team | undefined>();
 
-  useEffect(() => {
-    if (!isLoadingTeams && teams.length) {
-      setCurrentTeam(teams[0]);
-    }
-  }, [isLoadingTeams]);
+
 
   const onTeamChangeHandler = (event: any) => {
     setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
@@ -83,6 +82,7 @@ const EmployeeSettings = () => {
         team: currentTeam
       };
       addEmployeeToTeam({employee2Team});
+      refetch();
     }
 
   };
@@ -106,19 +106,21 @@ const EmployeeSettings = () => {
       </select>
       <EmployeeOverview employee={currentEmployee} />
       <br />
-      add selected employee to team:
       {currentTeam && (
-        <select
-          name="team"
-          value={currentTeam.uuid}
-          onChange={onTeamChangeHandler}
-        >
-          {teams.map((t, i) => (
-            <option key={i} value={t.uuid}>
-              {t.displayName}
-            </option>
-          ))}
-        </select>
+        <>
+          add selected employee to team:
+          <select
+            name="team"
+            value={currentTeam.uuid}
+            onChange={onTeamChangeHandler}
+          >
+            {teams.map((t, i) => (
+              <option key={i} value={t.uuid}>
+                {t.displayName}
+              </option>
+            ))}
+          </select>
+        </>
       )}
       <button type="button" onClick={handleAddEmployeeToTeam}>
         Add
