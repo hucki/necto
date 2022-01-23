@@ -1,4 +1,3 @@
-import dayjs, { Dayjs } from 'dayjs';
 import { useQuery, QueryResult } from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { Room } from '../types/Ressource';
@@ -24,7 +23,10 @@ export function useAllRooms(): QueryResult<Room[]> & { rooms: Room[] } {
     return client('rooms');
   });
 
-  const rooms = roomsQuery.data ?? [];
+  const rooms =
+    roomsQuery.data?.sort(
+      (a, b) => parseInt(a.displayName) - parseInt(b.displayName)
+    ) ?? [];
 
   return {
     rooms,
