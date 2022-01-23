@@ -21,11 +21,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
 import { Appointment, Event } from '../../types/Event';
 import { appointment2Event } from '../../helpers/dataConverter';
+import { v4 as uuidv4 } from 'uuid';
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
 
 interface CalendarEventInputProps {
-  id: number;
+  uuid: string;
   dateTime: Dayjs;
   isOpen: boolean;
   onOpen: () => void;
@@ -39,16 +40,14 @@ interface eventTitleFormElement extends HTMLFormElement {
 }
 
 function CalendarEventInput({
-  id,
+  uuid,
   dateTime,
   isOpen,
   onOpen,
   onClose,
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
-  const [newEvent, setNewEvent] = useState<Appointment>({
-    rowId: id.toString(),
-    ressourceId: id,
+  const defaultEvent = {
     title: t('calendar.event.newAppointmentTitle'),
     startTime: dateTime,
     duration: 45,
@@ -60,7 +59,22 @@ function CalendarEventInput({
     rruleString: '',
     rrule: '',
     bgColor: 'green',
-    roomId: 1,
+  };
+  const [newEvent, setNewEvent] = useState<Appointment>({
+    rowId: uuid.toString(),
+    ressourceId: uuid,
+    title: t('calendar.event.newAppointmentTitle'),
+    startTime: dateTime,
+    duration: 45,
+    endTime: dayjs(dateTime).add(45, 'minute'),
+    isRecurring: false,
+    isHomeVisit: false,
+    frequency: 'WEEKLY',
+    count: 10,
+    rruleString: '',
+    rrule: '',
+    bgColor: 'green',
+    roomId: uuidv4.toString(),
   });
   const [createEvent, { error: savingError }] = useCreateEvent();
 
@@ -96,7 +110,7 @@ function CalendarEventInput({
     setNewEvent({ ...newEvent, ...fieldValues });
     const submitEvent: Event | undefined = appointment2Event(
       { ...newEvent, ...fieldValues },
-      id
+      uuid
     );
     if (submitEvent)
       createEvent({
@@ -156,7 +170,7 @@ function CalendarEventInput({
                 }}
               >
                 {t('calendar.event.newAppointmentTitle')} {t('dict.for')} User:{' '}
-                {id} starting {newEvent.startTime.format('lll')}
+                {uuid} starting {newEvent.startTime.format('lll')}
                 <FormGroup>
                   <Label htmlFor="eventTitleInput">Title</Label>
                   <Input

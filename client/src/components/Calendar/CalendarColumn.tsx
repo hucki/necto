@@ -7,6 +7,7 @@ import { Person, Room } from '../../types/Ressource';
 import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
 import * as colors from '../../styles/colors';
 import { Dispatch, SetStateAction } from 'react';
+import { v4 as uuid } from 'uuid';
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -14,8 +15,8 @@ interface CalendarColumnInputProps {
   ressources: Array<Person | Room>;
   numOfHours: number;
   hoursInterval: [number, number];
-  clickedId: number;
-  setClickedId: Dispatch<SetStateAction<number>>;
+  clickedId: string | undefined;
+  setClickedId: Dispatch<SetStateAction<string | undefined>>;
   clickedDateTime: Dayjs;
   setClickedDateTime: Dispatch<SetStateAction<Dayjs>>;
   openModal: () => void;
@@ -42,10 +43,11 @@ function CalendarColumn({
   useWeekdayAsHeader = false,
 }: CalendarColumnInputProps): JSX.Element {
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
+    if (!event.uuid) event.uuid = uuid();
     return (
       <TeamtableItem
         readOnly={readOnly}
-        key={event.id}
+        key={event.uuid.toString()}
         event={event}
         styles={styles}
       />
@@ -55,7 +57,7 @@ function CalendarColumn({
   function getPosition(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
     e.preventDefault();
     if (e.target !== e.currentTarget) return;
-    setClickedId(parseInt(e.currentTarget.id.split(/_r/)[1]));
+    setClickedId(e.currentTarget.id.split(/_r/)[1].toString());
     const clickedDate = dayjs(e.currentTarget.id.split(/_d/)[1].substr(0, 8));
     const { height, top } = e.currentTarget.getBoundingClientRect();
     const startOfDay = clickedDate.add(hoursInterval[0], 'hour');
@@ -84,8 +86,8 @@ function CalendarColumn({
   }
   const ressourceColsHeader = ressources.map((ressource) => (
     <div
-      id={`rcolHeader_r${ressource.id}`}
-      key={`rcolHeader_r${ressource.id}`}
+      id={`rcolHeader_r${ressource.uuid}`}
+      key={`rcolHeader_r${ressource.uuid}`}
       css={{
         width: `calc(100% / ${ressources.length})`,
         textAlign: 'center',
@@ -97,8 +99,8 @@ function CalendarColumn({
   ));
   const ressourceColsBody = ressources.map((ressource, index) => (
     <div
-      id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.id}`}
-      key={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.id}`}
+      id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
+      key={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
       css={{
         width: `calc(100% / ${ressources.length})`,
         height: '100%',
@@ -109,7 +111,7 @@ function CalendarColumn({
       onClick={readOnly ? () => null : getPosition}
     >
       {events
-        .filter((event) => event.ressourceId === ressource.id)
+        .filter((event) => event.ressourceId === ressource.uuid)
         .map((event) => renderCustomEvent(event, getItemStyle(event)))}
     </div>
   ));

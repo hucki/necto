@@ -33,7 +33,7 @@ function CalendarContainer({
   useWeekdayAsHeader = false,
 }: CalendarInputProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [clickedId, setClickedId] = useState(0);
+  const [clickedId, setClickedId] = useState<string | undefined>(undefined);
   const [clickedDateTime, setClickedDateTime] = useState(dayjs());
   const [numOfDays] = useState(
     dayjs(daysRange[1]).diff(daysRange[0], 'day') + 1
@@ -150,13 +150,15 @@ function CalendarContainer({
         {calendarScale}
       </div>
       {calendarDays}
-      <CalendarEventInput
-        id={clickedId}
-        dateTime={clickedDateTime}
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-      />
+      {clickedId && (
+        <CalendarEventInput
+          uuid={clickedId}
+          dateTime={clickedDateTime}
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+        />
+      )}
     </div>
   );
 }
