@@ -91,7 +91,7 @@ model EmployeeToTeam {
   employee   Employee @relation(fields: [employeeId], references: [uuid])
   tenantId   String   @db.Uuid
 
-  @@unique([employeeId, teamId])
+  @@id([employeeId, teamId])
   @@map("employeeTeams")
 }
 
