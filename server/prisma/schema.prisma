@@ -91,7 +91,7 @@ model EmployeeToTeam {
   employee   Employee @relation(fields: [employeeId], references: [uuid])
   tenantId   String   @db.Uuid
 
-  @@id([employeeId, teamId])
+  @@unique([employeeId, teamId])
   @@map("employeeTeams")
 }
 
@@ -108,14 +108,14 @@ model Team {
 
 model Contract {
   id                  Int       @id @default(autoincrement())
-  userId              String    @db.Uuid
+  employeeId          String    @db.Uuid
+  tenantId            String    @db.Uuid
   hoursPerWeek        Int?
   appointmentsPerWeek Int?
-  tenantId            String    @db.Uuid
+  bgColor             String?   @db.VarChar(64)
   validUntil          DateTime? @db.Timestamptz(6)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
-  employeeId          String?   @db.Uuid
   employee            Employee? @relation("contracts_employeeIdToemployees", fields: [employeeId], references: [uuid], onDelete: Cascade)
 
   @@map("contracts")
@@ -162,7 +162,7 @@ model UserSettings {
   id         Int       @id @default(autoincrement())
   userId     String    @db.Uuid
   employeeId String?   @unique @db.Uuid
-  bgColor    String?   @db.VarChar(255)
+  bgColor    String?   @db.VarChar(64)
   tenantId   String    @db.Uuid
   validUntil DateTime? @db.Timestamptz(6)
   createdAt  DateTime  @default(now())
