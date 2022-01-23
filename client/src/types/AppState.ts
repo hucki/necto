@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import { Team } from './Employee';
 
 interface TeamMembers {
   uuid: string;
@@ -15,6 +16,7 @@ export type AppState = {
   };
   current: {
     currentDate: Dayjs;
+    currentTeam: Team;
   };
   settings: {
     hoursInterval: [number, number];

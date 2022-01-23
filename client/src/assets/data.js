@@ -79,6 +79,7 @@ export const initialState = {
   },
   current: {
     currentDate: dayjs(),
+    // currentTeam: undefined,
   },
   settings: {
     hoursInterval: [7, 19],
