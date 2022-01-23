@@ -1,6 +1,8 @@
 import express from 'express';
 import * as userController from '../controllers/user.controller';
 import * as employeeController from '../controllers/employee.controller';
+import * as teamController from '../controllers/team.controller';
+import * as employeeToTeamController from '../controllers/employeeToteam.controller';
 import * as roomController from '../controllers/room.controller';
 import * as buildingController from '../controllers/building.controller';
 import * as contractController from '../controllers/contract.controller';
@@ -37,9 +39,21 @@ router.get('/users', userController.getAllUsers);
 router.post('/users', userController.addUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
 
-// room routes
+// employee routes
 router.get('/employees', employeeController.getAllEmployees);
 router.post('/employees', employeeController.addEmployee);
+
+// team routes
+router.get('/teams', teamController.getAllTeams);
+// router.post('/teams', teamController.addTeam);
+
+// employeeToTeam routes
+router.post('/employee2team', employeeToTeamController.addEmployeeToTeam);
+
+// contract routes
+router.get('/contracts', contractController.getAllContracts);
+router.post('/contracts', contractController.addContract);
+router.put('/contracts', contractController.updateContract);
 
 // room routes
 router.get('/rooms', roomController.getAllRooms);
@@ -57,9 +71,6 @@ router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 
 router.post('/events', eventController.addEvent);
 router.delete('/events/:eventId', eventController.deleteEvent);
-
-// contractss routes
-router.post('/contracts', contractController.addContract);
 
 // settings routes
 router.post('/settings/app', appSettingsController.addAppSettings);
