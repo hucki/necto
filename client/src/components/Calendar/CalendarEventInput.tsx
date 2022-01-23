@@ -74,7 +74,6 @@ function CalendarEventInput({
     rruleString: '',
     rrule: '',
     bgColor: 'green',
-    roomId: uuidv4.toString(),
   });
   const [createEvent, { error: savingError }] = useCreateEvent();
 
