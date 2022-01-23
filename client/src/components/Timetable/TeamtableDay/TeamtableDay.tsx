@@ -31,7 +31,7 @@ const TeamtableDay = ({
     return (
       <TeamTableItem
         readOnly={false}
-        key={event.id}
+        key={event.uuid?.toString()}
         event={event}
         styles={styles}
       />

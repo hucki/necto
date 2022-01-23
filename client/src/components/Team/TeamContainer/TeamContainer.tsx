@@ -12,7 +12,7 @@ interface TeamContainerProps {
 const TeamContainer = ({ teamMembers }: TeamContainerProps) => {
   const dataSource = teamMembers.map((member) => {
     return {
-      key: member.id,
+      key: member.uuid,
 
       'First Name': member.firstName,
       'Last Name': member.lastName,

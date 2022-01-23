@@ -34,7 +34,7 @@ const TeamtableItem = ({
     confirm({
       content: (
         <div>
-          <p>Delete Appointment id: {event.id}?</p>
+          <p>Delete Appointment id: {event.uuid}?</p>
           <p>
             {dayjs(event.startTime).format('HH:mm')} -{' '}
             {dayjs(event.endTime).format('HH:mm')}: <b>{event.title}</b>
@@ -42,9 +42,9 @@ const TeamtableItem = ({
         </div>
       ),
       onOk() {
-        if (event.id) {
-          deleteEvent({ id: event.id });
-          message.success(`Appointment ${event.id} deleted`, 1);
+        if (event.uuid) {
+          deleteEvent({ uuid: event.uuid });
+          message.success(`Appointment ${event.uuid} deleted`, 1);
         }
       },
       onCancel() {
@@ -56,7 +56,7 @@ const TeamtableItem = ({
     <div
       style={styles}
       title={event.title}
-      key={event.id}
+      key={event.uuid?.toString()}
       onClick={readOnly ? undefined : onClickHandler}
       className={`${classes.event} ${classes['bg_' + event.bgColor]} ${
         readOnly ? 'read-only' : ''
