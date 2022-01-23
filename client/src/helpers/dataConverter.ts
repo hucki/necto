@@ -3,7 +3,7 @@ import { Event, Appointment } from '../types/Event';
 
 export function appointment2Event(
   appointment: Appointment,
-  userId: number
+  userId: string
 ): Event | undefined {
   const newEvent: Event = {
     userId: userId,
@@ -32,12 +32,12 @@ export function events2Appointments(
   if (!events.length || !users.length) return newAppointments;
 
   for (let i = 0; i < events.length; i++) {
-    const current = users.filter((user) => user.id === events[i].userId)[0];
+    const current = users.filter((user) => user.uuid === events[i].userId)[0];
     if (current && current.firstName) {
       if (!newAppointments[current.firstName])
         newAppointments[current.firstName] = [];
       newAppointments[current.firstName].push({
-        id: events[i].id,
+        uuid: events[i].uuid,
         rowId: current.firstName,
         title: events[i].title,
         isHomeVisit: events[i].isHomeVisit,
