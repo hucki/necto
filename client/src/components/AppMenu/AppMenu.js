@@ -49,12 +49,20 @@ const AppMenu = ({ dispatch }) => {
           Team Calendar{' '}
         </Menu.Item>
         <Menu.Item
-          key="/team"
+          key="/teamsettings"
           icon={<SettingOutlined />}
           onClick={onClickHandler}
         >
           {' '}
-          Settings
+          Team Settings
+        </Menu.Item>
+        <Menu.Item
+          key="/employeesettings"
+          icon={<SettingOutlined />}
+          onClick={onClickHandler}
+        >
+          {' '}
+          Employee Settings
         </Menu.Item>
         <Menu.Item
           key="/profile"

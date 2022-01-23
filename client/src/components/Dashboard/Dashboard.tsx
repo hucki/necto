@@ -8,6 +8,8 @@ import UserProfile from '../UserProfile/UserProfile';
 import { AppState } from '../../types/AppState';
 import TeamCalendar from '../../views/TeamCalendar/TeamCalendar';
 import Rooms from '../../views/Rooms/Rooms';
+import TeamSettings from '../../views/TeamSettings/TeamSettings';
+import EmployeeSettings from '../../views/EmployeeSettings/EmployeeSettings';
 
 interface DashboardInputProps {
   a0Id: string;
@@ -33,6 +35,13 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
         </Route>
         <Route path="/team">
           <TeamContainer teamMembers={teamMembers} />
+        </Route>
+        <Route path="/teamsettings">
+          <TeamSettings />
+          {/* <TeamContainer teamMembers={teamMembers} /> */}
+        </Route>
+        <Route path="/employeesettings">
+          <EmployeeSettings />
         </Route>
         <Route path="/profile">
           <UserProfile a0Id={a0Id} />
