@@ -31,7 +31,7 @@ function TeamCalendar({
   }, [currentDate, calendarDate, setCalendarDate]);
 
   const ressources: Person[] = teamMembers.map((member) => ({
-    id: member.id,
+    uuid: member.uuid,
     displayName: member.firstName,
     shortDescription: member.firstName,
     longDescription: member.firstName + ' ' + member.lastName,
