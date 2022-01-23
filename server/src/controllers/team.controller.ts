@@ -12,6 +12,13 @@ export const getAllTeams = async (
   try {
     const teams = await prisma.team.findMany({
       where: { tenantId },
+      include: {
+        employees: {
+          select: {
+            employee: true
+          }
+        }
+      }
     });
 
     res.json(teams);

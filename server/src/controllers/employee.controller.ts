@@ -19,6 +19,11 @@ export const getAllEmployees = async (
             validUntil: null,
           },
         },
+        teams: {
+          select: {
+            team: true
+          }
+        }
       },
     });
     res.json(employees);

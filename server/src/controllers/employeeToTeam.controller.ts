@@ -11,16 +11,16 @@ export const addEmployeeToTeam = async (
 ): Promise<void> => {
   try {
     console.log('incoming:',{request: req.body})
-    // const addedEmployeeToTeam = await prisma.employeeToTeam.create({
-    //   data: {
-    //     tenantId,
-    //     teamId: req.body.team.uuid,
-    //     employeeId: req.body.employee.uuid,
-    //   },
-    // });
+    const addedEmployeeToTeam = await prisma.employeeToTeam.create({
+      data: {
+        tenantId,
+        teamId: req.body.team.uuid,
+        employeeId: req.body.employee.uuid,
+      },
+    });
 
-    // res.json(addedEmployeeToTeam);
-    res.json('FAKE NEWS: addedEmployeeToTeam');
+    res.json(addedEmployeeToTeam);
+    // res.json('FAKE NEWS: addedEmployeeToTeam');
     res.status(201);
     return;
   } catch (e) {
