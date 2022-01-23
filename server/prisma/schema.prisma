@@ -123,8 +123,8 @@ model Contract {
 
 model Event {
   uuid              String    @id @default(uuid()) @db.Uuid
-  userId            Int?
-  ressourceId       Int?
+  userId            String?   @db.Uuid
+  ressourceId       String?   @db.Uuid
   title             String?   @db.VarChar
   type              String?   @db.VarChar
   isHomeVisit       Boolean?
@@ -138,8 +138,8 @@ model Event {
   bgColor           String?   @db.VarChar
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
-  tenantId          String?   @db.VarChar
-  roomId            Int?
+  tenantId          String?   @db.Uuid
+  roomId            String?   @db.Uuid
 
   @@map("events")
 }
