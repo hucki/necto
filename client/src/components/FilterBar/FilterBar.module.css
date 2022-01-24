@@ -1,6 +1,6 @@
 .FilterBar {
   margin: 0rem 0.5rem 0.3rem 0.5rem;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto auto;
   place-items: left;
 }

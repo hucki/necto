@@ -13,10 +13,40 @@ code {
 }
 
 :root {
-  --primary: cyan;
-  --secondary: magenta;
-  --primary-alpha: rgba(0,255,255,0.5);
-  --secondary-alpha: rgba(255,0,255,0.5);
+  --logoPrimary: cyan;
+  --logoSecondary: magenta;
+  --textPrimary: black;
+  --textSecondary: rgb(32, 32, 32);
+  --primary-alpha: rgba(0, 255, 255, 0.5);
+  --secondary-alpha: rgba(255, 0, 255, 0.5);
+
+  --bgGreyText: rgb(47, 79, 79, 1);
+  --bgGreyBorder: rgb(47, 79, 79, 0.3);
+  --bgGrey: rgb(47, 79, 79, 0.2);
+
+  --bgGreenText: rgba(0, 128, 0, 1);
+  --bgGreenBorder: rgba(0, 128, 0.3);
+  --bgGreen: rgba(0, 128, 0, 0.2);
+
+  --bgRedText: rgba(255, 0, 0, 1);
+  --bgRedBorder: rgba(255, 0, 0, 0.3);
+  --bgRed: rgba(255, 0, 0, 0.2);
+
+  --bgYellowText: rgb(128, 128, 0);
+  --bgYellowBorder: rgba(200, 200, 0, 0.3);
+  --bgYellow: rgba(200, 200, 0, 0.2);
+
+  --bgBlueText: rgba(0, 128, 255, 1);
+  --bgBlueBorder: rgba(0, 128, 255, 0.3);
+  --bgBlue: rgba(0, 128, 255, 0.2);
+
+  --bgPurpleText: rgba(234, 0, 255, 1);
+  --bgPurpleBorder: rgba(234, 0, 255, 0.3);
+  --bgPurple: rgba(234, 0, 255, 0.2);
+
+  --bgMintText: rgb(0, 100, 100);
+  --bgMintBorder: rgba(0, 255, 255, 0.3);
+  --bgMint: rgba(0, 255, 255, 0.2);
 }
 
 .box {
