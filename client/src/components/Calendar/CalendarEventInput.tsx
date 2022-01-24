@@ -21,12 +21,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
 import { Appointment, Event } from '../../types/Event';
 import { appointment2Event } from '../../helpers/dataConverter';
-import { v4 as uuidv4 } from 'uuid';
+import { EmployeeRessource, Room } from '../../types/Ressource';
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
 
 interface CalendarEventInputProps {
   uuid: string;
+  ressource: EmployeeRessource | Room;
   dateTime: Dayjs;
   isOpen: boolean;
   onOpen: () => void;
@@ -41,25 +42,13 @@ interface eventTitleFormElement extends HTMLFormElement {
 
 function CalendarEventInput({
   uuid,
+  ressource,
   dateTime,
   isOpen,
   onOpen,
   onClose,
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
-  const defaultEvent = {
-    title: t('calendar.event.newAppointmentTitle'),
-    startTime: dateTime,
-    duration: 45,
-    endTime: dayjs(dateTime).add(45, 'minute'),
-    isRecurring: false,
-    isHomeVisit: false,
-    frequency: 'WEEKLY',
-    count: 10,
-    rruleString: '',
-    rrule: '',
-    bgColor: 'green',
-  };
   const [newEvent, setNewEvent] = useState<Appointment>({
     rowId: uuid.toString(),
     ressourceId: uuid,
@@ -81,6 +70,7 @@ function CalendarEventInput({
   useEffect(() => {
     setNewEvent({
       ...newEvent,
+      bgColor: ressource.bgColor,
       startTime: dateTime,
       endTime: dayjs(dateTime).add(45, 'minute'),
     });
@@ -90,25 +80,34 @@ function CalendarEventInput({
     event.preventDefault();
     setNewEvent({
       ...newEvent,
+      bgColor: ressource.bgColor,
       [event.currentTarget.name]: event.currentTarget.value,
     });
   }
 
   function handleStartTimeChange(date: Date) {
-    setNewEvent({ ...newEvent, startTime: dayjs(date) });
+    setNewEvent({
+      ...newEvent,
+      startTime: dayjs(date),
+      bgColor: ressource.bgColor,
+    });
   }
 
   function handleEndTimeChange(date: Date) {
-    setNewEvent({ ...newEvent, endTime: dayjs(date) });
+    setNewEvent({
+      ...newEvent,
+      endTime: dayjs(date),
+      bgColor: ressource.bgColor,
+    });
   }
 
   function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const fieldValues = Object.fromEntries(formData.entries());
-    setNewEvent({ ...newEvent, ...fieldValues });
+    setNewEvent({ ...newEvent, ...fieldValues, bgColor: ressource.bgColor });
     const submitEvent: Event | undefined = appointment2Event(
-      { ...newEvent, ...fieldValues },
+      { ...newEvent, ...fieldValues, bgColor: ressource.bgColor },
       uuid
     );
     if (submitEvent)

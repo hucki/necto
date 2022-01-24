@@ -153,6 +153,7 @@ function CalendarContainer({
       {clickedId && (
         <CalendarEventInput
           uuid={clickedId}
+          ressource={ressources.filter(r => r.uuid === clickedId)[0]}
           dateTime={clickedDateTime}
           isOpen={isOpen}
           onOpen={onOpen}
