@@ -5,7 +5,6 @@ import Header from '../components/Header/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Footer from '../components/Footer/Footer';
 import { connect } from 'react-redux';
-import { User } from '@auth0/auth0-react';
 import { useAuth0User } from '../hooks/user';
 import UserProfile from '../components/UserProfile/UserProfile';
 import { logIn } from '../actions/actions';

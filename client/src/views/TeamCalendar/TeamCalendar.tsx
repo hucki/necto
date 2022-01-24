@@ -7,18 +7,19 @@ import { AppState } from '../../types/AppState';
 import { useDaysEvents } from '../../hooks/events';
 import dayjs, { Dayjs } from 'dayjs';
 import { FullPageSpinner } from '../../components/Library';
-import { TeamMember } from '../../types/User';
-import { Person } from '../../types/Ressource';
 import { useEffect, useState } from 'react';
+import FilterBar from '../../components/FilterBar/FilterBar';
+import { Employee, Team } from '../../types/Employee';
+import { EmployeeRessource } from '../../types/Ressource';
 
 interface TeamCalendarInputProps {
   currentDate?: Dayjs;
-  teamMembers: TeamMember[];
+  currentTeam?: Team;
 }
 
 function TeamCalendar({
   currentDate,
-  teamMembers,
+  currentTeam,
 }: TeamCalendarInputProps): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
@@ -29,14 +30,21 @@ function TeamCalendar({
     if (currentDate && calendarDate !== currentDate)
       setCalendarDate(currentDate);
   }, [currentDate, calendarDate, setCalendarDate]);
+  const teamMembers = currentTeam?.employees;
 
-  const ressources: Person[] = teamMembers.map((member) => ({
-    uuid: member.uuid,
-    displayName: member.firstName,
-    shortDescription: member.firstName,
-    longDescription: member.firstName + ' ' + member.lastName,
-    bgColor: member.bgColor,
-  }));
+  interface TeamMemberMapProps {
+    employee: Employee;
+  }
+  const ressources: EmployeeRessource[] = teamMembers?.length
+    ? teamMembers.map(({ employee }: TeamMemberMapProps) => ({
+      uuid: employee.uuid,
+      displayName: employee.firstName,
+      shortDescription: employee.firstName,
+      longDescription: employee.firstName + ' ' + employee.lastName,
+      bgColor: employee.contract[0].bgColor,
+    }))
+    : [];
+
   if (isLoading) return <FullPageSpinner />;
 
   return (
@@ -50,6 +58,7 @@ function TeamCalendar({
         alignItems: 'center',
       }}
     >
+      <FilterBar hasTeamsFilter hasBuildingFilter />
       <CalendarContainer
         readOnly={false}
         events={rawEvents}
@@ -62,6 +71,7 @@ function TeamCalendar({
 
 const mapStateToProps = (state: AppState) => {
   return {
+    currentTeam: state.currentTeam,
     currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
   };

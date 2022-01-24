@@ -31,7 +31,7 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
           <Rooms />
         </Route>
         <Route path="/teamcal">
-          <TeamCalendar teamMembers={teamMembers} />
+          <TeamCalendar />
         </Route>
         <Route path="/team">
           <TeamContainer teamMembers={teamMembers} />
