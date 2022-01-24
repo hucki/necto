@@ -24,7 +24,6 @@ const NavBar = ({
 
   useEffect(() => {
     if (!isLoadingTeams && teams.length) {
-      console.log(teams[0]);
       dispatch(setCurrentTeam(teams[0]));
     }
   }, [isLoadingTeams]);
@@ -42,6 +41,22 @@ const NavBar = ({
           <Label htmlFor="team">Team</Label>
           <Select
             name="team"
+            value={currentTeam.uuid}
+            onChange={onTeamChangeHandler}
+          >
+            {teams.map((t, i) => (
+              <option key={i} value={t.uuid}>
+                {t.displayName}
+              </option>
+            ))}
+          </Select>
+        </>
+      )}
+      {hasBuildingFilter && (
+        <>
+          <Label htmlFor="building">Building</Label>
+          <Select
+            name="building"
             value={currentTeam.uuid}
             onChange={onTeamChangeHandler}
           >

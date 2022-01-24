@@ -5,17 +5,17 @@ interface ButtonVariants {
   [key: string]: {
     background: string;
     color: string;
-  }
+  };
 }
 
 const buttonVariants: ButtonVariants = {
   primary: {
-    background: colors.indigo,
+    background: colors.indigoDarken10,
     color: colors.base,
   },
   secondary: {
-    background: colors.gray,
-    color: colors.text,
+    background: colors.gray20,
+    color: colors.indigoDarken10,
   },
 };
 
@@ -46,7 +46,7 @@ const Button = styled.button(
     lineHeight: '1',
     borderRadius: '3px',
   },
-  ({variant = 'primary'}: ButtonCallbackProps) => buttonVariants[variant],
+  ({ variant = 'primary' }: ButtonCallbackProps) => buttonVariants[variant]
 );
 
-export { Button, CircleButton } ;
+export { Button, CircleButton };

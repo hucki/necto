@@ -58,7 +58,7 @@ function TeamCalendar({
         alignItems: 'center',
       }}
     >
-      <FilterBar hasTeamsFilter hasBuildingFilter />
+      <FilterBar hasTeamsFilter hasBuildingFilter={false} />
       <CalendarContainer
         readOnly={false}
         events={rawEvents}

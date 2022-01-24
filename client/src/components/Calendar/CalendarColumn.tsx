@@ -5,7 +5,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
-import * as colors from '../../styles/colors';
+import classes from './Calendar.module.css';
 import { Dispatch, SetStateAction } from 'react';
 import { v4 as uuid } from 'uuid';
 
@@ -91,8 +91,9 @@ function CalendarColumn({
       css={{
         width: `calc(100% / ${ressources.length})`,
         textAlign: 'center',
-        backgroundColor: `${colors.bg.blue50}`, // TODO: get the real colors
+        backgroundColor: `${ressource.bgColor}`, // TODO: get the real colors
       }}
+      className={`${classes['bg_' + ressource.bgColor]} `}
     >
       {ressource.displayName}
     </div>
