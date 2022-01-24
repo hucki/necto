@@ -91,7 +91,6 @@ function CalendarColumn({
       css={{
         width: `calc(100% / ${ressources.length})`,
         textAlign: 'center',
-        backgroundColor: `${ressource.bgColor}`, // TODO: get the real colors
       }}
       className={`${classes['bg_' + ressource.bgColor]} `}
     >
