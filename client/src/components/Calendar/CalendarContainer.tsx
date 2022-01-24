@@ -5,7 +5,7 @@ import { useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { AppState } from '../../types/AppState';
-import { Person, Room } from '../../types/Ressource';
+import { EmployeeRessource, Room } from '../../types/Ressource';
 import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
 import * as colors from '../../styles/colors';
@@ -14,7 +14,7 @@ import CalendarEventInput from './CalendarEventInput';
 
 interface CalendarInputProps {
   events: Event[];
-  ressources: Array<Person | Room>;
+  ressources: Array<EmployeeRessource | Room>;
   hoursInterval?: [number, number];
   currentDate?: Dayjs;
   daysRange: [Dayjs, Dayjs];

@@ -3,7 +3,7 @@
 import { jsx } from '@emotion/react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
-import { Person, Room } from '../../types/Ressource';
+import { EmployeeRessource, Room } from '../../types/Ressource';
 import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
 import * as colors from '../../styles/colors';
 import { Dispatch, SetStateAction } from 'react';
@@ -12,7 +12,7 @@ import { v4 as uuid } from 'uuid';
 interface CalendarColumnInputProps {
   date: Dayjs;
   events: Event[];
-  ressources: Array<Person | Room>;
+  ressources: Array<EmployeeRessource | Room>;
   numOfHours: number;
   hoursInterval: [number, number];
   clickedId: string | undefined;

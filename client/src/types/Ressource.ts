@@ -8,7 +8,7 @@ interface Ressource {
   bgColor: BgColor;
 }
 
-export interface Person extends Ressource {
+export interface EmployeeRessource extends Ressource {
   userId?: number;
 }
 export interface Room extends Ressource {
