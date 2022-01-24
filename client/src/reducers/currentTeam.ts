@@ -7,13 +7,10 @@ interface CurrentTeamProps {
   payload: Team;
 }
 export default function currentTeam(
-  state = initialState.current,
+  state = initialState.currentTeam,
   { type, payload }: CurrentTeamProps
 ) {
-  const newState = {
-    currentDate: state.currentDate,
-    currentTeam: payload,
-  };
+  const newState = payload;
   switch (type) {
     case SET_CURRENT_TEAM:
       return newState;

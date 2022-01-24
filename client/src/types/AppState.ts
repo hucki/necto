@@ -16,8 +16,8 @@ export type AppState = {
   };
   current: {
     currentDate: Dayjs;
-    currentTeam: Team;
   };
+  currentTeam: Team;
   settings: {
     hoursInterval: [number, number];
     currentView: string;

@@ -8,7 +8,7 @@ import teamtable from './teamtable';
 
 export default combineReducers({
   current: currentDate,
-  // currentTeam,
+  currentTeam,
   settings,
   newAppointment,
   userData,
