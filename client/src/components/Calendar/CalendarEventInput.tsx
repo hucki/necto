@@ -62,7 +62,7 @@ function CalendarEventInput({
     count: 10,
     rruleString: '',
     rrule: '',
-    bgColor: 'green',
+    bgColor: ressource?.bgColor || 'green',
   });
   const [createEvent, { error: savingError }] = useCreateEvent();
 
@@ -70,7 +70,6 @@ function CalendarEventInput({
   useEffect(() => {
     setNewEvent({
       ...newEvent,
-      bgColor: ressource.bgColor,
       startTime: dateTime,
       endTime: dayjs(dateTime).add(45, 'minute'),
     });
@@ -80,7 +79,6 @@ function CalendarEventInput({
     event.preventDefault();
     setNewEvent({
       ...newEvent,
-      bgColor: ressource.bgColor,
       [event.currentTarget.name]: event.currentTarget.value,
     });
   }
@@ -89,7 +87,6 @@ function CalendarEventInput({
     setNewEvent({
       ...newEvent,
       startTime: dayjs(date),
-      bgColor: ressource.bgColor,
     });
   }
 
@@ -97,7 +94,6 @@ function CalendarEventInput({
     setNewEvent({
       ...newEvent,
       endTime: dayjs(date),
-      bgColor: ressource.bgColor,
     });
   }
 
@@ -105,7 +101,7 @@ function CalendarEventInput({
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const fieldValues = Object.fromEntries(formData.entries());
-    setNewEvent({ ...newEvent, ...fieldValues, bgColor: ressource.bgColor });
+    setNewEvent({ ...newEvent, ...fieldValues });
     const submitEvent: Event | undefined = appointment2Event(
       { ...newEvent, ...fieldValues, bgColor: ressource.bgColor },
       uuid
@@ -120,7 +116,11 @@ function CalendarEventInput({
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay>
+        <ModalOverlay
+          css={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+          }}
+        >
           <ModalContent
             css={{
               maxWidth: '450px',
@@ -135,7 +135,6 @@ function CalendarEventInput({
               },
             }}
           >
-            {newEvent.startTime.format('lll')}
             <form onSubmit={handleSubmit}>
               <ModalHeader
                 css={{
@@ -150,9 +149,19 @@ function CalendarEventInput({
                   padding: '0.5rem',
                 }}
               >
-                <div className="modal-title">
-                  {t('calendar.event.newAppointmentTitle')}{' '}
-                  {newEvent.startTime.format('l')}
+                <div>
+                  <div className="modal-title">
+                    {t('calendar.event.newAppointmentTitle')} {t('dict.for')}{' '}
+                    {ressource.displayName}
+                  </div>
+                  <div
+                    className="modal-subtitle"
+                    css={{
+                      fontSize: '0.8rem',
+                    }}
+                  >
+                    {newEvent.startTime.format('llll')}
+                  </div>
                 </div>
                 <CircleButton
                   type="button"
@@ -167,8 +176,6 @@ function CalendarEventInput({
                   padding: '0.5rem',
                 }}
               >
-                {t('calendar.event.newAppointmentTitle')} {t('dict.for')} User:{' '}
-                {uuid} starting {newEvent.startTime.format('lll')}
                 <FormGroup>
                   <Label htmlFor="eventTitleInput">Title</Label>
                   <Input
@@ -213,7 +220,7 @@ function CalendarEventInput({
               </ModalBody>
 
               <ModalFooter>
-                <Button type="button" onClick={onClose}>
+                <Button type="button" onClick={onClose} variant="secondary">
                   {t('button.close')}
                 </Button>
                 <Button type="submit">{t('button.save')}</Button>
