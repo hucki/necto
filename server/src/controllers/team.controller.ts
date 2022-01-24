@@ -15,10 +15,17 @@ export const getAllTeams = async (
       include: {
         employees: {
           select: {
-            employee: true
-          }
-        }
-      }
+            employee: {
+              select: {
+                uuid: true,
+                firstName: true,
+                lastName: true,
+                contract: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     res.json(teams);
