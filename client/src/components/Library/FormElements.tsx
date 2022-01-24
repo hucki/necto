@@ -5,30 +5,29 @@ const inputStyles = {
   padding: '8px 12px',
 };
 
-const Label = styled.label(
-  {
-    borderRadius: '3px',
-    fontWeight: 'bold',
-  },
-  inputStyles,
-);
+const Label = styled.label(inputStyles, {
+  borderRadius: '3px',
+  fontWeight: 'bold',
+  border: '0px',
+});
+
+const Select = styled.select(inputStyles, {
+  borderRadius: '3px',
+  fontWeight: 'bold',
+});
 
 interface InputCallbackProps {
   disabled?: boolean;
 }
 const Input = styled.input(
   {
-    borderRadius: '3px'
+    borderRadius: '3px',
   },
   inputStyles,
-  ({disabled}: InputCallbackProps) => (disabled
-    ? {
-      background: '#f1f1f4',
-      fontStyle: 'italic'
-    }
-    : {
-      background: 'white'
-    }),
+  ({ disabled }: InputCallbackProps) =>
+    disabled
+      ? { background: '#f1f1f4', fontStyle: 'italic' }
+      : { background: 'white' }
 );
 const Textarea = styled.textarea(inputStyles);
 const FormGroup = styled.div({
@@ -36,4 +35,4 @@ const FormGroup = styled.div({
   flexDirection: 'row',
 });
 
-export {Input, Textarea, FormGroup, Label};
+export { Input, Textarea, FormGroup, Label, Select };
