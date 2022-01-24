@@ -79,8 +79,8 @@ export const initialState = {
   },
   current: {
     currentDate: dayjs(),
-    // currentTeam: undefined,
   },
+  currentTeam: null,
   settings: {
     hoursInterval: [7, 19],
     currentView: 'Appointments',
