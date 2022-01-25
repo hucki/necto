@@ -1,8 +1,9 @@
 import styled from '@emotion/styled/macro';
+import ReactDatePicker from 'react-datepicker';
 
 const inputStyles = {
   border: '1px solid #f1f1f4',
-  padding: '8px 12px',
+  padding: '0.4rem 0.2rem',
 };
 
 const Label = styled.label(inputStyles, {
@@ -31,8 +32,23 @@ const Input = styled.input(
 );
 const Textarea = styled.textarea(inputStyles);
 const FormGroup = styled.div({
-  display: 'flex',
-  flexDirection: 'row',
+  display: 'grid',
+  gridTemplateColumns: 'auto auto auto auto',
+  alignItems: 'center',
 });
 
-export { Input, Textarea, FormGroup, Label, Select };
+const RadioGroup = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+});
+
+// pass props like seen here:
+// https://styled-components.com/docs/basics#passed-props
+const DatePicker = styled(ReactDatePicker)`
+  border: 1px solid #f1f1f4;
+  padding: 0.4rem 0.2rem;
+`;
+
+export { Input, Textarea, FormGroup, Label, Select, DatePicker, RadioGroup };
