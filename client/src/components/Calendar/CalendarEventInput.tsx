@@ -10,18 +10,28 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
-import { Button, CircleButton, FormGroup, Input, Label } from '../Library';
+import { useState, useEffect, BaseSyntheticEvent } from 'react';
+import {
+  Button,
+  CircleButton,
+  FormGroup,
+  Input,
+  Label,
+  DatePicker,
+  Select,
+  // RadioGroup,
+} from '../Library';
 import * as mq from '../../styles/media-queries';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
-import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
 import { Appointment, Event } from '../../types/Event';
 import { appointment2Event } from '../../helpers/dataConverter';
 import { EmployeeRessource, Room } from '../../types/Ressource';
+import { FaHouseUser, FaLink } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
@@ -41,6 +51,7 @@ interface FormElements extends HTMLFormControlsCollection {
 interface eventTitleFormElement extends HTMLFormElement {
   elements: FormElements;
 }
+type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
 
 function CalendarEventInput({
   uuid,
@@ -67,7 +78,8 @@ function CalendarEventInput({
     bgColor: ressource?.bgColor || 'green',
   });
   const [createEvent, { error: savingError }] = useCreateEvent();
-
+  const [isHomeVisit, setIsHomeVisit] = useState(false);
+  const [isRecurring, setIsRecurring] = useState(false);
   // console.log('startEnd', newEvent.startTime, newEvent.endTime);
   useEffect(() => {
     setNewEvent({
@@ -85,18 +97,30 @@ function CalendarEventInput({
     });
   }
 
-  function handleStartTimeChange(date: Date) {
-    setNewEvent({
-      ...newEvent,
-      startTime: dayjs(date),
-    });
+  function handleStartTimeChange(date: ReactDatePickerReturnType) {
+    if (date && typeof date !== 'object') {
+      setNewEvent({
+        ...newEvent,
+        startTime: dayjs(date),
+      });
+    }
   }
 
-  function handleEndTimeChange(date: Date) {
-    setNewEvent({
-      ...newEvent,
-      endTime: dayjs(date),
-    });
+  function handleEndTimeChange(date: ReactDatePickerReturnType) {
+    if (date && typeof date !== 'object') {
+      setNewEvent({
+        ...newEvent,
+        endTime: dayjs(date),
+      });
+    }
+  }
+
+  function onSwitchHomeVisit(event: BaseSyntheticEvent) {
+    setIsHomeVisit(event.target.checked);
+  }
+
+  function onSwitchRecurring(event: BaseSyntheticEvent) {
+    setIsRecurring(event.target.checked);
   }
 
   function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
@@ -165,6 +189,22 @@ function CalendarEventInput({
                     {newEvent.startTime.format('llll')}
                   </div>
                 </div>
+                {isHomeVisit && (
+                  <FaHouseUser
+                    css={{
+                      width: '2rem',
+                      height: '2rem',
+                    }}
+                  />
+                )}
+                {isRecurring && (
+                  <FaLink
+                    css={{
+                      width: '2rem',
+                      height: '2rem',
+                    }}
+                  />
+                )}
                 <CircleButton
                   type="button"
                   className="modal-close"
@@ -188,6 +228,40 @@ function CalendarEventInput({
                   />
                 </FormGroup>
                 <FormGroup>
+                  <Label htmlFor="duration">Duration</Label>
+                  <Select id="duration" name="duration">
+                    <option value={45}>0:45</option>
+                    <option value={30}>0:30</option>
+                  </Select>
+
+                  <Label htmlFor="homevisit">Home visit?</Label>
+                  <Input
+                    type="checkbox"
+                    id="isHomeVisit"
+                    name="Home Visit?"
+                    checked={isHomeVisit}
+                    onChange={onSwitchHomeVisit}
+                  />
+                  {/* <RadioGroup role="radiogroup">
+                    <Input
+                      type="radio"
+                      id="isHomeVisit"
+                      value="isHomeVisit"
+                      name="homevisit"
+                      onChange={onSwitchHomeVisit}
+                    />
+                    <Label htmlFor="isHomeVisit">Yes</Label>{' '}
+                    <Input
+                      type="radio"
+                      id="isNotHomeVisit"
+                      value="isNotHomeVisit"
+                      name="homevisit"
+                      onChange={onSwitchHomeVisit}
+                    />
+                    <Label htmlFor="isNotHomeVisit">No</Label>
+                  </RadioGroup> */}
+                </FormGroup>
+                <FormGroup>
                   <Label htmlFor="eventStartDatePicker">
                     {t('calendar.event.start')}
                   </Label>
@@ -200,7 +274,7 @@ function CalendarEventInput({
                     timeIntervals={15}
                     dateFormat="Pp"
                     selected={newEvent.startTime.toDate()}
-                    onChange={(date) => {
+                    onChange={(date: ReactDatePickerReturnType) => {
                       if (date) handleStartTimeChange(date);
                     }}
                   />
@@ -219,6 +293,17 @@ function CalendarEventInput({
                     onChange={(date) => {
                       if (date) handleEndTimeChange(date);
                     }}
+                  />
+                </FormGroup>
+                <hr></hr>
+                <FormGroup>
+                  <Label htmlFor="homevisit">recurring Appointment?</Label>
+                  <Input
+                    type="checkbox"
+                    id="isHomeVisit"
+                    name="Home Visit?"
+                    checked={isRecurring}
+                    onChange={onSwitchRecurring}
                   />
                 </FormGroup>
               </ModalBody>
