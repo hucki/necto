@@ -16,12 +16,14 @@ import * as mq from '../../styles/media-queries';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
 import { Appointment, Event } from '../../types/Event';
 import { appointment2Event } from '../../helpers/dataConverter';
 import { EmployeeRessource, Room } from '../../types/Ressource';
+import de from 'date-fns/locale/de';
+registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
 
@@ -193,6 +195,7 @@ function CalendarEventInput({
                     id="eventStartDatePicker"
                     name="startDate"
                     showTimeSelect
+                    locale="de"
                     timeFormat="p"
                     timeIntervals={15}
                     dateFormat="Pp"
@@ -208,6 +211,7 @@ function CalendarEventInput({
                     id="eventEndDatePicker"
                     name="endDate"
                     showTimeSelect
+                    locale="de"
                     timeFormat="p"
                     timeIntervals={15}
                     dateFormat="Pp"
