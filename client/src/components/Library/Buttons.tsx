@@ -45,6 +45,12 @@ const Button = styled.button(
     border: '0',
     lineHeight: '1',
     borderRadius: '3px',
+    cursor: 'pointer',
+    ':disabled': {
+      backgroundColor: colors.gray80,
+      fontStyle: 'italic',
+      cursor: 'not-allowed',
+    },
   },
   ({ variant = 'primary' }: ButtonCallbackProps) => buttonVariants[variant]
 );
