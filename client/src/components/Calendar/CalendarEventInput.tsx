@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
-import { useState, useEffect, BaseSyntheticEvent } from 'react';
+import { useState, useEffect, BaseSyntheticEvent, ReactElement } from 'react';
 import {
   Button,
   CircleButton,
@@ -22,6 +22,7 @@ import {
   // RadioGroup,
 } from '../Library';
 import * as mq from '../../styles/media-queries';
+import { RRule, rrulestr } from 'rrule';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
@@ -53,6 +54,28 @@ interface eventTitleFormElement extends HTMLFormElement {
 }
 type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
 
+type RecurringCount =
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16
+  | 17
+  | 18
+  | 19
+  | 20;
+
 function CalendarEventInput({
   uuid,
   ressource,
@@ -78,8 +101,11 @@ function CalendarEventInput({
     bgColor: ressource?.bgColor || 'green',
   });
   const [createEvent, { error: savingError }] = useCreateEvent();
+  const [timeline, setTimeline] = useState<ReactElement<any, any>>();
   const [isHomeVisit, setIsHomeVisit] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [recurringFrequency, setRecurringFrequency] = useState('WEEKLY');
+  const [recurringCount, setRecurringCount] = useState<RecurringCount>(10);
   // console.log('startEnd', newEvent.startTime, newEvent.endTime);
   useEffect(() => {
     setNewEvent({
@@ -123,6 +149,16 @@ function CalendarEventInput({
     setIsRecurring(event.target.checked);
   }
 
+  function handleRecurringCountChange(event: BaseSyntheticEvent) {
+    const count =
+      event.target.value < 1
+        ? 1
+        : event.target.value > 20
+          ? 20
+          : event.target.value;
+    setRecurringCount(count);
+  }
+
   function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -139,6 +175,25 @@ function CalendarEventInput({
     onClose();
   }
 
+  function onBuildTimelineHandler() {
+    const rrule = new RRule({
+      freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
+      tzid: 'Europe/Brussels',
+      count: recurringCount,
+      dtstart: newEvent.startTime.toDate(),
+    });
+    // console.log(rrule.toString());
+    setTimeline(
+      <ul>
+        {rrule.all().map((date) => (
+          <li key={date.toString()}>
+            {dayjs(date).format('ddd DD.MM.YYYY HH:mm')}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -151,7 +206,7 @@ function CalendarEventInput({
             css={{
               maxWidth: '450px',
               borderRadius: '3px',
-              paddingBottom: '3.5em',
+              // paddingBottom: '3.5em',
               backgroundColor: 'white',
               boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
               margin: '20vh auto',
@@ -161,7 +216,13 @@ function CalendarEventInput({
               },
             }}
           >
-            <form onSubmit={handleSubmit}>
+            <form
+              onSubmit={handleSubmit}
+              css={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
               <ModalHeader
                 css={{
                   fontSize: '1.1rem',
@@ -297,18 +358,54 @@ function CalendarEventInput({
                 </FormGroup>
                 <hr></hr>
                 <FormGroup>
-                  <Label htmlFor="homevisit">recurring Appointment?</Label>
+                  <Label htmlFor="isRecurring">recurring Appointment?</Label>
                   <Input
                     type="checkbox"
-                    id="isHomeVisit"
-                    name="Home Visit?"
+                    id="isRecurring"
+                    name="isRecurring"
                     checked={isRecurring}
                     onChange={onSwitchRecurring}
                   />
                 </FormGroup>
+                <FormGroup>
+                  <Label htmlFor="frequency">Frequency</Label>
+                  <Select
+                    id="frequency"
+                    name="frequency"
+                    disabled={!isRecurring}
+                  >
+                    <option value="WEEKLY">weekly</option>
+                    <option value="MONTHLY" disabled>
+                      monthly
+                    </option>
+                  </Select>
+                  <Label htmlFor="count">how often?</Label>
+                  <Input
+                    id="count"
+                    name="count"
+                    type="number"
+                    min={1}
+                    max={20}
+                    disabled={!isRecurring}
+                    defaultValue={recurringCount}
+                    onChange={handleRecurringCountChange}
+                  />
+                </FormGroup>
+                <Button
+                  type="button"
+                  onClick={onBuildTimelineHandler}
+                  disabled={!isRecurring}
+                >
+                  preview recurring Appointments
+                </Button>
+                {timeline}
               </ModalBody>
 
-              <ModalFooter>
+              <ModalFooter
+                css={{
+                  padding: '0.5rem',
+                }}
+              >
                 <Button type="button" onClick={onClose} variant="secondary">
                   {t('button.close')}
                 </Button>
