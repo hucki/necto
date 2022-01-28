@@ -1,9 +1,10 @@
 import { PersonBookings } from '../types/Rooms';
+// 🦙 Lena
 
 export const bookingsPerPerson: PersonBookings[] = [
   {
     employeeId: '8e499c60-77ba-4c5f-9388-b81df2cea1af',
-    name: 'Anja',
+    name: '🐰 Anja',
     bgColor: 'blue',
     days: [
       {
@@ -80,7 +81,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: 'd5137354-4ffe-486f-a885-633aeea323ac',
-    name: 'Theresa',
+    name: '🐢 Theresa',
     bgColor: 'red',
     days: [
       {
@@ -142,7 +143,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: '69c1e074-5ec3-436d-9db3-b258ba9d5b94',
-    name: 'Biggi',
+    name: '🐸 Biggi',
     bgColor: 'green',
     days: [
       {
@@ -180,7 +181,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: 'f5c6eb4f-d198-4219-a564-5e0e9c0dfc88',
-    name: 'Nadine',
+    name: '🧸 Nadine',
     bgColor: 'yellow',
     days: [
       {
@@ -243,7 +244,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: '968a07ff-af82-48cc-b60e-c546141b26ee',
-    name: 'Biene',
+    name: '🐝 Biene',
     bgColor: 'purple',
     days: [
       {
@@ -328,7 +329,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: '537146d9-a0ae-4694-9dfe-423a702438bf',
-    name: 'Wiebke',
+    name: '😺 Wiebke',
     bgColor: 'red',
     days: [
       {
@@ -395,7 +396,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: '5028bcd8-ee58-490c-9e12-ff44a6708228',
-    name: 'Nicola',
+    name: '🐶 Nicola',
     bgColor: 'blue',
     days: [
       {
@@ -428,14 +429,14 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: '6b6eee44-c751-4341-a32b-e4030c0bc9aa',
-    name: 'Roswitha',
+    name: '🧶 Roswitha',
     bgColor: 'green',
     days: [
       {
         name: 'tuesday',
         bookings: [
           {
-            roomId: 'b9e3f812-6a6e-4b62-b21b-cc8ad0881a96',
+            roomId: 'c9fce764-07af-4f41-af14-9def86f419e2',
             start: '12:45',
             end: '15:00',
           },
@@ -446,7 +447,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         name: 'thursday',
         bookings: [
           {
-            roomId: 'b9e3f812-6a6e-4b62-b21b-cc8ad0881a96',
+            roomId: 'c9fce764-07af-4f41-af14-9def86f419e2',
             start: '12:45',
             end: '14:15',
           },
@@ -461,7 +462,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: '79050e98-e95f-428c-aa8c-68a130d5e8cb',
-    name: 'Hucki',
+    name: '💾 Hucki',
     bgColor: 'green',
     days: [
       {
@@ -470,6 +471,54 @@ export const bookingsPerPerson: PersonBookings[] = [
           {
             roomId: 'c4811ecc-e83f-4850-96dd-381c2ff6cf8d',
             start: '08:30',
+            end: '12:00',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    employeeId: '4670ae25-0be9-47bf-b46d-62b229f5744e',
+    name: '🍊 Sina',
+    bgColor: 'yellow',
+    days: [
+      {
+        name: 'monday',
+        bookings: [
+          {
+            roomId: 'b9e3f812-6a6e-4b62-b21b-cc8ad0881a96',
+            start: '13:45',
+            end: '17:30',
+          },
+        ],
+      },
+      {
+        name: 'tuesday',
+        bookings: [
+          {
+            roomId: 'b9e3f812-6a6e-4b62-b21b-cc8ad0881a96',
+            start: '08:30',
+            end: '15:15',
+          },
+        ],
+      },
+      {
+        name: 'thursday',
+        bookings: [
+          {
+            roomId: 'b9e3f812-6a6e-4b62-b21b-cc8ad0881a96',
+            start: '13:00',
+            end: '18:00',
+          },
+        ],
+      },
+
+      {
+        name: 'friday',
+        bookings: [
+          {
+            roomId: '37414bd7-a295-4ed7-abc8-e1b4caf95d88',
+            start: '11:15',
             end: '12:00',
           },
         ],
