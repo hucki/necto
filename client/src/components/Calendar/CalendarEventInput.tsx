@@ -19,18 +19,19 @@ import {
   Label,
   DatePicker,
   Select,
+  ErrorMessage,
   // RadioGroup,
 } from '../Library';
 import * as mq from '../../styles/media-queries';
 import { RRule, rrulestr } from 'rrule';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
+import { useDaysEvents } from '../../hooks/events';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
-import { Appointment, Event } from '../../types/Event';
-import { appointment2Event } from '../../helpers/dataConverter';
+import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import { FaHouseUser, FaLink } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
@@ -54,6 +55,7 @@ interface eventTitleFormElement extends HTMLFormElement {
 }
 type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
 
+type RecurringFrequency = 'WEEKLY' | 'MONTHLY';
 type RecurringCount =
   | 1
   | 2
@@ -85,68 +87,123 @@ function CalendarEventInput({
   onClose,
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
-  const [newEvent, setNewEvent] = useState<Appointment>({
-    rowId: uuid.toString(),
+  const defaultEvent: Event = {
+    userId: uuid.toString(),
     ressourceId: uuid,
     title: t('calendar.event.newAppointmentTitle'),
     startTime: dateTime,
-    duration: 45,
     endTime: dayjs(dateTime).add(45, 'minute'),
     isRecurring: false,
     isHomeVisit: false,
-    frequency: 'WEEKLY',
-    count: 10,
-    rruleString: '',
     rrule: '',
     bgColor: ressource?.bgColor || 'green',
-  });
+    type: 'Appointment',
+    isAllDay: false,
+    isCancelled: false,
+    isCancelledReason: '',
+  };
+  const [newEvent, setNewEvent] = useState<Event>(defaultEvent);
+  const { isLoading, isError, rawEvents } = useDaysEvents(
+    dateTime
+  );
+
   const [createEvent, { error: savingError }] = useCreateEvent();
+
   const [timeline, setTimeline] = useState<ReactElement<any, any>>();
+  const [eventTitle, setEventTitle] = useState(() => t('calendar.event.newAppointmentTitle'));
+  const [eventStartTime, setEventStartTime] = useState(dateTime);
+  const [eventEndTime, setEventEndTime] = useState(dayjs(dateTime).add(45, 'minute'));
+  const [eventType, setEventType] = useState('Appointment');
   const [isHomeVisit, setIsHomeVisit] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false);
-  const [recurringFrequency, setRecurringFrequency] = useState('WEEKLY');
+  const [isAllDay, setIsAllDay] = useState(false);
+  const [isCancelled, setIsCancelled] = useState(false);
+  const [isCancelledReason, setIsCancelledReason] = useState('');
+  const [recurringFrequency, setRecurringFrequency] =
+  useState<RecurringFrequency>('WEEKLY');
   const [recurringCount, setRecurringCount] = useState<RecurringCount>(10);
-  // console.log('startEnd', newEvent.startTime, newEvent.endTime);
-  useEffect(() => {
-    setNewEvent({
-      ...newEvent,
-      startTime: dateTime,
-      endTime: dayjs(dateTime).add(45, 'minute'),
-    });
-  }, [dateTime]);
+  const [recurringRule, setRecurringRule] = useState('');
+  const [message, setMessage] = useState<string | null>(null);
 
-  function handleChange(event: React.FormEvent<HTMLInputElement>) {
+  useEffect(() => {
+    // reset event State if new incoming datetime or uuid
+    setEventTitle(defaultEvent.title);
+    setEventStartTime(defaultEvent.startTime);
+    setEventEndTime(defaultEvent.endTime);
+    setEventType(defaultEvent.type);
+    setIsHomeVisit(defaultEvent.isHomeVisit);
+    setIsRecurring(defaultEvent.isRecurring);
+    setIsAllDay(defaultEvent.isAllDay);
+    setIsCancelled(defaultEvent.isCancelled);
+    setIsCancelledReason(defaultEvent.isCancelledReason);
+    setMessage(null);
+
+  }, [dateTime, uuid]);
+
+  const createSubmitEvent = () => {
+    const event: Event = {
+      userId: uuid.toString(),
+      ressourceId: uuid,
+      title: eventTitle,
+      type: eventType,
+      isHomeVisit: isHomeVisit,
+      isAllDay: isAllDay,
+      isRecurring: isRecurring,
+      isCancelled: isCancelled,
+      isCancelledReason: isCancelledReason,
+      rrule: recurringRule,
+      startTime: eventStartTime,
+      endTime: eventEndTime,
+      roomId: eventType === 'RoomBooking' ? uuid.toString() : '',
+      bgColor: ressource?.bgColor || 'green',
+    };
+    return event;
+  };
+
+  function handleTitleChange(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
-    setNewEvent({
-      ...newEvent,
-      [event.currentTarget.name]: event.currentTarget.value,
-    });
+    setEventTitle(event.currentTarget.value);
+    setMessage(null);
   }
 
   function handleStartTimeChange(date: ReactDatePickerReturnType) {
     if (date && typeof date !== 'object') {
-      setNewEvent({
-        ...newEvent,
-        startTime: dayjs(date),
-      });
+      setEventStartTime(dayjs(date));
     }
+    setMessage(null);
   }
 
   function handleEndTimeChange(date: ReactDatePickerReturnType) {
     if (date && typeof date !== 'object') {
-      setNewEvent({
-        ...newEvent,
-        endTime: dayjs(date),
-      });
+      setEventEndTime(dayjs(date));
     }
+    setMessage(null);
   }
 
   function onSwitchHomeVisit(event: BaseSyntheticEvent) {
     setIsHomeVisit(event.target.checked);
+    setMessage(null);
   }
 
+  useEffect(()=> {
+    if (isRecurring) {
+      const rrule = new RRule({
+        freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
+        tzid: 'Europe/Brussels',
+        count: recurringCount,
+        dtstart: newEvent.startTime.toDate(),
+      });
+      setRecurringRule(rrule.toString());
+    } else {
+      setRecurringRule('');
+    }
+
+  }, [isRecurring]);
+
   function onSwitchRecurring(event: BaseSyntheticEvent) {
+    checkOverlap();
     setIsRecurring(event.target.checked);
+    setMessage(null);
   }
 
   function handleRecurringCountChange(event: BaseSyntheticEvent) {
@@ -157,21 +214,23 @@ function CalendarEventInput({
           ? 20
           : event.target.value;
     setRecurringCount(count);
+    setMessage(null);
   }
 
   function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const fieldValues = Object.fromEntries(formData.entries());
-    setNewEvent({ ...newEvent, ...fieldValues });
-    const submitEvent: Event | undefined = appointment2Event(
-      { ...newEvent, ...fieldValues, bgColor: ressource.bgColor },
-      uuid
-    );
-    if (submitEvent)
+    if (checkOverlap()) {
+      setMessage(
+        'Overlapping Appointments are not allowed. Please check again'
+      );
+      return false;
+    }
+    const eventToSubmit = createSubmitEvent();
+    if (eventToSubmit) {
       createEvent({
-        event: submitEvent,
+        event: eventToSubmit,
       });
+    }
     onClose();
   }
 
@@ -182,7 +241,7 @@ function CalendarEventInput({
       count: recurringCount,
       dtstart: newEvent.startTime.toDate(),
     });
-    // console.log(rrule.toString());
+    setRecurringRule(rrule.toString());
     setTimeline(
       <ul>
         {rrule.all().map((date) => (
@@ -192,6 +251,20 @@ function CalendarEventInput({
         ))}
       </ul>
     );
+  }
+
+  function checkOverlap () {
+    // console.log(rowId, events)
+    const checkStart = eventStartTime;
+    const checkEnd = eventEndTime;
+    const result = rawEvents.filter(
+      (event) =>
+        event.ressourceId === ressource.uuid &&
+        ((dayjs(checkStart) >= dayjs(event.startTime) && dayjs(checkStart) <= dayjs(event.endTime)) ||
+        (dayjs(checkEnd) >= dayjs(event.startTime) && dayjs(checkEnd) <= dayjs(event.endTime)))
+    );
+    if (!result.length) return false;
+    return true;
   }
 
   return (
@@ -206,7 +279,6 @@ function CalendarEventInput({
             css={{
               maxWidth: '450px',
               borderRadius: '3px',
-              // paddingBottom: '3.5em',
               backgroundColor: 'white',
               boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
               margin: '20vh auto',
@@ -284,8 +356,8 @@ function CalendarEventInput({
                   <Input
                     id="eventTitleInput"
                     name="title"
-                    value={newEvent.title}
-                    onChange={handleChange}
+                    value={eventTitle}
+                    onChange={handleTitleChange}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -303,24 +375,6 @@ function CalendarEventInput({
                     checked={isHomeVisit}
                     onChange={onSwitchHomeVisit}
                   />
-                  {/* <RadioGroup role="radiogroup">
-                    <Input
-                      type="radio"
-                      id="isHomeVisit"
-                      value="isHomeVisit"
-                      name="homevisit"
-                      onChange={onSwitchHomeVisit}
-                    />
-                    <Label htmlFor="isHomeVisit">Yes</Label>{' '}
-                    <Input
-                      type="radio"
-                      id="isNotHomeVisit"
-                      value="isNotHomeVisit"
-                      name="homevisit"
-                      onChange={onSwitchHomeVisit}
-                    />
-                    <Label htmlFor="isNotHomeVisit">No</Label>
-                  </RadioGroup> */}
                 </FormGroup>
                 <FormGroup>
                   <Label htmlFor="eventStartDatePicker">
@@ -334,7 +388,7 @@ function CalendarEventInput({
                     timeFormat="p"
                     timeIntervals={15}
                     dateFormat="Pp"
-                    selected={newEvent.startTime.toDate()}
+                    selected={eventStartTime.toDate()}
                     onChange={(date: ReactDatePickerReturnType) => {
                       if (date) handleStartTimeChange(date);
                     }}
@@ -350,7 +404,7 @@ function CalendarEventInput({
                     timeFormat="p"
                     timeIntervals={15}
                     dateFormat="Pp"
-                    selected={newEvent.endTime.toDate()}
+                    selected={eventEndTime.toDate()}
                     onChange={(date) => {
                       if (date) handleEndTimeChange(date);
                     }}
@@ -406,10 +460,15 @@ function CalendarEventInput({
                   padding: '0.5rem',
                 }}
               >
-                <Button type="button" onClick={onClose} variant="secondary">
-                  {t('button.close')}
-                </Button>
-                <Button type="submit">{t('button.save')}</Button>
+                <div className="row">
+                  {message && <ErrorMessage error={{message}}/>}
+                </div>
+                <div className="row">
+                  <Button type="button" onClick={onClose} variant="secondary">
+                    {t('button.close')}
+                  </Button>
+                  <Button type="submit">{t('button.save')}</Button>
+                </div>
               </ModalFooter>
             </form>
           </ModalContent>
