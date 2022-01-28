@@ -243,7 +243,7 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: '968a07ff-af82-48cc-b60e-c546141b26ee',
-    name: '🐝 Biene',
+    name: 'Biene',
     bgColor: 'purple',
     days: [
       {
@@ -454,6 +454,23 @@ export const bookingsPerPerson: PersonBookings[] = [
             roomId: '4f9b422d-7541-469a-bff7-564ad2965b66',
             start: '10:15',
             end: '11:45',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    employeeId: '79050e98-e95f-428c-aa8c-68a130d5e8cb',
+    name: 'Hucki',
+    bgColor: 'green',
+    days: [
+      {
+        name: 'friday',
+        bookings: [
+          {
+            roomId: 'c4811ecc-e83f-4850-96dd-381c2ff6cf8d',
+            start: '08:30',
+            end: '12:00',
           },
         ],
       },
