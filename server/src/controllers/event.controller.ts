@@ -17,10 +17,24 @@ export const addEvent = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log({req: req.body})
     const createdEvent = await prisma.event.create({
       data: {
+        userId: req.body.userId,
+        ressourceId: req.body.ressourceId,
+        title: req.body.title,
+        type: req.body.type,
+        isHomeVisit: req.body.isHomeVisit,
+        isAllDay: req.body.isAllDay,
+        isRecurring: req.body.isRecurring,
+        isCancelled: req.body.isCancelled,
+        isCancelledReason: req.body.isCancelledReason,
+        rrule: req.body.rrule,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime,
+        bgColor: req.body.bgColor,
         tenantId: tenantId,
-        ...req.body,
+        roomId: req.body.roomId ? req.body.roomId : null,
       },
     });
     res.json(createdEvent);
