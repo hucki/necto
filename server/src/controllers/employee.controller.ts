@@ -48,11 +48,11 @@ export const addEmployee = async (
       data: {
         tenantId: tenantId,
         ...req.body,
-        create: {
-          contract: {
+        contract: {
+          create: {
             tenantId: tenantId,
           },
-        },
+        }
       },
       include: {
         contract: {
