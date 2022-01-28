@@ -122,26 +122,41 @@ model Contract {
 }
 
 model Event {
-  uuid              String    @id @default(uuid()) @db.Uuid
-  userId            String?   @db.Uuid
-  ressourceId       String?   @db.Uuid
-  title             String?   @db.VarChar
-  type              String?   @db.VarChar
-  isHomeVisit       Boolean?
-  isAllDay          Boolean?
-  isRecurring       Boolean?
-  isCancelled       Boolean?
-  isCancelledReason String?   @db.VarChar
-  rrule             String?   @db.VarChar
-  startTime         DateTime? @db.Timestamp(6)
-  endTime           DateTime? @db.Timestamp(6)
-  bgColor           String?   @db.VarChar
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  tenantId          String?   @db.Uuid
-  roomId            String?   @db.Uuid
+  uuid                    String                   @id @default(uuid()) @db.Uuid
+  userId                  String?                  @db.Uuid
+  ressourceId             String?                  @db.Uuid
+  title                   String?                  @db.VarChar
+  type                    String?                  @db.VarChar
+  isHomeVisit             Boolean?
+  isAllDay                Boolean?
+  isRecurring             Boolean?
+  isCancelled             Boolean?
+  isCancelledReason       String?                  @db.VarChar
+  rrule                   String?                  @db.VarChar
+  startTime               DateTime?                @db.Timestamp(6)
+  endTime                 DateTime?                @db.Timestamp(6)
+  bgColor                 String?                  @db.VarChar
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  tenantId                String?                  @db.Uuid
+  roomId                  String?                  @db.Uuid
+  parentEventId           String?                  @db.Uuid
+  parentEvent             Event?                   @relation("events_parentEventIdToEvents", fields: [parentEventId], references: [uuid])
+  childEvents             Event[]                  @relation("events_parentEventIdToEvents")
+  EventInstanceExceptions EventInstanceException[] @relation("eventInstanceExceptions_eventIdToEvents")
 
   @@map("events")
+}
+
+model EventInstanceException {
+  uuid          String    @id @default(uuid()) @db.Uuid
+  eventId       String    @db.Uuid
+  Event         Event?    @relation("eventInstanceExceptions_eventIdToEvents", fields: [eventId], references: [uuid])
+  isRescheduled Boolean?
+  isCancelled   Boolean?
+  isAllDay      Boolean?
+  startTime     DateTime? @db.Timestamp(6)
+  endTime       DateTime? @db.Timestamp(6)
 }
 
 model Tenant {
