@@ -12,6 +12,7 @@ import { bookingsPerPerson } from '../../assets/bookingsdata';
 import { useAllRooms } from '../../hooks/rooms';
 import { useAllbuildings } from '../../hooks/buildings';
 import { Building } from '../../types/Rooms';
+import { Label, Select } from '../../components/Library';
 
 interface RoomsInputProps {
   currentDate?: Dayjs;
@@ -126,17 +127,20 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
         alignItems: 'center',
       }}
     >
-      <select
-        name="building"
-        value={currentBuilding.toString()}
-        onChange={onBuildingChangeHandler}
-      >
-        {buildings.map((b) => (
-          <option key={b.uuid.toString()} value={b.uuid.toString()}>
-            {b.displayName}
-          </option>
-        ))}
-      </select>
+      <div>
+        <Label htmlFor="building">Ort</Label>
+        <Select
+          name="building"
+          value={currentBuilding.toString()}
+          onChange={onBuildingChangeHandler}
+        >
+          {buildings.map((b) => (
+            <option key={b.uuid.toString()} value={b.uuid.toString()}>
+              {b.displayName}
+            </option>
+          ))}
+        </Select>
+      </div>
       <CalendarContainer
         readOnly={true}
         events={events}
