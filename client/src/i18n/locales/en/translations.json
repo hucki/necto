@@ -13,5 +13,11 @@
   },
   "dict": {
     "for": "for"
+  },
+  "error": {
+    "prefix": "There was an error",
+    "event": {
+      "overlapping": "Overlapping Appointments are not allowed. Please check again"
+    }
   }
 }

@@ -13,5 +13,11 @@
   },
   "dict": {
     "for": "für"
+  },
+  "error": {
+    "prefix": "Es gab einen Fehler",
+    "event": {
+      "overlapping": "Überlappende Termine sind nicht erlaubt. Bitte Termin anpassen"
+    }
   }
 }
