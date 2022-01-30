@@ -5,9 +5,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
+import { CalendarEntry } from './CalendarEntry';
 import classes from './Calendar.module.css';
 import { Dispatch, SetStateAction } from 'react';
 import { v4 as uuid } from 'uuid';
+import { useDeleteEvent } from '../../hooks/events';
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -42,13 +44,23 @@ function CalendarColumn({
   readOnly = false,
   useWeekdayAsHeader = false,
 }: CalendarColumnInputProps): JSX.Element {
+
+  const [deleteEvent] = useDeleteEvent();
+
+  function onClickCalendarEvent(event: Event) {
+    console.log(event.uuid);
+    if (event?.uuid) deleteEvent({ uuid: event.uuid });
+
+  }
+
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
     if (!event.uuid) event.uuid = uuid();
     return (
-      <TeamtableItem
+      <CalendarEntry
         readOnly={readOnly}
         key={event.uuid.toString()}
         event={event}
+        onClickHandler={onClickCalendarEvent}
         styles={styles}
       />
     );
@@ -84,13 +96,17 @@ function CalendarColumn({
     };
     return itemStyle;
   }
-  const ressourceColsHeader = ressources.map((ressource) => (
+  const ressourceColsHeader = ressources.map((ressource, index) => (
     <div
       id={`rcolHeader_r${ressource.uuid}`}
       key={`rcolHeader_r${ressource.uuid}`}
       css={{
         width: `calc(100% / ${ressources.length})`,
         textAlign: 'center',
+        borderRight:
+          index === ressources.length - 1
+            ? '2px solid gray'
+            : '1px dashed #3333',
       }}
       className={`${classes['bg_' + ressource.bgColor]} `}
     >
@@ -106,7 +122,9 @@ function CalendarColumn({
         height: '100%',
         position: 'relative',
         borderRight:
-          index === ressources.length - 1 ? '1px solid gray' : undefined,
+          index === ressources.length - 1
+            ? '2px solid gray'
+            : '1px dashed #3333',
       }}
       onClick={readOnly ? () => null : getPosition}
     >
