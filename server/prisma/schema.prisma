@@ -139,11 +139,13 @@ model Event {
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   tenantId                String?                  @db.Uuid
+  patientId               String?                  @db.Uuid
   roomId                  String?                  @db.Uuid
   parentEventId           String?                  @db.Uuid
   parentEvent             Event?                   @relation("events_parentEventIdToEvents", fields: [parentEventId], references: [uuid])
   childEvents             Event[]                  @relation("events_parentEventIdToEvents")
-  EventInstanceExceptions EventInstanceException[] @relation("eventInstanceExceptions_eventIdToEvents")
+  eventInstanceExceptions EventInstanceException[] @relation("eventInstanceExceptions_eventIdToEvents")
+  patient                 Patient?                 @relation("event_referenceIdTopatient", fields: [patientId], references: [uuid])
 
   @@map("events")
 }
@@ -268,6 +270,7 @@ model Patient {
   companyId           String        @db.Uuid
   tenantId            String        @db.Uuid
   contactData         ContactData[] @relation("contactData_referenceIdTopatient")
+  events              Event[]       @relation("event_referenceIdTopatient")
 
   @@map("patients")
 }
