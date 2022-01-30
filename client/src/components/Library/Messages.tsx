@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import {jsx} from '@emotion/react';
+import { t } from 'i18next';
 import * as colors from '../../styles/colors';
 
 interface ErrorMessageVariants {
@@ -24,7 +25,7 @@ function ErrorMessage ({error, variant = 'stacked', ...props}: ErrorInputProps):
       css={[{color: colors.danger}, errorMessageVariants[variant]]}
       {...props}
     >
-      <span>There was an error: </span>
+      <span>{t('error.prefix')}</span>
       <pre
         css={[
           {whiteSpace: 'break-spaces', margin: '0', marginBottom: -5},
