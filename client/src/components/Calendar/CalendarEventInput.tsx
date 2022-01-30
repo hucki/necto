@@ -111,6 +111,7 @@ function CalendarEventInput({
 
   const [timeline, setTimeline] = useState<ReactElement<any, any>>();
   const [eventTitle, setEventTitle] = useState(() => t('calendar.event.newAppointmentTitle'));
+  const [eventDuration, setEventDuration] = useState(45);
   const [eventStartTime, setEventStartTime] = useState(dateTime);
   const [eventEndTime, setEventEndTime] = useState(dayjs(dateTime).add(45, 'minute'));
   const [eventType, setEventType] = useState('Appointment');
@@ -128,6 +129,7 @@ function CalendarEventInput({
   useEffect(() => {
     // reset event State if new incoming datetime or uuid
     setEventTitle(defaultEvent.title);
+    setEventDuration(45);
     setEventStartTime(defaultEvent.startTime);
     setEventEndTime(defaultEvent.endTime);
     setEventType(defaultEvent.type);
@@ -167,15 +169,16 @@ function CalendarEventInput({
   }
 
   function handleStartTimeChange(date: ReactDatePickerReturnType) {
-    if (date && typeof date !== 'object') {
-      setEventStartTime(dayjs(date));
+    if (date) {
+      setEventStartTime(dayjs(date.toString()));
+      setEventEndTime(dayjs(date.toString()).add(eventDuration, 'm'));
     }
     setMessage(null);
   }
 
   function handleEndTimeChange(date: ReactDatePickerReturnType) {
-    if (date && typeof date !== 'object') {
-      setEventEndTime(dayjs(date));
+    if (date) {
+      setEventEndTime(dayjs(date.toString()));
     }
     setMessage(null);
   }
@@ -206,6 +209,11 @@ function CalendarEventInput({
     setMessage(null);
   }
 
+  function handleEventDurationChange(event: BaseSyntheticEvent) {
+    setEventDuration(event.target.value);
+    setMessage(null);
+  }
+
   function handleRecurringCountChange(event: BaseSyntheticEvent) {
     const count =
       event.target.value < 1
@@ -217,11 +225,12 @@ function CalendarEventInput({
     setMessage(null);
   }
 
-  function handleSubmit(event: React.FormEvent<eventTitleFormElement>) {
-    event.preventDefault();
+  // function handleSubmit(event: React.MouseEventHandler<HTMLButtonElement>) {
+  function handleSubmit() {
+    // event.preventDefault();
     if (checkOverlap()) {
       setMessage(
-        'Overlapping Appointments are not allowed. Please check again'
+        t('error.event.overlapping')
       );
       return false;
     }
@@ -277,6 +286,8 @@ function CalendarEventInput({
         >
           <ModalContent
             css={{
+              display: 'grid',
+              gridTemplateRows: '1fr 6fr 1fr',
               maxWidth: '450px',
               borderRadius: '3px',
               backgroundColor: 'white',
@@ -288,189 +299,199 @@ function CalendarEventInput({
               },
             }}
           >
-            <form
+            {/* <form
               onSubmit={handleSubmit}
               css={{
                 display: 'flex',
                 flexDirection: 'column',
+                height: '100%',
+                alignContent: 'space-between'
+              }}
+            > */}
+            <ModalHeader
+              css={{
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: 'cornflowerblue',
+                padding: '0.5rem',
               }}
             >
-              <ModalHeader
-                css={{
-                  fontSize: '1.1rem',
-                  fontWeight: 'bold',
-                  color: 'white',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  backgroundColor: 'cornflowerblue',
-                  padding: '0.5rem',
-                }}
-              >
-                <div>
-                  <div className="modal-title">
-                    {t('calendar.event.newAppointmentTitle')} {t('dict.for')}{' '}
-                    {ressource.displayName}
-                  </div>
-                  <div
-                    className="modal-subtitle"
-                    css={{
-                      fontSize: '0.8rem',
-                    }}
-                  >
-                    {newEvent.startTime.format('llll')}
-                  </div>
+              <div>
+                <div className="modal-title">
+                  {t('calendar.event.newAppointmentTitle')} {ressource?.displayName ? t('dict.for') + ' ' + ressource.displayName : ''}
                 </div>
-                {isHomeVisit && (
-                  <FaHouseUser
-                    css={{
-                      width: '2rem',
-                      height: '2rem',
-                    }}
-                  />
-                )}
-                {isRecurring && (
-                  <FaLink
-                    css={{
-                      width: '2rem',
-                      height: '2rem',
-                    }}
-                  />
-                )}
-                <CircleButton
-                  type="button"
-                  className="modal-close"
-                  onClick={onClose}
+                <div
+                  className="modal-subtitle"
+                  css={{
+                    fontSize: '0.8rem',
+                  }}
                 >
-                  X
-                </CircleButton>
-              </ModalHeader>
-              <ModalBody
-                css={{
-                  padding: '0.5rem',
-                }}
+                  {newEvent.startTime.format('llll')}
+                </div>
+              </div>
+              {isHomeVisit && (
+                <FaHouseUser
+                  css={{
+                    width: '2rem',
+                    height: '2rem',
+                  }}
+                />
+              )}
+              {isRecurring && (
+                <FaLink
+                  css={{
+                    width: '2rem',
+                    height: '2rem',
+                  }}
+                />
+              )}
+              <CircleButton
+                type="button"
+                className="modal-close"
+                onClick={onClose}
               >
-                <FormGroup>
-                  <Label htmlFor="eventTitleInput">Title</Label>
-                  <Input
-                    id="eventTitleInput"
-                    name="title"
-                    value={eventTitle}
-                    onChange={handleTitleChange}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label htmlFor="duration">Duration</Label>
-                  <Select id="duration" name="duration">
-                    <option value={45}>0:45</option>
-                    <option value={30}>0:30</option>
-                  </Select>
+                X
+              </CircleButton>
+            </ModalHeader>
+            <ModalBody
+              css={{
+                padding: '0.5rem',
+              }}
+            >
+              <FormGroup>
+                <Label htmlFor="eventTitleInput">Title</Label>
+                <Input
+                  id="eventTitleInput"
+                  name="title"
+                  value={eventTitle}
+                  onChange={handleTitleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="duration">Duration</Label>
+                <Select id="duration" name="duration" value={eventDuration} onChange={handleEventDurationChange}>
+                  <option value={45}>0:45</option>
+                  <option value={30}>0:30</option>
+                </Select>
 
-                  <Label htmlFor="homevisit">Home visit?</Label>
-                  <Input
-                    type="checkbox"
-                    id="isHomeVisit"
-                    name="Home Visit?"
-                    checked={isHomeVisit}
-                    onChange={onSwitchHomeVisit}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label htmlFor="eventStartDatePicker">
-                    {t('calendar.event.start')}
-                  </Label>
-                  <DatePicker
-                    id="eventStartDatePicker"
-                    name="startDate"
-                    showTimeSelect
-                    locale="de"
-                    timeFormat="p"
-                    timeIntervals={15}
-                    dateFormat="Pp"
-                    selected={eventStartTime.toDate()}
-                    onChange={(date: ReactDatePickerReturnType) => {
-                      if (date) handleStartTimeChange(date);
-                    }}
-                  />
-                  <Label htmlFor="eventEndDatePicker">
-                    {t('calendar.event.end')}
-                  </Label>
-                  <DatePicker
-                    id="eventEndDatePicker"
-                    name="endDate"
-                    showTimeSelect
-                    locale="de"
-                    timeFormat="p"
-                    timeIntervals={15}
-                    dateFormat="Pp"
-                    selected={eventEndTime.toDate()}
-                    onChange={(date) => {
-                      if (date) handleEndTimeChange(date);
-                    }}
-                  />
-                </FormGroup>
-                <hr></hr>
-                <FormGroup>
-                  <Label htmlFor="isRecurring">recurring Appointment?</Label>
-                  <Input
-                    type="checkbox"
-                    id="isRecurring"
-                    name="isRecurring"
-                    checked={isRecurring}
-                    onChange={onSwitchRecurring}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label htmlFor="frequency">Frequency</Label>
-                  <Select
-                    id="frequency"
-                    name="frequency"
-                    disabled={!isRecurring}
-                  >
-                    <option value="WEEKLY">weekly</option>
-                    <option value="MONTHLY" disabled>
-                      monthly
-                    </option>
-                  </Select>
-                  <Label htmlFor="count">how often?</Label>
-                  <Input
-                    id="count"
-                    name="count"
-                    type="number"
-                    min={1}
-                    max={20}
-                    disabled={!isRecurring}
-                    defaultValue={recurringCount}
-                    onChange={handleRecurringCountChange}
-                  />
-                </FormGroup>
-                <Button
-                  type="button"
-                  onClick={onBuildTimelineHandler}
+                <Label htmlFor="homevisit">Home visit?</Label>
+                <Input
+                  type="checkbox"
+                  id="isHomeVisit"
+                  name="Home Visit?"
+                  checked={isHomeVisit}
+                  onChange={onSwitchHomeVisit}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="eventStartDatePicker">
+                  {t('calendar.event.start')}
+                </Label>
+                <DatePicker
+                  id="eventStartDatePicker"
+                  name="startDate"
+                  showTimeSelect
+                  locale="de"
+                  timeFormat="p"
+                  timeIntervals={15}
+                  dateFormat="Pp"
+                  selected={eventStartTime.toDate()}
+                  onChange={(date: ReactDatePickerReturnType) => {
+                    if (date) handleStartTimeChange(date);
+                  }}
+                />
+                <Label htmlFor="eventEndDatePicker">
+                  {t('calendar.event.end')}
+                </Label>
+                <DatePicker
+                  id="eventEndDatePicker"
+                  name="endDate"
+                  showTimeSelect
+                  locale="de"
+                  timeFormat="p"
+                  timeIntervals={15}
+                  dateFormat="Pp"
+                  selected={eventEndTime.toDate()}
+                  onChange={(date) => {
+                    if (date) handleEndTimeChange(date);
+                  }}
+                />
+              </FormGroup>
+              <hr></hr>
+              <FormGroup>
+                <Label htmlFor="isRecurring">recurring Appointment?</Label>
+                <Input
+                  type="checkbox"
+                  id="isRecurring"
+                  name="isRecurring"
+                  checked={isRecurring}
+                  onChange={onSwitchRecurring}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="frequency">Frequency</Label>
+                <Select
+                  id="frequency"
+                  name="frequency"
                   disabled={!isRecurring}
                 >
-                  preview recurring Appointments
-                </Button>
-                {timeline}
-              </ModalBody>
-
-              <ModalFooter
-                css={{
-                  padding: '0.5rem',
-                }}
+                  <option value="WEEKLY">weekly</option>
+                  <option value="MONTHLY" disabled>
+                    monthly
+                  </option>
+                </Select>
+                <Label htmlFor="count">how often?</Label>
+                <Input
+                  id="count"
+                  name="count"
+                  type="number"
+                  min={1}
+                  max={20}
+                  disabled={!isRecurring}
+                  defaultValue={recurringCount}
+                  onChange={handleRecurringCountChange}
+                />
+              </FormGroup>
+              <Button
+                type="button"
+                onClick={onBuildTimelineHandler}
+                disabled={!isRecurring}
               >
-                <div className="row">
-                  {message && <ErrorMessage error={{message}}/>}
-                </div>
-                <div className="row">
-                  <Button type="button" onClick={onClose} variant="secondary">
-                    {t('button.close')}
-                  </Button>
-                  <Button type="submit">{t('button.save')}</Button>
-                </div>
-              </ModalFooter>
-            </form>
+                preview recurring Appointments
+              </Button>
+              {timeline}
+            </ModalBody>
+
+            <ModalFooter
+              css={{
+                padding: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <div className="row" css={{
+                width: '100%'
+              }}>
+                {message && <ErrorMessage error={{message}}/>}
+              </div>
+              <div className="row" css={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'end',
+              }}>
+                <Button type="button" onClick={onClose} variant="secondary">
+                  {t('button.close')}
+                </Button>
+                <Button type="button" onClick={handleSubmit}>{t('button.save')}</Button>
+              </div>
+            </ModalFooter>
+            {/* </form> */}
           </ModalContent>
         </ModalOverlay>
       </Modal>
