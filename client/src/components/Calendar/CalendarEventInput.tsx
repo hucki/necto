@@ -9,6 +9,13 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
 } from '@chakra-ui/react';
 import { useState, useEffect, BaseSyntheticEvent, ReactElement } from 'react';
 import {
@@ -53,30 +60,6 @@ interface FormElements extends HTMLFormControlsCollection {
 interface eventTitleFormElement extends HTMLFormElement {
   elements: FormElements;
 }
-type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
-
-type RecurringFrequency = 'WEEKLY' | 'MONTHLY';
-type RecurringCount =
-  | 1
-  | 2
-  | 3
-  | 4
-  | 5
-  | 6
-  | 7
-  | 8
-  | 9
-  | 10
-  | 11
-  | 12
-  | 13
-  | 14
-  | 15
-  | 16
-  | 17
-  | 18
-  | 19
-  | 20;
 
 function CalendarEventInput({
   uuid,
@@ -122,7 +105,7 @@ function CalendarEventInput({
   const [isCancelledReason, setIsCancelledReason] = useState('');
   const [recurringFrequency, setRecurringFrequency] =
   useState<RecurringFrequency>('WEEKLY');
-  const [recurringCount, setRecurringCount] = useState<RecurringCount>(10);
+  const [recurringInterval, setRecurringInterval] = useState<RecurringInterval>(10);
   const [recurringRule, setRecurringRule] = useState('');
   const [message, setMessage] = useState<string | null>(null);
 
@@ -193,7 +176,7 @@ function CalendarEventInput({
       const rrule = new RRule({
         freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
         tzid: 'Europe/Brussels',
-        count: recurringCount,
+        count: recurringInterval,
         dtstart: newEvent.startTime.toDate(),
       });
       setRecurringRule(rrule.toString());
@@ -211,23 +194,23 @@ function CalendarEventInput({
 
   function handleEventDurationChange(event: BaseSyntheticEvent) {
     setEventDuration(event.target.value);
+    setEventEndTime(dayjs(eventStartTime.toString()).add(event.target.value, 'm'));
+
     setMessage(null);
   }
 
-  function handleRecurringCountChange(event: BaseSyntheticEvent) {
-    const count =
+  function handleRecurringIntervalChange(event: BaseSyntheticEvent) {
+    const interval =
       event.target.value < 1
         ? 1
         : event.target.value > 20
           ? 20
           : event.target.value;
-    setRecurringCount(count);
+    setRecurringInterval(interval);
     setMessage(null);
   }
 
-  // function handleSubmit(event: React.MouseEventHandler<HTMLButtonElement>) {
   function handleSubmit() {
-    // event.preventDefault();
     if (checkOverlap()) {
       setMessage(
         t('error.event.overlapping')
@@ -247,7 +230,7 @@ function CalendarEventInput({
     const rrule = new RRule({
       freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
       tzid: 'Europe/Brussels',
-      count: recurringCount,
+      count: recurringInterval,
       dtstart: newEvent.startTime.toDate(),
     });
     setRecurringRule(rrule.toString());
@@ -299,15 +282,6 @@ function CalendarEventInput({
               },
             }}
           >
-            {/* <form
-              onSubmit={handleSubmit}
-              css={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                alignContent: 'space-between'
-              }}
-            > */}
             <ModalHeader
               css={{
                 fontSize: '1.1rem',
@@ -361,10 +335,12 @@ function CalendarEventInput({
             <ModalBody
               css={{
                 padding: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column'
               }}
             >
               <FormGroup>
-                <Label htmlFor="eventTitleInput">Title</Label>
+                <Label htmlFor="eventTitleInput">{t('calendar.event.title')}</Label>
                 <Input
                   id="eventTitleInput"
                   name="title"
@@ -373,13 +349,8 @@ function CalendarEventInput({
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor="duration">Duration</Label>
-                <Select id="duration" name="duration" value={eventDuration} onChange={handleEventDurationChange}>
-                  <option value={45}>0:45</option>
-                  <option value={30}>0:30</option>
-                </Select>
 
-                <Label htmlFor="homevisit">Home visit?</Label>
+                <Label htmlFor="homevisit">{t('calendar.event.homeVisit')}</Label>
                 <Input
                   type="checkbox"
                   id="isHomeVisit"
@@ -405,6 +376,16 @@ function CalendarEventInput({
                     if (date) handleStartTimeChange(date);
                   }}
                 />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="duration">{t('calendar.event.duration')}</Label>
+                <Select id="duration" name="duration" value={eventDuration} onChange={handleEventDurationChange}>
+                  <option value={45}>0:45</option>
+                  <option value={30}>0:30</option>
+                </Select>
+
+              </FormGroup>
+              <FormGroup>
                 <Label htmlFor="eventEndDatePicker">
                   {t('calendar.event.end')}
                 </Label>
@@ -424,7 +405,7 @@ function CalendarEventInput({
               </FormGroup>
               <hr></hr>
               <FormGroup>
-                <Label htmlFor="isRecurring">recurring Appointment?</Label>
+                <Label htmlFor="isRecurring">{t('calendar.event.recurringAppointment')}</Label>
                 <Input
                   type="checkbox"
                   id="isRecurring"
@@ -434,37 +415,60 @@ function CalendarEventInput({
                 />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor="frequency">Frequency</Label>
+                <Label htmlFor="frequency">{t('calendar.event.frequency')}</Label>
                 <Select
                   id="frequency"
                   name="frequency"
                   disabled={!isRecurring}
                 >
-                  <option value="WEEKLY">weekly</option>
-                  <option value="MONTHLY" disabled>
-                    monthly
+                  <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
+                  <option value="MONTHLY" disabled>{t('calendar.event.frequencyMonthly')}
                   </option>
                 </Select>
-                <Label htmlFor="count">how often?</Label>
+                <Label htmlFor="interval">{t('calendar.event.interval')}</Label>
                 <Input
-                  id="count"
-                  name="count"
+                  id="interval"
+                  name="interval"
                   type="number"
                   min={1}
                   max={20}
                   disabled={!isRecurring}
-                  defaultValue={recurringCount}
-                  onChange={handleRecurringCountChange}
+                  defaultValue={recurringInterval}
+                  onChange={handleRecurringIntervalChange}
                 />
               </FormGroup>
-              <Button
-                type="button"
-                onClick={onBuildTimelineHandler}
-                disabled={!isRecurring}
-              >
-                preview recurring Appointments
-              </Button>
-              {timeline}
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    type="button"
+                    onClick={onBuildTimelineHandler}
+                    disabled={!isRecurring}
+                    css={{
+                      alignSelf: 'flex-end'
+                    }}
+                  >
+                    {t('button.preview')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent css={{
+                  backgroundColor: 'white',
+                  border: '1px solid #3333',
+                  borderRadius: '1rem',
+                  padding: '0.5rem'
+                }}>
+                  <PopoverArrow />
+                  <PopoverCloseButton css={{
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '1.5rem',
+                    height: '1.5rem',
+                    alignSelf: 'flex-end',
+                    cursor: 'pointer'
+                  }} />
+                  <PopoverHeader></PopoverHeader>
+                  <PopoverBody>{timeline}</PopoverBody>
+                </PopoverContent>
+              </Popover>
             </ModalBody>
 
             <ModalFooter
@@ -491,7 +495,6 @@ function CalendarEventInput({
                 <Button type="button" onClick={handleSubmit}>{t('button.save')}</Button>
               </div>
             </ModalFooter>
-            {/* </form> */}
           </ModalContent>
         </ModalOverlay>
       </Modal>
