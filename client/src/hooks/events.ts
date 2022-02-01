@@ -112,3 +112,20 @@ export function useCreateEvent(): MutationResultPair<
     },
   });
 }
+
+export function useUpdateEvent(): MutationResultPair<
+  Event,
+  Error,
+  { event: Event },
+  string
+  > {
+  const client = useAuthenticatedClient<Event>();
+  const updateEvent = async ({ event }: { event: Event }): Promise<Event> => {
+    return client(`events/${event.uuid}`, { data: event, method: 'PATCH' });
+  };
+  return useMutation(updateEvent, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('events');
+    },
+  });
+}
