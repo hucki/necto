@@ -4,7 +4,6 @@ import { jsx } from '@emotion/react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
-import TeamtableItem from '../Timetable/TeamTableItem/TeamTableItem';
 import { CalendarEntry } from './CalendarEntry';
 import classes from './Calendar.module.css';
 import { Dispatch, SetStateAction } from 'react';
@@ -48,9 +47,7 @@ function CalendarColumn({
   const [deleteEvent] = useDeleteEvent();
 
   function onClickCalendarEvent(event: Event) {
-    console.log(event.uuid);
     if (event?.uuid) deleteEvent({ uuid: event.uuid });
-
   }
 
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
