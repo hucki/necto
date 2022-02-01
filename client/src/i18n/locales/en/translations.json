@@ -2,6 +2,7 @@
   "calendar": {
     "event": {
       "newAppointmentTitle": "New Appointment",
+      "editAppointmentTitle": "Termin",
       "title": "title",
       "duration": "duration",
       "homeVisit": "home visit",
