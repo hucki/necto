@@ -6,9 +6,11 @@ import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import { CalendarEntry } from './CalendarEntry';
 import classes from './Calendar.module.css';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useDeleteEvent } from '../../hooks/events';
+import CalendarEventEdit from './CalendarEventEdit';
+import { useDisclosure } from '@chakra-ui/react';
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -45,10 +47,20 @@ function CalendarColumn({
 }: CalendarColumnInputProps): JSX.Element {
 
   const [deleteEvent] = useDeleteEvent();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [clickedEvent, setClickedEvent] = useState<Event | null>(null);
 
   function onClickCalendarEvent(event: Event) {
-    if (event?.uuid) deleteEvent({ uuid: event.uuid });
-  }
+    setClickedEvent(event);
+    // if (event?.uuid) deleteEvent({ uuid: event.uuid });
+  };
+
+  function closeClickedEventHandler() {
+    setClickedEvent(null);
+    onClose();
+  };
+
 
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
     if (!event.uuid) event.uuid = uuid();
@@ -174,6 +186,15 @@ function CalendarColumn({
       >
         {ressourceColsBody}
       </div>
+      {clickedEvent && (
+        <CalendarEventEdit
+          event={clickedEvent}
+          isOpen={true}
+          isReadOnly={true}
+          onClose={closeClickedEventHandler}
+          onOpen={onOpen}
+        />
+      )}
     </div>
   );
 }
