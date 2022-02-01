@@ -9,6 +9,7 @@ import { FaHouseUser, FaLink } from 'react-icons/fa';
 import dayjs from 'dayjs';
 
 const CalendarEntryContainer = styled.div({
+  // minHeight: 'min-content'
   // backgroundColor: 'white',
 });
 
@@ -26,30 +27,17 @@ export const CalendarEntry = ({
   styles,
 }: CalendarEntryProps) => {
   const [icons, setIcons] = useState<JSX.Element[] | []>([]);
-  console.log({ event });
   useEffect(() => {
     setIcons([]);
-    if (event.rrule !== '')
-      setIcons(() => [
-        ...icons,
-        <FaHouseUser
-          key="homeVisitIcon"
-          css={{
-            width: '2rem',
-            height: '2rem',
-          }}
-        />,
-      ]);
     if (event.isHomeVisit)
-      setIcons(() => [
+      setIcons((icons) => [
         ...icons,
-        <FaLink
-          key="rruleIcon"
-          css={{
-            width: '2rem',
-            height: '2rem',
-          }}
-        />,
+        <FaHouseUser key="homeVisitIcon" />,
+      ]);
+    if (event.rrule !== '')
+      setIcons((icons) => [
+        ...icons,
+        <FaLink key="rruleIcon" />,
       ]);
   }, [event]);
 
@@ -67,10 +55,10 @@ export const CalendarEntry = ({
         <span className={classes.event_info}>{event.title}</span>
         <div className={classes.icon_container}>{icons}</div>
       </div>
-      <span className={classes.event_info}>
+      {/* <span className={classes.event_info}>
         {dayjs(event.startTime).format('HH:mm')} -{' '}
         {dayjs(event.endTime).format('HH:mm')}
-      </span>
+      </span> */}
     </CalendarEntryContainer>
   );
 };
