@@ -49,7 +49,7 @@
   overflow: hidden;
   border-radius: 0 0.2rem 0 0.2rem;
   /* border-radius: 0.5rem; */
-  border-top: 1px solid;
+  border-top: 2px solid;
   box-shadow: 0.2rem 0.2rem 2px #3333;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
@@ -69,7 +69,7 @@
   padding: 2px;
   font-size: 1em;
   text-shadow: 0 0 5px #3333;
-  color: red;
+  color: #3338;
 }
 
 .bg_grey {
@@ -108,8 +108,9 @@
 }
 .event:hover,
 .event:focus {
-  /* border-top-width: 3px; */
-  transform: scale(1.05);
+  border-top-width: 3px;
+  /* transform: scale(1.02); */
+  /* background-color: white; */
   box-shadow: 0.1rem 0.1rem 5px #3333;
   cursor: pointer;
 }
