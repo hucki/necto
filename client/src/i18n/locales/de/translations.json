@@ -2,14 +2,24 @@
   "calendar": {
     "event": {
       "newAppointmentTitle": "Neuer Termin",
+      "title": "Title",
+      "duration": "Dauer",
+      "homeVisit": "Hausbesuch",
+      "recurringAppointment": "Terminserie",
+      "frequency": "Frequenz",
+      "frequencyWeekly": "1 x pro Woche",
+      "frequencyMonthly": "1 x pro Monat",
+      "interval": "Intervall",
       "start": "Start",
-      "end": "Ende"
+      "end": "Ende",
+      "previewRecurringApointments": "Vorschau Terminserie"
     }
   },
   "button": {
     "close": "schliessen",
     "save": "speichern",
-    "cancel": "abbrechen"
+    "cancel": "abbrechen",
+    "preview": "Vorschau"
   },
   "dict": {
     "for": "für"
