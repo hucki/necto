@@ -45,6 +45,49 @@ export const addEvent = async (
   }
 };
 
+
+/**
+ * update one Event
+ *  @param {Event} req.body
+ */
+export const updateEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    console.log({req: req.body, eId: req.params.eventId})
+    const eventId = req.params.eventId;
+    const updatedEvent = await prisma.event.update({
+      where: {
+        uuid: eventId
+      },
+      data: {
+        userId: req.body.userId,
+        ressourceId: req.body.ressourceId,
+        title: req.body.title,
+        type: req.body.type,
+        isHomeVisit: req.body.isHomeVisit,
+        isAllDay: req.body.isAllDay,
+        isRecurring: req.body.isRecurring,
+        isCancelled: req.body.isCancelled,
+        isCancelledReason: req.body.isCancelledReason,
+        rrule: req.body.rrule,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime,
+        bgColor: req.body.bgColor,
+        tenantId: tenantId,
+        roomId: req.body.roomId ? req.body.roomId : null,
+      },
+    });
+    res.json(updatedEvent);
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
 /**
  * delete one Event by eventId
  *  @param {string} req.params.eventId

@@ -70,6 +70,7 @@ router.get('/events/d/:year/:month/:day', eventController.getDaysEvents);
 router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 
 router.post('/events', eventController.addEvent);
+router.patch('/events/:eventId', eventController.updateEvent);
 router.delete('/events/:eventId', eventController.deleteEvent);
 
 // settings routes
