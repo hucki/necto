@@ -1,3 +1,7 @@
+import {
+  Button as ChakraButton,
+  IconButton as ChakraIconButton,
+} from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import * as colors from '../../styles/colors';
 import { BgColor } from '../../types/Colors';
@@ -58,7 +62,7 @@ interface ButtonCallbackProps {
   variant?: string;
   disabled?: boolean;
 }
-const Button = styled.button(
+const Button = styled(ChakraButton)(
   {
     padding: '10px 15px',
     border: '0',
@@ -76,8 +80,23 @@ const Button = styled.button(
   ({ variant = 'primary' }: ButtonCallbackProps) => buttonVariants[variant]
 );
 
+const IconButton = styled(ChakraIconButton)({
+  padding: '10px 15px',
+  border: '0',
+  lineHeight: '1',
+  borderRadius: '3px',
+  cursor: 'pointer',
+  ':disabled': {
+    backgroundColor: colors.gray80,
+    fontStyle: 'italic',
+    cursor: 'not-allowed',
+  },
+  display: 'flex',
+  alignItems: 'center',
+});
+
 const ControlWrapper = styled.div({
   display: 'flex',
 });
 
-export { Button, CircleButton, ControlWrapper };
+export { Button, IconButton, CircleButton, ControlWrapper };

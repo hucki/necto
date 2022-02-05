@@ -9,7 +9,7 @@ import {
   RadioGroup,
 } from './FormElements';
 import { ErrorMessage } from './Messages';
-import { Button, CircleButton, ControlWrapper } from './Buttons';
+import { Button, IconButton, CircleButton, ControlWrapper } from './Buttons';
 import { EventModalContent, EventModalHeader, EventModalBody } from './Modal';
 
 export {
@@ -21,6 +21,7 @@ export {
   Select,
   ErrorMessage,
   Button,
+  IconButton,
   CircleButton,
   DatePicker,
   RadioGroup,
