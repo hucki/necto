@@ -21,7 +21,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
 import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
-import { FaHouseUser, FaLink } from 'react-icons/fa';
+import { FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
 import CalendarEventForm from './CalendarEventForm';
 registerLocale('de', de);
@@ -202,10 +202,20 @@ function CalendarEventInput({
                   justifyContent: 'end',
                 }}
               >
-                <Button type="button" onClick={onClose} variant="secondary">
+                <Button
+                  icon={<FaTimes />}
+                  aria-label="close modal"
+                  type="button"
+                  onClick={onClose}
+                  variant="secondary"
+                >
                   {t('button.close')}
                 </Button>
-                <Button type="button" onClick={handleSubmit}>
+                <Button
+                  aria-label="save changes"
+                  type="button"
+                  onClick={handleSubmit}
+                >
                   {t('button.save')}
                 </Button>
               </div>

@@ -209,24 +209,39 @@ function CalendarEventEdit({
                 }}
               >
                 <ControlWrapper>
-                  <Button type="button" onClick={handleDelete} variant="danger">
-                    <FaTrash /> {t('button.delete')}
+                  <Button
+                    leftIcon={<FaTrash />}
+                    aria-label="delete event"
+                    type="button"
+                    onClick={handleDelete}
+                    variant="danger"
+                  >
+                    {t('button.delete')}
                   </Button>
                 </ControlWrapper>
                 <ControlWrapper>
-                  <Button type="button" onClick={onClose} variant="secondary">
-                    <FaTimes /> {t('button.cancel')}
+                  <Button
+                    leftIcon={<FaTimes />}
+                    aria-label="cancel edit"
+                    type="button"
+                    onClick={onClose}
+                    variant="secondary"
+                  >
+                    {t('button.cancel')}
                   </Button>
                   {isReadOnly ? (
                     <Button
+                      leftIcon={<FaEdit />}
+                      aria-label="edit event"
                       type="button"
                       onClick={() => setIsReadOnly(!isReadOnly)}
                       variant="secondary"
                     >
-                      <FaEdit /> {t('button.edit')}
+                      {t('button.edit')}
                     </Button>
                   ) : (
                     <Button
+                      aria-label="save changes"
                       type="button"
                       disabled={isReadOnly}
                       onClick={handleSubmit}

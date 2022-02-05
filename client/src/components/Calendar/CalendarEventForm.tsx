@@ -30,7 +30,6 @@ registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
 
-
 interface CalendarEventFormProps {
   event: Event;
   handleChangedEvent: (event: Event) => void;
@@ -148,7 +147,7 @@ function CalendarEventForm({
     );
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     handleChangedEvent({
       uuid: event.uuid,
       userId: event.userId,
@@ -164,9 +163,20 @@ function CalendarEventForm({
       startTime: eventStartTime,
       endTime: eventEndTime,
       roomId: event.roomId,
-      bgColor: event.bgColor
+      bgColor: event.bgColor,
     });
-  },[eventTitle, eventType, isHomeVisit, isAllDay, isRecurring, isCancelled, isCancelledReason, recurringRule, eventStartTime, eventEndTime]);
+  }, [
+    eventTitle,
+    eventType,
+    isHomeVisit,
+    isAllDay,
+    isRecurring,
+    isCancelled,
+    isCancelledReason,
+    recurringRule,
+    eventStartTime,
+    eventEndTime,
+  ]);
 
   return (
     <div>
@@ -271,6 +281,7 @@ function CalendarEventForm({
       <Popover>
         <PopoverTrigger>
           <Button
+            aria-label="preview recurring events"
             type="button"
             onClick={onBuildTimelineHandler}
             disabled={!isRecurring}
