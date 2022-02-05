@@ -17,6 +17,10 @@ const buttonVariants: ButtonVariants = {
     background: colors.gray20,
     color: colors.indigoDarken10,
   },
+  danger: {
+    background: colors.danger,
+    color: colors.background,
+  },
 };
 
 interface ButtonCallbackProps {
@@ -51,8 +55,14 @@ const Button = styled.button(
       fontStyle: 'italic',
       cursor: 'not-allowed',
     },
+    display: 'flex',
+    alignItems: 'center',
   },
   ({ variant = 'primary' }: ButtonCallbackProps) => buttonVariants[variant]
 );
 
-export { Button, CircleButton };
+const ControlWrapper = styled.div({
+  display: 'flex'
+});
+
+export { Button, CircleButton, ControlWrapper };

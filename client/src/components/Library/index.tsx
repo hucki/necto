@@ -9,7 +9,7 @@ import {
   RadioGroup,
 } from './FormElements';
 import { ErrorMessage } from './Messages';
-import { Button, CircleButton } from './Buttons';
+import { Button, CircleButton, ControlWrapper } from './Buttons';
 
 export {
   FullPageSpinner,
@@ -23,4 +23,5 @@ export {
   CircleButton,
   DatePicker,
   RadioGroup,
+  ControlWrapper
 };
