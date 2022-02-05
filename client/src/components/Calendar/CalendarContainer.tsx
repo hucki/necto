@@ -19,7 +19,7 @@ interface CalendarInputProps {
   currentDate?: Dayjs;
   daysRange: [Dayjs, Dayjs];
   readOnly?: boolean;
-  useWeekdayAsHeader?: boolean;
+  columnHeaderFormat?: CalendarColumnHeaderFormat;
 }
 const currentDayjs = dayjs();
 
@@ -30,7 +30,7 @@ function CalendarContainer({
   currentDate,
   daysRange = [currentDayjs, currentDayjs],
   readOnly = false,
-  useWeekdayAsHeader = false,
+  columnHeaderFormat = 'dddd DD.MM.'
 }: CalendarInputProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [clickedId, setClickedId] = useState<string | undefined>(undefined);
@@ -109,7 +109,7 @@ function CalendarContainer({
         setClickedDateTime={setClickedDateTime}
         openModal={onOpen}
         readOnly={readOnly}
-        useWeekdayAsHeader={useWeekdayAsHeader}
+        columnHeaderFormat={columnHeaderFormat}
       />
     );
     curCalendarDay = curCalendarDay.add(1, 'day');

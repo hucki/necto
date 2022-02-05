@@ -8,9 +8,11 @@ import { CalendarEntry } from './CalendarEntry';
 import classes from './Calendar.module.css';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import { useDeleteEvent } from '../../hooks/events';
 import CalendarEventEdit from './CalendarEventEdit';
 import { useDisclosure } from '@chakra-ui/react';
+import * as colors from '../../styles/colors';
+import 'dayjs/locale/de';
+dayjs.locale('de');
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -24,7 +26,7 @@ interface CalendarColumnInputProps {
   setClickedDateTime: Dispatch<SetStateAction<Dayjs>>;
   openModal: () => void;
   readOnly?: boolean;
-  useWeekdayAsHeader?: boolean;
+  columnHeaderFormat?: string;
 }
 interface ItemStyle {
   top: string;
@@ -32,7 +34,7 @@ interface ItemStyle {
 }
 
 function CalendarColumn({
-  date,
+  date: dateInput,
   events,
   ressources,
   numOfHours,
@@ -43,17 +45,15 @@ function CalendarColumn({
   setClickedDateTime,
   openModal,
   readOnly = false,
-  useWeekdayAsHeader = false,
+  columnHeaderFormat = 'dddd',
 }: CalendarColumnInputProps): JSX.Element {
-
-  const [deleteEvent] = useDeleteEvent();
+  const date = dateInput.locale('de');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [clickedEvent, setClickedEvent] = useState<Event | null>(null);
 
   function onClickCalendarEvent(event: Event) {
     setClickedEvent(event);
-    // if (event?.uuid) deleteEvent({ uuid: event.uuid });
   };
 
   function closeClickedEventHandler() {
@@ -143,6 +143,7 @@ function CalendarColumn({
     </div>
   ));
 
+  const columnHeader = date.format(columnHeaderFormat);
   return (
     <div
       id={`CalendarDay_d${date.format('YYYYMMDD')}`}
@@ -157,12 +158,12 @@ function CalendarColumn({
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
         css={{
           height: `calc((100% / ${numOfHours + 1}) / 2)`,
-          backgroundColor: 'orange',
-          color: 'white',
+          backgroundColor: `${colors.gray20}`,
+          color: `${colors.gray}`,
           fontWeight: 'bold',
         }}
       >
-        {useWeekdayAsHeader ? date.format('dddd') : date.format('DD.MM.YYYY')}
+        {columnHeader}
       </div>
       <div
         id={`RessourceHeader_d${date.format('YYYYMMDD')}`}
@@ -190,7 +191,7 @@ function CalendarColumn({
         <CalendarEventEdit
           event={clickedEvent}
           isOpen={true}
-          isReadOnly={true}
+          readOnly={true}
           onClose={closeClickedEventHandler}
           onOpen={onOpen}
         />

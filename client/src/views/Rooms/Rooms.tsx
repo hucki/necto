@@ -146,7 +146,7 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
         events={events}
         ressources={ressources}
         daysRange={[calendarDate, calendarDate.add(4, 'day')]}
-        useWeekdayAsHeader
+        columnHeaderFormat={'dddd'}
       />
     </div>
   );
