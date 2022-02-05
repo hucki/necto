@@ -20,7 +20,9 @@
     "close": "close",
     "save": "save",
     "cancel": "cancel",
-    "preview": "preview"
+    "preview": "preview",
+    "edit": "edit",
+    "delete": "delete"
   },
   "dict": {
     "for": "for"
