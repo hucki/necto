@@ -9,25 +9,12 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverHeader,
-  PopoverBody,
 } from '@chakra-ui/react';
-import { useState, useEffect, BaseSyntheticEvent, ReactElement } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   CircleButton,
-  FormGroup,
-  Input,
-  Label,
-  DatePicker,
-  Select,
   ErrorMessage,
-  // RadioGroup,
 } from '../Library';
 import * as mq from '../../styles/media-queries';
 import { RRule, rrulestr } from 'rrule';
@@ -42,6 +29,7 @@ import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import { FaHouseUser, FaLink } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
+import CalendarEventForm from './CalendarEventForm';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -91,124 +79,32 @@ function CalendarEventInput({
   );
 
   const [createEvent, { error: savingError }] = useCreateEvent();
-
-  const [timeline, setTimeline] = useState<ReactElement<any, any>>();
-  const [eventTitle, setEventTitle] = useState(() => t('calendar.event.newAppointmentTitle'));
-  const [eventDuration, setEventDuration] = useState(45);
-  const [eventStartTime, setEventStartTime] = useState(dateTime);
-  const [eventEndTime, setEventEndTime] = useState(dayjs(dateTime).add(45, 'minute'));
-  const [eventType, setEventType] = useState('Appointment');
-  const [isHomeVisit, setIsHomeVisit] = useState(false);
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [isAllDay, setIsAllDay] = useState(false);
-  const [isCancelled, setIsCancelled] = useState(false);
-  const [isCancelledReason, setIsCancelledReason] = useState('');
-  const [recurringFrequency, setRecurringFrequency] =
-  useState<RecurringFrequency>('WEEKLY');
-  const [recurringInterval, setRecurringInterval] = useState<RecurringInterval>(10);
-  const [recurringRule, setRecurringRule] = useState('');
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
     // reset event State if new incoming datetime or uuid
-    setEventTitle(defaultEvent.title);
-    setEventDuration(45);
-    setEventStartTime(defaultEvent.startTime);
-    setEventEndTime(defaultEvent.endTime);
-    setEventType(defaultEvent.type);
-    setIsHomeVisit(defaultEvent.isHomeVisit);
-    setIsRecurring(defaultEvent.isRecurring);
-    setIsAllDay(defaultEvent.isAllDay);
-    setIsCancelled(defaultEvent.isCancelled);
-    setIsCancelledReason(defaultEvent.isCancelledReason);
+    setNewEvent(defaultEvent);
     setMessage(null);
-
   }, [dateTime, uuid]);
 
-  const createSubmitEvent = () => {
-    const event: Event = {
-      userId: uuid.toString(),
-      ressourceId: uuid,
-      title: eventTitle,
-      type: eventType,
-      isHomeVisit: isHomeVisit,
-      isAllDay: isAllDay,
-      isRecurring: isRecurring,
-      isCancelled: isCancelled,
-      isCancelledReason: isCancelledReason,
-      rrule: recurringRule,
-      startTime: eventStartTime,
-      endTime: eventEndTime,
-      roomId: eventType === 'RoomBooking' ? uuid.toString() : '',
-      bgColor: ressource?.bgColor || 'green',
-    };
-    return event;
+  const handleChangedEvent = (changedEvent:Event) => {
+    setNewEvent( {
+      userId: defaultEvent.userId,
+      ressourceId: defaultEvent.ressourceId,
+      title: changedEvent.title,
+      type: changedEvent.type,
+      isHomeVisit: changedEvent.isHomeVisit,
+      isAllDay: changedEvent.isAllDay,
+      isRecurring: changedEvent.isRecurring,
+      isCancelled: changedEvent.isCancelled,
+      isCancelledReason: changedEvent.isCancelledReason,
+      rrule: changedEvent.rrule,
+      startTime: changedEvent.startTime,
+      endTime: changedEvent.endTime,
+      roomId: defaultEvent.roomId,
+      bgColor: defaultEvent.bgColor
+    });
   };
-
-  function handleTitleChange(event: React.FormEvent<HTMLInputElement>) {
-    event.preventDefault();
-    setEventTitle(event.currentTarget.value);
-    setMessage(null);
-  }
-
-  function handleStartTimeChange(date: ReactDatePickerReturnType) {
-    if (date) {
-      setEventStartTime(dayjs(date.toString()));
-      setEventEndTime(dayjs(date.toString()).add(eventDuration, 'm'));
-    }
-    setMessage(null);
-  }
-
-  function handleEndTimeChange(date: ReactDatePickerReturnType) {
-    if (date) {
-      setEventEndTime(dayjs(date.toString()));
-    }
-    setMessage(null);
-  }
-
-  function onSwitchHomeVisit(event: BaseSyntheticEvent) {
-    setIsHomeVisit(event.target.checked);
-    setMessage(null);
-  }
-
-  useEffect(()=> {
-    if (isRecurring) {
-      const rrule = new RRule({
-        freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
-        tzid: 'Europe/Brussels',
-        count: recurringInterval,
-        dtstart: newEvent.startTime.toDate(),
-      });
-      setRecurringRule(rrule.toString());
-    } else {
-      setRecurringRule('');
-    }
-
-  }, [isRecurring]);
-
-  function onSwitchRecurring(event: BaseSyntheticEvent) {
-    checkOverlap();
-    setIsRecurring(event.target.checked);
-    setMessage(null);
-  }
-
-  function handleEventDurationChange(event: BaseSyntheticEvent) {
-    setEventDuration(event.target.value);
-    setEventEndTime(dayjs(eventStartTime.toString()).add(event.target.value, 'm'));
-
-    setMessage(null);
-  }
-
-  function handleRecurringIntervalChange(event: BaseSyntheticEvent) {
-    const interval =
-      event.target.value < 1
-        ? 1
-        : event.target.value > 20
-          ? 20
-          : event.target.value;
-    setRecurringInterval(interval);
-    setMessage(null);
-  }
 
   function handleSubmit() {
     if (checkOverlap()) {
@@ -217,38 +113,17 @@ function CalendarEventInput({
       );
       return false;
     }
-    const eventToSubmit = createSubmitEvent();
-    if (eventToSubmit) {
+    if (newEvent) {
       createEvent({
-        event: eventToSubmit,
+        event: newEvent,
       });
     }
     onClose();
   }
 
-  function onBuildTimelineHandler() {
-    const rrule = new RRule({
-      freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
-      tzid: 'Europe/Brussels',
-      count: recurringInterval,
-      dtstart: newEvent.startTime.toDate(),
-    });
-    setRecurringRule(rrule.toString());
-    setTimeline(
-      <ul>
-        {rrule.all().map((date) => (
-          <li key={date.toString()}>
-            {dayjs(date).format('ddd DD.MM.YYYY HH:mm')}
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
   function checkOverlap () {
-    // console.log(rowId, events)
-    const checkStart = eventStartTime;
-    const checkEnd = eventEndTime;
+    const checkStart = newEvent.startTime;
+    const checkEnd = newEvent.endTime;
     const result = rawEvents.filter(
       (event) =>
         event.ressourceId === ressource.uuid &&
@@ -308,7 +183,7 @@ function CalendarEventInput({
                   {newEvent.startTime.format('llll')}
                 </div>
               </div>
-              {isHomeVisit && (
+              {newEvent.isHomeVisit && (
                 <FaHouseUser
                   css={{
                     width: '2rem',
@@ -316,7 +191,7 @@ function CalendarEventInput({
                   }}
                 />
               )}
-              {isRecurring && (
+              {newEvent.isRecurring && (
                 <FaLink
                   css={{
                     width: '2rem',
@@ -339,7 +214,9 @@ function CalendarEventInput({
                 flexDirection: 'column'
               }}
             >
-              <FormGroup>
+              <CalendarEventForm event={newEvent} setMessage={setMessage} handleChangedEvent={handleChangedEvent}/>
+
+              {/* <FormGroup>
                 <Label htmlFor="eventTitleInput">{t('calendar.event.title')}</Label>
                 <Input
                   id="eventTitleInput"
@@ -468,7 +345,7 @@ function CalendarEventInput({
                   <PopoverHeader></PopoverHeader>
                   <PopoverBody>{timeline}</PopoverBody>
                 </PopoverContent>
-              </Popover>
+              </Popover> */}
             </ModalBody>
 
             <ModalFooter
