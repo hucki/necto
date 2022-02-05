@@ -12,7 +12,6 @@ import {
   EventModalContent,
   EventModalHeader,
 } from '../Library';
-import classes from './Calendar.module.css';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
 import { useDaysEvents } from '../../hooks/events';
@@ -36,9 +35,6 @@ interface CalendarEventInputProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-}
-interface FormElements extends HTMLFormControlsCollection {
-  eventTitleInput: HTMLInputElement;
 }
 
 function CalendarEventInput({

@@ -14,7 +14,6 @@ import {
   EventModalHeader,
   // RadioGroup,
 } from '../Library';
-import * as mq from '../../styles/media-queries';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import {
@@ -41,9 +40,6 @@ interface CalendarEventEditProps {
   readOnly: boolean;
   onOpen: () => void;
   onClose: () => void;
-}
-interface FormElements extends HTMLFormControlsCollection {
-  eventTitleInput: HTMLInputElement;
 }
 
 function CalendarEventEdit({
