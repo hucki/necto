@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
+import { jsx } from '@emotion/react';
 import { EditOutlined } from '@ant-design/icons';
 import React, { FormEvent, useState } from 'react';
 
@@ -8,42 +8,47 @@ import { useAddUser, useAuth0User } from '../../hooks/user';
 import { FormGroup, Input, Button, Label } from '../Library';
 
 interface UserProfileProps {
-  purpose?: string,
-  a0Id: string,
+  purpose?: string;
+  a0Id: string;
 }
 
-
-const UserProfile = ({purpose = 'view', a0Id}: UserProfileProps):JSX.Element => {
-  const [ createUser ] = useAddUser();
-  const [ state, setState ] = useState(purpose);
-  const { user, isLoading} = useAuth0User(a0Id);
-  const [ userState, setUserState ] = useState({
+const UserProfile = ({
+  purpose = 'view',
+  a0Id,
+}: UserProfileProps): JSX.Element => {
+  const [createUser] = useAddUser();
+  const [state, setState] = useState(purpose);
+  const { user, isLoading } = useAuth0User(a0Id);
+  const [userState, setUserState] = useState({
     a0Id: a0Id,
     firstName: user ? user.firstName : '',
     lastName: user ? user.lastName : '',
   });
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) : void => {
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
-    setUserState(currentState => ({
+    setUserState((currentState) => ({
       ...currentState,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
-  const onSubmitHandler = (e: FormEvent) : void => {
+  const onSubmitHandler = (e: FormEvent): void => {
     e.preventDefault();
-    state === 'new' ? createUser({user: userState}) : console.log('Update function coming later');
+    state === 'new'
+      ? createUser({ user: userState })
+      : console.log('Update function coming later');
     toggleEdit(e);
   };
-  const toggleEdit = (e: FormEvent) : void => {
+  const toggleEdit = (e: FormEvent): void => {
     e.preventDefault();
-    setState(currentState => currentState === 'view' ? 'edit' : 'view');
+    setState((currentState) => (currentState === 'view' ? 'edit' : 'view'));
   };
 
   if (isLoading) return <div>fetching data</div>;
   return (
     <div>
-      <form onSubmit={onSubmitHandler}
+      <form
+        onSubmit={onSubmitHandler}
         css={{
           display: 'flex',
           flexDirection: 'column',
@@ -53,7 +58,8 @@ const UserProfile = ({purpose = 'view', a0Id}: UserProfileProps):JSX.Element => 
             width: '100%',
             maxWidth: '300px',
           },
-        }}>
+        }}
+      >
         <FormGroup>
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -61,7 +67,8 @@ const UserProfile = ({purpose = 'view', a0Id}: UserProfileProps):JSX.Element => 
             type="text"
             name="firstName"
             value={userState.firstName}
-            onChange={onChangeHandler}/>
+            onChange={onChangeHandler}
+          />
         </FormGroup>
         <FormGroup>
           <Label htmlFor="lastName">Last Name</Label>
@@ -70,11 +77,19 @@ const UserProfile = ({purpose = 'view', a0Id}: UserProfileProps):JSX.Element => 
             type="text"
             name="lastName"
             value={userState.lastName}
-            onChange={onChangeHandler}/>
+            onChange={onChangeHandler}
+          />
         </FormGroup>
-        {state === 'view' ? <Button onClick={toggleEdit}><EditOutlined /></Button> : <Button type="submit">{state === 'new' ? 'Create User' : 'Save changes'}</Button>}
+        {state === 'view' ? (
+          <Button aria-label="toggle edit mode" onClick={toggleEdit}>
+            <EditOutlined />
+          </Button>
+        ) : (
+          <Button aria-label="save changes" type="submit">
+            {state === 'new' ? 'Create User' : 'Save changes'}
+          </Button>
+        )}
       </form>
-
     </div>
   );
 };
