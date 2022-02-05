@@ -8,6 +8,15 @@ import { connect } from 'react-redux';
 import { useAuth0User } from '../hooks/user';
 import UserProfile from '../components/UserProfile/UserProfile';
 import { logIn } from '../actions/actions';
+import {
+  App,
+  // Header,
+  Content,
+  // Footer,
+  ContentContainer,
+} from '../components/Library/AppLayout';
+import Sidebar from '../components/SidebarMenu/SidebarMenu';
+// import SidebarMenu from '../components/Sidebar/SidebarMenu';
 
 const { Content: AntContent } = Layout;
 
@@ -28,7 +37,16 @@ function AuthenticatedApp({
 
   return (
     <>
+      {/* <App id="app">
+        <SidebarMenu />
+        <ContentContainer>
+          <Header id="Header" />
+          <Content id="Content" />
+          <Footer id="Footer" />
+        </ContentContainer>
+      </App> */}
       <AppMenu />
+      {/* <Sidebar /> */}
       <Layout className="site-layout">
         <Header userName={!user ? 'new User' : user.firstName} />
         <AntContent style={{ margin: '0 16px' }}>
