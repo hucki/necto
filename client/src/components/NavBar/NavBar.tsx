@@ -1,12 +1,12 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
-import { Button, Tooltip } from 'antd';
-import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
 import { DatePicker } from '../../elements';
 import { changeDate } from '../../actions/actions';
 import { AppState } from '../../types/AppState';
 import classes from './NavBar.module.css';
 import dayjs, { Dayjs } from 'dayjs';
+import { Button, IconButton } from '../Library';
+import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 
 interface NavBarProps {
   currentDate: Dayjs;
@@ -35,13 +35,17 @@ const NavBar = ({ currentDate, dispatch }: NavBarProps) => {
       >
         Today
       </Button>
-      <Tooltip title="previous Day">
-        <Button icon={<CaretLeftOutlined />} onClick={prevDayHandler}></Button>
-      </Tooltip>
+      <IconButton
+        aria-label="previous day"
+        leftIcon={<FaCaretLeft />}
+        onClick={prevDayHandler}
+      ></IconButton>
       <DatePicker onChange={onChangeHandler} value={currentDate} />
-      <Tooltip title="next Day">
-        <Button icon={<CaretRightOutlined />} onClick={nextDayHandler}></Button>
-      </Tooltip>
+      <IconButton
+        aria-label="next day"
+        icon={<FaCaretRight />}
+        onClick={nextDayHandler}
+      ></IconButton>
     </div>
   );
 };
