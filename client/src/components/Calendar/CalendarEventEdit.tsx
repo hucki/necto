@@ -2,26 +2,26 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-} from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalFooter } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
   Button,
   CircleButton,
   ControlWrapper,
   ErrorMessage,
+  EventModalBody,
+  EventModalContent,
+  EventModalHeader,
   // RadioGroup,
 } from '../Library';
 import * as mq from '../../styles/media-queries';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
-import { useDaysEvents, useDeleteEvent, useUpdateEvent } from '../../hooks/events';
+import {
+  useDaysEvents,
+  useDeleteEvent,
+  useUpdateEvent,
+} from '../../hooks/events';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -56,9 +56,7 @@ function CalendarEventEdit({
   const { t } = useTranslation();
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
-  const { isLoading, isError, rawEvents } = useDaysEvents(
-    event.startTime
-  );
+  const { isLoading, isError, rawEvents } = useDaysEvents(event.startTime);
 
   const [updateEvent, { error: savingError }] = useUpdateEvent();
   const [deleteEvent] = useDeleteEvent();
@@ -66,8 +64,8 @@ function CalendarEventEdit({
   const [message, setMessage] = useState<string | null>(null);
   const [changedEvent, setChangedEvent] = useState<Event>(event);
 
-  const handleChangedEvent = (changedEvent:Event) => {
-    setChangedEvent( {
+  const handleChangedEvent = (changedEvent: Event) => {
+    setChangedEvent({
       uuid: event.uuid,
       userId: event.userId,
       ressourceId: event.ressourceId,
@@ -82,15 +80,13 @@ function CalendarEventEdit({
       startTime: changedEvent.startTime,
       endTime: changedEvent.endTime,
       roomId: event.roomId,
-      bgColor: event.bgColor
+      bgColor: event.bgColor,
     });
   };
 
   function handleSubmit() {
     if (checkOverlap()) {
-      setMessage(
-        t('error.event.overlapping')
-      );
+      setMessage(t('error.event.overlapping'));
       return false;
     }
     if (changedEvent) {
@@ -106,7 +102,7 @@ function CalendarEventEdit({
     onClose();
   }
 
-  function checkOverlap () {
+  function checkOverlap() {
     if (changedEvent) {
       const checkStart = changedEvent.startTime;
       const checkEnd = changedEvent.endTime;
@@ -114,15 +110,16 @@ function CalendarEventEdit({
         (checkEvent) =>
           checkEvent.uuid !== event.uuid &&
           checkEvent.ressourceId === event.ressourceId &&
-          ((dayjs(checkStart) >= dayjs(checkEvent.startTime) && dayjs(checkStart) <= dayjs(checkEvent.endTime)) ||
-          (dayjs(checkEnd) > dayjs(checkEvent.startTime) && dayjs(checkEnd) <= dayjs(checkEvent.endTime)))
+          ((dayjs(checkStart) >= dayjs(checkEvent.startTime) &&
+            dayjs(checkStart) <= dayjs(checkEvent.endTime)) ||
+            (dayjs(checkEnd) > dayjs(checkEvent.startTime) &&
+              dayjs(checkEnd) <= dayjs(checkEvent.endTime)))
       );
       if (!result.length) return false;
       return true;
     }
     return false;
   }
-
 
   return (
     <div>
@@ -132,34 +129,8 @@ function CalendarEventEdit({
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
         >
-          <ModalContent
-            css={{
-              display: 'grid',
-              gridTemplateRows: '1fr 6fr 1fr',
-              maxWidth: '450px',
-              borderRadius: '3px',
-              backgroundColor: 'white',
-              boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
-              margin: '20vh auto',
-              [mq.small]: {
-                width: '100%',
-                margin: '10vh auto',
-              },
-            }}
-          >
-            <ModalHeader
-              css={{
-                fontSize: '1.1rem',
-                fontWeight: 'bold',
-                color: 'white',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                backgroundColor: 'cornflowerblue',
-                padding: '0.5rem',
-              }}
-            >
+          <EventModalContent>
+            <EventModalHeader bgColor={changedEvent?.bgColor || 'green'}>
               <div>
                 <div className="modal-title">
                   {t('calendar.event.editAppointmentTitle')}
@@ -193,18 +164,13 @@ function CalendarEventEdit({
                 type="button"
                 className="modal-close"
                 onClick={onClose}
+                bgColor={changedEvent?.bgColor || 'green'}
               >
                 X
               </CircleButton>
-            </ModalHeader>
-            <ModalBody
-              css={{
-                padding: '0.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              {isReadOnly &&
+            </EventModalHeader>
+            <EventModalBody>
+              {isReadOnly && (
                 <CalendarEventView
                   eventTitle={changedEvent.title}
                   isHomeVisit={changedEvent.isHomeVisit}
@@ -212,11 +178,15 @@ function CalendarEventEdit({
                   eventStartTime={changedEvent.startTime}
                   eventEndTime={changedEvent.endTime}
                 />
-              }
-              {!isReadOnly &&
-                <CalendarEventForm event={event} setMessage={setMessage} handleChangedEvent={handleChangedEvent}/>
-              }
-            </ModalBody>
+              )}
+              {!isReadOnly && (
+                <CalendarEventForm
+                  event={event}
+                  setMessage={setMessage}
+                  handleChangedEvent={handleChangedEvent}
+                />
+              )}
+            </EventModalBody>
 
             <ModalFooter
               css={{
@@ -225,19 +195,25 @@ function CalendarEventEdit({
                 flexDirection: 'column',
               }}
             >
-              <div className="row" css={{
-                width: '100%'
-              }}>
-                {message && <ErrorMessage error={{message}}/>}
+              <div
+                className="row"
+                css={{
+                  width: '100%',
+                }}
+              >
+                {message && <ErrorMessage error={{ message }} />}
               </div>
-              <div className="row" css={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
+              <div
+                className="row"
+                css={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <ControlWrapper>
-                  <Button type="button"onClick={handleDelete} variant="danger">
+                  <Button type="button" onClick={handleDelete} variant="danger">
                     <FaTrash /> {t('button.delete')}
                   </Button>
                 </ControlWrapper>
@@ -245,17 +221,27 @@ function CalendarEventEdit({
                   <Button type="button" onClick={onClose} variant="secondary">
                     <FaTimes /> {t('button.cancel')}
                   </Button>
-                  {
-                    isReadOnly
-                      ? (<Button type="button" onClick={() => setIsReadOnly(!isReadOnly)} variant="secondary">
-                        <FaEdit /> {t('button.edit')}
-                      </Button>)
-                      : (<Button type="button" disabled={isReadOnly} onClick={handleSubmit}>{t('button.save')}</Button>)
-                  }
+                  {isReadOnly ? (
+                    <Button
+                      type="button"
+                      onClick={() => setIsReadOnly(!isReadOnly)}
+                      variant="secondary"
+                    >
+                      <FaEdit /> {t('button.edit')}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      disabled={isReadOnly}
+                      onClick={handleSubmit}
+                    >
+                      {t('button.save')}
+                    </Button>
+                  )}
                 </ControlWrapper>
               </div>
             </ModalFooter>
-          </ModalContent>
+          </EventModalContent>
         </ModalOverlay>
       </Modal>
     </div>
