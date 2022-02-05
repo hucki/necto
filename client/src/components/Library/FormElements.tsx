@@ -46,9 +46,6 @@ const RadioGroup = styled.div({
 
 // pass props like seen here:
 // https://styled-components.com/docs/basics#passed-props
-const DatePicker = styled(ReactDatePicker)`
-  border: 1px solid #f1f1f4;
-  padding: 0.4rem 0.2rem;
-`;
+const DatePicker = styled(ReactDatePicker)(inputStyles);
 
 export { Input, Textarea, FormGroup, Label, Select, DatePicker, RadioGroup };

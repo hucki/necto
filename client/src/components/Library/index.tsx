@@ -10,6 +10,7 @@ import {
 } from './FormElements';
 import { ErrorMessage } from './Messages';
 import { Button, CircleButton, ControlWrapper } from './Buttons';
+import { EventModalContent, EventModalHeader, EventModalBody } from './Modal';
 
 export {
   FullPageSpinner,
@@ -23,5 +24,8 @@ export {
   CircleButton,
   DatePicker,
   RadioGroup,
-  ControlWrapper
+  ControlWrapper,
+  EventModalHeader,
+  EventModalContent,
+  EventModalBody,
 };

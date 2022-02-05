@@ -1,5 +1,6 @@
 import styled from '@emotion/styled/macro';
 import * as colors from '../../styles/colors';
+import { BgColor } from '../../types/Colors';
 
 interface ButtonVariants {
   [key: string]: {
@@ -23,26 +24,40 @@ const buttonVariants: ButtonVariants = {
   },
 };
 
+interface CircleButtonProps {
+  bgColor: BgColor;
+}
+
+const CircleButton = styled.button(
+  {
+    borderRadius: '30px',
+    padding: '0',
+    width: '40px',
+    height: '40px',
+    lineHeight: '1',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: colors.base,
+    color: colors.text,
+    textShadow: `1px 1px 1px ${colors.text}`,
+    fontWeight: 'bold',
+    border: 'none',
+    cursor: 'pointer',
+  },
+  ({ bgColor = 'green' }: CircleButtonProps) => {
+    return {
+      color: `var(--bg${
+        bgColor[0].toUpperCase() + bgColor.substring(1)
+      }Border)`,
+    };
+  }
+);
+
 interface ButtonCallbackProps {
   variant?: string;
   disabled?: boolean;
 }
-
-const CircleButton = styled.button({
-  borderRadius: '30px',
-  padding: '0',
-  width: '40px',
-  height: '40px',
-  lineHeight: '1',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: colors.base,
-  color: colors.text,
-  border: `1px solid ${colors.gray10}`,
-  cursor: 'pointer',
-});
-
 const Button = styled.button(
   {
     padding: '10px 15px',
@@ -62,7 +77,7 @@ const Button = styled.button(
 );
 
 const ControlWrapper = styled.div({
-  display: 'flex'
+  display: 'flex',
 });
 
 export { Button, CircleButton, ControlWrapper };
