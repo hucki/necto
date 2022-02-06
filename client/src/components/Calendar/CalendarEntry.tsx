@@ -16,6 +16,7 @@ const CalendarEntryContainer = styled.div({
 interface CalendarEntryProps {
   event: Event;
   readOnly: boolean;
+  showTime?: boolean;
   onClickHandler: (event: Event) => void;
   styles: any;
 }
@@ -23,6 +24,7 @@ interface CalendarEntryProps {
 export const CalendarEntry = ({
   event,
   readOnly,
+  showTime = false,
   onClickHandler,
   styles,
 }: CalendarEntryProps) => {
@@ -30,20 +32,17 @@ export const CalendarEntry = ({
   useEffect(() => {
     setIcons([]);
     if (event.isHomeVisit)
-      setIcons((icons) => [
-        ...icons,
-        <FaHouseUser key="homeVisitIcon" />,
-      ]);
+      setIcons((icons) => [...icons, <FaHouseUser key="homeVisitIcon" />]);
     if (event.rrule !== '')
-      setIcons((icons) => [
-        ...icons,
-        <FaLink key="rruleIcon" />,
-      ]);
+      setIcons((icons) => [...icons, <FaLink key="rruleIcon" />]);
   }, [event]);
+
+  const timeString = `${dayjs(event.startTime).format('HH:mm')} -
+  ${dayjs(event.endTime).format('HH:mm')}`;
 
   return (
     <CalendarEntryContainer
-      title={event.title}
+      title={timeString + ' ' + event.title}
       key={event.uuid?.toString()}
       onClick={readOnly ? undefined : () => onClickHandler(event)}
       className={`${classes.event} ${classes['bg_' + event.bgColor]} ${
@@ -51,14 +50,13 @@ export const CalendarEntry = ({
       }`}
       style={styles}
     >
+      <div className={classes.icon_container}>
+        {icons}
+        {showTime && <span className={classes.event_time}>{timeString}</span>}
+      </div>
       <div className={classes.event_container}>
         <span className={classes.event_info}>{event.title}</span>
-        <div className={classes.icon_container}>{icons}</div>
       </div>
-      {/* <span className={classes.event_info}>
-        {dayjs(event.startTime).format('HH:mm')} -{' '}
-        {dayjs(event.endTime).format('HH:mm')}
-      </span> */}
     </CalendarEntryContainer>
   );
 };

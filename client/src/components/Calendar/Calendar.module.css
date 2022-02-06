@@ -43,9 +43,9 @@
   background-color: rgba(255, 255, 255, 0.5);
   font-size: 0.7em;
   font-weight: 300;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto;
   overflow: hidden;
   border-radius: 0 0.2rem 0 0.2rem;
   /* border-radius: 0.5rem; */
@@ -56,7 +56,15 @@
 
 .event_info {
   color: var(--secondary);
-  font-size: 1.2em;
+  font-size: 0.8rem;
+  line-height: initial;
+  text-align: center;
+  font-weight: bold;
+}
+
+.event_time {
+  color: black;
+  font-size: 0.6rem;
   line-height: initial;
   text-align: center;
 }
@@ -65,6 +73,8 @@
   grid-template-columns: 1fr auto;
 }
 .icon_container {
+  display: flex;
+  flex-direction: row;
   margin: 0;
   padding: 2px;
   font-size: 1em;
