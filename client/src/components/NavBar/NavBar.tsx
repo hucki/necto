@@ -1,12 +1,12 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
-import { DatePicker } from '../../elements';
 import { changeDate } from '../../actions/actions';
 import { AppState } from '../../types/AppState';
-import classes from './NavBar.module.css';
 import dayjs, { Dayjs } from 'dayjs';
-import { Button, IconButton } from '../Library';
+import { Button, IconButton, DatePicker } from '../Library';
+
 import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
+import { Flex } from '@chakra-ui/react';
 
 interface NavBarProps {
   currentDate: Dayjs;
@@ -14,8 +14,8 @@ interface NavBarProps {
 }
 
 const NavBar = ({ currentDate, dispatch }: NavBarProps) => {
-  function onChangeHandler(date: Dayjs | null) {
-    dispatch(changeDate(date));
+  function onChangeHandler(date: ReactDatePickerReturnType) {
+    if (date) dispatch(changeDate(dayjs(date.toString())));
   }
   function todayClickHandler() {
     dispatch(changeDate(dayjs()));
@@ -28,25 +28,33 @@ const NavBar = ({ currentDate, dispatch }: NavBarProps) => {
   }
 
   return (
-    <div className={classes.NavBar}>
+    <Flex m={2}>
       <Button
+        marginX={2}
         disabled={dayjs().isSame(dayjs(currentDate), 'day')}
         onClick={todayClickHandler}
+        variant="outline"
       >
         Today
       </Button>
       <IconButton
+        marginX={2}
         aria-label="previous day"
         leftIcon={<FaCaretLeft />}
         onClick={prevDayHandler}
-      ></IconButton>
-      <DatePicker onChange={onChangeHandler} value={currentDate} />
+      />
+      <DatePicker
+        onChange={onChangeHandler}
+        dateFormat="dd.MM.y"
+        selected={currentDate.toDate()}
+      />
       <IconButton
+        marginX={2}
         aria-label="next day"
         icon={<FaCaretRight />}
         onClick={nextDayHandler}
-      ></IconButton>
-    </div>
+      />
+    </Flex>
   );
 };
 
