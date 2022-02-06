@@ -13,6 +13,7 @@ import { useAllRooms } from '../../hooks/rooms';
 import { useAllbuildings } from '../../hooks/buildings';
 import { Building } from '../../types/Rooms';
 import { Label, Select } from '../../components/Library';
+import { Flex } from '@chakra-ui/react';
 
 interface RoomsInputProps {
   currentDate?: Dayjs;
@@ -22,11 +23,11 @@ function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
   const createBookings = () => {
     const res = [];
     const day2date = {
-      monday: '17.01.2022',
-      tuesday: '18.01.2022',
-      wednesday: '19.01.2022',
-      thursday: '20.01.2022',
-      friday: '21.01.2022',
+      monday: '2022-01-17',
+      tuesday: '2022-01-18',
+      wednesday: '2022-01-19',
+      thursday: '2022-01-20',
+      friday: '2022-01-21',
     };
     let count = 1;
     for (let l = 0; l < bookingsPerPerson.length; l++) {
@@ -52,12 +53,10 @@ function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
               isCancelledReason: '',
               rrule: '',
               startTime: dayjs(
-                day2date[person.days[i].name] + ' ' + bookings[j].start,
-                'DD.MM.YYYY HH:mm'
+                day2date[person.days[i].name] + ' ' + bookings[j].start
               ),
               endTime: dayjs(
-                day2date[person.days[i].name] + ' ' + bookings[j].end,
-                'DD.MM.YYYY HH:mm'
+                day2date[person.days[i].name] + ' ' + bookings[j].end
               ),
               createdAt: dayjs().toDate(),
               updatedAt: undefined,
@@ -87,9 +86,7 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
     buildings,
   } = useAllbuildings();
 
-  const [calendarDate, setCalendarDate] = useState(
-    dayjs('17.01.2022', 'DD.MM.YYYY')
-  );
+  const [calendarDate, setCalendarDate] = useState(dayjs('2022-01-17'));
   const [currentBuilding, setCurrentBuilding] = useState<string>(
     buildings[0]?.uuid
   );
@@ -127,7 +124,7 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
         alignItems: 'center',
       }}
     >
-      <div>
+      <Flex w={300}>
         <Label htmlFor="building">Ort</Label>
         <Select
           name="building"
@@ -140,7 +137,7 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
             </option>
           ))}
         </Select>
-      </div>
+      </Flex>
       <CalendarContainer
         readOnly={true}
         events={events}
