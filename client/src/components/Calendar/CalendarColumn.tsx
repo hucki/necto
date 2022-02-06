@@ -54,13 +54,12 @@ function CalendarColumn({
 
   function onClickCalendarEvent(event: Event) {
     setClickedEvent(event);
-  };
+  }
 
   function closeClickedEventHandler() {
     setClickedEvent(null);
     onClose();
-  };
-
+  }
 
   const renderCustomEvent = (event: Event, styles: ItemStyle) => {
     if (!event.uuid) event.uuid = uuid();
@@ -71,6 +70,7 @@ function CalendarColumn({
         event={event}
         onClickHandler={onClickCalendarEvent}
         styles={styles}
+        showTime
       />
     );
   };

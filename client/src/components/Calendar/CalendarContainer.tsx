@@ -30,7 +30,7 @@ function CalendarContainer({
   currentDate,
   daysRange = [currentDayjs, currentDayjs],
   readOnly = false,
-  columnHeaderFormat = 'dddd DD.MM.'
+  columnHeaderFormat = 'dddd DD.MM.',
 }: CalendarInputProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [clickedId, setClickedId] = useState<string | undefined>(undefined);
@@ -153,7 +153,7 @@ function CalendarContainer({
       {clickedId && (
         <CalendarEventInput
           uuid={clickedId}
-          ressource={ressources.filter(r => r.uuid === clickedId)[0]}
+          ressource={ressources.filter((r) => r.uuid === clickedId)[0]}
           dateTime={clickedDateTime}
           isOpen={isOpen}
           onOpen={onOpen}

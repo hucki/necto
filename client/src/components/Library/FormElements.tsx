@@ -4,6 +4,7 @@ import ReactDatePicker from 'react-datepicker';
 const inputStyles = {
   border: '1px solid #f1f1f4',
   padding: '0.4rem 0.2rem',
+  width: '100%',
 };
 
 const Label = styled.label(inputStyles, {
