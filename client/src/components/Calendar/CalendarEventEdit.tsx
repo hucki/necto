@@ -2,11 +2,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalOverlay, ModalFooter } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalFooter, IconButton } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
   Button,
-  CircleButton,
   ControlWrapper,
   ErrorMessage,
   EventModalBody,
@@ -156,14 +155,11 @@ function CalendarEventEdit({
                   }}
                 />
               )}
-              <CircleButton
-                type="button"
-                className="modal-close"
+              <IconButton
+                aria-label="close modal"
+                icon={<FaTimes />}
                 onClick={onClose}
-                bgColor={changedEvent?.bgColor || 'green'}
-              >
-                X
-              </CircleButton>
+              />
             </EventModalHeader>
             <EventModalBody>
               {isReadOnly && (
@@ -212,9 +208,10 @@ function CalendarEventEdit({
                   <Button
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
+                    colorScheme="red"
+                    size="sm"
                     type="button"
                     onClick={handleDelete}
-                    variant="danger"
                   >
                     {t('button.delete')}
                   </Button>
@@ -224,8 +221,10 @@ function CalendarEventEdit({
                     leftIcon={<FaTimes />}
                     aria-label="cancel edit"
                     type="button"
+                    size="sm"
                     onClick={onClose}
-                    variant="secondary"
+                    variant="outline"
+                    colorScheme="blue"
                   >
                     {t('button.cancel')}
                   </Button>
@@ -235,7 +234,8 @@ function CalendarEventEdit({
                       aria-label="edit event"
                       type="button"
                       onClick={() => setIsReadOnly(!isReadOnly)}
-                      variant="secondary"
+                      colorScheme="blue"
+                      size="sm"
                     >
                       {t('button.edit')}
                     </Button>
@@ -245,6 +245,8 @@ function CalendarEventEdit({
                       type="button"
                       disabled={isReadOnly}
                       onClick={handleSubmit}
+                      size="sm"
+                      colorScheme="blue"
                     >
                       {t('button.save')}
                     </Button>

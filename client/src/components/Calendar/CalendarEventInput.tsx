@@ -2,11 +2,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalOverlay, ModalFooter } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalFooter, IconButton } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import {
   Button,
-  CircleButton,
   ErrorMessage,
   EventModalBody,
   EventModalContent,
@@ -162,14 +161,11 @@ function CalendarEventInput({
                   }}
                 />
               )}
-              <CircleButton
-                type="button"
-                className="modal-close"
+              <IconButton
+                aria-label="close modal"
+                icon={<FaTimes />}
                 onClick={onClose}
-                bgColor={newEvent?.bgColor || 'green'}
-              >
-                X
-              </CircleButton>
+              />
             </EventModalHeader>
             <EventModalBody>
               <CalendarEventForm
@@ -207,13 +203,17 @@ function CalendarEventInput({
                   aria-label="close modal"
                   type="button"
                   onClick={onClose}
-                  variant="secondary"
+                  size="sm"
+                  colorScheme="blue"
+                  variant="outline"
                 >
                   {t('button.close')}
                 </Button>
                 <Button
                   aria-label="save changes"
                   type="button"
+                  size="sm"
+                  colorScheme="blue"
                   onClick={handleSubmit}
                 >
                   {t('button.save')}
