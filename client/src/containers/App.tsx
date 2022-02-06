@@ -9,6 +9,7 @@ import AuthenticatedApp from './AuthenticatedApp';
 import UnauthenticatedApp from './UnauthenticatedApp';
 import { useAuth0 } from '@auth0/auth0-react';
 import { FullPageSpinner } from '../components/Library';
+import { ChakraProvider } from '@chakra-ui/react';
 
 declare global {
   interface Window {
@@ -28,16 +29,18 @@ function App() {
   if (isLoading) return <FullPageSpinner />;
   return (
     <Provider store={store}>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Router>
-          {isAuthenticated && user?.sub ? (
-            <AuthenticatedApp a0Id={user?.sub} />
-          ) : (
-            <UnauthenticatedApp />
-          )}
-        </Router>
-      </Layout>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ChakraProvider>
+        <Layout style={{ minHeight: '100vh' }}>
+          <Router>
+            {isAuthenticated && user?.sub ? (
+              <AuthenticatedApp a0Id={user?.sub} />
+            ) : (
+              <UnauthenticatedApp />
+            )}
+          </Router>
+        </Layout>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </ChakraProvider>
     </Provider>
   );
 }
