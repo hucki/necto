@@ -10,6 +10,7 @@ import TeamCalendar from '../../views/TeamCalendar/TeamCalendar';
 import Rooms from '../../views/Rooms/Rooms';
 import TeamSettings from '../../views/TeamSettings/TeamSettings';
 import EmployeeSettings from '../../views/EmployeeSettings/EmployeeSettings';
+import Patients from '../../views/Patients/Patients';
 
 interface DashboardInputProps {
   a0Id: string;
@@ -29,6 +30,9 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
         </Route>
         <Route path="/rooms">
           <Rooms />
+        </Route>
+        <Route path="/patients">
+          <Patients />
         </Route>
         <Route path="/teamcal">
           <TeamCalendar />
