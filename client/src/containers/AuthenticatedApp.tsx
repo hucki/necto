@@ -1,22 +1,20 @@
 import React, { Dispatch, useEffect } from 'react';
 import { Layout } from 'antd';
-import AppMenu from '../components/AppMenu/AppMenu';
-import Header from '../components/Header/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
-import Footer from '../components/Footer/Footer';
 import { connect } from 'react-redux';
 import { useAuth0User } from '../hooks/user';
 import UserProfile from '../components/UserProfile/UserProfile';
 import { logIn } from '../actions/actions';
 import {
   App,
-  // Header,
+  Header,
   Content,
-  // Footer,
+  Footer,
   ContentContainer,
 } from '../components/Library/AppLayout';
-import Sidebar from '../components/SidebarMenu/SidebarMenu';
-// import SidebarMenu from '../components/Sidebar/SidebarMenu';
+import SidebarMenu from '../components/SidebarMenu/SidebarMenu';
+import UserInfo from '../components/UserInfo/UserInfo';
+import NavBar from '../components/NavBar/NavBar';
 
 const { Content: AntContent } = Layout;
 
@@ -37,29 +35,36 @@ function AuthenticatedApp({
 
   return (
     <>
-      {/* <App id="app">
+      <App id="app">
         <SidebarMenu />
         <ContentContainer>
-          <Header id="Header" />
-          <Content id="Content" />
-          <Footer id="Footer" />
+          <Header>
+            <UserInfo userName={user?.firstName || 'new User'} />
+            <NavBar />
+          </Header>
+          <Content id="Content" bg="whitesmoke" p={2}>
+            {isError ? (
+              <div>Error connecting to backend. Please try again later!</div>
+            ) : !user ? (
+              <UserProfile purpose="new" a0Id={a0Id} />
+            ) : (
+              <Dashboard style={{ height: '100%' }} a0Id={a0Id} />
+            )}
+          </Content>
+          <Footer>
+            <p>
+              made with{' '}
+              <span role="img" aria-label="pineapple">
+                🍍
+              </span>
+              <span role="img" aria-label="pizza">
+                🍕
+              </span>{' '}
+              by Hucki
+            </p>
+          </Footer>
         </ContentContainer>
-      </App> */}
-      <AppMenu />
-      {/* <Sidebar /> */}
-      <Layout className="site-layout">
-        <Header userName={!user ? 'new User' : user.firstName} />
-        <AntContent style={{ margin: '0 16px' }}>
-          {isError ? (
-            <div>Error connecting to backend. Please try again later!</div>
-          ) : !user ? (
-            <UserProfile purpose="new" a0Id={a0Id} />
-          ) : (
-            <Dashboard style={{ height: '100%' }} a0Id={a0Id} />
-          )}
-        </AntContent>
-        <Footer />
-      </Layout>
+      </App>
     </>
   );
 }
