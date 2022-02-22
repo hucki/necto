@@ -8,9 +8,18 @@ const Button = styled(ChakraButton)();
 
 const NavigationButton = styled(ChakraButton)({
   width: '100%',
+  borderRadius: '0',
+  ':focus': {
+    boxShadow: 'none',
+  },
 });
 
-const IconButton = styled(ChakraIconButton)();
+const IconButton = styled(ChakraIconButton)({
+  borderRadius: '0',
+  ':focus': {
+    boxShadow: 'none',
+  },
+});
 
 const ControlWrapper = styled.div({
   display: 'flex',
