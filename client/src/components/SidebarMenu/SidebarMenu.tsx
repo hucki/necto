@@ -1,105 +1,117 @@
-import React, { BaseSyntheticEvent, Dispatch } from 'react';
+import React, { Dispatch } from 'react';
+import { IconButton, useDisclosure, Divider } from '@chakra-ui/react';
 import {
-  TeamOutlined,
-  SettingOutlined,
-  HomeOutlined,
-  LogoutOutlined,
-  ProfileOutlined,
-  FolderOpenOutlined,
-} from '@ant-design/icons';
-import { Menu } from 'antd';
-// import classes from './AppMenu.module.css';
+  RiCalendarEventFill,
+  RiHomeFill,
+  RiLogoutBoxLine,
+  RiMenuFoldFill,
+  RiMenuUnfoldFill,
+  RiProfileLine,
+  RiTeamFill,
+  RiUserSettingsFill,
+  RiUserSettingsLine,
+} from 'react-icons/ri';
 import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
 import { useHistory, useLocation } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import { AppState } from '../../types/AppState';
-import { LocationDescriptor } from 'history';
-import { Sidebar } from '../Library';
+import { NavigationButton, Sidebar } from '../Library';
 
 interface SidebarProps {
-  // state: 'fullyVisible' | 'collapsedToIcons' | 'invisible';
   dispatch: Dispatch<any>;
 }
 
 const SidebarMenu = ({ dispatch }: SidebarProps) => {
   const { pathname: currentView } = useLocation();
   const history = useHistory();
-  const onClickHandler = (e: BaseSyntheticEvent) => {
-    console.log(e);
-    // history.push(e.key);
-    // dispatch(switchView(e.key));
+  const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
+  const onClickHandler = (route: string) => {
+    history.push(route);
+    dispatch(switchView(route));
   };
   const { logout } = useAuth0();
   // TODO: add route to /personal again
   return (
-    <Sidebar>
-      <h1>Menu</h1>
-      <ul>
-        <li key="/" onClick={onClickHandler}>
-          {' '}
-          Home
-        </li>
-        <li key="/teamcal" onClick={onClickHandler}>
-          {' '}
-          teamcal
-        </li>
-      </ul>
-      {/*
-      <Menu theme="dark" defaultSelectedKeys={[currentView]} mode="inline">
-        <Menu.Item key="/" icon={<HomeOutlined />} onClick={onClickHandler}>
-          {' '}
-          Home
-        </Menu.Item>
-        <Menu.Item
-          key="/rooms"
-          icon={<FolderOpenOutlined />}
-          onClick={onClickHandler}
-        >
-          {' '}
-          Rooms{' '}
-        </Menu.Item>
-        <Menu.Item
-          key="/teamcal"
-          icon={<TeamOutlined />}
-          onClick={onClickHandler}
-        >
-          {' '}
-          Team Calendar{' '}
-        </Menu.Item>
-        <Menu.Item
-          key="/teamsettings"
-          icon={<SettingOutlined />}
-          onClick={onClickHandler}
-        >
-          {' '}
-          Team Settings
-        </Menu.Item>
-        <Menu.Item
-          key="/employeesettings"
-          icon={<SettingOutlined />}
-          onClick={onClickHandler}
-        >
-          {' '}
-          Employee Settings
-        </Menu.Item>
-        <Menu.Item
-          key="/profile"
-          icon={<ProfileOutlined />}
-          onClick={onClickHandler}
-        >
-          {' '}
-          Profile
-        </Menu.Item>
-        <Menu.Item
-          key="/logout"
-          icon={<LogoutOutlined />}
-          onClick={() => logout({ returnTo: window.location.origin })}
-        >
-          {' '}
-          LogOut
-        </Menu.Item>
-      </Menu> */}
+    <Sidebar collapsed={!isOpen}>
+      <IconButton
+        aria-label="Open Menu"
+        icon={isOpen ? <RiMenuFoldFill /> : <RiMenuUnfoldFill />}
+        onClick={onToggle}
+      />
+      <NavigationButton
+        variant="ghost"
+        colorScheme="purple"
+        aria-label="Home"
+        leftIcon={<RiHomeFill />}
+        key="/"
+        onClick={() => onClickHandler('/')}
+      >
+        {isOpen ? 'Home' : null}
+      </NavigationButton>
+      <Divider />
+      <NavigationButton
+        variant="ghost"
+        colorScheme="teal"
+        aria-label="Team Calendar"
+        leftIcon={<RiTeamFill />}
+        key="/teamcal"
+        onClick={() => onClickHandler('/teamcal')}
+      >
+        {isOpen ? 'Team' : null}
+      </NavigationButton>
+      <NavigationButton
+        colorScheme="teal"
+        variant="ghost"
+        aria-label="Rooms"
+        leftIcon={<RiCalendarEventFill />}
+        key="/rooms"
+        onClick={() => onClickHandler('/rooms')}
+      >
+        {isOpen ? 'Rooms' : null}
+      </NavigationButton>
+      <Divider />
+      <NavigationButton
+        variant="ghost"
+        colorScheme="gray"
+        aria-label="Team Settings"
+        leftIcon={<RiUserSettingsFill />}
+        key="/teamsettings"
+        onClick={() => onClickHandler('/teamsettings')}
+      >
+        {isOpen ? 'Team Settings' : null}
+      </NavigationButton>
+      <NavigationButton
+        colorScheme="gray"
+        variant="ghost"
+        aria-label="Employee Settings"
+        leftIcon={<RiUserSettingsLine />}
+        key="/employeesettings"
+        onClick={() => onClickHandler('/employeesettings')}
+      >
+        {isOpen ? 'Employee Settings' : null}
+      </NavigationButton>
+      <NavigationButton
+        colorScheme="gray"
+        variant="ghost"
+        aria-label="Profile"
+        leftIcon={<RiProfileLine />}
+        key="/profile"
+        onClick={() => onClickHandler('/profile')}
+      >
+        {isOpen ? 'Profile' : null}
+      </NavigationButton>
+      <Divider />
+      <NavigationButton
+        key="/logout"
+        colorScheme="orange"
+        onClick={() => logout({ returnTo: window.location.origin })}
+        variant="ghost"
+        aria-label="Logout"
+        leftIcon={<RiLogoutBoxLine />}
+      >
+        {isOpen ? 'Logout' : null}
+      </NavigationButton>
     </Sidebar>
   );
 };
