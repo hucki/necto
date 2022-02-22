@@ -2,11 +2,12 @@ import express from 'express';
 import * as userController from '../controllers/user.controller';
 import * as employeeController from '../controllers/employee.controller';
 import * as teamController from '../controllers/team.controller';
-import * as employeeToTeamController from '../controllers/employeeToteam.controller';
+import * as employeeToTeamController from '../controllers/employeeToTeam.controller';
 import * as roomController from '../controllers/room.controller';
 import * as buildingController from '../controllers/building.controller';
 import * as contractController from '../controllers/contract.controller';
 import * as eventController from '../controllers/event.controller';
+import * as patientController from '../controllers/patient.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
 import * as userSettingsController from '../controllers/userSettings.controller';
@@ -72,6 +73,15 @@ router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 router.post('/events', eventController.addEvent);
 router.patch('/events/:eventId', eventController.updateEvent);
 router.delete('/events/:eventId', eventController.deleteEvent);
+
+// patient routes
+//router.get('/patients/:eventId', eventController.getPatients);
+router.get('/patients/a', patientController.getAllPatients);
+router.get('/patients/w/:year/:week', patientController.getPatientsEvents);
+
+router.post('/patients', patientController.addPatient);
+router.patch('/patients/:patientId', patientController.updatePatient);
+// router.delete('/patients/:patientId', patientController.deletePatient);
 
 // settings routes
 router.post('/settings/app', appSettingsController.addAppSettings);
