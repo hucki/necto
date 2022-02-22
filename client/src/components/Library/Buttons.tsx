@@ -6,10 +6,14 @@ import styled from '@emotion/styled/macro';
 
 const Button = styled(ChakraButton)();
 
+const NavigationButton = styled(ChakraButton)({
+  width: '100%',
+});
+
 const IconButton = styled(ChakraIconButton)();
 
 const ControlWrapper = styled.div({
   display: 'flex',
 });
 
-export { Button, IconButton, ControlWrapper };
+export { Button, NavigationButton, IconButton, ControlWrapper };
