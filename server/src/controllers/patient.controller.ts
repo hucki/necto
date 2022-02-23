@@ -3,7 +3,6 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
-import { Prisma } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
@@ -39,7 +38,7 @@ export const addPatient = async (
         addPayFreedFrom: req.body.addPayFreedFrom,
         addPayFreedUntil: req.body.addPayFreedUntil,
         validUntil: req.body.validUntil,
-        companyId: '0',
+        companyId: req.body.companyId,
         tenantId: tenantId,
       },
     });
@@ -87,8 +86,8 @@ export const updatePatient = async (
         addPayFreedFrom: req.body.addPayFreedFrom,
         addPayFreedUntil: req.body.addPayFreedUntil,
         validUntil: req.body.validUntil,
-        companyId: '0',
-        tenantId: tenantId,
+        // companyId: '0',
+        // tenantId: tenantId,
       },
     });
     res.json(updatedPatient);

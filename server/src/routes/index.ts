@@ -12,6 +12,7 @@ import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
 import * as userSettingsController from '../controllers/userSettings.controller';
 import * as tenantController from '../controllers/tenant.controller';
+import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
 import { jwtCheck } from '../middleware/authentication';
 const router = express.Router();
@@ -93,5 +94,8 @@ router.post('/settings/user', userSettingsController.addUserSettings);
 // tenant routes
 router.get('/tenants', tenantController.getAllTenants);
 router.post('/tenant', tenantController.addTenant);
+
+// company routes
+router.get('/companies', companyController.getAllCompanies);
 
 export { router, errorRouter };
