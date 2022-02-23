@@ -81,6 +81,7 @@ export const initialState = {
     currentDate: dayjs(),
   },
   currentTeam: null,
+  currentCompany: null,
   settings: {
     hoursInterval: [7, 19],
     currentView: 'Appointments',
