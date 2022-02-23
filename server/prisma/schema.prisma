@@ -67,6 +67,7 @@ model Employee {
   uuid        String           @id @default(uuid()) @db.Uuid
   firstName   String?          @db.VarChar(64)
   lastName    String?          @db.VarChar(64)
+  alias       String?          @db.VarChar(64)
   street      String?          @db.VarChar(64)
   zip         String?          @db.VarChar(10)
   city        String?          @db.VarChar(64)
