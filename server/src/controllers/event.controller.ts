@@ -35,6 +35,7 @@ export const addEvent = async (
         bgColor: req.body.bgColor,
         tenantId: tenantId,
         roomId: req.body.roomId ? req.body.roomId : null,
+        patientId: req.body.patientId ? req.body.patientId : null,
       },
     });
     res.json(createdEvent);
@@ -78,6 +79,7 @@ export const updateEvent = async (
         bgColor: req.body.bgColor,
         tenantId: tenantId,
         roomId: req.body.roomId ? req.body.roomId : null,
+        patientId: req.body.patientId ? req.body.patientId : null,
       },
     });
     res.json(updatedEvent);
@@ -144,6 +146,9 @@ export const getDaysEvents = async (
           },
         ],
       },
+      include: {
+        patient: true
+      }
     });
     res.json(events);
     res.status(200);
