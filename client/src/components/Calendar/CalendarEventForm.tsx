@@ -26,6 +26,7 @@ import { registerLocale } from 'react-datepicker';
 import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import de from 'date-fns/locale/de';
+import { useAllPatients } from '../../hooks/patient';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -42,9 +43,11 @@ function CalendarEventForm({
   handleChangedEvent,
 }: CalendarEventFormProps): JSX.Element {
   const { t } = useTranslation();
+  const { isLoading: isLoadingPatients, error, patients } = useAllPatients();
 
   // Form state
   const [eventTitle, setEventTitle] = useState(event.title);
+  const [eventPatientId, setEventPatientId] = useState(event.patientId);
   const [eventDuration, setEventDuration] = useState(
     dayjs(event.endTime).diff(dayjs(event.startTime), 'm')
   );
@@ -101,6 +104,10 @@ function CalendarEventForm({
       dayjs(eventStartTime.toString()).add(event.target.value, 'm')
     );
 
+    setMessage(null);
+  }
+  function handleEventPatientIdChange(event: BaseSyntheticEvent) {
+    setEventPatientId(event.target.value);
     setMessage(null);
   }
 
@@ -162,6 +169,7 @@ function CalendarEventForm({
       rrule: recurringRule,
       startTime: eventStartTime,
       endTime: eventEndTime,
+      patientId: eventPatientId,
       roomId: event.roomId,
       bgColor: event.bgColor,
     });
@@ -180,6 +188,18 @@ function CalendarEventForm({
 
   return (
     <div>
+      <FormGroup>
+        <Label htmlFor="patient">{t('calendar.event.patient')}</Label>
+        <Select
+          id="patient"
+          name="patient"
+          value={eventPatientId}
+          onChange={handleEventPatientIdChange}
+        >
+          {patients.map(p => <option key={p.uuid} value={p.uuid}>{p.lastName + ', ' + p.firstName}</option>)}
+
+        </Select>
+      </FormGroup>
       <FormGroup>
         <Label htmlFor="eventTitleInput">{t('calendar.event.title')}</Label>
         <Input
