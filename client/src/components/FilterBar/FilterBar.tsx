@@ -34,7 +34,6 @@ const NavBar = ({
     companies,
   } = useAllCompanies();
 
-  console.log({ currentTeam, currentCompany });
   useEffect(() => {
     if (!isLoadingTeams && teams.length) {
       dispatch(setCurrentTeam(teams[0]));
@@ -43,7 +42,6 @@ const NavBar = ({
 
   useEffect(() => {
     if (!isLoadingCompanies && companies.length) {
-      console.log({ company: companies[0] });
       dispatch(setCurrentCompany(companies[0]));
     }
   }, [isLoadingCompanies]);
