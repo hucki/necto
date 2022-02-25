@@ -11,6 +11,7 @@ export function CalendarEventView({
   isRecurring,
   eventStartTime,
   eventEndTime,
+  eventPatient,
 }:CalenderEventViewProps) {
 
   const {t} = useTranslation();
@@ -18,6 +19,7 @@ export function CalendarEventView({
     display: 'grid',
     gridTemplateColumns: '1fr 3fr'
   }}>
+    <div>{t('calendar.event.patient') + ': '}</div><div css={{fontWeight: 'bold'}}>{eventPatient ? eventPatient.lastName + ', ' +  eventPatient.firstName : 'no Patient'}</div>
     <div>{t('calendar.event.title') + ': '}</div><div css={{fontWeight: 'bold'}}>{ eventTitle}</div>
     <div>{t('calendar.event.homeVisit') + ': '}</div><div css={{fontWeight: 'bold'}}>{isHomeVisit && <FaCheck /> }</div>
     <div>{t('calendar.event.recurringAppointment') + ': '}</div><div css={{fontWeight: 'bold'}}>{isRecurring && <FaCheck /> }</div>

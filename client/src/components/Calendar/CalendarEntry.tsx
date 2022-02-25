@@ -40,6 +40,8 @@ export const CalendarEntry = ({
   const timeString = `${dayjs(event.startTime).format('HH:mm')} -
   ${dayjs(event.endTime).format('HH:mm')}`;
 
+  const entryTitle = event.patient ? event.patient.lastName + ', ' +  event.patient.firstName : event.title;
+
   return (
     <CalendarEntryContainer
       title={timeString + ' ' + event.title}
@@ -55,7 +57,7 @@ export const CalendarEntry = ({
         {showTime && <span className={classes.event_time}>{timeString}</span>}
       </div>
       <div className={classes.event_container}>
-        <span className={classes.event_info}>{event.title}</span>
+        <span className={classes.event_info}>{entryTitle}</span>
       </div>
     </CalendarEntryContainer>
   );

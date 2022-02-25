@@ -59,6 +59,8 @@ function CalendarEventInput({
     isAllDay: false,
     isCancelled: false,
     isCancelledReason: '',
+    roomId: '',
+    patientId: ''
   };
   const [newEvent, setNewEvent] = useState<Event>(defaultEvent);
   const { isLoading, isError, rawEvents } = useDaysEvents(dateTime);
@@ -73,6 +75,7 @@ function CalendarEventInput({
   }, [dateTime, uuid]);
 
   const handleChangedEvent = (changedEvent: Event) => {
+    console.log({changedEvent});
     setNewEvent({
       userId: defaultEvent.userId,
       ressourceId: defaultEvent.ressourceId,
@@ -86,6 +89,7 @@ function CalendarEventInput({
       rrule: changedEvent.rrule,
       startTime: changedEvent.startTime,
       endTime: changedEvent.endTime,
+      patientId: changedEvent.patientId,
       roomId: defaultEvent.roomId,
       bgColor: defaultEvent.bgColor,
     });

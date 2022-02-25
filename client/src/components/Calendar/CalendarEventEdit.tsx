@@ -74,6 +74,7 @@ function CalendarEventEdit({
       rrule: changedEvent.rrule,
       startTime: changedEvent.startTime,
       endTime: changedEvent.endTime,
+      patientId: changedEvent.patientId,
       roomId: event.roomId,
       bgColor: event.bgColor,
     });
@@ -169,6 +170,7 @@ function CalendarEventEdit({
                   isRecurring={changedEvent.isRecurring}
                   eventStartTime={changedEvent.startTime}
                   eventEndTime={changedEvent.endTime}
+                  eventPatient={changedEvent.patient}
                 />
               )}
               {!isReadOnly && (

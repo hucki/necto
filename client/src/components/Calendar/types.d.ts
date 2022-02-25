@@ -4,6 +4,7 @@ type CalenderEventViewProps = {
   isRecurring: Event['isRecurring']
   eventStartTime: Event['startTime']
   eventEndTime: Event['endTime']
+  eventPatient: Event['patient']
 }
 
 type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;

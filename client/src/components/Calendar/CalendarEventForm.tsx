@@ -184,6 +184,7 @@ function CalendarEventForm({
     recurringRule,
     eventStartTime,
     eventEndTime,
+    eventPatientId
   ]);
 
   return (
@@ -196,6 +197,7 @@ function CalendarEventForm({
           value={eventPatientId}
           onChange={handleEventPatientIdChange}
         >
+          <option key="noPatient" value="">No {t('calendar.event.patient')}</option>
           {patients.map(p => <option key={p.uuid} value={p.uuid}>{p.lastName + ', ' + p.firstName}</option>)}
 
         </Select>

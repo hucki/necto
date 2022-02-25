@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { BgColor } from './Colors';
+import { Patient } from './Patient';
 
 export type Event = {
   uuid?: string;
@@ -20,6 +21,7 @@ export type Event = {
   createdAt?: Date;
   updatedAt?: Date;
   bgColor?: BgColor;
+  patient?: Patient;
 };
 
 export type Appointment = {
