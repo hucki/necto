@@ -4,6 +4,7 @@
       "newAppointmentTitle": "Neuer Termin",
       "editAppointmentTitle": "Termin",
       "title": "Title",
+      "patient": "Patient",
       "duration": "Dauer",
       "homeVisit": "Hausbesuch",
       "recurringAppointment": "Terminserie",
