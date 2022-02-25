@@ -4,7 +4,7 @@ import { Spinner } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
 import FilterBar from '../../components/FilterBar/FilterBar';
-import { PatientsList } from '../../components/Patients/PatientsList';
+import PatientsList from '../../components/Patients/PatientsList';
 import { useAllPatients } from '../../hooks/patient';
 
 function Patients(): JSX.Element {
@@ -30,7 +30,7 @@ function Patients(): JSX.Element {
         hasBuildingFilter={false}
         hasTeamsFilter={false}
       />
-      <PatientsList patients={patients} />
+      <PatientsList patients={patients} currentCompany={undefined} />
     </div>
   );
 }
