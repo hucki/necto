@@ -21,6 +21,7 @@
     "close": "schliessen",
     "save": "speichern",
     "cancel": "abbrechen",
+    "cancelEvent": "absagen",
     "preview": "Vorschau",
     "edit": "bearbeiten",
     "delete": "löschen"
