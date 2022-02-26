@@ -23,6 +23,7 @@ import { EmployeeRessource, Room } from '../../types/Ressource';
 import { FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
 import CalendarEventForm from './CalendarEventForm';
+import { checkOverlap } from '../../helpers/eventChecker';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -60,7 +61,7 @@ function CalendarEventInput({
     isCancelled: false,
     isCancelledReason: '',
     roomId: '',
-    patientId: ''
+    patientId: '',
   };
   const [newEvent, setNewEvent] = useState<Event>(defaultEvent);
   const { isLoading, isError, rawEvents } = useDaysEvents(dateTime);
@@ -75,7 +76,7 @@ function CalendarEventInput({
   }, [dateTime, uuid]);
 
   const handleChangedEvent = (changedEvent: Event) => {
-    console.log({changedEvent});
+    console.log({ changedEvent });
     setNewEvent({
       userId: defaultEvent.userId,
       ressourceId: defaultEvent.ressourceId,
@@ -96,7 +97,8 @@ function CalendarEventInput({
   };
 
   function handleSubmit() {
-    if (checkOverlap()) {
+    if (checkOverlap({ eventToCheck: newEvent, eventList: rawEvents })) {
+      // if (checkOverlap()) {
       setMessage(t('error.event.overlapping'));
       return false;
     }
@@ -106,21 +108,6 @@ function CalendarEventInput({
       });
     }
     onClose();
-  }
-
-  function checkOverlap() {
-    const checkStart = newEvent.startTime;
-    const checkEnd = newEvent.endTime;
-    const result = rawEvents.filter(
-      (event) =>
-        event.ressourceId === ressource.uuid &&
-        ((dayjs(checkStart) >= dayjs(event.startTime) &&
-          dayjs(checkStart) <= dayjs(event.endTime)) ||
-          (dayjs(checkEnd) >= dayjs(event.startTime) &&
-            dayjs(checkEnd) <= dayjs(event.endTime)))
-    );
-    if (!result.length) return false;
-    return true;
   }
 
   return (
@@ -177,6 +164,7 @@ function CalendarEventInput({
                 setMessage={setMessage}
                 handleChangedEvent={handleChangedEvent}
               />
+              {message && <ErrorMessage error={{ message }} />}
             </EventModalBody>
             <ModalFooter
               css={{
@@ -185,14 +173,6 @@ function CalendarEventInput({
                 flexDirection: 'column',
               }}
             >
-              <div
-                className="row"
-                css={{
-                  width: '100%',
-                }}
-              >
-                {message && <ErrorMessage error={{ message }} />}
-              </div>
               <div
                 className="row"
                 css={{

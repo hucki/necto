@@ -29,6 +29,7 @@ import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
 import { CalendarEventView } from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
 import de from 'date-fns/locale/de';
+import { checkOverlap } from '../../helpers/eventChecker';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -81,7 +82,7 @@ function CalendarEventEdit({
   };
 
   function handleSubmit() {
-    if (checkOverlap()) {
+    if (checkOverlap({ eventToCheck: changedEvent, eventList: rawEvents })) {
       setMessage(t('error.event.overlapping'));
       return false;
     }
@@ -96,25 +97,6 @@ function CalendarEventEdit({
   function handleDelete() {
     if (event?.uuid) deleteEvent({ uuid: event.uuid });
     onClose();
-  }
-
-  function checkOverlap() {
-    if (changedEvent) {
-      const checkStart = changedEvent.startTime;
-      const checkEnd = changedEvent.endTime;
-      const result = rawEvents.filter(
-        (checkEvent) =>
-          checkEvent.uuid !== event.uuid &&
-          checkEvent.ressourceId === event.ressourceId &&
-          ((dayjs(checkStart) >= dayjs(checkEvent.startTime) &&
-            dayjs(checkStart) <= dayjs(checkEvent.endTime)) ||
-            (dayjs(checkEnd) > dayjs(checkEvent.startTime) &&
-              dayjs(checkEnd) <= dayjs(checkEvent.endTime)))
-      );
-      if (!result.length) return false;
-      return true;
-    }
-    return false;
   }
 
   return (
@@ -180,6 +162,7 @@ function CalendarEventEdit({
                   handleChangedEvent={handleChangedEvent}
                 />
               )}
+              {message && <ErrorMessage error={{ message }} />}
             </EventModalBody>
 
             <ModalFooter
@@ -189,14 +172,6 @@ function CalendarEventEdit({
                 flexDirection: 'column',
               }}
             >
-              <div
-                className="row"
-                css={{
-                  width: '100%',
-                }}
-              >
-                {message && <ErrorMessage error={{ message }} />}
-              </div>
               <div
                 className="row"
                 css={{
