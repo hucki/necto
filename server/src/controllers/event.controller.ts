@@ -17,7 +17,7 @@ export const addEvent = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log({req: req.body})
+    console.log({ req: req.body });
     const createdEvent = await prisma.event.create({
       data: {
         userId: req.body.userId,
@@ -46,7 +46,6 @@ export const addEvent = async (
   }
 };
 
-
 /**
  * update one Event
  *  @param {Event} req.body
@@ -57,11 +56,11 @@ export const updateEvent = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log({req: req.body, eId: req.params.eventId})
+    console.log({ req: req.body, eId: req.params.eventId });
     const eventId = req.params.eventId;
     const updatedEvent = await prisma.event.update({
       where: {
-        uuid: eventId
+        uuid: eventId,
       },
       data: {
         userId: req.body.userId,
@@ -147,8 +146,8 @@ export const getDaysEvents = async (
         ],
       },
       include: {
-        patient: true
-      }
+        patient: true,
+      },
     });
     res.json(events);
     res.status(200);
