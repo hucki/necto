@@ -52,22 +52,24 @@ Additional features could include:
 - [React](https://reactjs.org)
 - [React Redux](https://react-redux.js.org/)
 - [React Query](https://github.com/tannerlinsley/react-query)
-- (wip): [TypeScript](https://www.typescriptlang.org)
+- [TypeScript](https://www.typescriptlang.org)
 - [Day.js](https://day.js.org)
-- [Ant Design](https://ant.design)
+- [Chakra UI](https://chakra-ui.com/)
 
 ### Back End:
 
 - [Node.js](https://nodejs.org/)
 - [Express](https://expressjs.com)
 - [TypeScript](https://www.typescriptlang.org)
-- [Sequelize ORM](https://sequelize.org)
+- [Prisma ORM](https://www.prisma.io/)
 - [PostgreSQL](https://www.postgresql.org)
+
+## Authentication
+
+- [auth0](https://auth0.com/)
 
 ## Future Plans
 
-- [ ] implement Authentication
-- [ ] convert FrontEnd to Typescript
 - [ ] embed local holidays: [date-holidays](https://www.npmjs.com/package/date-holidays)
 
 ## Contributors
