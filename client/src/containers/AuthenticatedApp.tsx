@@ -1,5 +1,4 @@
 import React, { Dispatch, useEffect } from 'react';
-import { Layout } from 'antd';
 import Dashboard from '../components/Dashboard/Dashboard';
 import { connect } from 'react-redux';
 import { useAuth0User } from '../hooks/user';
@@ -15,8 +14,6 @@ import {
 import SidebarMenu from '../components/SidebarMenu/SidebarMenu';
 import UserInfo from '../components/UserInfo/UserInfo';
 import NavBar from '../components/NavBar/NavBar';
-
-const { Content: AntContent } = Layout;
 
 interface AuthenticatedAppInputProps {
   a0Id: string;

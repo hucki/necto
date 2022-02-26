@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Table } from 'antd';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import { useAllTeams } from '../../hooks/teams';
@@ -37,7 +36,9 @@ const TeamSettings = () => {
         ))}
       </select>
       {currentTeam.employees?.length ? (
-        currentTeam.employees.map((e, i) => <div key={i}>{e.employee.firstName}</div>)
+        currentTeam.employees.map((e, i) => (
+          <div key={i}>{e.employee.firstName}</div>
+        ))
       ) : (
         <div>no peeps in this team</div>
       )}

@@ -1,22 +1,28 @@
 import React from 'react';
-import { Layout } from 'antd';
 import LoginButton from '../components/Auth/LoginButton';
 import { Route, Switch } from 'react-router';
 import VerifySignup from '../components/Auth/VerifySignup';
 import { useAuth0 } from '@auth0/auth0-react';
-import Header from '../components/Header/Header';
-import { FullPageSpinner } from '../components/Library';
+import {
+  App,
+  ContentContainer,
+  FullPageSpinner,
+  Header,
+} from '../components/Library';
+import UserInfo from '../components/UserInfo/UserInfo';
 
-
-function UnauthenticatedApp (): JSX.Element {
+function UnauthenticatedApp(): JSX.Element {
   const { isLoading } = useAuth0();
   return (
-    <div>
-      <Layout className="site-layout">
-        <Header userName="Guest" />
-        {isLoading
-          ? <FullPageSpinner />
-          : <Switch>
+    <App id="App">
+      <ContentContainer>
+        <Header>
+          <UserInfo userName="Guest" />
+        </Header>
+        {isLoading ? (
+          <FullPageSpinner />
+        ) : (
+          <Switch>
             <Route path="/verify">
               <VerifySignup />
             </Route>
@@ -26,9 +32,9 @@ function UnauthenticatedApp (): JSX.Element {
               <LoginButton />
             </Route>
           </Switch>
-        }
-      </Layout>
-    </div>
+        )}
+      </ContentContainer>
+    </App>
   );
 }
 
