@@ -1,11 +1,11 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
-import { EditOutlined } from '@ant-design/icons';
 import React, { FormEvent, useState } from 'react';
 
 import { useAddUser, useAuth0User } from '../../hooks/user';
 import { FormGroup, Input, Button, Label } from '../Library';
+import { RiEditFill } from 'react-icons/ri';
 
 interface UserProfileProps {
   purpose?: string;
@@ -82,7 +82,7 @@ const UserProfile = ({
         </FormGroup>
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
-            <EditOutlined />
+            <RiEditFill />
           </Button>
         ) : (
           <Button aria-label="save changes" type="submit">
