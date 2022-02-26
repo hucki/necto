@@ -188,8 +188,8 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
         <Td>
           <IconButton
             aria-label="edit patient"
-            icon={<RiAddBoxFill />}
-            size="xs"
+            icon={<RiAddBoxFill color='green'/>}
+            size="md"
             onClick={() => handleSubmit()}
           />
         </Td>
