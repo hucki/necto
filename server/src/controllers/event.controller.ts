@@ -36,6 +36,7 @@ export const addEvent = async (
         tenantId: tenantId,
         roomId: req.body.roomId ? req.body.roomId : null,
         patientId: req.body.patientId ? req.body.patientId : null,
+        parentEventId: req.body.parentEventId ? req.body.parentEventId : null,
       },
     });
     res.json(createdEvent);
@@ -79,6 +80,7 @@ export const updateEvent = async (
         tenantId: tenantId,
         roomId: req.body.roomId ? req.body.roomId : null,
         patientId: req.body.patientId ? req.body.patientId : null,
+        parentEventId: req.body.parentEventId ? req.body.parentEventId : null,
       },
     });
     res.json(updatedEvent);
