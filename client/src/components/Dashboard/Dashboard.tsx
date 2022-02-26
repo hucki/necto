@@ -2,7 +2,6 @@ import React, { CSSProperties } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import classes from './Dashboard.module.css';
-import TeamContainer from '../Team/TeamContainer/TeamContainer';
 import { useAllTeamMembers } from '../../hooks/user';
 import UserProfile from '../UserProfile/UserProfile';
 import { AppState } from '../../types/AppState';
@@ -37,12 +36,8 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
         <Route path="/teamcal">
           <TeamCalendar />
         </Route>
-        <Route path="/team">
-          <TeamContainer teamMembers={teamMembers} />
-        </Route>
         <Route path="/teamsettings">
           <TeamSettings />
-          {/* <TeamContainer teamMembers={teamMembers} /> */}
         </Route>
         <Route path="/employeesettings">
           <EmployeeSettings />
