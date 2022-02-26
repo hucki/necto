@@ -122,6 +122,18 @@ model Contract {
   @@map("contracts")
 }
 
+// recurring Events
+//
+// parent
+//  - isRecurring === true
+//  - rrule === rrulestring
+//  - parentEventId === undefined
+//
+// child
+//  - isRecurring === true
+//  - rrule === ''
+//  - parentEventId === parentEventId
+//
 model Event {
   uuid                    String                   @id @default(uuid()) @db.Uuid
   userId                  String?                  @db.Uuid
