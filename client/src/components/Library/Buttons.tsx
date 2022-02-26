@@ -9,6 +9,7 @@ const Button = styled(ChakraButton)();
 const NavigationButton = styled(ChakraButton)({
   width: '100%',
   borderRadius: '0',
+  justifyContent: 'flex-start',
   ':focus': {
     boxShadow: 'none',
   },

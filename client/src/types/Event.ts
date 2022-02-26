@@ -18,6 +18,7 @@ export type Event = {
   endTime: Dayjs;
   roomId?: string;
   patientId?: string;
+  parentEventId?: string;
   createdAt?: Date;
   updatedAt?: Date;
   bgColor?: BgColor;

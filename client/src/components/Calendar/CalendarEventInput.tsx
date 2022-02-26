@@ -24,6 +24,7 @@ import { FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
 import CalendarEventForm from './CalendarEventForm';
 import { checkOverlap } from '../../helpers/eventChecker';
+import { rrulestr } from 'rrule';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -96,16 +97,42 @@ function CalendarEventInput({
     });
   };
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (checkOverlap({ eventToCheck: newEvent, eventList: rawEvents })) {
-      // if (checkOverlap()) {
       setMessage(t('error.event.overlapping'));
       return false;
     }
     if (newEvent) {
-      createEvent({
-        event: newEvent,
-      });
+      try {
+        const createdEvent = await createEvent({
+          event: newEvent,
+        });
+
+        // create events from rrule if event was created and it isRecurring and has rrule
+        if (!createdEvent || !createdEvent.isRecurring || !createdEvent.rrule)
+          return;
+
+        const rruleObj = rrulestr(createdEvent.rrule);
+        const rruleList = rruleObj?.all();
+        const eventDuration = dayjs(createdEvent.endTime).diff(
+          dayjs(createdEvent.startTime),
+          'm'
+        );
+        if (rruleList && rruleList.length > 1) {
+          console.log({ rruleList });
+          for (let i = 1; i < rruleList.length; i++) {
+            const nextEvent = newEvent;
+            nextEvent.parentEventId = createdEvent.uuid;
+            nextEvent.startTime = dayjs(rruleList[i]);
+            nextEvent.endTime = dayjs(rruleList[i]).add(eventDuration, 'm');
+            await createEvent({
+              event: nextEvent,
+            });
+          }
+        }
+      } catch (error) {
+        console.error('event could not be created', { error });
+      }
     }
     onClose();
   }

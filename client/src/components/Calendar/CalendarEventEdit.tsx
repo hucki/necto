@@ -99,6 +99,11 @@ function CalendarEventEdit({
     onClose();
   }
 
+  function handleCancelEvent() {
+    alert('you want to cancel this event');
+    onClose();
+  }
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -183,6 +188,16 @@ function CalendarEventEdit({
               >
                 <ControlWrapper>
                   <Button
+                    leftIcon={<FaTimes />}
+                    aria-label="cancel event"
+                    colorScheme="orange"
+                    size="sm"
+                    type="button"
+                    onClick={handleCancelEvent}
+                  >
+                    {t('button.cancelEvent')}
+                  </Button>
+                  <Button
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
                     colorScheme="red"
@@ -194,17 +209,6 @@ function CalendarEventEdit({
                   </Button>
                 </ControlWrapper>
                 <ControlWrapper>
-                  <Button
-                    leftIcon={<FaTimes />}
-                    aria-label="cancel edit"
-                    type="button"
-                    size="sm"
-                    onClick={onClose}
-                    variant="outline"
-                    colorScheme="blue"
-                  >
-                    {t('button.cancel')}
-                  </Button>
                   {isReadOnly ? (
                     <Button
                       leftIcon={<FaEdit />}
