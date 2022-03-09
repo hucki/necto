@@ -35,6 +35,7 @@ export const addPatient = async (
         careFacility: req.body.careFacility,
         state: req.body.state,
         isAddpayFreed: req.body.isAddpayFreed,
+        firstContactAt: req.body.firstContactAt,
         addPayFreedFrom: req.body.addPayFreedFrom,
         addPayFreedUntil: req.body.addPayFreedUntil,
         validUntil: req.body.validUntil,
@@ -83,6 +84,7 @@ export const updatePatient = async (
         careFacility: req.body.careFacility,
         state: req.body.state,
         isAddpayFreed: req.body.isAddpayFreed,
+        firstContactAt: req.body.firstContactAt,
         addPayFreedFrom: req.body.addPayFreedFrom,
         addPayFreedUntil: req.body.addPayFreedUntil,
         validUntil: req.body.validUntil,
@@ -120,6 +122,7 @@ export const deletePatient = async (
     next(e);
   }
 };
+
 /**
  * get all Events that are connected to a patient
  *  @param {string} req.params.patientId
@@ -156,6 +159,47 @@ export const getAllPatients = async (
   try {
     const patients = await prisma.patient.findMany();
     res.json(patients);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * get all Patients that are currently not scheduled
+ */
+ export const getWaitingPatients = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const waitingPatients = await prisma.patient.findMany({
+      include: {
+        events: true,
+      },
+      where: {
+        OR: [
+          {
+            events: {
+              none: {}
+            },
+          },
+          {
+            events: {
+              every: {
+                isDiagnostic: true
+              }
+            },
+          }
+        ]
+      },
+      orderBy: {
+        firstContactAt: 'asc'
+      }
+    });
+    res.json(waitingPatients);
     res.status(200);
     return;
   } catch (e) {

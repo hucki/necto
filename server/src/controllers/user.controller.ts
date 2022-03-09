@@ -30,6 +30,7 @@ export const getOneUserByAuth0Id = async (
   try {
     const user = await prisma.user.findFirst({
       where: { a0Id: req.params.a0Id },
+      include: {userSettings_userSettings_userIdTousers: true}
     });
     res.json(user);
     res.status(200);

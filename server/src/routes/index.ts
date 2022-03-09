@@ -78,6 +78,7 @@ router.delete('/events/:eventId', eventController.deleteEvent);
 // patient routes
 //router.get('/patients/:eventId', eventController.getPatients);
 router.get('/patients', patientController.getAllPatients);
+router.get('/waiting', patientController.getWaitingPatients);
 router.get('/patients/:patientId', patientController.getPatientsEvents);
 
 router.post('/patients', patientController.addPatient);
