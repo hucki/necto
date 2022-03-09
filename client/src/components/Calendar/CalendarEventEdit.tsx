@@ -67,6 +67,7 @@ function CalendarEventEdit({
       ressourceId: event.ressourceId,
       title: changedEvent.title,
       type: changedEvent.type,
+      isDiagnostic: changedEvent.isDiagnostic,
       isHomeVisit: changedEvent.isHomeVisit,
       isAllDay: changedEvent.isAllDay,
       isRecurring: changedEvent.isRecurring,

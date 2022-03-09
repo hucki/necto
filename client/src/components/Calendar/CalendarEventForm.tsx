@@ -54,6 +54,7 @@ function CalendarEventForm({
   const [eventStartTime, setEventStartTime] = useState(event.startTime);
   const [eventEndTime, setEventEndTime] = useState(event.endTime);
   const [eventType, setEventType] = useState(event.type);
+  const [isDiagnostic, setIsDiagnostic] = useState(event.isDiagnostic);
   const [isHomeVisit, setIsHomeVisit] = useState(event.isHomeVisit);
   const [isRecurring, setIsRecurring] = useState(event.isRecurring);
   const [isAllDay, setIsAllDay] = useState(event.isAllDay);
@@ -88,6 +89,10 @@ function CalendarEventForm({
     setMessage(null);
   }
 
+  function onSwitchDiagnostic(event: BaseSyntheticEvent) {
+    setIsDiagnostic(event.target.checked);
+    setMessage(null);
+  }
   function onSwitchHomeVisit(event: BaseSyntheticEvent) {
     setIsHomeVisit(event.target.checked);
     setMessage(null);
@@ -161,6 +166,7 @@ function CalendarEventForm({
       ressourceId: event.ressourceId,
       title: eventTitle,
       type: eventType,
+      isDiagnostic: isDiagnostic,
       isHomeVisit: isHomeVisit,
       isAllDay: isAllDay,
       isRecurring: isRecurring,
@@ -176,6 +182,7 @@ function CalendarEventForm({
   }, [
     eventTitle,
     eventType,
+    isDiagnostic,
     isHomeVisit,
     isAllDay,
     isRecurring,
@@ -219,6 +226,16 @@ function CalendarEventForm({
           name="Home Visit?"
           checked={isHomeVisit}
           onChange={onSwitchHomeVisit}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="diagnostic">{t('calendar.event.diagnostic')}</Label>
+        <Input
+          type="checkbox"
+          id="isDiagnostic"
+          name="Diagnostic?"
+          checked={isDiagnostic}
+          onChange={onSwitchDiagnostic}
         />
       </FormGroup>
       <FormGroup>
