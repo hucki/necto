@@ -46,6 +46,7 @@ function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
               title: person.name,
               bgColor: person.bgColor,
               type: 'custom',
+              isDiagnostic: false,
               isHomeVisit: false,
               isAllDay: false,
               isRecurring: false,

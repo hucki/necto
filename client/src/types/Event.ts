@@ -8,6 +8,7 @@ export type Event = {
   ressourceId: string;
   title: string;
   type: string;
+  isDiagnostic: boolean;
   isHomeVisit: boolean;
   isAllDay: boolean;
   isRecurring: boolean;

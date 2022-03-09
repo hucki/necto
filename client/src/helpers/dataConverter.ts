@@ -12,6 +12,7 @@ export function appointment2Event(
     type: 'custom',
     isHomeVisit: appointment.isHomeVisit,
     isRecurring: appointment.rrule ? true : false,
+    isDiagnostic: false,
     isAllDay: false,
     isCancelled: false,
     isCancelledReason: '',

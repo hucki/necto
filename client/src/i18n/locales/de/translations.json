@@ -7,6 +7,7 @@
       "patient": "Patient",
       "duration": "Dauer",
       "homeVisit": "Hausbesuch",
+      "diagnostic": "Diagnose",
       "recurringAppointment": "Terminserie",
       "frequency": "Frequenz",
       "frequencyWeekly": "1 x pro Woche",
