@@ -1,4 +1,5 @@
 import { PatientContactData } from './ContactData';
+import { Event } from './Event';
 
 export type Patient = {
   uuid?: string;
@@ -22,6 +23,7 @@ export type Patient = {
   addPayFreedUntil?: Date;
   validUntil?: Date;
   createdAt?: Date;
+  firstContactAt?: Date;
   updatedAt?: Date;
   companyId?: string;
   tenantId?: string;

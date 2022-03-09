@@ -45,3 +45,20 @@ export function useAllPatients(): QueryResult<Patient[]> & {
     ...patientsQuery,
   };
 }
+
+export function useAllWaitingPatients(): QueryResult<Patient[]> & {
+  patients: Patient[];
+  } {
+  const client = useAuthenticatedClient<Patient[]>();
+
+  const patientsQuery = useQuery('waiting', async () => {
+    return client('waiting');
+  });
+
+  const patients = patientsQuery.data ?? [];
+
+  return {
+    patients,
+    ...patientsQuery,
+  };
+}

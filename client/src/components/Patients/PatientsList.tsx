@@ -13,20 +13,22 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { Patient } from '../../types/Patient';
-import { IconButton, Input } from '../Library';
+import { DatePicker, IconButton, Input } from '../Library';
 import { RiAddBoxFill, RiEditFill } from 'react-icons/ri';
 import { useEffect, useState } from 'react';
 import { useCreatePatient } from '../../hooks/patient';
 import { AppState } from '../../types/AppState';
 import { connect } from 'react-redux';
 import { Company } from '../../types/Company';
+import dayjs from 'dayjs';
 
 interface PatientsListProps {
   patients: Patient[];
   currentCompany: Company | undefined;
+  hasActions: boolean | undefined;
 }
 
-function PatientsList({ patients, currentCompany }: PatientsListProps) {
+function PatientsList({ patients, currentCompany, hasActions = false }: PatientsListProps) {
   const PatientAddRow = (currentCompany: Company | undefined): JSX.Element => {
     const [createPatient, { error: savingError }] = useCreatePatient();
     const [newPatient, setNewPatient] = useState<Patient>();
@@ -38,6 +40,7 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
     const [zip, setZip] = useState('');
     const [city, setCity] = useState('');
     const [isAddpayFreed, setIsAddpayFreed] = useState(false);
+    const [firstContactAt, setFirstContactAt] = useState(dayjs().toDate());
     const [notices, setNotices] = useState('');
 
     function handleFirstNameChange(event: React.FormEvent<HTMLInputElement>) {
@@ -78,7 +81,11 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
       event.preventDefault();
       setNotices(event.currentTarget.value);
     }
-
+    function handleFirstContactAtChange(date: ReactDatePickerReturnType) {
+      if (date) {
+        setFirstContactAt(dayjs(date.toString()).toDate());
+      }
+    }
     function handleSubmit() {
       setNewPatient({
         firstName,
@@ -90,6 +97,7 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
         city,
         isAddpayFreed,
         notices,
+        firstContactAt,
         companyId: currentCompany?.uuid,
       });
     }
@@ -134,14 +142,14 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
             onChange={handleLastNameChange}
           />
         </Td>
-        <Td>
+        {/* <Td>
           <Input
             id="title"
             name="title"
             value={title}
             onChange={handleTitleChange}
           />
-        </Td>
+        </Td> */}
         <Td>
           <Input
             id="gender"
@@ -186,20 +194,37 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
           />
         </Td>
         <Td>
-          <IconButton
-            aria-label="edit patient"
-            icon={<RiAddBoxFill color='green'/>}
-            size="md"
-            onClick={() => handleSubmit()}
+          <DatePicker
+            id="firstContactAt"
+            name="firstContactAt"
+            showTimeSelect
+            locale="de"
+            timeFormat="p"
+            timeIntervals={15}
+            dateFormat="Pp"
+            selected={dayjs(firstContactAt).toDate()}
+            onChange={(date: ReactDatePickerReturnType) => {
+              if (date) handleFirstContactAtChange(date);
+            }}
           />
         </Td>
+        {
+          hasActions && <Td>
+            <IconButton
+              aria-label="edit patient"
+              icon={<RiAddBoxFill color='green'/>}
+              size="md"
+              onClick={() => handleSubmit()}
+            />
+          </Td>
+        }
       </Tr>
     );
   };
   const PatientRows = (): JSX.Element[] =>
     patients.map((p) => (
       <Tr key={p.uuid}>
-        <Td>{p.title}</Td>
+        {/* <Td>{p.title}</Td> */}
         <Td>{p.firstName}</Td>
         <Td>{p.lastName}</Td>
         <Td>{p.gender}</Td>
@@ -210,7 +235,8 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
         <Td>
           <Checkbox isReadOnly={true} isChecked={Boolean(p.isAddpayFreed)} />
         </Td>
-        <Td>
+        <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
+        { hasActions && <Td>
           <IconButton
             disabled={true}
             aria-label="edit patient"
@@ -218,6 +244,10 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
             size="xs"
           />
         </Td>
+        }
+        {p.events?.length ? <Td>
+          {dayjs(p.events[0].startTime).format('lll')}
+        </Td> : null}
       </Tr>
     ));
 
@@ -225,7 +255,7 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
     <Table variant="striped" size="sm" colorScheme="blue">
       <Thead>
         <Tr>
-          <Th width={5}>Title </Th>
+          {/* <Th width={5}>Title </Th> */}
           <Th>FirstName</Th>
           <Th>LastName </Th>
           <Th width={2}>Gender </Th>
@@ -234,12 +264,14 @@ function PatientsList({ patients, currentCompany }: PatientsListProps) {
           <Th>City </Th>
           <Th>Notices </Th>
           <Th width={5}>Freed?</Th>
-          <Th width={5}>Actions</Th>
+          <Th width={7}>FirstContact</Th>
+          { hasActions && <Th width={5}>Actions</Th> }
+          { !hasActions && <Th width={5}>Diagnostic</Th> }
         </Tr>
       </Thead>
       <Tbody>
         {PatientRows()}
-        {PatientAddRow(currentCompany)}
+        {hasActions && PatientAddRow(currentCompany)}
       </Tbody>
     </Table>
   );

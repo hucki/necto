@@ -6,10 +6,13 @@ import { useAllTeamMembers } from '../../hooks/user';
 import UserProfile from '../UserProfile/UserProfile';
 import { AppState } from '../../types/AppState';
 import TeamCalendar from '../../views/TeamCalendar/TeamCalendar';
+import PersonalCalendar from '../../views/PersonalCalendar/PersonalCalendar';
 import Rooms from '../../views/Rooms/Rooms';
 import TeamSettings from '../../views/TeamSettings/TeamSettings';
 import EmployeeSettings from '../../views/EmployeeSettings/EmployeeSettings';
 import Patients from '../../views/Patients/Patients';
+import WaitingList from '../../views/Patients/WaitingList';
+// import { useBreakpointValue } from '@chakra-ui/react';
 
 interface DashboardInputProps {
   a0Id: string;
@@ -20,6 +23,7 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error getting teamMembers: {error}</div>;
   if (!teamMembers) return <div>Data missing</div>;
+  // const viewport = useBreakpointValue({ base: 'mobile', md: 'desktop' });
 
   return (
     <div className={classes.Dashboard}>
@@ -33,8 +37,14 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
         <Route path="/patients">
           <Patients />
         </Route>
+        <Route path="/waiting">
+          <WaitingList />
+        </Route>
         <Route path="/teamcal">
           <TeamCalendar />
+        </Route>
+        <Route path="/personalcal">
+          <PersonalCalendar />
         </Route>
         <Route path="/teamsettings">
           <TeamSettings />

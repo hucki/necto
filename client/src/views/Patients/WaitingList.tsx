@@ -5,10 +5,10 @@ import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
 import FilterBar from '../../components/FilterBar/FilterBar';
 import PatientsList from '../../components/Patients/PatientsList';
-import { useAllPatients } from '../../hooks/patient';
+import { useAllWaitingPatients } from '../../hooks/patient';
 
-function Patients(): JSX.Element {
-  const { isLoading, error, patients } = useAllPatients();
+function WaitingList(): JSX.Element {
+  const { isLoading, error, patients } = useAllWaitingPatients();
 
   return isLoading ? (
     <Spinner />
@@ -30,9 +30,9 @@ function Patients(): JSX.Element {
         hasBuildingFilter={false}
         hasTeamsFilter={false}
       />
-      <PatientsList patients={patients} currentCompany={undefined} hasActions />
+      <PatientsList patients={patients} currentCompany={undefined} hasActions={false}/>
     </div>
   );
 }
 
-export default connect(null, null)(Patients);
+export default connect(null, null)(WaitingList);

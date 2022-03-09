@@ -9,8 +9,10 @@ import {
   RiMenuUnfoldFill,
   RiProfileLine,
   RiTeamFill,
+  RiUserFill,
   RiUserSettingsFill,
   RiUserSettingsLine,
+  RiZzzFill,
 } from 'react-icons/ri';
 import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
@@ -55,6 +57,16 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
       </NavigationButton>
       <Divider />
       <NavigationButton
+        variant={currentView === '/personalcal' ? 'solid' : 'ghost'}
+        colorScheme="teal"
+        aria-label="Personal Calendar"
+        leftIcon={<RiUserFill />}
+        key="/personalcal"
+        onClick={() => onClickHandler('/personalcal')}
+      >
+        {isOpen ? 'You' : null}
+      </NavigationButton>
+      <NavigationButton
         variant={currentView === '/teamcal' ? 'solid' : 'ghost'}
         colorScheme="teal"
         aria-label="Team Calendar"
@@ -81,6 +93,16 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         leftIcon={<RiMentalHealthFill />}
         key="/patients"
         onClick={() => onClickHandler('/patients')}
+      >
+        {isOpen ? 'Patients' : null}
+      </NavigationButton>
+      <NavigationButton
+        colorScheme="teal"
+        variant={currentView === '/waiting' ? 'solid' : 'ghost'}
+        aria-label="WaitingList"
+        leftIcon={<RiZzzFill />}
+        key="/waiting"
+        onClick={() => onClickHandler('/waiting')}
       >
         {isOpen ? 'Patients' : null}
       </NavigationButton>
