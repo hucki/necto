@@ -81,6 +81,8 @@ model Employee {
   user        UserSettings?    @relation("userSettings_employeeIdToemployees")
   contactData ContactData[]    @relation("contactData_referenceIdToemployees")
   teams       EmployeeToTeam[]
+  events      Event[]          @relation("event_referenceIdToEmployee")
+
 
   @@map("employees")
 }
@@ -160,6 +162,7 @@ model Event {
   childEvents             Event[]                  @relation("events_parentEventIdToEvents")
   eventInstanceExceptions EventInstanceException[] @relation("eventInstanceExceptions_eventIdToEvents")
   patient                 Patient?                 @relation("event_referenceIdTopatient", fields: [patientId], references: [uuid])
+  employee                Employee?                @relation("event_referenceIdToEmployee", fields: [ressourceId], references: [uuid])
 
   @@map("events")
 }
@@ -213,7 +216,7 @@ model User {
   validUntil                              DateTime?           @db.Timestamptz(6)
   createdAt                               DateTime            @default(now())
   updatedAt                               DateTime            @updatedAt
-  userSettings_userSettings_userIdTousers UserSettings[]      @relation("userSettings_userIdTousers")
+  userSettings                            UserSettings[]      @relation("userSettings_userIdTousers")
   contactData                             ContactData[]       @relation("contactData_referenceIdTousers")
   permissions                             UserToPermissions[]
 
