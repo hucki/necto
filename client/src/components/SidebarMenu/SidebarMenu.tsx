@@ -20,6 +20,7 @@ import { useHistory, useLocation } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import { AppState } from '../../types/AppState';
 import { IconButton, NavigationButton, Sidebar } from '../Library';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarProps {
   dispatch: Dispatch<any>;
@@ -34,7 +35,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
     dispatch(switchView(route));
   };
   const { logout } = useAuth0();
-  // TODO: add route to /personal again
+  const { t } = useTranslation();
   return (
     <Sidebar collapsed={!isOpen}>
       {/* Menu Button */}
@@ -53,7 +54,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/"
         onClick={() => onClickHandler('/')}
       >
-        {isOpen ? 'Home' : null}
+        {isOpen ? t('menu.home') : null}
       </NavigationButton>
       <Divider />
       <NavigationButton
@@ -64,7 +65,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/personalcal"
         onClick={() => onClickHandler('/personalcal')}
       >
-        {isOpen ? 'You' : null}
+        {isOpen ? t('menu.personalCalendar') : null}
       </NavigationButton>
       <NavigationButton
         variant={currentView === '/teamcal' ? 'solid' : 'ghost'}
@@ -74,7 +75,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/teamcal"
         onClick={() => onClickHandler('/teamcal')}
       >
-        {isOpen ? 'Team' : null}
+        {isOpen ? t('menu.teamCalendar') : null}
       </NavigationButton>
       <NavigationButton
         colorScheme="teal"
@@ -84,7 +85,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/rooms"
         onClick={() => onClickHandler('/rooms')}
       >
-        {isOpen ? 'Rooms' : null}
+        {isOpen ? t('menu.roomCalendar') : null}
       </NavigationButton>
       <NavigationButton
         colorScheme="teal"
@@ -94,7 +95,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/patients"
         onClick={() => onClickHandler('/patients')}
       >
-        {isOpen ? 'Patients' : null}
+        {isOpen ? t('menu.patients') : null}
       </NavigationButton>
       <NavigationButton
         colorScheme="teal"
@@ -104,7 +105,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/waiting"
         onClick={() => onClickHandler('/waiting')}
       >
-        {isOpen ? 'Patients' : null}
+        {isOpen ? t('menu.waitingList') : null}
       </NavigationButton>
       <Divider />
       {/* Settings */}
@@ -116,7 +117,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/teamsettings"
         onClick={() => onClickHandler('/teamsettings')}
       >
-        {isOpen ? 'Team Settings' : null}
+        {isOpen ? t('menu.teamSettings') : null}
       </NavigationButton>
       <NavigationButton
         colorScheme="gray"
@@ -126,7 +127,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/employeesettings"
         onClick={() => onClickHandler('/employeesettings')}
       >
-        {isOpen ? 'Employee Settings' : null}
+        {isOpen ? t('menu.employeeSettings') : null}
       </NavigationButton>
       <NavigationButton
         colorScheme="gray"
@@ -136,7 +137,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         key="/profile"
         onClick={() => onClickHandler('/profile')}
       >
-        {isOpen ? 'Profile' : null}
+        {isOpen ? t('menu.profile') : null}
       </NavigationButton>
       <Divider />
       {/* Logout */}
@@ -148,7 +149,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         aria-label="Logout"
         leftIcon={<RiLogoutBoxLine />}
       >
-        {isOpen ? 'Logout' : null}
+        {isOpen ? t('menu.logout') : null}
       </NavigationButton>
     </Sidebar>
   );

@@ -12,7 +12,7 @@ import {
   TableCaption,
   Checkbox,
 } from '@chakra-ui/react';
-import { Patient } from '../../types/Patient';
+import { Patient, PatientInput } from '../../types/Patient';
 import { DatePicker, IconButton, Input } from '../Library';
 import { RiAddBoxFill, RiEditFill } from 'react-icons/ri';
 import { useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ import { AppState } from '../../types/AppState';
 import { connect } from 'react-redux';
 import { Company } from '../../types/Company';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 interface PatientsListProps {
   patients: Patient[];
@@ -28,10 +29,16 @@ interface PatientsListProps {
   hasActions: boolean | undefined;
 }
 
-function PatientsList({ patients, currentCompany, hasActions = false }: PatientsListProps) {
+function PatientsList({
+  patients,
+  currentCompany,
+  hasActions = false,
+}: PatientsListProps) {
+  const { t } = useTranslation();
+
   const PatientAddRow = (currentCompany: Company | undefined): JSX.Element => {
     const [createPatient, { error: savingError }] = useCreatePatient();
-    const [newPatient, setNewPatient] = useState<Patient>();
+    const [newPatient, setNewPatient] = useState<PatientInput>();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [title, setTitle] = useState('');
@@ -42,6 +49,8 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
     const [isAddpayFreed, setIsAddpayFreed] = useState(false);
     const [firstContactAt, setFirstContactAt] = useState(dayjs().toDate());
     const [notices, setNotices] = useState('');
+    const [telephoneNumber, setTelephoneNumber] = useState('');
+    const [mailAddress, setMailAddress] = useState('');
 
     function handleFirstNameChange(event: React.FormEvent<HTMLInputElement>) {
       event.preventDefault();
@@ -58,6 +67,14 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
     function handleStreetChange(event: React.FormEvent<HTMLInputElement>) {
       event.preventDefault();
       setStreet(event.currentTarget.value);
+    }
+    function handleTelephoneChange(event: React.FormEvent<HTMLInputElement>) {
+      event.preventDefault();
+      setTelephoneNumber(event.currentTarget.value);
+    }
+    function handleMailChange(event: React.FormEvent<HTMLInputElement>) {
+      event.preventDefault();
+      setMailAddress(event.currentTarget.value);
     }
     function handleGenderChange(event: React.FormEvent<HTMLInputElement>) {
       event.preventDefault();
@@ -99,6 +116,8 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
         notices,
         firstContactAt,
         companyId: currentCompany?.uuid,
+        telephoneNumber,
+        mailAddress,
       });
     }
     function initNewPatient() {
@@ -111,6 +130,9 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
       setCity('');
       setIsAddpayFreed(false);
       setNotices('');
+      setTelephoneNumber('');
+      setMailAddress('');
+      setFirstContactAt(dayjs().toDate());
     }
     useEffect(() => {
       if (!newPatient) return;
@@ -186,6 +208,22 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
           />
         </Td>
         <Td>
+          <Input
+            id="telephone"
+            name="telephone"
+            value={telephoneNumber}
+            onChange={handleTelephoneChange}
+          />
+        </Td>
+        <Td>
+          <Input
+            id="mail"
+            name="mail"
+            value={mailAddress}
+            onChange={handleMailChange}
+          />
+        </Td>
+        <Td>
           <Checkbox
             id="isAddpayFreed"
             name="isAddpayFreed"
@@ -208,16 +246,16 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
             }}
           />
         </Td>
-        {
-          hasActions && <Td>
+        {hasActions && (
+          <Td>
             <IconButton
               aria-label="edit patient"
-              icon={<RiAddBoxFill color='green'/>}
+              icon={<RiAddBoxFill color="green" />}
               size="md"
               onClick={() => handleSubmit()}
             />
           </Td>
-        }
+        )}
       </Tr>
     );
   };
@@ -233,21 +271,39 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
         <Td>{p.city}</Td>
         <Td>{p.notices}</Td>
         <Td>
+          {p.contactData
+            ?.filter((c) => c.type === 'telephone')
+            .map((tel) => (
+              <div key={tel.uuid}>{tel.contact}</div>
+            ))}
+        </Td>
+        <Td>
+          {p.contactData
+            ?.filter((c) => c.type === 'email')
+            .map((tel) => (
+              <div key={tel.uuid}>{tel.contact}</div>
+            ))}
+        </Td>
+        <Td>
           <Checkbox isReadOnly={true} isChecked={Boolean(p.isAddpayFreed)} />
         </Td>
         <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
-        { hasActions && <Td>
-          <IconButton
-            disabled={true}
-            aria-label="edit patient"
-            icon={<RiEditFill />}
-            size="xs"
-          />
-        </Td>
-        }
-        {p.events?.length ? <Td>
-          {dayjs(p.events[0].startTime).format('lll')}
-        </Td> : null}
+        {hasActions && (
+          <Td>
+            <IconButton
+              disabled={true}
+              aria-label="edit patient"
+              icon={<RiEditFill />}
+              size="xs"
+            />
+          </Td>
+        )}
+        {!hasActions && p.events?.length ? (
+          <Td>
+            <b>{p.events[0].employee?.firstName}</b>:<br />
+            {dayjs(p.events[0].startTime).format('llll')}
+          </Td>
+        ) : null}
       </Tr>
     ));
 
@@ -256,17 +312,19 @@ function PatientsList({ patients, currentCompany, hasActions = false }: Patients
       <Thead>
         <Tr>
           {/* <Th width={5}>Title </Th> */}
-          <Th>FirstName</Th>
-          <Th>LastName </Th>
-          <Th width={2}>Gender </Th>
-          <Th>Street </Th>
-          <Th width={5}>Zip </Th>
-          <Th>City </Th>
-          <Th>Notices </Th>
-          <Th width={5}>Freed?</Th>
-          <Th width={7}>FirstContact</Th>
-          { hasActions && <Th width={5}>Actions</Th> }
-          { !hasActions && <Th width={5}>Diagnostic</Th> }
+          <Th>{t('patients.firstName')}</Th>
+          <Th>{t('patients.lastName')}</Th>
+          <Th width={2}>{t('patients.gender')} </Th>
+          <Th>{t('patients.street')} </Th>
+          <Th width={5}>{t('patients.zip')} </Th>
+          <Th>{t('patients.city')} </Th>
+          <Th>{t('patients.notices')} </Th>
+          <Th>{t('patients.telephoneNumber')} </Th>
+          <Th>{t('patients.mailAddress')} </Th>
+          <Th width={5}>{t('patients.isAddpayFreed')}</Th>
+          <Th width={7}>{t('patients.firstContactAt')}</Th>
+          {hasActions && <Th width={5}>{t('patients.actions')}</Th>}
+          {!hasActions && <Th width={5}>{t('patients.diagnostic')}</Th>}
         </Tr>
       </Thead>
       <Tbody>

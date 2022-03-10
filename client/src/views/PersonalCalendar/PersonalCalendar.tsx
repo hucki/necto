@@ -10,22 +10,25 @@ import { FullPageSpinner } from '../../components/Library';
 import { useEffect, useState } from 'react';
 import { Employee, Team } from '../../types/Employee';
 import { EmployeeRessource } from '../../types/Ressource';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0User } from '../../hooks/user';
 
 interface TeamCalendarInputProps {
   currentDate?: Dayjs;
   currentTeam?: Team;
+  a0Id: string;
 }
 
 function PersonalCalendar({
   currentDate,
   currentTeam,
+  a0Id,
 }: TeamCalendarInputProps): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
   const { isLoading, rawEvents } = useDaysEvents(calendarDate);
-  const { user, isAuthenticated, isLoading: isLoadingAuth } = useAuth0();
+  const { user, isLoading: isLoadingUser } = useAuth0User(a0Id);
+
   useEffect(() => {
     if (currentDate && calendarDate !== currentDate)
       setCalendarDate(currentDate);
@@ -35,18 +38,22 @@ function PersonalCalendar({
   interface TeamMemberMapProps {
     employee: Employee;
   }
-  const ressources: EmployeeRessource[] = teamMembers?.length
-    ? [teamMembers.map(({ employee }: TeamMemberMapProps) => ({
-      uuid: employee.uuid,
-      displayName: employee.firstName,
-      shortDescription: employee.firstName,
-      longDescription: employee.firstName + ' ' + employee.lastName,
-      bgColor: employee.contract[0].bgColor,
-    }))[0]]
-    : [];
 
-  if (isLoading) return <FullPageSpinner />;
-  console.log({user});
+  if (isLoading || isLoadingUser || !user?.uuid || !user?.userSettings?.length || !user?.userSettings[0].employee) return <FullPageSpinner />;
+
+  const thisEmployee = user?.userSettings[0].employee;
+
+  const ressources: EmployeeRessource[] = [
+    {
+      userId: user.uuid,
+      uuid: thisEmployee.uuid,
+      displayName: thisEmployee.firstName,
+      shortDescription: thisEmployee.firstName,
+      longDescription: thisEmployee.firstName + ' ' + thisEmployee.lastName,
+      bgColor: 'red' //thisEmployee.contract[0].bgColor || '',
+    }
+  ];
+
   return (
     <div
       css={{
