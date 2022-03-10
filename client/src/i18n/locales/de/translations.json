@@ -35,5 +35,33 @@
     "event": {
       "overlapping": "Überlappende Termine sind nicht erlaubt. Bitte Termin anpassen"
     }
+  },
+  "menu": {
+    "home": "home",
+    "personalCalendar": "Du",
+    "teamCalendar": "Team",
+    "roomCalendar": "Raumbelegung",
+    "patients": "Patienten",
+    "waitingList": "Warteliste",
+    "teamSettings": "Team",
+    "employeeSettings": "Mitarbeiter",
+    "profile": "Profil",
+    "logout": "abmelden"
+  },
+  "patients": {
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "title": "Titel",
+    "gender": "Geschlecht",
+    "zip": "PLZ",
+    "street": "Straße",
+    "city": "Ort",
+    "isAddpayFreed": "befreit?",
+    "notices": "Notizen",
+    "firstContactAt": "Datum der Anmeldung",
+    "telephoneNumber": "Telefon",
+    "mailAddress": "eMail",
+    "actions": "Actions",
+    "diagnostic": "Diagnose"
   }
 }

@@ -35,5 +35,33 @@
     "event": {
       "overlapping": "Overlapping Appointments are not allowed. Please check again"
     }
+  },
+  "menu": {
+    "home": "home",
+    "personalCalendar": "You",
+    "teamCalendar": "Team",
+    "roomCalendar": "Roombookings",
+    "patients": "Patients",
+    "waitingList": "Waiting List",
+    "teamSettings": "Team",
+    "employeeSettings": "Employees",
+    "profile": "Profile",
+    "logout": "logout"
+  },
+  "patients": {
+    "firstName": "first name",
+    "lastName": "last name",
+    "title": "title",
+    "gender": "gender",
+    "zip": "zip",
+    "street": "street",
+    "city": "City",
+    "isAddpayFreed": "freed?",
+    "notices": "notices",
+    "firstContactAt": "Date of reception",
+    "telephoneNumber": "telephone",
+    "mailAddress": "email",
+    "actions": "Actions",
+    "diagnostic": "diagnostic"
   }
 }
