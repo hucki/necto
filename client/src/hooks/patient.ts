@@ -6,19 +6,19 @@ import {
   queryCache,
 } from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
-import { Patient } from '../types/Patient';
+import { Patient, PatientInput } from '../types/Patient';
 
 export function useCreatePatient(): MutationResultPair<
   Patient,
   Error,
-  { patient: Patient },
+  { patient: PatientInput },
   string
   > {
-  const client = useAuthenticatedClient<Patient>();
+  const client = useAuthenticatedClient<PatientInput>();
   const createPatient = async ({
     patient,
   }: {
-    patient: Patient;
+    patient: PatientInput;
   }): Promise<Patient> => {
     return client('patients', { data: patient });
   };

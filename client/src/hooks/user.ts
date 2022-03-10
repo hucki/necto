@@ -5,6 +5,7 @@ import { useQuery,
   queryCache } from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { TeamMember, User } from '../types/User';
+import { UserSettings } from '../types/UserSettings';
 
 export function useUser (
   id: number
@@ -83,3 +84,38 @@ export function useAllTeamMembers (): QueryResult<TeamMember[]> & {
     ...teamMembersQuery,
   };
 }
+
+export function useCreateUserSettings (): MutationResultPair<
+  UserSettings,
+  Error,
+  { userSettings: UserSettings },
+  string
+  > {
+  const client = useAuthenticatedClient<UserSettings>();
+  const createUserSettings = async ({ userSettings }: { userSettings: UserSettings }): Promise<UserSettings> => {
+    return client('settings/user', { data: userSettings });
+  };
+  return useMutation(createUserSettings, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('settings/user');
+    },
+  });
+}
+
+export function useUpdateUserSettings (): MutationResultPair<
+  UserSettings,
+  Error,
+  { userSettings: UserSettings },
+  string
+  > {
+  const client = useAuthenticatedClient<UserSettings>();
+  const updateUserSettings = async ({ userSettings }: { userSettings: UserSettings }): Promise<UserSettings> => {
+    return client('settings/user', { data: userSettings, method: 'PATCH' });
+  };
+  return useMutation(updateUserSettings, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('settings/user');
+    },
+  });
+}
+
