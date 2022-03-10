@@ -9,7 +9,7 @@ interface Ressource {
 }
 
 export interface EmployeeRessource extends Ressource {
-  userId?: number;
+  userId?: string;
 }
 export interface Room extends Ressource {
   buildingId?: string;

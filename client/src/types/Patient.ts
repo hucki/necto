@@ -30,3 +30,8 @@ export type Patient = {
   contactData?: PatientContactData[];
   events?: Event[];
 };
+
+export interface PatientInput extends Patient {
+  telephoneNumber?: string;
+  mailAddress?: string;
+}

@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { BgColor } from './Colors';
+import { Employee } from './Employee';
 import { Patient } from './Patient';
 
 export type Event = {
@@ -24,6 +25,7 @@ export type Event = {
   updatedAt?: Date;
   bgColor?: BgColor;
   patient?: Patient;
+  employee?: Employee;
 };
 
 export type Appointment = {

@@ -1,4 +1,5 @@
 import { BgColor } from './Colors';
+import { UserSettings } from './UserSettings';
 
 export type User = {
   uuid?: string;
@@ -8,6 +9,7 @@ export type User = {
   validUntil?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+  userSettings?: UserSettings[];
 };
 
 export type TeamMember = {
