@@ -43,7 +43,29 @@ export const addPatient = async (
         tenantId: tenantId,
       },
     });
-    res.json(createdPatient);
+    const createdTelephone = req.body.telephoneNumber
+      ? await prisma.contactData.create({
+          data: {
+            patientId: createdPatient.uuid,
+            type: 'telephone',
+            contact: req.body.telephoneNumber,
+            tenantId: tenantId,
+          },
+        })
+      : {};
+
+    const createdMail = req.body.mailAddress
+      ? await prisma.contactData.create({
+          data: {
+            patientId: createdPatient.uuid,
+            type: 'email',
+            contact: req.body.mailAddress,
+            tenantId: tenantId,
+          },
+        })
+      : {};
+
+    res.json({ createdPatient, createdTelephone, createdMail });
     res.status(201);
     return;
   } catch (e) {
@@ -157,7 +179,12 @@ export const getAllPatients = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const patients = await prisma.patient.findMany();
+    const patients = await prisma.patient.findMany({
+      include: {
+        contactData: true,
+        events: true,
+      },
+    });
     res.json(patients);
     res.status(200);
     return;
@@ -169,7 +196,7 @@ export const getAllPatients = async (
 /**
  * get all Patients that are currently not scheduled
  */
- export const getWaitingPatients = async (
+export const getWaitingPatients = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -177,27 +204,32 @@ export const getAllPatients = async (
   try {
     const waitingPatients = await prisma.patient.findMany({
       include: {
-        events: true,
+        events: {
+          include: {
+            employee: true,
+          },
+        },
+        contactData: true,
       },
       where: {
         OR: [
           {
             events: {
-              none: {}
+              none: {},
             },
           },
           {
             events: {
               every: {
-                isDiagnostic: true
-              }
+                isDiagnostic: true,
+              },
             },
-          }
-        ]
+          },
+        ],
       },
       orderBy: {
-        firstContactAt: 'asc'
-      }
+        firstContactAt: 'asc',
+      },
     });
     res.json(waitingPatients);
     res.status(200);
