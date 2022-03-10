@@ -86,8 +86,11 @@ router.patch('/patients/:patientId', patientController.updatePatient);
 // router.delete('/patients/:patientId', patientController.deletePatient);
 
 // settings routes
+// app Settings
 router.post('/settings/app', appSettingsController.addAppSettings);
+// user settings
 router.post('/settings/user', userSettingsController.addUserSettings);
+router.patch('/settings/user', userSettingsController.updateUserSettings);
 
 //router.get('/appsettings', settingsController.getAppSettings);
 //router.put('/appsettings', settingsController.updateAppSettings);

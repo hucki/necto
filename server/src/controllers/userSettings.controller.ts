@@ -27,3 +27,29 @@ export const addUserSettings = async (
     next(e);
   }
 };
+/**
+ * update User Settings
+ *  @param {UserSettings} req.body
+ */
+export const updateUserSettings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const updatedSettings = await prisma.userSettings.update({
+      where: {
+        id: req.body.id,
+      },
+      data: {
+        tenantId: tenantId,
+        ...req.body,
+      },
+    });
+    res.json(updatedSettings);
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};

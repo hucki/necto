@@ -29,8 +29,22 @@ export const getOneUserByAuth0Id = async (
 ): Promise<void> => {
   try {
     const user = await prisma.user.findFirst({
-      where: { a0Id: req.params.a0Id },
-      include: {userSettings_userSettings_userIdTousers: true}
+      where: {
+        a0Id: req.params.a0Id,
+      },
+      include: {
+        userSettings: {
+          where: {
+            validUntil: {
+              equals: null
+            }
+          },
+          include: {
+            employee: true,
+          },
+        },
+
+      },
     });
     res.json(user);
     res.status(200);
