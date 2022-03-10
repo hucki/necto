@@ -11,7 +11,7 @@ import { CalendarColumn } from './CalendarColumn';
 import * as colors from '../../styles/colors';
 import { useDisclosure } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
-import { useCurrentTime } from '../../hooks/time';
+import CalendarTimeMarker from './CalendarTimeMarker';
 
 interface CalendarInputProps {
   events: Event[];
@@ -47,9 +47,7 @@ function CalendarContainer({
       : currentHoursInterval[1] - currentHoursInterval[0] + 1
   );
   const scaleWidth = '3rem';
-
-  const {date, time} = useCurrentTime();
-  const isToday = date.isBetween(daysRange[0], daysRange[1], 'date', '[]');
+  const isToday = dayjs().isBetween(daysRange[0], daysRange[1], 'date', '[]');
 
   // calculate boundaries to fit all events
   events.forEach((event) => {
@@ -137,20 +135,13 @@ function CalendarContainer({
         backgroundSize: `1px calc(100% / ${numOfHours + 1} * 2)`,
       }}
     >
-      {isToday && <div
-        className="now"
-        css={{
-          position: 'absolute',
-          top: '100px',
-          left: scaleWidth,
-          width: `calc(100% - ${scaleWidth})`,
-          borderBottom: '1px solid red',
-          fontSize: '0.8rem',
-          color: 'red'
-        }}
-      >
-        {time}
-      </div>}
+      {isToday && (
+        <CalendarTimeMarker
+          scaleHeightUnits={numOfHours + 1}
+          offsetLeft={scaleWidth}
+          firstHour={currentHoursInterval[0]}
+        />
+      )}
       <div
         id="CalendarScale"
         key="CalendarScale"
