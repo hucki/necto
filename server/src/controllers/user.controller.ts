@@ -40,7 +40,11 @@ export const getOneUserByAuth0Id = async (
             }
           },
           include: {
-            employee: true,
+            employee: {
+              include: {
+                contract: true,
+              }
+            }
           },
         },
 
