@@ -46,7 +46,8 @@
     "teamSettings": "Team",
     "employeeSettings": "Employees",
     "profile": "Profile",
-    "logout": "logout"
+    "logout": "logout",
+    "settings": "settings"
   },
   "patients": {
     "firstName": "first name",

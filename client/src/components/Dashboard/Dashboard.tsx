@@ -12,6 +12,7 @@ import TeamSettings from '../../views/TeamSettings/TeamSettings';
 import EmployeeSettings from '../../views/EmployeeSettings/EmployeeSettings';
 import Patients from '../../views/Patients/Patients';
 import WaitingList from '../../views/Patients/WaitingList';
+import Settings from '../../views/Settings/Settings';
 // import { useBreakpointValue } from '@chakra-ui/react';
 
 interface DashboardInputProps {
@@ -46,14 +47,8 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
         <Route path="/personalcal">
           <PersonalCalendar a0Id={a0Id} />
         </Route>
-        <Route path="/teamsettings">
-          <TeamSettings />
-        </Route>
-        <Route path="/employeesettings">
-          <EmployeeSettings />
-        </Route>
-        <Route path="/profile">
-          <UserProfile a0Id={a0Id} />
+        <Route path="/settings">
+          <Settings a0Id={a0Id} />
         </Route>
         <Route path="*">
           <div>Route not found</div>

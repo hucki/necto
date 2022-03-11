@@ -3,15 +3,13 @@ import { useDisclosure, Divider } from '@chakra-ui/react';
 import {
   RiCalendarEventFill,
   RiHomeFill,
-  RiLogoutBoxLine,
+  RiLogoutBoxFill,
   RiMentalHealthFill,
   RiMenuFoldFill,
   RiMenuUnfoldFill,
-  RiProfileLine,
+  RiSettingsLine,
   RiTeamFill,
   RiUserFill,
-  RiUserSettingsFill,
-  RiUserSettingsLine,
   RiZzzFill,
 } from 'react-icons/ri';
 import { connect } from 'react-redux';
@@ -110,34 +108,14 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
       <Divider />
       {/* Settings */}
       <NavigationButton
-        variant={currentView === '/teamsettings' ? 'solid' : 'ghost'}
         colorScheme="gray"
-        aria-label="Team Settings"
-        leftIcon={<RiUserSettingsFill />}
-        key="/teamsettings"
-        onClick={() => onClickHandler('/teamsettings')}
+        variant={currentView === '/settings' ? 'solid' : 'ghost'}
+        aria-label="Settings"
+        leftIcon={<RiSettingsLine />}
+        key="/settings"
+        onClick={() => onClickHandler('/settings')}
       >
-        {isOpen ? t('menu.teamSettings') : null}
-      </NavigationButton>
-      <NavigationButton
-        colorScheme="gray"
-        variant={currentView === '/employeesettings' ? 'solid' : 'ghost'}
-        aria-label="Employee Settings"
-        leftIcon={<RiUserSettingsLine />}
-        key="/employeesettings"
-        onClick={() => onClickHandler('/employeesettings')}
-      >
-        {isOpen ? t('menu.employeeSettings') : null}
-      </NavigationButton>
-      <NavigationButton
-        colorScheme="gray"
-        variant={currentView === '/profile' ? 'solid' : 'ghost'}
-        aria-label="Profile"
-        leftIcon={<RiProfileLine />}
-        key="/profile"
-        onClick={() => onClickHandler('/profile')}
-      >
-        {isOpen ? t('menu.profile') : null}
+        {isOpen ? t('menu.settings') : null}
       </NavigationButton>
       <Divider />
       {/* Logout */}
@@ -147,7 +125,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         onClick={() => logout({ returnTo: window.location.origin })}
         variant="ghost"
         aria-label="Logout"
-        leftIcon={<RiLogoutBoxLine />}
+        leftIcon={<RiLogoutBoxFill />}
       >
         {isOpen ? t('menu.logout') : null}
       </NavigationButton>
