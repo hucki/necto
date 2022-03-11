@@ -42,7 +42,7 @@ function PersonalCalendar({
   if (isLoading || isLoadingUser || !user?.uuid || !user?.userSettings?.length || !user?.userSettings[0].employee) return <FullPageSpinner />;
 
   const thisEmployee = user?.userSettings[0].employee;
-
+  console.log({thisEmployee});
   const ressources: EmployeeRessource[] = [
     {
       userId: user.uuid,
@@ -50,7 +50,7 @@ function PersonalCalendar({
       displayName: thisEmployee.firstName,
       shortDescription: thisEmployee.firstName,
       longDescription: thisEmployee.firstName + ' ' + thisEmployee.lastName,
-      bgColor: 'red' //thisEmployee.contract[0].bgColor || '',
+      bgColor: thisEmployee.contract[0].bgColor || '',
     }
   ];
 
