@@ -22,7 +22,7 @@ function Patients(): JSX.Element {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
       }}
     >
       <FilterBar

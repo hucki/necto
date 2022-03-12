@@ -22,7 +22,7 @@ function WaitingList(): JSX.Element {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
       }}
     >
       <FilterBar
@@ -30,7 +30,11 @@ function WaitingList(): JSX.Element {
         hasBuildingFilter={false}
         hasTeamsFilter={false}
       />
-      <PatientsList patients={patients} currentCompany={undefined} hasActions={false}/>
+      <PatientsList
+        patients={patients}
+        currentCompany={undefined}
+        hasActions={false}
+      />
     </div>
   );
 }
