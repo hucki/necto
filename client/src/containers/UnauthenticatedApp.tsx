@@ -10,29 +10,36 @@ import {
   Header,
 } from '../components/Library';
 import UserInfo from '../components/UserInfo/UserInfo';
+import { Box, Stack } from '@chakra-ui/react';
 
 function UnauthenticatedApp(): JSX.Element {
   const { isLoading } = useAuth0();
   return (
     <App id="App">
-      <ContentContainer>
-        <Header>
-          <UserInfo userName="Guest" />
-        </Header>
-        {isLoading ? (
-          <FullPageSpinner />
-        ) : (
-          <Switch>
-            <Route path="/verify">
-              <VerifySignup />
-            </Route>
-            <Route path="*">
-              <h1>Welcome</h1>
-              <div>Please login</div>
-              <LoginButton />
-            </Route>
-          </Switch>
-        )}
+      <ContentContainer alignItems="center" justifyContent="center">
+        <Box
+          rounded="lg"
+          boxShadow="lg"
+          p="8"
+        >
+          <Stack spacing="4">
+            <UserInfo userName="Guest" />
+            {isLoading ? (
+              <FullPageSpinner />
+            ) : (
+              <Switch>
+                <Route path="/verify">
+                  <VerifySignup />
+                </Route>
+                <Route path="*">
+                  <h1>Welcome</h1>
+                  <div>Please login</div>
+                  <LoginButton />
+                </Route>
+              </Switch>
+            )}
+          </Stack>
+        </Box>
       </ContentContainer>
     </App>
   );
