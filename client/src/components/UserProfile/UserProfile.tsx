@@ -3,7 +3,12 @@
 import { jsx } from '@emotion/react';
 import React, { FormEvent, useEffect, useState } from 'react';
 
-import { useAddUser, useAuth0User, useCreateUserSettings, useUpdateUserSettings } from '../../hooks/user';
+import {
+  useAddUser,
+  useAuth0User,
+  useCreateUserSettings,
+  useUpdateUser,
+} from '../../hooks/user';
 import { useAllEmployees } from '../../hooks/employees';
 import { FormGroup, Input, Button, Label, Select } from '../Library';
 import { RiEditFill } from 'react-icons/ri';
@@ -18,36 +23,44 @@ const UserProfile = ({
   a0Id,
 }: UserProfileProps): JSX.Element => {
   const [createUser] = useAddUser();
+  const [updateUser] = useUpdateUser();
   const [createUserSettings] = useCreateUserSettings();
-  const [updateUserSettings] = useUpdateUserSettings();
-  const { isLoading: isLoadingEmployees, error, employees, refetch } = useAllEmployees();
+  const {
+    isLoading: isLoadingEmployees,
+    error,
+    employees,
+    refetch,
+  } = useAllEmployees();
   const [state, setState] = useState(purpose);
   const { user, isLoading } = useAuth0User(a0Id);
   const [userState, setUserState] = useState({
     a0Id: a0Id,
     firstName: user ? user.firstName : '',
     lastName: user ? user.lastName : '',
-    employeeId: ''
+    employeeId: '',
   });
 
-  useEffect(() =>{
+  useEffect(() => {
     if (!isLoading && user?.uuid && !user.userSettings?.length) {
       console.log('create UserSettings');
-      createUserSettings(
-        {
-          userSettings: {
-            userId: user.uuid
-          }
-        }
-      );
-    };
-    if (!isLoading && user?.userSettings?.length && user.userSettings[0].employeeId) {
+      createUserSettings({
+        userSettings: {
+          userId: user.uuid,
+        },
+      });
+    }
+    if (
+      !isLoading &&
+      user?.userSettings?.length &&
+      user.userSettings[0].employeeId
+    ) {
       setUserState((currentState) => ({
         ...currentState,
-        employeeId: user && user.userSettings && user.userSettings[0].employeeId || '',
+        employeeId:
+          (user && user.userSettings && user.userSettings[0].employeeId) || '',
       }));
-    };
-  },[user, isLoading]);
+    }
+  }, [user, isLoading]);
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
@@ -57,34 +70,38 @@ const UserProfile = ({
     }));
   };
 
-  const onSelectHandler = (e:any) : void => {
+  const onSelectHandler = (e: any): void => {
     // console.log({selected: e.target.value});
     setUserState((currentState) => ({
       ...currentState,
-      employeeId: e.target.value
+      employeeId: e.target.value,
     }));
   };
 
   const onSubmitHandler = (e: FormEvent): void => {
     e.preventDefault();
-    state === 'new'
-      ? createUser({ user: userState })
-      : updateSettings();
+    state === 'new' ? createUser({ user: userState }) : onUpdateUser();
     toggleEdit(e);
   };
 
-  const updateSettings = () => {
+  const onUpdateUser = () => {
     if (!user?.uuid) return;
     if (!user?.userSettings?.length) return;
-    updateUserSettings(
-      {
-        userSettings: {
-          id: user?.userSettings[0].id,
-          userId: user?.uuid,
-          employeeId: userState.employeeId
-        }
-      }
-    );
+    updateUser({
+      user: {
+        uuid: user.uuid,
+        a0Id: user.a0Id,
+        firstName: userState.firstName,
+        lastName: userState.lastName,
+        userSettings: [
+          {
+            id: user?.userSettings[0].id,
+            userId: user?.uuid,
+            employeeId: userState.employeeId,
+          },
+        ],
+      },
+    });
   };
   const toggleEdit = (e: FormEvent): void => {
     e.preventDefault();
@@ -107,6 +124,7 @@ const UserProfile = ({
           },
         }}
       >
+        {state === 'new' && <div>Please Enter your Name and choose and connect to your employee account</div>}
         <FormGroup>
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -135,8 +153,10 @@ const UserProfile = ({
             value={userState.employeeId}
             onChange={onSelectHandler}
           >
-            {employees.map((e,i) => (
-              <option key={i} value={e.uuid}>{e.lastName + ', ' + e.firstName}</option>
+            {employees.map((e, i) => (
+              <option key={i} value={e.uuid}>
+                {e.lastName + ', ' + e.firstName}
+              </option>
             ))}
           </Select>
         </FormGroup>

@@ -1,13 +1,15 @@
-import { useQuery,
+import {
+  useQuery,
   QueryResult,
   useMutation,
   MutationResultPair,
-  queryCache } from 'react-query';
+  queryCache,
+} from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
 import { TeamMember, User } from '../types/User';
 import { UserSettings } from '../types/UserSettings';
 
-export function useUser (
+export function useUser(
   id: number
 ): QueryResult<User> & { user: User | undefined } {
   const client = useAuthenticatedClient<User>();
@@ -21,7 +23,7 @@ export function useUser (
   };
 }
 
-export function useAddUser (): MutationResultPair<
+export function useAddUser(): MutationResultPair<
   User,
   Error,
   { user: User },
@@ -38,8 +40,7 @@ export function useAddUser (): MutationResultPair<
   });
 }
 
-
-export function useAuth0User (
+export function useAuth0User(
   a0Id: string
 ): QueryResult<User> & { user: User | undefined } {
   const client = useAuthenticatedClient<User>();
@@ -53,7 +54,7 @@ export function useAuth0User (
   };
 }
 
-export function useAllUsers (): QueryResult<User[]> & { users: User[] } {
+export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
   const client = useAuthenticatedClient<User[]>();
 
   const usersQuery = useQuery('users', async () => {
@@ -68,7 +69,7 @@ export function useAllUsers (): QueryResult<User[]> & { users: User[] } {
   };
 }
 
-export function useAllTeamMembers (): QueryResult<TeamMember[]> & {
+export function useAllTeamMembers(): QueryResult<TeamMember[]> & {
   teamMembers: TeamMember[];
   } {
   const client = useAuthenticatedClient<TeamMember[]>();
@@ -85,14 +86,18 @@ export function useAllTeamMembers (): QueryResult<TeamMember[]> & {
   };
 }
 
-export function useCreateUserSettings (): MutationResultPair<
+export function useCreateUserSettings(): MutationResultPair<
   UserSettings,
   Error,
   { userSettings: UserSettings },
   string
   > {
   const client = useAuthenticatedClient<UserSettings>();
-  const createUserSettings = async ({ userSettings }: { userSettings: UserSettings }): Promise<UserSettings> => {
+  const createUserSettings = async ({
+    userSettings,
+  }: {
+    userSettings: UserSettings;
+  }): Promise<UserSettings> => {
     return client('settings/user', { data: userSettings });
   };
   return useMutation(createUserSettings, {
@@ -102,14 +107,18 @@ export function useCreateUserSettings (): MutationResultPair<
   });
 }
 
-export function useUpdateUserSettings (): MutationResultPair<
+export function useUpdateUserSettings(): MutationResultPair<
   UserSettings,
   Error,
   { userSettings: UserSettings },
   string
   > {
   const client = useAuthenticatedClient<UserSettings>();
-  const updateUserSettings = async ({ userSettings }: { userSettings: UserSettings }): Promise<UserSettings> => {
+  const updateUserSettings = async ({
+    userSettings,
+  }: {
+    userSettings: UserSettings;
+  }): Promise<UserSettings> => {
     return client('settings/user', { data: userSettings, method: 'PATCH' });
   };
   return useMutation(updateUserSettings, {
@@ -119,3 +128,19 @@ export function useUpdateUserSettings (): MutationResultPair<
   });
 }
 
+export function useUpdateUser(): MutationResultPair<
+  User,
+  Error,
+  { user: User },
+  string
+  > {
+  const client = useAuthenticatedClient<User>();
+  const updateUser = async ({ user }: { user: User }): Promise<User> => {
+    return client('users', { data: user, method: 'PATCH' });
+  };
+  return useMutation(updateUser, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('users');
+    },
+  });
+}
