@@ -36,18 +36,17 @@ export const getOneUserByAuth0Id = async (
         userSettings: {
           where: {
             validUntil: {
-              equals: null
-            }
+              equals: null,
+            },
           },
           include: {
             employee: {
               include: {
                 contract: true,
-              }
-            }
+              },
+            },
           },
         },
-
       },
     });
     res.json(user);
@@ -86,10 +85,67 @@ export const addUser = async (
     const createdUser = await prisma.user.create({
       data: {
         tenantId: tenantId,
-        ...req.body,
+        a0Id: req.body.a0Id,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
       },
     });
-    res.json(createdUser);
+    let createdSettings;
+    if (req.body.employeeId) {
+      createdSettings = await prisma.userSettings.create({
+        data: {
+          tenantId: tenantId,
+          userId: createdUser.uuid,
+          employeeId: req.body.employeeId,
+        },
+      });
+    }
+    res.json({ createdUser, createdSettings });
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+/**
+ * update one User
+ *  @param {User} req.body
+ */
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        uuid: req.body.uuid,
+      },
+      data: {
+        a0Id: req.body.a0Id,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        tenantId: tenantId,
+      },
+    });
+    let updatedSettings;
+
+    if (req.body.userSettings.length) {
+      updatedSettings = await prisma.userSettings.upsert({
+        where: {
+          id: req.body.userSettings[0].id,
+        },
+        update: {
+          employeeId: req.body.userSettings[0].employeeId,
+        },
+        create: {
+          userId: req.body.uuid,
+          employeeId: req.body.userSettings[0].employeeId,
+          tenantId: tenantId,
+        },
+      });
+    }
+    res.json({ updatedUser, updatedSettings });
     res.status(201);
     return;
   } catch (e) {

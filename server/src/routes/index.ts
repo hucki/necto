@@ -39,6 +39,7 @@ router.get('/a0users/:a0Id', userController.getOneUserByAuth0Id);
 // router.get('/users/:userId', userController.getOneUser);
 router.get('/users', userController.getAllUsers);
 router.post('/users', userController.addUser);
+router.patch('/users', userController.updateUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
 
 // employee routes
