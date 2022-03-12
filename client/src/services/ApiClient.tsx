@@ -73,16 +73,32 @@ type ClientFunction<T, P = T> = (
 ) => Promise<P>;
 
 export function useAuthenticatedClient<T, P = T>(): ClientFunction<T, P> {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated, getAccessTokenWithPopup } =
+    useAuth0();
 
   return useCallback(
     async (endpoint, config) => {
       /* eslint-disable */
-      const accessToken = isAuthenticated
-        ? await getAccessTokenSilently({
-            audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL,
-          })
-        : undefined;
+      let accessToken = undefined;
+      const getTokenAndTryAgain = async () => {
+        accessToken = await getAccessTokenWithPopup({
+          audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL,
+        });
+        // refresh();
+      };
+      try {
+        accessToken = isAuthenticated
+          ? await getAccessTokenSilently({
+              audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL,
+            })
+          : undefined;
+      } catch (error1) {
+        try {
+          await getTokenAndTryAgain();
+        } catch (error2) {
+          console.error({ error1, error2 });
+        }
+      }
       return client<T, P>(endpoint, { ...config, accessToken });
     },
     [isAuthenticated, getAccessTokenSilently]
