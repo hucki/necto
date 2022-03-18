@@ -25,10 +25,12 @@ import RRule from 'rrule';
 import { registerLocale } from 'react-datepicker';
 import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import utc from 'dayjs/plugin/utc';
 import de from 'date-fns/locale/de';
 import { useAllPatients } from '../../hooks/patient';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
+dayjs.extend(utc);
 dayjs.locale('de');
 
 interface CalendarEventFormProps {
@@ -129,32 +131,36 @@ function CalendarEventForm({
 
   useEffect(() => {
     if (isRecurring) {
+      const dt = dayjs.utc(eventStartTime);
       const rrule = new RRule({
         freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
-        tzid: 'Europe/Brussels',
+        tzid: 'Europe/Amsterdam',
         count: recurringInterval,
-        dtstart: dayjs(eventStartTime).toDate(),
+        dtstart: new Date(Date.UTC(dt.year(),dt.month(),dt.date(),dt.hour(),dt.minute(),0)),
       });
       setRecurringRule(rrule.toString());
     } else {
       setRecurringRule('');
     }
   }, [isRecurring]);
+
   function onBuildTimelineHandler() {
+    const dt = dayjs.utc(eventStartTime);
     const rrule = new RRule({
       freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
-      tzid: 'Europe/Brussels',
+      tzid: 'Europe/Amsterdam',
       count: recurringInterval,
-      dtstart: dayjs(eventStartTime).toDate(),
+      dtstart: new Date(Date.UTC(dt.year(),dt.month(),dt.date(),dt.hour(),dt.minute(),0)),
     });
     setRecurringRule(rrule.toString());
     setTimeline(
       <ul>
-        {rrule.all().map((date) => (
-          <li key={date.toString()}>
-            {dayjs(date).format('ddd DD.MM.YYYY HH:mm')}
-          </li>
-        ))}
+        {rrule.all().map((date) =>  {
+          return (
+            <li key={date.toString()}>
+              {dayjs.utc(date).hour(dt.local().hour()).format('ddd DD.MM.YYYY HH:mm')}
+            </li>
+          );})}
       </ul>
     );
   }
@@ -191,7 +197,7 @@ function CalendarEventForm({
     recurringRule,
     eventStartTime,
     eventEndTime,
-    eventPatientId
+    eventPatientId,
   ]);
 
   return (
@@ -204,9 +210,14 @@ function CalendarEventForm({
           value={eventPatientId}
           onChange={handleEventPatientIdChange}
         >
-          <option key="noPatient" value="">No {t('calendar.event.patient')}</option>
-          {patients.map(p => <option key={p.uuid} value={p.uuid}>{p.lastName + ', ' + p.firstName}</option>)}
-
+          <option key="noPatient" value="">
+            No {t('calendar.event.patient')}
+          </option>
+          {patients.map((p) => (
+            <option key={p.uuid} value={p.uuid}>
+              {p.lastName + ', ' + p.firstName}
+            </option>
+          ))}
         </Select>
       </FormGroup>
       <FormGroup>
