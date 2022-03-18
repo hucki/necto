@@ -101,7 +101,14 @@ function CalendarEventEdit({
   }
 
   function handleCancelEvent() {
-    alert('you want to cancel this event');
+    // alert('you want to cancel this event');
+    updateEvent({
+      event: {
+        ...changedEvent,
+        isCancelled: true,
+        isCancelledReason: 'generic'
+      },
+    });
     onClose();
   }
 

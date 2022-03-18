@@ -92,10 +92,10 @@ function CalendarContainer({
   const calendarDays = [];
   let curCalendarDay = daysRange[0];
   for (let i = 0; i < numOfDays; i++) {
-    const daysEvents = events.filter((event) =>
+    const daysEvents = events.filter((event) => !event.isCancelled &&
       dayjs(event.startTime).isSame(dayjs(curCalendarDay), 'date')
-        ? event
-        : undefined
+      ? event
+      : undefined
     );
     calendarDays.push(
       <CalendarColumn
