@@ -9,11 +9,11 @@ interface CheckOverlapProps {
 export function checkOverlap({ eventToCheck, eventList }: CheckOverlapProps) {
   if (eventToCheck) {
     const newEvent = !eventToCheck.uuid;
-    console.log({ newEvent, eventToCheck, eventList });
     const checkStart = eventToCheck.startTime;
     const checkEnd = eventToCheck.endTime;
     const result = eventList.filter(
       (event) =>
+        !event.isCancelled &&
         (newEvent || eventToCheck.uuid !== event.uuid) &&
         eventToCheck.ressourceId === event.ressourceId &&
         ((dayjs(checkStart) >= dayjs(event.startTime) &&
