@@ -13,6 +13,7 @@ import {
 } from '../Library';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
+import utc from 'dayjs/plugin/utc';
 import { useDaysEvents } from '../../hooks/events';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
@@ -27,6 +28,7 @@ import { checkOverlap } from '../../helpers/eventChecker';
 import { rrulestr } from 'rrule';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
+dayjs.extend(utc);
 dayjs.locale('de');
 
 interface CalendarEventInputProps {
@@ -78,7 +80,6 @@ function CalendarEventInput({
   }, [dateTime, uuid]);
 
   const handleChangedEvent = (changedEvent: Event) => {
-    console.log({ changedEvent });
     setNewEvent({
       userId: defaultEvent.userId,
       ressourceId: defaultEvent.ressourceId,
@@ -121,12 +122,13 @@ function CalendarEventInput({
           'm'
         );
         if (rruleList && rruleList.length > 1) {
-          console.log({ rruleList });
+          const currentTZHour = dayjs.utc(rruleList[0]).local().hour();
           for (let i = 1; i < rruleList.length; i++) {
+            const dt = dayjs(rruleList[i]).hour(currentTZHour);
             const nextEvent = newEvent;
             nextEvent.parentEventId = createdEvent.uuid;
-            nextEvent.startTime = dayjs(rruleList[i]);
-            nextEvent.endTime = dayjs(rruleList[i]).add(eventDuration, 'm');
+            nextEvent.startTime = dt;
+            nextEvent.endTime = dt.add(eventDuration, 'm');
             await createEvent({
               event: nextEvent,
             });
