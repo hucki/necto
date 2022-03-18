@@ -300,8 +300,8 @@ function PatientsList({
         )}
         {!hasActions && p.events?.length ? (
           <Td>
-            <b>{p.events[0].employee?.firstName}</b>:<br />
-            {dayjs(p.events[0].startTime).format('llll')}
+            <b>{p.events.filter(event => !event.isCancelled)[0].employee?.firstName}</b>:<br />
+            {dayjs(p.events.filter(event => !event.isCancelled)[0].startTime).format('llll')}
           </Td>
         ) : null}
       </Tr>
