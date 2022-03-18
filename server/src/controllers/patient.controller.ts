@@ -202,6 +202,7 @@ export const getWaitingPatients = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    // TODO: fix to only get patient without events or with not cancelled diagnostic patients
     const waitingPatients = await prisma.patient.findMany({
       include: {
         events: {
@@ -221,7 +222,15 @@ export const getWaitingPatients = async (
           {
             events: {
               every: {
+                isCancelled: true,
+              }
+            }
+          },
+          {
+            events: {
+              some: {
                 isDiagnostic: true,
+                isCancelled: false,
               },
             },
           },
