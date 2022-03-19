@@ -7,7 +7,7 @@ import {
   queryCache,
 } from 'react-query';
 import { useAuthenticatedClient } from '../services/ApiClient';
-import { Event } from '../types/Event';
+import { CancellationReason, Event } from '../types/Event';
 
 export function useEvent(
   id: number
@@ -128,4 +128,55 @@ export function useUpdateEvent(): MutationResultPair<
       queryCache.invalidateQueries('events');
     },
   });
+}
+
+const cancellationReasonsRoute = 'settings/event/cr';
+
+export function useCreateCancellationReason(): MutationResultPair<
+  CancellationReason,
+  Error,
+  { cr: CancellationReason },
+  string
+  > {
+  const client = useAuthenticatedClient<CancellationReason>();
+  const createCancellationReason = async ({ cr }: { cr: CancellationReason }): Promise<CancellationReason> => {
+    return client(cancellationReasonsRoute, { data: cr });
+  };
+  return useMutation(createCancellationReason, {
+    onSuccess: () => {
+      queryCache.invalidateQueries(cancellationReasonsRoute);
+    },
+  });
+}
+
+export function useUpdateCancellationReason(): MutationResultPair<
+CancellationReason,
+  Error,
+  { cr: CancellationReason },
+  string
+  > {
+  const client = useAuthenticatedClient<CancellationReason>();
+  const updateCancellationReason = async ({ cr }: { cr: CancellationReason }): Promise<CancellationReason> => {
+    return client(cancellationReasonsRoute, { data: cr, method: 'PATCH' });
+  };
+  return useMutation(updateCancellationReason, {
+    onSuccess: () => {
+      queryCache.invalidateQueries(cancellationReasonsRoute);
+    },
+  });
+}
+
+export function useAllCancellationReasons(): QueryResult<CancellationReason[]> & { cancellationReasons: CancellationReason[] } {
+  const client = useAuthenticatedClient<CancellationReason[]>();
+
+  const usersQuery = useQuery(cancellationReasonsRoute, async () => {
+    return client(cancellationReasonsRoute);
+  });
+
+  const cancellationReasons = usersQuery.data ?? [];
+
+  return {
+    cancellationReasons,
+    ...usersQuery,
+  };
 }

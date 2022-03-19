@@ -45,3 +45,9 @@ export type Appointment = {
   isHomeVisit: boolean;
   roomId?: string;
 };
+
+export type CancellationReason = {
+  id: string;
+  description: string;
+  tenantId?: string;
+}
