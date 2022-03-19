@@ -47,7 +47,8 @@
     "employeeSettings": "Mitarbeiter",
     "profile": "Profil",
     "logout": "abmelden",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "eventSettings": "Termine"
   },
   "patients": {
     "firstName": "Vorname",
