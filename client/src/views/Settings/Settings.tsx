@@ -5,12 +5,14 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import TeamSettings from '../TeamSettings/TeamSettings';
 import EmployeeSettings from '../EmployeeSettings/EmployeeSettings';
 import {
+  RiCalendarEventLine,
   RiProfileLine,
   RiUserSettingsFill,
   RiUserSettingsLine,
 } from 'react-icons/ri';
 import UserProfile from '../../components/UserProfile/UserProfile';
 import { useTranslation } from 'react-i18next';
+import EventSettings from '../EventSettings/EventSettings';
 
 interface SettingsProps {
   a0Id: string;
@@ -31,6 +33,10 @@ const Settings = ({ a0Id }: SettingsProps): JSX.Element => {
           {t('menu.employeeSettings')}
         </Tab>
         <Tab>
+          <RiCalendarEventLine />
+          {t('menu.eventSettings')}
+        </Tab>
+        <Tab>
           <RiProfileLine />
           {t('menu.profile')}
         </Tab>
@@ -42,6 +48,9 @@ const Settings = ({ a0Id }: SettingsProps): JSX.Element => {
         </TabPanel>
         <TabPanel>
           <EmployeeSettings />
+        </TabPanel>
+        <TabPanel>
+          <EventSettings />
         </TabPanel>
         <TabPanel>
           <UserProfile a0Id={a0Id} />
