@@ -11,6 +11,7 @@ import * as patientController from '../controllers/patient.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
 import * as userSettingsController from '../controllers/userSettings.controller';
+import * as eventSettingsController from '../controllers/eventSettings.controller';
 import * as tenantController from '../controllers/tenant.controller';
 import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
@@ -92,6 +93,10 @@ router.post('/settings/app', appSettingsController.addAppSettings);
 // user settings
 router.post('/settings/user', userSettingsController.addUserSettings);
 router.patch('/settings/user', userSettingsController.updateUserSettings);
+// event Settings
+router.get('/settings/event/cr', eventSettingsController.getAllCancellationReasons);
+router.post('/settings/event/cr', eventSettingsController.addCancellationReason);
+router.patch('/settings/event/cr', eventSettingsController.updateCancellationReason);
 
 //router.get('/appsettings', settingsController.getAppSettings);
 //router.put('/appsettings', settingsController.updateAppSettings);

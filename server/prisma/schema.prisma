@@ -147,7 +147,9 @@ model Event {
   isAllDay                Boolean?
   isRecurring             Boolean?
   isCancelled             Boolean?
-  isCancelledReason       String?                  @db.VarChar
+  cancellationReasonId    String?                  @db.VarChar(10)
+  cancellationReason      CancellationReason?      @relation("event_referenceIdToCancellationReason", fields: [cancellationReasonId], references: [id])
+  isCancelledReason       String?                  @db.VarChar // deprecated
   rrule                   String?                  @db.VarChar
   startTime               DateTime?                @db.Timestamp(6)
   endTime                 DateTime?                @db.Timestamp(6)
@@ -291,4 +293,11 @@ model Patient {
   events              Event[]       @relation("event_referenceIdTopatient")
 
   @@map("patients")
+}
+
+model CancellationReason {
+  id          String  @id @db.VarChar(10)
+  description String  @db.VarChar(64)
+  tenantId    String? @db.Uuid
+  events      Event[] @relation("event_referenceIdToCancellationReason")
 }
