@@ -32,11 +32,20 @@ const Input = styled.input(
       : { background: 'white' }
 );
 const Textarea = styled.textarea(inputStyles);
+
+interface FormGroupProps {
+  gridCols?: number
+  gridColsUnit?: 'auto' | '1fr'
+}
+
 const FormGroup = styled.div({
   display: 'grid',
-  gridTemplateColumns: 'auto auto auto auto',
-  alignItems: 'center',
-});
+  alignItems: 'center'
+},
+(({ gridCols = 2, gridColsUnit = '1fr' }: FormGroupProps) => {
+  return { gridTemplateColumns: `${(gridColsUnit + ' ').repeat(gridCols)}` };
+}),
+);
 
 const RadioGroup = styled.div({
   display: 'flex',
