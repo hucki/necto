@@ -15,6 +15,7 @@ function CalendarTimeMarker({
   firstHour = 7,
 }: CalendarTimeMarkerProps) {
   const { date, time, hours, minutes } = useCurrentTime();
+  if (hours > (firstHour + scaleHeightUnits - 1)) return null;
   return (
     <div
       className="now"
