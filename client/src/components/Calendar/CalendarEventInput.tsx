@@ -112,8 +112,10 @@ function CalendarEventInput({
         });
 
         // create events from rrule if event was created and it isRecurring and has rrule
-        if (!createdEvent || !createdEvent.isRecurring || !createdEvent.rrule)
+        if (!createdEvent || !createdEvent.isRecurring || !createdEvent.rrule) {
+          onClose();
           return;
+        }
 
         const rruleObj = rrulestr(createdEvent.rrule);
         const rruleList = rruleObj?.all();
@@ -134,11 +136,11 @@ function CalendarEventInput({
             });
           }
         }
+        onClose();
       } catch (error) {
         console.error('event could not be created', { error });
       }
     }
-    onClose();
   }
 
   return (
