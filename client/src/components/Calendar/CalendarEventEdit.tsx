@@ -2,8 +2,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalOverlay, ModalFooter, IconButton } from '@chakra-ui/react';
-import { useState } from 'react';
+import { Modal, ModalOverlay, ModalFooter, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { BaseSyntheticEvent, useState } from 'react';
 import {
   Button,
   ControlWrapper,
@@ -16,6 +16,7 @@ import {
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import {
+  useAllCancellationReasons,
   useDaysEvents,
   useDeleteEvent,
   useUpdateEvent,
@@ -23,7 +24,7 @@ import {
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Event } from '../../types/Event';
+import { CancellationReason, Event } from '../../types/Event';
 import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
 
 import { CalendarEventView } from './CalendarEventView';
@@ -53,6 +54,7 @@ function CalendarEventEdit({
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
   const { isLoading, isError, rawEvents } = useDaysEvents(event.startTime);
+  const { isLoading: isLoadingCR, error: errorCR, cancellationReasons} = useAllCancellationReasons();
 
   const [updateEvent, { error: savingError }] = useUpdateEvent();
   const [deleteEvent] = useDeleteEvent();
@@ -100,17 +102,29 @@ function CalendarEventEdit({
     onClose();
   }
 
-  function handleCancelEvent() {
-    // alert('you want to cancel this event');
+  function handleCancelEvent(event: BaseSyntheticEvent, id: CancellationReason['id']) {
+    console.log({id});
     updateEvent({
       event: {
         ...changedEvent,
         isCancelled: true,
-        isCancelledReason: 'generic'
+        cancellationReasonId: id
       },
     });
     onClose();
   }
+
+  const CancelMenuItems = () => {
+    if (isLoadingCR || !cancellationReasons.length)
+      return (
+        <MenuList borderColor="orange.500">
+          <MenuItem>{t('button.cancelEvent')}</MenuItem>
+        </MenuList>);
+    return (
+      <MenuList borderColor="orange.500">
+        {cancellationReasons.map(cr => <MenuItem onClick={(e) => handleCancelEvent(e, cr.id)} key={cr.id}>{cr.id} | {cr.description}</MenuItem>)}
+      </MenuList>);
+  };
 
   return (
     <div>
@@ -195,16 +209,19 @@ function CalendarEventEdit({
                 }}
               >
                 <ControlWrapper>
-                  <Button
-                    leftIcon={<FaTimes />}
-                    aria-label="cancel event"
-                    colorScheme="orange"
-                    size="sm"
-                    type="button"
-                    onClick={handleCancelEvent}
-                  >
-                    {t('button.cancelEvent')}
-                  </Button>
+                  <Menu>
+                    <MenuButton
+                      leftIcon={<FaTimes />}
+                      aria-label="cancel event"
+                      colorScheme="orange"
+                      size="sm"
+                      type="button"
+                      as={Button}
+                    >
+                      {t('button.cancelEvent')}
+                    </MenuButton>
+                    {CancelMenuItems()}
+                  </Menu>
                   <Button
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
