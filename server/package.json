@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc",
+    "build": "tsc",
     "start": "concurrently \"tsc -w\" \"nodemon dist/src/app.js\"",
     "start-once": "npx tsc && node dist/src/app.js"
   },
