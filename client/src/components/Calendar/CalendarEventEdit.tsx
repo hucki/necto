@@ -122,7 +122,7 @@ function CalendarEventEdit({
         </MenuList>);
     return (
       <MenuList borderColor="orange.500">
-        {cancellationReasons.map(cr => <MenuItem onClick={(e) => handleCancelEvent(e, cr.id)} key={cr.id}>{cr.id} | {cr.description}</MenuItem>)}
+        {cancellationReasons.map((cr: CancellationReason) => <MenuItem onClick={(e) => handleCancelEvent(e, cr.id)} key={cr.id}>{cr.id} | {cr.description}</MenuItem>)}
       </MenuList>);
   };
 
