@@ -1,0 +1,55 @@
+version: "3"
+services:
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:80
+    networks:
+      - necto-network
+    volumes:
+      - ./client/src:/usr/app/src
+      - ./client/public:/usr/app/public
+    depends_on:
+      - server
+    env_file:
+      - ./client/.env
+    command: nginx -g "daemon off;"
+    stdin_open: true
+    tty: true
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    networks:
+      - necto-network
+    volumes:
+      - ./server/src:/usr/app/src
+    depends_on:
+     - database
+    env_file:
+      - ./server/.env
+    environment:
+      # TODO: use below user/password combination defined in the database section
+      - DATABASE_URL=postgresql://user:password@database:5432/necto_prod?schema=public
+    command: node dist/src/app.js
+
+  database:
+    image: 'postgres:latest'
+    networks:
+      - necto-network
+    environment:
+      POSTGRES_USER: user # TODO: enter db username
+      POSTGRES_PASSWORD: password # TODO: enter db username
+      POSTGRES_DB: necto_prod
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+
+networks:
+  necto-network:
+    driver: bridge
