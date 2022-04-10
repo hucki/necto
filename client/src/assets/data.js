@@ -77,9 +77,6 @@ export const initialState = {
   appointments: {
     teamMembers: teamMembers,
   },
-  current: {
-    currentDate: dayjs(),
-  },
   currentTeam: null,
   currentCompany: null,
   settings: {
