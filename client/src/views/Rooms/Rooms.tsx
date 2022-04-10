@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { Event } from '../../types/Event';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { Room } from '../../types/Ressource';
 import { useEffect, useState } from 'react';
 import { bookingsPerPerson } from '../../assets/bookingsdata';
@@ -14,10 +14,6 @@ import { useAllbuildings } from '../../hooks/buildings';
 import { Building } from '../../types/Rooms';
 import { Label, Select } from '../../components/Library';
 import { Flex } from '@chakra-ui/react';
-
-interface RoomsInputProps {
-  currentDate?: Dayjs;
-}
 
 function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
   const createBookings = () => {
@@ -79,7 +75,7 @@ function getRooms(buildingId: string, rooms: Room[]) {
   return rooms.filter((r) => r.buildingId === buildingId);
 }
 
-function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
+function Rooms(): JSX.Element {
   const { isLoading: isLoadingRooms, error: errorRooms, rooms } = useAllRooms();
   const {
     isLoading: isLoadingBuildings,
@@ -152,7 +148,6 @@ function Rooms({ currentDate }: RoomsInputProps): JSX.Element {
 
 const mapStateToProps = (state: AppState) => {
   return {
-    currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
   };
 };

@@ -1,30 +1,34 @@
-import React, { Dispatch } from 'react';
-import { connect } from 'react-redux';
-import { changeDate } from '../../actions/actions';
-import { AppState } from '../../types/AppState';
-import dayjs, { Dayjs } from 'dayjs';
+import React, { useContext } from 'react';
+import dayjs from 'dayjs';
 import { Button, IconButton, DatePicker } from '../Library';
-
-import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
+import { FaBackward, FaCaretLeft, FaCaretRight, FaForward } from 'react-icons/fa';
 import { Flex } from '@chakra-ui/react';
+import { UserDateContext } from '../../providers/UserDate';
+console.log('NavBar', dayjs().locale());
 
-interface NavBarProps {
-  currentDate: Dayjs;
-  dispatch: Dispatch<any>;
-}
+const NavBar = () => {
 
-const NavBar = ({ currentDate, dispatch }: NavBarProps) => {
+  const {currentDate, setCurrentDate} = useContext(UserDateContext);
+
   function onChangeHandler(date: ReactDatePickerReturnType) {
-    if (date) dispatch(changeDate(dayjs(date.toString())));
+    if (date) {
+      setCurrentDate(dayjs(date.toString()));
+    }
   }
   function todayClickHandler() {
-    dispatch(changeDate(dayjs()));
+    setCurrentDate(dayjs());
   }
   function prevDayHandler() {
-    dispatch(changeDate(dayjs(currentDate).subtract(1, 'day')));
+    setCurrentDate(dayjs(currentDate).subtract(1, 'day'));
   }
   function nextDayHandler() {
-    dispatch(changeDate(dayjs(currentDate).add(1, 'day')));
+    setCurrentDate(dayjs(currentDate).add(1, 'day'));
+  }
+  function prevWeekHandler() {
+    setCurrentDate(dayjs(currentDate).subtract(1, 'week'));
+  }
+  function nextWeekHandler() {
+    setCurrentDate(dayjs(currentDate).add(1, 'week'));
   }
 
   return (
@@ -38,7 +42,13 @@ const NavBar = ({ currentDate, dispatch }: NavBarProps) => {
         Today
       </Button>
       <IconButton
-        marginX={2}
+        marginLeft={2}
+        aria-label="previous week"
+        leftIcon={<FaBackward />}
+        onClick={prevWeekHandler}
+      />
+      <IconButton
+        marginRight={2}
         aria-label="previous day"
         leftIcon={<FaCaretLeft />}
         onClick={prevDayHandler}
@@ -46,27 +56,22 @@ const NavBar = ({ currentDate, dispatch }: NavBarProps) => {
       <DatePicker
         onChange={onChangeHandler}
         dateFormat="dd.MM.y"
-        selected={currentDate.toDate()}
+        selected={currentDate?.toDate()}
       />
       <IconButton
-        marginX={2}
+        marginLeft={2}
         aria-label="next day"
         icon={<FaCaretRight />}
         onClick={nextDayHandler}
+      />
+      <IconButton
+        marginRight={2}
+        aria-label="next week"
+        icon={<FaForward />}
+        onClick={nextWeekHandler}
       />
     </Flex>
   );
 };
 
-const MapStateToProps = (state: AppState) => {
-  const { currentDate } = state.current;
-  return { currentDate };
-};
-const MapDispatchToProps = (dispatch: Dispatch<any>) => {
-  return {
-    changeDate,
-    dispatch,
-  };
-};
-
-export default connect(MapStateToProps, MapDispatchToProps)(NavBar);
+export default NavBar;

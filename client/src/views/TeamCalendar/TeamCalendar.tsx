@@ -7,20 +7,20 @@ import { AppState } from '../../types/AppState';
 import { useDaysEvents } from '../../hooks/events';
 import dayjs, { Dayjs } from 'dayjs';
 import { FullPageSpinner } from '../../components/Library';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import FilterBar from '../../components/FilterBar/FilterBar';
 import { Employee, Team } from '../../types/Employee';
 import { EmployeeRessource } from '../../types/Ressource';
+import { UserDateContext } from '../../providers/UserDate';
 
 interface TeamCalendarInputProps {
-  currentDate?: Dayjs;
   currentTeam?: Team;
 }
 
 function TeamCalendar({
-  currentDate,
   currentTeam,
 }: TeamCalendarInputProps): JSX.Element {
+  const {currentDate} = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
@@ -76,7 +76,6 @@ function TeamCalendar({
 const mapStateToProps = (state: AppState) => {
   return {
     currentTeam: state.currentTeam,
-    currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
   };
 };

@@ -9,6 +9,7 @@ import UnauthenticatedApp from './UnauthenticatedApp';
 import { useAuth0 } from '@auth0/auth0-react';
 import { FullPageSpinner } from '../components/Library';
 import { ChakraProvider, Container } from '@chakra-ui/react';
+import { UserDateProvider } from '../providers/UserDate';
 
 declare global {
   interface Window {
@@ -28,18 +29,20 @@ function App() {
   if (isLoading) return <FullPageSpinner />;
   return (
     <Provider store={store}>
-      <ChakraProvider>
-        <Container m={0} p={0}>
-          <Router>
-            {isAuthenticated && user?.sub ? (
-              <AuthenticatedApp a0Id={user?.sub} />
-            ) : (
-              <UnauthenticatedApp />
-            )}
-          </Router>
-        </Container>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      </ChakraProvider>
+      <UserDateProvider>
+        <ChakraProvider>
+          <Container m={0} p={0}>
+            <Router>
+              {isAuthenticated && user?.sub ? (
+                <AuthenticatedApp a0Id={user?.sub} />
+              ) : (
+                <UnauthenticatedApp />
+              )}
+            </Router>
+          </Container>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </ChakraProvider>
+      </UserDateProvider>
     </Provider>
   );
 }

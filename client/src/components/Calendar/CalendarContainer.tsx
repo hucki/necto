@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { AppState } from '../../types/AppState';
@@ -12,12 +12,12 @@ import * as colors from '../../styles/colors';
 import { useDisclosure } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
 import CalendarTimeMarker from './CalendarTimeMarker';
+import { UserDateContext } from '../../providers/UserDate';
 
 interface CalendarInputProps {
   events: Event[];
   ressources: Array<EmployeeRessource | Room>;
   hoursInterval?: [number, number];
-  currentDate?: Dayjs;
   daysRange: [Dayjs, Dayjs];
   readOnly?: boolean;
   columnHeaderFormat?: CalendarColumnHeaderFormat;
@@ -28,11 +28,11 @@ function CalendarContainer({
   events,
   hoursInterval,
   ressources,
-  currentDate,
   daysRange = [currentDayjs, currentDayjs],
   readOnly = false,
   columnHeaderFormat = 'dddd DD.MM.',
 }: CalendarInputProps): JSX.Element {
+  const {currentDate} = useContext(UserDateContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [clickedId, setClickedId] = useState<string | undefined>(undefined);
   const [clickedDateTime, setClickedDateTime] = useState(dayjs());
@@ -175,7 +175,6 @@ function CalendarContainer({
 }
 const mapStateToProps = (state: AppState) => {
   return {
-    currentDate: state.current.currentDate,
     hoursInterval: state.settings.hoursInterval,
   };
 };
