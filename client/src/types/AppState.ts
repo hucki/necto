@@ -15,11 +15,7 @@ export type AppState = {
   appointments: {
     teamMembers: TeamMembers;
   };
-  current: {
-    currentDate: Dayjs;
-  };
   currentTeam: Team;
-  currentCompany: Company;
   settings: {
     hoursInterval: [number, number];
     currentView: string;

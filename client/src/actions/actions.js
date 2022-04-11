@@ -1,5 +1,4 @@
 export const SET_CURRENT_TEAM = 'SET_CURRENT_TEAM';
-export const SET_CURRENT_COMPANY = 'SET_CURRENT_COMPANY';
 export const TOGGLE_VISIBLE = 'TOGGLE_VISIBLE';
 export const CLICK_ROW = 'CLICK_ROW';
 export const SET_START = 'SET_START';
@@ -18,10 +17,6 @@ export function setHours(newHours) {
 
 export function setCurrentTeam(currentTeam) {
   return { type: SET_CURRENT_TEAM, payload: currentTeam };
-}
-
-export function setCurrentCompany(currentCompany) {
-  return { type: SET_CURRENT_COMPANY, payload: currentCompany };
 }
 
 export function toggleVisible() {
