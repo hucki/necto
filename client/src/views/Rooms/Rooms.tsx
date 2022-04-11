@@ -14,6 +14,7 @@ import { useAllbuildings } from '../../hooks/buildings';
 import { Building } from '../../types/Rooms';
 import { Label, Select } from '../../components/Library';
 import { Flex } from '@chakra-ui/react';
+import { useFilter } from '../../hooks/useFilter';
 
 function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
   const createBookings = () => {
@@ -83,32 +84,31 @@ function Rooms(): JSX.Element {
     buildings,
   } = useAllbuildings();
 
-  const [calendarDate, setCalendarDate] = useState(dayjs('2022-01-17'));
-  const [currentBuilding, setCurrentBuilding] = useState<string>(
-    buildings[0]?.uuid
-  );
+  const [ calendarDate ] = useState(dayjs('2022-01-17'));
+  const { currentBuildingId, setCurrentBuildingId } = useFilter();
+
   const [events, setEvents] = useState<Event[]>(
-    getBookings(currentBuilding, rooms, buildings)
+    currentBuildingId ? getBookings(currentBuildingId, rooms, buildings) : []
   );
   const [ressources, setRessources] = useState<Room[]>(
-    getRooms(currentBuilding, rooms)
+    currentBuildingId ? getRooms(currentBuildingId, rooms) : []
   );
 
   const onBuildingChangeHandler = (event: any) => {
-    setCurrentBuilding(event.target.value);
+    setCurrentBuildingId(event.target.value);
   };
 
   useEffect(() => {
-    if (buildings[0]?.uuid && !currentBuilding)
-      setCurrentBuilding(buildings[0].uuid);
-  }, [buildings, setCurrentBuilding]);
+    if (buildings[0]?.uuid && !currentBuildingId)
+      setCurrentBuildingId(buildings[0].uuid);
 
-  useEffect(() => {
-    setEvents(getBookings(currentBuilding, rooms, buildings));
-    setRessources(getRooms(currentBuilding, rooms));
-  }, [currentBuilding]);
+    if (currentBuildingId) {
+      setEvents(getBookings(currentBuildingId, rooms, buildings));
+      setRessources(getRooms(currentBuildingId, rooms));
+    }
+  }, [buildings, currentBuildingId, setCurrentBuildingId]);
 
-  return !currentBuilding || isLoadingBuildings || isLoadingRooms ? (
+  return !currentBuildingId || isLoadingBuildings || isLoadingRooms ? (
     <div>pending</div>
   ) : (
     <div
@@ -125,11 +125,11 @@ function Rooms(): JSX.Element {
         <Label htmlFor="building">Ort</Label>
         <Select
           name="building"
-          value={currentBuilding.toString()}
+          value={currentBuildingId}
           onChange={onBuildingChangeHandler}
         >
           {buildings.map((b) => (
-            <option key={b.uuid.toString()} value={b.uuid.toString()}>
+            <option key={b.uuid} value={b.uuid}>
               {b.displayName}
             </option>
           ))}
