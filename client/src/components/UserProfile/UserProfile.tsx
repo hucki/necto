@@ -42,7 +42,6 @@ const UserProfile = ({
 
   useEffect(() => {
     if (!isLoading && user?.uuid && !user.userSettings?.length) {
-      console.log('create UserSettings');
       createUserSettings({
         userSettings: {
           userId: user.uuid,

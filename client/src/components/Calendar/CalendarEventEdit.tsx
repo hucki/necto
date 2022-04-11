@@ -103,7 +103,6 @@ function CalendarEventEdit({
   }
 
   function handleCancelEvent(event: BaseSyntheticEvent, id: CancellationReason['id']) {
-    console.log({id});
     updateEvent({
       event: {
         ...changedEvent,

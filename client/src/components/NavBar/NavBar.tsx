@@ -4,7 +4,6 @@ import { Button, IconButton, DatePicker } from '../Library';
 import { FaBackward, FaCaretLeft, FaCaretRight, FaForward } from 'react-icons/fa';
 import { Flex } from '@chakra-ui/react';
 import { UserDateContext } from '../../providers/UserDate';
-console.log('NavBar', dayjs().locale());
 
 const NavBar = () => {
 

@@ -12,7 +12,6 @@ const EventSettings = () => {
 
   const handleSubmit = () => {
     if (cancellationReasons.findIndex(cr => cr.id === newCancellationReason.id) !== -1) {
-      console.log('already exists');
       return;
     }
     if (
