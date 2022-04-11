@@ -25,14 +25,9 @@ function WaitingList(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <FilterBar
-        hasCompanyFilter
-        hasBuildingFilter={false}
-        hasTeamsFilter={false}
-      />
+      <FilterBar hasCompanyFilter />
       <PatientsList
         patients={patients}
-        currentCompany={undefined}
         hasActions={false}
       />
     </div>
