@@ -10,6 +10,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { FullPageSpinner } from '../components/Library';
 import { ChakraProvider, Container } from '@chakra-ui/react';
 import { UserDateProvider } from '../providers/UserDate';
+import { FilterProvider } from '../providers/filter/FilterContextProvider';
 
 declare global {
   interface Window {
@@ -21,27 +22,27 @@ const store = createStore(
   reducer,
   // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
-store.subscribe(() => {
-  /*console.log('NEW STATE', store.getState())*/
-});
+store.subscribe(() => {});
 function App() {
   const { user, isAuthenticated, isLoading } = useAuth0();
   if (isLoading) return <FullPageSpinner />;
   return (
     <Provider store={store}>
       <UserDateProvider>
-        <ChakraProvider>
-          <Container m={0} p={0}>
-            <Router>
-              {isAuthenticated && user?.sub ? (
-                <AuthenticatedApp a0Id={user?.sub} />
-              ) : (
-                <UnauthenticatedApp />
-              )}
-            </Router>
-          </Container>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        </ChakraProvider>
+        <FilterProvider>
+          <ChakraProvider>
+            <Container m={0} p={0}>
+              <Router>
+                {isAuthenticated && user?.sub ? (
+                  <AuthenticatedApp a0Id={user?.sub} />
+                ) : (
+                  <UnauthenticatedApp />
+                )}
+              </Router>
+            </Container>
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          </ChakraProvider>
+        </FilterProvider>
       </UserDateProvider>
     </Provider>
   );
