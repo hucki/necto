@@ -1,6 +1,6 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { Dispatch, useContext, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { setCurrentTeam, setCurrentCompany } from '../../actions/actions';
+import { setCurrentTeam } from '../../actions/actions';
 import { AppState } from '../../types/AppState';
 import classes from './FilterBar.module.css';
 import { useAllTeams } from '../../hooks/teams';
@@ -8,13 +8,13 @@ import { Team } from '../../types/Employee';
 import { Label, Select } from '../Library';
 import { Company } from '../../types/Company';
 import { useAllCompanies } from '../../hooks/companies';
+import { FilterStateContext } from '../../providers/FilterStateProvider';
 
 interface FilterBarProps {
-  hasTeamsFilter: boolean;
-  hasCompanyFilter: boolean;
-  hasBuildingFilter: boolean;
+  hasTeamsFilter?: boolean;
+  hasCompanyFilter?: boolean;
+  hasBuildingFilter?: boolean;
   currentTeam: Team;
-  currentCompany: Company;
   dispatch: Dispatch<any>;
 }
 
@@ -23,9 +23,9 @@ const NavBar = ({
   hasBuildingFilter = false,
   hasCompanyFilter = false,
   currentTeam,
-  currentCompany,
   dispatch,
 }: FilterBarProps) => {
+  const {currentCompany, setCurrentCompany} = useContext(FilterStateContext);
   const { isLoading: isLoadingTeams, error, teams } = useAllTeams();
 
   const {
@@ -42,7 +42,7 @@ const NavBar = ({
 
   useEffect(() => {
     if (!isLoadingCompanies && companies.length) {
-      dispatch(setCurrentCompany(companies[0]));
+      setCurrentCompany(companies[0]);
     }
   }, [isLoadingCompanies]);
 
@@ -53,10 +53,8 @@ const NavBar = ({
   }
 
   function onCompanyChangeHandler(event: any) {
-    dispatch(
-      setCurrentCompany(
-        companies.filter((c) => c.uuid === event.target.value)[0]
-      )
+    setCurrentCompany(
+      companies.filter((c) => c.uuid === event.target.value)[0]
     );
   }
 
@@ -116,13 +114,11 @@ const NavBar = ({
 
 const MapStateToProps = (state: AppState) => {
   const currentTeam = state.currentTeam;
-  const currentCompany = state.currentCompany;
-  return { currentTeam, currentCompany };
+  return { currentTeam };
 };
 const MapDispatchToProps = (dispatch: Dispatch<any>) => {
   return {
     setCurrentTeam,
-    setCurrentCompany,
     dispatch,
   };
 };

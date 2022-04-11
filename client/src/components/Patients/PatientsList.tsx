@@ -15,26 +15,24 @@ import {
 import { Patient, PatientInput } from '../../types/Patient';
 import { DatePicker, IconButton, Input } from '../Library';
 import { RiAddBoxFill, RiEditFill } from 'react-icons/ri';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useCreatePatient } from '../../hooks/patient';
-import { AppState } from '../../types/AppState';
-import { connect } from 'react-redux';
 import { Company } from '../../types/Company';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
+import { FilterStateContext } from '../../providers/FilterStateProvider';
 
 interface PatientsListProps {
   patients: Patient[];
-  currentCompany: Company | undefined;
   hasActions: boolean | undefined;
 }
 
 function PatientsList({
   patients,
-  currentCompany,
   hasActions = false,
 }: PatientsListProps) {
   const { t } = useTranslation();
+  const {currentCompany } = useContext(FilterStateContext);
 
   const PatientAddRow = (currentCompany: Company | undefined): JSX.Element => {
     const [createPatient, { error: savingError }] = useCreatePatient();
@@ -137,7 +135,6 @@ function PatientsList({
     useEffect(() => {
       if (!newPatient) return;
       if ((newPatient?.firstName, newPatient?.lastName)) {
-        console.log('submitNewPatient', { newPatient });
         createPatient({ patient: newPatient });
         setNewPatient(undefined);
         initNewPatient();
@@ -335,10 +332,4 @@ function PatientsList({
   );
 }
 
-const MapStateToProps = (state: AppState) => {
-  return {
-    currentCompany: state.currentCompany,
-  };
-};
-
-export default connect(MapStateToProps, null)(PatientsList);
+export default PatientsList;
