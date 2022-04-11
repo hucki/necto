@@ -25,12 +25,8 @@ function Patients(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <FilterBar
-        hasCompanyFilter
-        hasBuildingFilter={false}
-        hasTeamsFilter={false}
-      />
-      <PatientsList patients={patients} currentCompany={undefined} hasActions />
+      <FilterBar hasCompanyFilter />
+      <PatientsList patients={patients} hasActions />
     </div>
   );
 }
