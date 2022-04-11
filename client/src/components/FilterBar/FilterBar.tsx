@@ -1,31 +1,31 @@
-import React, { Dispatch, useContext, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { setCurrentTeam } from '../../actions/actions';
-import { AppState } from '../../types/AppState';
+import React, { useEffect } from 'react';
 import classes from './FilterBar.module.css';
 import { useAllTeams } from '../../hooks/teams';
-import { Team } from '../../types/Employee';
 import { Label, Select } from '../Library';
-import { Company } from '../../types/Company';
 import { useAllCompanies } from '../../hooks/companies';
-import { FilterStateContext } from '../../providers/FilterStateProvider';
+import { useFilter } from '../../hooks/useFilter';
 
 interface FilterBarProps {
   hasTeamsFilter?: boolean;
   hasCompanyFilter?: boolean;
   hasBuildingFilter?: boolean;
-  currentTeam: Team;
-  dispatch: Dispatch<any>;
 }
 
-const NavBar = ({
+const FilterBar = ({
   hasTeamsFilter = false,
   hasBuildingFilter = false,
   hasCompanyFilter = false,
-  currentTeam,
-  dispatch,
 }: FilterBarProps) => {
-  const {currentCompany, setCurrentCompany} = useContext(FilterStateContext);
+
+  const {
+    currentCompany,
+    setCurrentCompany,
+    currentTeam,
+    setCurrentTeam,
+    currentBuildingId,
+    setCurrentBuildingId
+  } = useFilter();
+
   const { isLoading: isLoadingTeams, error, teams } = useAllTeams();
 
   const {
@@ -36,7 +36,7 @@ const NavBar = ({
 
   useEffect(() => {
     if (!isLoadingTeams && teams.length) {
-      dispatch(setCurrentTeam(teams[0]));
+      setCurrentTeam(teams[0]);
     }
   }, [isLoadingTeams]);
 
@@ -47,9 +47,7 @@ const NavBar = ({
   }, [isLoadingCompanies]);
 
   function onTeamChangeHandler(event: any) {
-    dispatch(
-      setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0])
-    );
+    setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
   }
 
   function onCompanyChangeHandler(event: any) {
@@ -58,11 +56,15 @@ const NavBar = ({
     );
   }
 
+  function onBuildingChangeHandler(event: any) {
+    setCurrentBuildingId(event.target.value);
+  }
+
   return (
     <div className={classes.FilterBar}>
       {hasTeamsFilter && currentTeam && (
         <>
-          <Label htmlFor="team">Team</Label>
+          <Label htmlFor="team">Team:</Label>
           <Select
             name="team"
             value={currentTeam.uuid}
@@ -81,8 +83,8 @@ const NavBar = ({
           <Label htmlFor="building">Building</Label>
           <Select
             name="building"
-            value={currentTeam.uuid}
-            onChange={onTeamChangeHandler}
+            value={currentBuildingId}
+            onChange={onBuildingChangeHandler}
           >
             {teams.map((t, i) => (
               <option key={i} value={t.uuid}>
@@ -112,15 +114,4 @@ const NavBar = ({
   );
 };
 
-const MapStateToProps = (state: AppState) => {
-  const currentTeam = state.currentTeam;
-  return { currentTeam };
-};
-const MapDispatchToProps = (dispatch: Dispatch<any>) => {
-  return {
-    setCurrentTeam,
-    dispatch,
-  };
-};
-
-export default connect(MapStateToProps, MapDispatchToProps)(NavBar);
+export default FilterBar;

@@ -15,12 +15,12 @@ import {
 import { Patient, PatientInput } from '../../types/Patient';
 import { DatePicker, IconButton, Input } from '../Library';
 import { RiAddBoxFill, RiEditFill } from 'react-icons/ri';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCreatePatient } from '../../hooks/patient';
 import { Company } from '../../types/Company';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { FilterStateContext } from '../../providers/FilterStateProvider';
+import { useFilter } from '../../hooks/useFilter';
 
 interface PatientsListProps {
   patients: Patient[];
@@ -32,7 +32,7 @@ function PatientsList({
   hasActions = false,
 }: PatientsListProps) {
   const { t } = useTranslation();
-  const {currentCompany } = useContext(FilterStateContext);
+  const { currentCompany } = useFilter();
 
   const PatientAddRow = (currentCompany: Company | undefined): JSX.Element => {
     const [createPatient, { error: savingError }] = useCreatePatient();

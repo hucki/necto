@@ -5,31 +5,28 @@ import { connect } from 'react-redux';
 import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents } from '../../hooks/events';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { FullPageSpinner } from '../../components/Library';
 import { useContext, useEffect, useState } from 'react';
 import FilterBar from '../../components/FilterBar/FilterBar';
-import { Employee, Team } from '../../types/Employee';
+import { Employee } from '../../types/Employee';
 import { EmployeeRessource } from '../../types/Ressource';
 import { UserDateContext } from '../../providers/UserDate';
+import { useFilter } from '../../hooks/useFilter';
 
-interface TeamCalendarInputProps {
-  currentTeam?: Team;
-}
-
-function TeamCalendar({
-  currentTeam,
-}: TeamCalendarInputProps): JSX.Element {
-  const {currentDate} = useContext(UserDateContext);
-  const [calendarDate, setCalendarDate] = useState(
+function TeamCalendar(): JSX.Element {
+  const { currentTeam } = useFilter();
+  const { currentDate } = useContext(UserDateContext);
+  const [ calendarDate, setCalendarDate ] = useState(
     currentDate ? currentDate : dayjs()
   );
   const { isLoading, rawEvents } = useDaysEvents(calendarDate);
-  // teamMembers.forEach(member => console.log(member.bgColor))
+
   useEffect(() => {
     if (currentDate && calendarDate !== currentDate)
       setCalendarDate(currentDate);
   }, [currentDate, calendarDate, setCalendarDate]);
+
   const teamMembers = currentTeam?.employees;
 
   interface TeamMemberMapProps {
@@ -58,11 +55,7 @@ function TeamCalendar({
         alignItems: 'center',
       }}
     >
-      <FilterBar
-        hasTeamsFilter
-        hasBuildingFilter={false}
-        hasCompanyFilter={false}
-      />
+      <FilterBar hasTeamsFilter />
       <CalendarContainer
         readOnly={false}
         events={rawEvents}
@@ -75,7 +68,6 @@ function TeamCalendar({
 
 const mapStateToProps = (state: AppState) => {
   return {
-    currentTeam: state.currentTeam,
     hoursInterval: state.settings.hoursInterval,
   };
 };
