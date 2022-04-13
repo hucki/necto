@@ -32,4 +32,4 @@ type RecurringInterval =
   | 19
   | 20;
 
-type CalendarColumnHeaderFormat = 'dddd' | 'dddd DD.MM.'
+type CalendarColumnHeaderFormat = 'DD.MM.' | 'dd DD.MM.' | 'dddd' | 'dddd DD.MM.'
