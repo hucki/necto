@@ -1,6 +1,4 @@
 import { Dayjs } from 'dayjs';
-import { Company } from './Company';
-import { Team } from './Employee';
 
 interface TeamMembers {
   uuid: string;
@@ -15,7 +13,6 @@ export type AppState = {
   appointments: {
     teamMembers: TeamMembers;
   };
-  currentTeam: Team;
   settings: {
     hoursInterval: [number, number];
     currentView: string;
