@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { FilterContext } from '../../types/AppState';
+import { FilterContext } from './types';
 
 export const defaultFilterContextProps: FilterContext = {
   calendarView: 'day',
