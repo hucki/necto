@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ReactNode } from 'react';
 import { useState } from 'react';
-import { CalendarView, FilterContext } from '../../types/AppState';
+import { CalendarView } from './types';
 import { Company } from '../../types/Company';
 import { Team } from '../../types/Employee';
 import { filterContext } from '.';
