@@ -10,7 +10,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { FullPageSpinner } from '../components/Library';
 import { ChakraProvider, Container } from '@chakra-ui/react';
 import { UserDateProvider } from '../providers/UserDate';
-import { FilterProvider } from '../providers/filter/FilterContextProvider';
+import { FilterProvider } from '../providers/filter/FilterProvider';
 
 declare global {
   interface Window {
