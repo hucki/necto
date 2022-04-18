@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents, useWeeksEvents } from '../../hooks/events';
+import { useTranslation } from 'react-i18next';
 import dayjs, { Dayjs } from 'dayjs';
 import { FullPageSpinner, Label, Select } from '../../components/Library';
 import { useContext, useEffect, useState } from 'react';
@@ -28,6 +29,7 @@ interface PersonalCalendarInputProps {
 function PersonalCalendar({
   a0Id,
 }: PersonalCalendarInputProps): JSX.Element {
+  const { t } = useTranslation();
   const {currentDate} = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
@@ -79,8 +81,8 @@ function PersonalCalendar({
           value={currentView}
           onChange={onCurrentViewChange}
         >
-          <option value="day">Day</option>
-          <option value="week">Week</option>
+          <option value="day">{t('calendar.view.day')}</option>
+          <option value="week">{t('calendar.view.week')}</option>
         </Select>
       </Flex>
       {currentView === 'day' &&
