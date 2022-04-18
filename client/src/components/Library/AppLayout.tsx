@@ -34,7 +34,7 @@ const ContentContainer = styled(Box)({
 const Header = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
   width: '100%',
   height: 'clamp(52px, 5vh)',
   backgroundColor: 'white',
