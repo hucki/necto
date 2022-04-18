@@ -2,7 +2,7 @@ import styled from '@emotion/styled/macro';
 import ReactDatePicker from 'react-datepicker';
 
 const inputStyles = {
-  border: '1px solid #f1f1f4',
+  border: '1px solid #ababab',
   padding: '0.4rem 0.2rem',
   width: '100%',
 };
@@ -34,17 +34,18 @@ const Input = styled.input(
 const Textarea = styled.textarea(inputStyles);
 
 interface FormGroupProps {
-  gridCols?: number
-  gridColsUnit?: 'auto' | '1fr'
+  gridCols?: number;
+  gridColsUnit?: 'auto' | '1fr';
 }
 
-const FormGroup = styled.div({
-  display: 'grid',
-  alignItems: 'center'
-},
-(({ gridCols = 2, gridColsUnit = '1fr' }: FormGroupProps) => {
-  return { gridTemplateColumns: `${(gridColsUnit + ' ').repeat(gridCols)}` };
-}),
+const FormGroup = styled.div(
+  {
+    display: 'grid',
+    alignItems: 'center',
+  },
+  ({ gridCols = 2, gridColsUnit = '1fr' }: FormGroupProps) => {
+    return { gridTemplateColumns: `${(gridColsUnit + ' ').repeat(gridCols)}` };
+  }
 );
 
 const RadioGroup = styled.div({
