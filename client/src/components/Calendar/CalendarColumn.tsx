@@ -47,6 +47,7 @@ function CalendarColumn({
   readOnly = false,
   columnHeaderFormat = 'dddd',
 }: CalendarColumnInputProps): JSX.Element {
+  const isToday = dayjs().isSame(dateInput, 'day');
   const date = dateInput.locale('de');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -158,8 +159,8 @@ function CalendarColumn({
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
         css={{
           height: `calc((100% / ${numOfHours + 1}) / 2)`,
-          backgroundColor: `${colors.gray20}`,
-          color: `${colors.gray}`,
+          backgroundColor: isToday ? `${colors.indigoDarken10}` : `${colors.gray20}`,
+          color: isToday ? `${colors.indigoLighten80}` : `${colors.gray}`,
           fontWeight: 'bold',
         }}
       >
