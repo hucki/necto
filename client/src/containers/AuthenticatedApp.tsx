@@ -36,10 +36,9 @@ function AuthenticatedApp({
         <SidebarMenu />
         <ContentContainer>
           <Header>
-            <UserInfo userName={user?.firstName || 'new User'} />
             <NavBar />
           </Header>
-          <Content id="Content" bg="whitesmoke" p={2}>
+          <Content id="Content" bg="whitesmoke" pr={1}>
             {isError ? (
               <div>Error connecting to backend. Please try again later!</div>
             ) : !user ? (
