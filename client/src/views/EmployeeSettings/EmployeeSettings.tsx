@@ -5,6 +5,7 @@ import { useAllEmployees } from '../../hooks/employees';
 import { Employee, Employee2Team, Team } from '../../types/Employee';
 import { useAddEmployeeToTeam } from '../../hooks/teams';
 import { useAllTeams } from '../../hooks/teams';
+import { Label, Select } from '../../components/Library';
 dayjs.extend(isBetween);
 
 interface EmployeeOverviewProps {
@@ -13,7 +14,6 @@ interface EmployeeOverviewProps {
 const EmployeeOverview = ({ employee }: EmployeeOverviewProps) => {
   return (
     <>
-      <h2>{employee.firstName + ' ' + employee.lastName}</h2>
       <h3>Contract Data</h3>
       <ul>
         <li>
@@ -93,7 +93,7 @@ const EmployeeSettings = () => {
     </>
   ) : (
     <>
-      <select
+      <Select
         name="employee"
         value={currentEmployee.uuid}
         onChange={onemployeeChangeHandler}
@@ -103,7 +103,8 @@ const EmployeeSettings = () => {
             {t.firstName + ' ' + t.lastName}
           </option>
         ))}
-      </select>
+      </Select>
+
       <EmployeeOverview employee={currentEmployee} />
       <br />
       {currentTeam && (
