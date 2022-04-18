@@ -7,6 +7,7 @@ import {
   Td,
   Checkbox,
   Flex,
+  useToast,
 } from '@chakra-ui/react';
 import { Patient, PatientInput } from '../../types/Patient';
 import {
@@ -17,7 +18,12 @@ import {
   Input,
   Label,
 } from '../Library';
-import { RiAddBoxFill, RiEditFill, RiSearchLine } from 'react-icons/ri';
+import {
+  RiAddBoxFill,
+  RiArchiveFill,
+  RiEditFill,
+  RiSearchLine,
+} from 'react-icons/ri';
 import { useEffect, useState } from 'react';
 import { useCreatePatient } from '../../hooks/patient';
 import { Company } from '../../types/Company';
@@ -27,14 +33,16 @@ import { useFilter } from '../../hooks/useFilter';
 import React from 'react';
 import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 import { useViewport } from '../../hooks/useViewport';
+import FilterBar from '../FilterBar/FilterBar';
 
 interface PatientsListProps {
   patients: Patient[];
-  hasActions: boolean | undefined;
+  hasActions?: boolean;
 }
 
 function PatientsList({ patients, hasActions = false }: PatientsListProps) {
   const { isMobile } = useViewport();
+  const toast = useToast();
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
 
@@ -44,7 +52,9 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
     (item) =>
       item.firstName.toLowerCase().includes(search.toLowerCase()) ||
       item.lastName.toLowerCase().includes(search.toLowerCase()) ||
-      item.street?.toLowerCase().includes(search.toLowerCase())
+      item.street?.toLowerCase().includes(search.toLowerCase()) ||
+      item.city?.toLowerCase().includes(search.toLowerCase()) ||
+      item.notices?.toLowerCase().includes(search.toLowerCase())
   );
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
@@ -57,7 +67,10 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
 
   // interactive row ro add patients
   const PatientAddRow = (currentCompany: Company | undefined): JSX.Element => {
-    const [createPatient, { error: savingError }] = useCreatePatient();
+    const [
+      createPatient,
+      { error, data, isSuccess, status, isIdle, isLoading },
+    ] = useCreatePatient();
     const [newPatient, setNewPatient] = useState<PatientInput>();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -157,11 +170,28 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
     useEffect(() => {
       if (!newPatient) return;
       if ((newPatient?.firstName, newPatient?.lastName)) {
-        createPatient({ patient: newPatient });
+        createPatient({ patient: newPatient }).then((res) => {
+          if (res?.uuid) {
+            toast({
+              title: 'Patient created.',
+              description: `Patient ${res.lastName}, ${res.firstName} has been created`,
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+        });
         setNewPatient(undefined);
         initNewPatient();
       } else {
-        alert('please check input');
+        toast({
+          title: 'Missing Data!',
+          description:
+            'Be sure to provide at least the full first and last name of the patient',
+          status: 'warning',
+          duration: 5000,
+          isClosable: true,
+        });
       }
     }, [newPatient]);
     return (
@@ -326,6 +356,13 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
                 icon={<RiEditFill />}
                 size="xs"
               />
+              <IconButton
+                disabled={true}
+                aria-label="archive patient"
+                icon={<RiArchiveFill color="red" />}
+                size="xs"
+                onClick={() => console.log('archive patient', p.uuid)}
+              />
             </Td>
           )}
           {!hasActions && p.events?.length ? (
@@ -347,41 +384,50 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
 
   return (
     <>
-      <FormGroup style={{ paddingTop: '0.5rem' }}>
-        <Label htmlFor="search">
-          <RiSearchLine />
-        </Label>
-        <Input id="search" name="search" type="text" onChange={handleSearch} />
-      </FormGroup>
-      <Table variant="striped" size="sm" colorScheme="blue">
-        <Thead>
-          <Tr>
-            {/* <Th width={5}>Title </Th> */}
-            <Th>{t('patients.firstName')}</Th>
-            <Th>{t('patients.lastName')}</Th>
-            <Th width={2}>{t('patients.gender')} </Th>
-            <Th>{t('patients.street')} </Th>
-            <Th width={5}>{t('patients.zip')} </Th>
-            <Th>{t('patients.city')} </Th>
-            <Th>{t('patients.notices')} </Th>
-            <Th>{t('patients.telephoneNumber')} </Th>
-            <Th>{t('patients.mailAddress')} </Th>
-            <Th width={5}>{t('patients.isAddpayFreed')}</Th>
-            <Th width={7}>{t('patients.firstContactAt')}</Th>
-            {hasActions && <Th width={5}>{t('patients.actions')}</Th>}
-            {!hasActions && <Th width={5}>{t('patients.diagnostic')}</Th>}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {PatientRows()}
-          {hasActions && PatientAddRow(currentCompany)}
-        </Tbody>
-      </Table>
+      <Flex flexDirection={isMobile ? 'column' : 'row'} pt="0.5rem">
+        <FormGroup>
+          <Label htmlFor="search">
+            <RiSearchLine />
+          </Label>
+          <Input
+            id="search"
+            name="search"
+            type="text"
+            onChange={handleSearch}
+          />
+        </FormGroup>
+        <FilterBar hasCompanyFilter />
+      </Flex>
+      <div className="tableContainer" style={{ height: '100%' }}>
+        <Table variant="striped" size="sm" colorScheme="blue">
+          <Thead>
+            <Tr>
+              {/* <Th width={5}>Title </Th> */}
+              <Th>{t('patients.firstName')}</Th>
+              <Th>{t('patients.lastName')}</Th>
+              <Th width={2}>{t('patients.gender')} </Th>
+              <Th>{t('patients.street')} </Th>
+              <Th width={5}>{t('patients.zip')} </Th>
+              <Th>{t('patients.city')} </Th>
+              <Th>{t('patients.notices')} </Th>
+              <Th>{t('patients.telephoneNumber')} </Th>
+              <Th>{t('patients.mailAddress')} </Th>
+              <Th width={5}>{t('patients.isAddpayFreed')}</Th>
+              <Th width={7}>{t('patients.firstContactAt')}</Th>
+              {hasActions && <Th width={5}>{t('patients.actions')}</Th>}
+              {!hasActions && <Th width={5}>{t('patients.diagnostic')}</Th>}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {PatientRows()}
+            {hasActions && PatientAddRow(currentCompany)}
+          </Tbody>
+        </Table>
+      </div>
       {/* pagination controls */}
 
-      <Flex m={2}>
+      <Flex m={2} alignSelf="flex-end">
         <IconButton
-          marginRight={2}
           aria-label="previous day"
           leftIcon={<FaCaretLeft />}
           disabled={currentPage === 1}
@@ -397,7 +443,6 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
           </Button>
         ))}
         <IconButton
-          marginLeft={2}
           aria-label="next day"
           icon={<FaCaretRight />}
           disabled={currentPage === numOfPages}
