@@ -10,7 +10,22 @@
 
 necto provides teams with the ability to schedule appointments with patients/clients on a weekly basis. The number of weekly appointment a team member has to fulfill can be indivdually defined. Every Appointment can be defined as in House or as a home visit.
 
+## Project description
+
+App to keep track of the appointments of a team of therapists, where each appointment has a defined frequency (i.e. weekly) and a number of recurrences (i.e. 10 times). The App provides an overview of appointments for the hole team, as well as personal views for each team member. Single appointments can be moved to different dates/times/therapists without necessarily affecting the rest of the recurring appointments.
+
+Additional features could include:
+
+- User role "team leader"
+  - can add/remove team members
+  - can setup schedules for other team members
+- introduce clients / patients dataset + tie to appointments
+  - waiting list for new clients / patients
+- time tracking and statistics for team members
+
 ## Getting started
+
+### setting up a development environment
 
 1. clone the repo
 
@@ -32,18 +47,11 @@ to get started set `NODE_ENV=development` and use the .env Variables prefixed wi
 
 6. enjoy scheduling 📅!
 
-## Project description
+### dockerize app
 
-App to keep track of the appointments of a team of therapists, where each appointment has a defined frequency (i.e. weekly) and a number of recurrences (i.e. 10 times). The App provides an overview of appointments for the hole team, as well as personal views for each team member. Single appointments can be moved to different dates/times/therapists without necessarily affecting the rest of the recurring appointments.
-
-Additional features could include:
-
-- User role "team leader"
-  - can add/remove team members
-  - can setup schedules for other team members
-- introduce clients / patients dataset + tie to appointments
-  - waiting list for new clients / patients
-- time tracking and statistics for team members
+1. create a `docker-compose.yml` from `docker-compose.yml.example`
+2. if you are starting with an empty db: seed the database with the script from `prisma/seed.ts`
+3. use `docker-compose up` to build and serve the app locally
 
 ## Tech stack
 
