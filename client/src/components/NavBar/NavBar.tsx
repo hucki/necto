@@ -1,13 +1,19 @@
 import React, { useContext } from 'react';
 import dayjs from 'dayjs';
 import { Button, IconButton, DatePicker } from '../Library';
-import { FaBackward, FaCaretLeft, FaCaretRight, FaForward } from 'react-icons/fa';
+import {
+  FaBackward,
+  FaCaretLeft,
+  FaCaretRight,
+  FaForward,
+} from 'react-icons/fa';
 import { Flex } from '@chakra-ui/react';
 import { UserDateContext } from '../../providers/UserDate';
+import { useViewport } from '../../hooks/useViewport';
 
 const NavBar = () => {
-
-  const {currentDate, setCurrentDate} = useContext(UserDateContext);
+  const { currentDate, setCurrentDate } = useContext(UserDateContext);
+  const { isMobile } = useViewport();
 
   function onChangeHandler(date: ReactDatePickerReturnType) {
     if (date) {
@@ -38,7 +44,16 @@ const NavBar = () => {
         onClick={todayClickHandler}
         variant="outline"
       >
-        Today
+        <div>
+          <div
+            style={{
+              backgroundColor: 'red',
+              height: '0.2rem',
+              borderRadius: '1rem',
+            }}
+          ></div>
+          <div>{dayjs().format('DD')}</div>
+        </div>
       </Button>
       <IconButton
         marginLeft={2}
@@ -54,7 +69,7 @@ const NavBar = () => {
       />
       <DatePicker
         onChange={onChangeHandler}
-        dateFormat="dd.MM.y"
+        dateFormat={isMobile ? 'dd.MM.' : 'dd.MM.y'}
         selected={currentDate?.toDate()}
       />
       <IconButton
