@@ -1,5 +1,10 @@
 {
   "calendar": {
+    "view": {
+      "day": "Tag",
+      "week": "Woche",
+      "month": "Monat"
+    },
     "event": {
       "newAppointmentTitle": "Neuer Termin",
       "editAppointmentTitle": "Termin",
@@ -54,7 +59,7 @@
     "firstName": "Vorname",
     "lastName": "Nachname",
     "title": "Titel",
-    "gender": "Geschlecht",
+    "gender": "m/w/d",
     "zip": "PLZ",
     "street": "Straße",
     "city": "Ort",
@@ -64,6 +69,6 @@
     "telephoneNumber": "Telefon",
     "mailAddress": "eMail",
     "actions": "Actions",
-    "diagnostic": "Diagnose"
+    "diagnostic": "Diagnostik"
   }
 }

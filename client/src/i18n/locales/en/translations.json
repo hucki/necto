@@ -1,5 +1,10 @@
 {
   "calendar": {
+    "view": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
     "event": {
       "newAppointmentTitle": "New Appointment",
       "editAppointmentTitle": "Termin",
