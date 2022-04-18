@@ -1,39 +1,61 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   Checkbox,
+  Flex,
 } from '@chakra-ui/react';
 import { Patient, PatientInput } from '../../types/Patient';
-import { DatePicker, IconButton, Input } from '../Library';
-import { RiAddBoxFill, RiEditFill } from 'react-icons/ri';
+import {
+  Button,
+  DatePicker,
+  FormGroup,
+  IconButton,
+  Input,
+  Label,
+} from '../Library';
+import { RiAddBoxFill, RiEditFill, RiSearchLine } from 'react-icons/ri';
 import { useEffect, useState } from 'react';
 import { useCreatePatient } from '../../hooks/patient';
 import { Company } from '../../types/Company';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useFilter } from '../../hooks/useFilter';
+import React from 'react';
+import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
+import { useViewport } from '../../hooks/useViewport';
 
 interface PatientsListProps {
   patients: Patient[];
   hasActions: boolean | undefined;
 }
 
-function PatientsList({
-  patients,
-  hasActions = false,
-}: PatientsListProps) {
+function PatientsList({ patients, hasActions = false }: PatientsListProps) {
+  const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
 
+  // search function
+  const [search, setSearch] = useState('');
+  const filteredPatients = patients.filter(
+    (item) =>
+      item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(search.toLowerCase()) ||
+      item.street?.toLowerCase().includes(search.toLowerCase())
+  );
+  const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
+    setSearch(event.currentTarget.value);
+  };
+
+  // pagination
+  const rowsPerPage = isMobile ? 6 : 12;
+  const numOfPages = Math.ceil(filteredPatients.length / rowsPerPage);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // interactive row ro add patients
   const PatientAddRow = (currentCompany: Company | undefined): JSX.Element => {
     const [createPatient, { error: savingError }] = useCreatePatient();
     const [newPatient, setNewPatient] = useState<PatientInput>();
@@ -143,25 +165,26 @@ function PatientsList({
       }
     }, [newPatient]);
     return (
-      <Tr key="PatientAddRow">
-        <Td>
-          {' '}
-          <Input
-            id="firstName"
-            name="firstName"
-            value={firstName}
-            onChange={handleFirstNameChange}
-          />
-        </Td>
-        <Td>
-          <Input
-            id="lastName"
-            name="lastName"
-            value={lastName}
-            onChange={handleLastNameChange}
-          />
-        </Td>
-        {/* <Td>
+      <>
+        <Tr key="PatientAddRow">
+          <Td>
+            {' '}
+            <Input
+              id="firstName"
+              name="firstName"
+              value={firstName}
+              onChange={handleFirstNameChange}
+            />
+          </Td>
+          <Td>
+            <Input
+              id="lastName"
+              name="lastName"
+              value={lastName}
+              onChange={handleLastNameChange}
+            />
+          </Td>
+          {/* <Td>
           <Input
             id="title"
             name="title"
@@ -169,166 +192,219 @@ function PatientsList({
             onChange={handleTitleChange}
           />
         </Td> */}
-        <Td>
-          <Input
-            id="gender"
-            name="gender"
-            value={gender}
-            onChange={handleGenderChange}
-          />
-        </Td>
-        <Td>
-          <Input
-            id="street"
-            name="street"
-            value={street}
-            onChange={handleStreetChange}
-          />
-        </Td>
-        <Td>
-          <Input id="zip" name="zip" value={zip} onChange={handleZipChange} />
-        </Td>
-        <Td>
-          <Input
-            id="city"
-            name="city"
-            value={city}
-            onChange={handleCityChange}
-          />
-        </Td>
-        <Td>
-          <Input
-            id="notices"
-            name="notices"
-            value={notices}
-            onChange={handleNoticesChange}
-          />
-        </Td>
-        <Td>
-          <Input
-            id="telephone"
-            name="telephone"
-            value={telephoneNumber}
-            onChange={handleTelephoneChange}
-          />
-        </Td>
-        <Td>
-          <Input
-            id="mail"
-            name="mail"
-            value={mailAddress}
-            onChange={handleMailChange}
-          />
-        </Td>
-        <Td>
-          <Checkbox
-            id="isAddpayFreed"
-            name="isAddpayFreed"
-            isChecked={isAddpayFreed}
-            onChange={handleIsAddpayFreedChange}
-          />
-        </Td>
-        <Td>
-          <DatePicker
-            id="firstContactAt"
-            name="firstContactAt"
-            showTimeSelect
-            locale="de"
-            timeFormat="p"
-            timeIntervals={15}
-            dateFormat="Pp"
-            selected={dayjs(firstContactAt).toDate()}
-            onChange={(date: ReactDatePickerReturnType) => {
-              if (date) handleFirstContactAtChange(date);
-            }}
-          />
-        </Td>
-        {hasActions && (
           <Td>
-            <IconButton
-              aria-label="edit patient"
-              icon={<RiAddBoxFill color="green" />}
-              size="md"
-              onClick={() => handleSubmit()}
+            <Input
+              id="gender"
+              name="gender"
+              value={gender}
+              onChange={handleGenderChange}
             />
           </Td>
-        )}
-      </Tr>
+          <Td>
+            <Input
+              id="street"
+              name="street"
+              value={street}
+              onChange={handleStreetChange}
+            />
+          </Td>
+          <Td>
+            <Input id="zip" name="zip" value={zip} onChange={handleZipChange} />
+          </Td>
+          <Td>
+            <Input
+              id="city"
+              name="city"
+              value={city}
+              onChange={handleCityChange}
+            />
+          </Td>
+          <Td>
+            <Input
+              id="notices"
+              name="notices"
+              value={notices}
+              onChange={handleNoticesChange}
+            />
+          </Td>
+          <Td>
+            <Input
+              id="telephone"
+              name="telephone"
+              value={telephoneNumber}
+              onChange={handleTelephoneChange}
+            />
+          </Td>
+          <Td>
+            <Input
+              id="mail"
+              name="mail"
+              value={mailAddress}
+              onChange={handleMailChange}
+            />
+          </Td>
+          <Td>
+            <Checkbox
+              id="isAddpayFreed"
+              name="isAddpayFreed"
+              isChecked={isAddpayFreed}
+              onChange={handleIsAddpayFreedChange}
+            />
+          </Td>
+          <Td>
+            <DatePicker
+              id="firstContactAt"
+              name="firstContactAt"
+              showTimeSelect
+              locale="de"
+              timeFormat="p"
+              timeIntervals={15}
+              dateFormat="Pp"
+              selected={dayjs(firstContactAt).toDate()}
+              onChange={(date: ReactDatePickerReturnType) => {
+                if (date) handleFirstContactAtChange(date);
+              }}
+            />
+          </Td>
+          {hasActions && (
+            <Td>
+              <IconButton
+                aria-label="edit patient"
+                icon={<RiAddBoxFill color="green" />}
+                size="md"
+                onClick={() => handleSubmit()}
+              />
+            </Td>
+          )}
+        </Tr>
+      </>
     );
   };
   const PatientRows = (): JSX.Element[] =>
-    patients.map((p) => (
-      <Tr key={p.uuid}>
-        {/* <Td>{p.title}</Td> */}
-        <Td>{p.firstName}</Td>
-        <Td>{p.lastName}</Td>
-        <Td>{p.gender}</Td>
-        <Td>{p.street}</Td>
-        <Td>{p.zip}</Td>
-        <Td>{p.city}</Td>
-        <Td>{p.notices}</Td>
-        <Td>
-          {p.contactData
-            ?.filter((c) => c.type === 'telephone')
-            .map((tel) => (
-              <div key={tel.uuid}>{tel.contact}</div>
-            ))}
-        </Td>
-        <Td>
-          {p.contactData
-            ?.filter((c) => c.type === 'email')
-            .map((tel) => (
-              <div key={tel.uuid}>{tel.contact}</div>
-            ))}
-        </Td>
-        <Td>
-          <Checkbox isReadOnly={true} isChecked={Boolean(p.isAddpayFreed)} />
-        </Td>
-        <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
-        {hasActions && (
+    filteredPatients
+      .filter(
+        (p, i) =>
+          i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
+      )
+      .map((p) => (
+        <Tr key={p.uuid}>
+          {/* <Td>{p.title}</Td> */}
+          <Td>{p.firstName}</Td>
+          <Td>{p.lastName}</Td>
+          <Td>{p.gender}</Td>
+          <Td>{p.street}</Td>
+          <Td>{p.zip}</Td>
+          <Td>{p.city}</Td>
+          <Td>{p.notices}</Td>
           <Td>
-            <IconButton
+            {p.contactData
+              ?.filter((c) => c.type === 'telephone')
+              .map((tel) => (
+                <div key={tel.uuid}>{tel.contact}</div>
+              ))}
+          </Td>
+          <Td>
+            {p.contactData
+              ?.filter((c) => c.type === 'email')
+              .map((tel) => (
+                <div key={tel.uuid}>{tel.contact}</div>
+              ))}
+          </Td>
+          <Td>
+            <Checkbox
+              isReadOnly={true}
               disabled={true}
-              aria-label="edit patient"
-              icon={<RiEditFill />}
-              size="xs"
+              isChecked={Boolean(p.isAddpayFreed)}
             />
           </Td>
-        )}
-        {!hasActions && p.events?.length ? (
-          <Td>
-            <b>{p.events.filter(event => !event.isCancelled)[0].employee?.firstName}</b>:<br />
-            {dayjs(p.events.filter(event => !event.isCancelled)[0].startTime).format('llll')}
-          </Td>
-        ) : null}
-      </Tr>
-    ));
+          <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
+          {hasActions && (
+            <Td>
+              <IconButton
+                disabled={true}
+                aria-label="edit patient"
+                icon={<RiEditFill />}
+                size="xs"
+              />
+            </Td>
+          )}
+          {!hasActions && p.events?.length ? (
+            <Td>
+              <b>
+                {
+                  p.events.filter((event) => !event.isCancelled)[0].employee
+                    ?.firstName
+                }
+              </b>
+              :<br />
+              {dayjs(
+                p.events.filter((event) => !event.isCancelled)[0].startTime
+              ).format('llll')}
+            </Td>
+          ) : null}
+        </Tr>
+      ));
 
   return (
-    <Table variant="striped" size="sm" colorScheme="blue">
-      <Thead>
-        <Tr>
-          {/* <Th width={5}>Title </Th> */}
-          <Th>{t('patients.firstName')}</Th>
-          <Th>{t('patients.lastName')}</Th>
-          <Th width={2}>{t('patients.gender')} </Th>
-          <Th>{t('patients.street')} </Th>
-          <Th width={5}>{t('patients.zip')} </Th>
-          <Th>{t('patients.city')} </Th>
-          <Th>{t('patients.notices')} </Th>
-          <Th>{t('patients.telephoneNumber')} </Th>
-          <Th>{t('patients.mailAddress')} </Th>
-          <Th width={5}>{t('patients.isAddpayFreed')}</Th>
-          <Th width={7}>{t('patients.firstContactAt')}</Th>
-          {hasActions && <Th width={5}>{t('patients.actions')}</Th>}
-          {!hasActions && <Th width={5}>{t('patients.diagnostic')}</Th>}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {PatientRows()}
-        {hasActions && PatientAddRow(currentCompany)}
-      </Tbody>
-    </Table>
+    <>
+      <FormGroup style={{ paddingTop: '0.5rem' }}>
+        <Label htmlFor="search">
+          <RiSearchLine />
+        </Label>
+        <Input id="search" name="search" type="text" onChange={handleSearch} />
+      </FormGroup>
+      <Table variant="striped" size="sm" colorScheme="blue">
+        <Thead>
+          <Tr>
+            {/* <Th width={5}>Title </Th> */}
+            <Th>{t('patients.firstName')}</Th>
+            <Th>{t('patients.lastName')}</Th>
+            <Th width={2}>{t('patients.gender')} </Th>
+            <Th>{t('patients.street')} </Th>
+            <Th width={5}>{t('patients.zip')} </Th>
+            <Th>{t('patients.city')} </Th>
+            <Th>{t('patients.notices')} </Th>
+            <Th>{t('patients.telephoneNumber')} </Th>
+            <Th>{t('patients.mailAddress')} </Th>
+            <Th width={5}>{t('patients.isAddpayFreed')}</Th>
+            <Th width={7}>{t('patients.firstContactAt')}</Th>
+            {hasActions && <Th width={5}>{t('patients.actions')}</Th>}
+            {!hasActions && <Th width={5}>{t('patients.diagnostic')}</Th>}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {PatientRows()}
+          {hasActions && PatientAddRow(currentCompany)}
+        </Tbody>
+      </Table>
+      {/* pagination controls */}
+
+      <Flex m={2}>
+        <IconButton
+          marginRight={2}
+          aria-label="previous day"
+          leftIcon={<FaCaretLeft />}
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage(currentPage - 1)}
+        />
+        {new Array(numOfPages).fill(numOfPages).map((_, index) => (
+          <Button
+            disabled={index + 1 === currentPage}
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+          >
+            {index + 1}
+          </Button>
+        ))}
+        <IconButton
+          marginLeft={2}
+          aria-label="next day"
+          icon={<FaCaretRight />}
+          disabled={currentPage === numOfPages}
+          onClick={() => setCurrentPage(currentPage + 1)}
+        />
+      </Flex>
+    </>
   );
 }
 
