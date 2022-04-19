@@ -65,7 +65,7 @@ export const addPatient = async (
         })
       : {};
 
-    res.json({ createdPatient, createdTelephone, createdMail });
+    res.json(createdPatient);
     res.status(201);
     return;
   } catch (e) {
@@ -110,6 +110,7 @@ export const updatePatient = async (
         addPayFreedFrom: req.body.addPayFreedFrom,
         addPayFreedUntil: req.body.addPayFreedUntil,
         validUntil: req.body.validUntil,
+        archived: req.body.archived,
         // companyId: '0',
         // tenantId: tenantId,
       },
@@ -157,7 +158,10 @@ export const getPatientsEvents = async (
   try {
     const patientId = req.params.patientId;
     const patientsEvents = await prisma.patient.findMany({
-      where: { uuid: patientId },
+      where: {
+        uuid: patientId,
+        archived: false
+      },
       include: {
         events: true,
       },
@@ -180,6 +184,9 @@ export const getAllPatients = async (
 ): Promise<void> => {
   try {
     const patients = await prisma.patient.findMany({
+      where: {
+        archived: false
+      },
       include: {
         contactData: true,
         events: true,
@@ -215,18 +222,21 @@ export const getWaitingPatients = async (
       where: {
         OR: [
           {
+            archived: false,
             events: {
               none: {},
             },
           },
           {
+            archived: false,
             events: {
               every: {
                 isCancelled: true,
-              }
-            }
+              },
+            },
           },
           {
+            archived: false,
             events: {
               some: {
                 isDiagnostic: true,
