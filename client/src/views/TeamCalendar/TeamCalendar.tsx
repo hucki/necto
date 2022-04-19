@@ -13,6 +13,7 @@ import { Employee } from '../../types/Employee';
 import { EmployeeRessource } from '../../types/Ressource';
 import { UserDateContext } from '../../providers/UserDate';
 import { useFilter } from '../../hooks/useFilter';
+import { Flex } from '@chakra-ui/react';
 
 function TeamCalendar(): JSX.Element {
   const { currentTeam } = useFilter();
@@ -52,10 +53,12 @@ function TeamCalendar(): JSX.Element {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
       }}
     >
-      <FilterBar hasTeamsFilter />
+      <Flex ml="3rem">
+        <FilterBar hasTeamsFilter />
+      </Flex>
       <CalendarContainer
         readOnly={false}
         events={rawEvents}

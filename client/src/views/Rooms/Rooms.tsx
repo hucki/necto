@@ -118,10 +118,10 @@ function Rooms(): JSX.Element {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
       }}
     >
-      <Flex w={300}>
+      <Flex w={300} ml="3rem">
         <Label htmlFor="building">Ort</Label>
         <Select
           name="building"

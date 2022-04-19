@@ -8,16 +8,11 @@ import {
   Checkbox,
   Flex,
   useToast,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react';
 import { Patient, PatientInput } from '../../types/Patient';
-import {
-  Button,
-  DatePicker,
-  FormGroup,
-  IconButton,
-  Input,
-  Label,
-} from '../Library';
+import { Button, DatePicker, IconButton, Input } from '../Library';
 import {
   RiAddBoxFill,
   RiArchiveFill,
@@ -34,6 +29,7 @@ import React from 'react';
 import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 import { useViewport } from '../../hooks/useViewport';
 import FilterBar from '../FilterBar/FilterBar';
+import * as colors from '../../styles/colors';
 
 interface PatientsListProps {
   patients: Patient[];
@@ -384,18 +380,18 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
 
   return (
     <>
-      <Flex flexDirection={isMobile ? 'column' : 'row'} pt="0.5rem">
-        <FormGroup>
-          <Label htmlFor="search">
-            <RiSearchLine />
-          </Label>
+      <Flex flexDirection={isMobile ? 'column' : 'row'} p="0.5rem">
+        <InputGroup>
+          <InputLeftElement>
+            <RiSearchLine color={colors.indigoLighten80} />{' '}
+          </InputLeftElement>
           <Input
             id="search"
             name="search"
             type="text"
             onChange={handleSearch}
           />
-        </FormGroup>
+        </InputGroup>
         <FilterBar hasCompanyFilter />
       </Flex>
       <div className="tableContainer" style={{ height: '100%' }}>

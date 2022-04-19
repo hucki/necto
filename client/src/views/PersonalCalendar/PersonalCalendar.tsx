@@ -26,20 +26,21 @@ interface PersonalCalendarInputProps {
   a0Id: string;
 }
 
-function PersonalCalendar({
-  a0Id,
-}: PersonalCalendarInputProps): JSX.Element {
+function PersonalCalendar({ a0Id }: PersonalCalendarInputProps): JSX.Element {
   const { t } = useTranslation();
-  const {currentDate} = useContext(UserDateContext);
+  const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
-  const { isLoading: isLoadingDaysEvents, rawEvents: daysEvents } = useDaysEvents(calendarDate);
-  const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } = useWeeksEvents(calendarDate.year(), calendarDate.week());
+  const { isLoading: isLoadingDaysEvents, rawEvents: daysEvents } =
+    useDaysEvents(calendarDate);
+  const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } =
+    useWeeksEvents(calendarDate.year(), calendarDate.week());
   const { user, isLoading: isLoadingUser } = useAuth0User(a0Id);
-  const isLoading = isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
+  const isLoading =
+    isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
 
-  const [currentView, setCurrentView] = useState<'day'|'week'>('day');
+  const [currentView, setCurrentView] = useState<'day' | 'week'>('day');
   const onCurrentViewChange = (event: any) => {
     setCurrentView(event.target.value);
   };
@@ -49,7 +50,14 @@ function PersonalCalendar({
       setCalendarDate(currentDate);
   }, [currentDate, calendarDate, setCalendarDate]);
 
-  if (isLoading || isLoadingUser || !user?.uuid || !user?.userSettings?.length || !user?.userSettings[0].employee) return <FullPageSpinner />;
+  if (
+    isLoading ||
+    isLoadingUser ||
+    !user?.uuid ||
+    !user?.userSettings?.length ||
+    !user?.userSettings[0].employee
+  )
+    return <FullPageSpinner />;
 
   const thisEmployee = user?.userSettings[0].employee;
   const ressources: EmployeeRessource[] = [
@@ -60,7 +68,7 @@ function PersonalCalendar({
       shortDescription: thisEmployee.firstName,
       longDescription: thisEmployee.firstName + ' ' + thisEmployee.lastName,
       bgColor: thisEmployee.contract[0].bgColor || '',
-    }
+    },
   ];
 
   return (
@@ -71,21 +79,17 @@ function PersonalCalendar({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
       }}
     >
-      <Flex w={300}>
+      <Flex w={300} ml="3rem">
         <Label htmlFor="view">View</Label>
-        <Select
-          name="view"
-          value={currentView}
-          onChange={onCurrentViewChange}
-        >
+        <Select name="view" value={currentView} onChange={onCurrentViewChange}>
           <option value="day">{t('calendar.view.day')}</option>
           <option value="week">{t('calendar.view.week')}</option>
         </Select>
       </Flex>
-      {currentView === 'day' &&
+      {currentView === 'day' && (
         <CalendarContainer
           readOnly={false}
           events={daysEvents}
@@ -93,16 +97,19 @@ function PersonalCalendar({
           daysRange={[calendarDate, calendarDate]}
           columnHeaderFormat={'dddd DD.MM.'}
         />
-      }
-      {currentView === 'week' &&
+      )}
+      {currentView === 'week' && (
         <CalendarContainer
           readOnly={false}
           events={weeksEvents}
           ressources={ressources}
-          daysRange={[calendarDate.startOf('week'), calendarDate.startOf('week').add(6, 'day')]}
+          daysRange={[
+            calendarDate.startOf('week'),
+            calendarDate.startOf('week').add(6, 'day'),
+          ]}
           columnHeaderFormat={'DD.MM.'}
         />
-      }
+      )}
     </div>
   );
 }
