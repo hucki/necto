@@ -82,7 +82,7 @@ model Employee {
   contactData ContactData[]    @relation("contactData_referenceIdToemployees")
   teams       EmployeeToTeam[]
   events      Event[]          @relation("event_referenceIdToEmployee")
-
+  availability Availability[] @relation("availability_referenceIdToEmployee")
 
   @@map("employees")
 }
@@ -178,6 +178,17 @@ model EventInstanceException {
   isAllDay      Boolean?
   startTime     DateTime? @db.Timestamp(6)
   endTime       DateTime? @db.Timestamp(6)
+}
+
+model Availability {
+  uuid        String      @id @default(uuid()) @db.Uuid
+  dayOfWeek   String?     @db.VarChar(20)
+  startTime   DateTime?   @db.Timestamp(6)
+  endTime     DateTime?   @db.Timestamp(6)
+  patientId   String?     @db.Uuid
+  patient     Patient?    @relation("availability_referenceIdToPatient", fields: [patientId], references: [uuid])
+  employeeId  String?     @db.Uuid
+  employee    Employee?   @relation("availability_referenceIdToEmployee", fields: [employeeId], references: [uuid])
 }
 
 model Tenant {
@@ -289,8 +300,10 @@ model Patient {
   updatedAt           DateTime      @updatedAt
   companyId           String        @db.Uuid
   tenantId            String        @db.Uuid
-  contactData         ContactData[] @relation("contactData_referenceIdTopatient")
-  events              Event[]       @relation("event_referenceIdTopatient")
+  archived            Boolean       @default(false)
+  contactData         ContactData[]  @relation("contactData_referenceIdTopatient")
+  events              Event[]        @relation("event_referenceIdTopatient")
+  availability        Availability[] @relation("availability_referenceIdToPatient")
 
   @@map("patients")
 }
