@@ -69,6 +69,7 @@
     "telephoneNumber": "Telefon",
     "mailAddress": "eMail",
     "actions": "Actions",
-    "diagnostic": "Diagnostik"
+    "diagnostic": "Diagnostik",
+    "careFacility": "Einrichtung"
   }
 }
