@@ -10,12 +10,21 @@ import {
   useToast,
   InputGroup,
   InputLeftElement,
+  Icon,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody
 } from '@chakra-ui/react';
 import { Patient, PatientInput } from '../../types/Patient';
 import { Button, DatePicker, IconButton, Input } from '../Library';
 import {
   RiAddBoxFill,
   RiArchiveFill,
+  RiCheckboxBlankLine,
+  RiCheckLine,
   RiEditFill,
   RiSearchLine,
 } from 'react-icons/ri';
@@ -30,6 +39,7 @@ import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 import { useViewport } from '../../hooks/useViewport';
 import FilterBar from '../FilterBar/FilterBar';
 import * as colors from '../../styles/colors';
+import { PatientInfo } from './PatientInfo';
 
 interface PatientsListProps {
   patients: Patient[];
@@ -45,12 +55,17 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
   // search function
   const [search, setSearch] = useState('');
   const filteredPatients = patients.filter(
-    (item) =>
-      item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(search.toLowerCase()) ||
-      item.street?.toLowerCase().includes(search.toLowerCase()) ||
-      item.city?.toLowerCase().includes(search.toLowerCase()) ||
-      item.notices?.toLowerCase().includes(search.toLowerCase())
+    (patient) =>
+      patient.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      patient.lastName.toLowerCase().includes(search.toLowerCase()) ||
+      patient.street?.toLowerCase().includes(search.toLowerCase()) ||
+      patient.city?.toLowerCase().includes(search.toLowerCase()) ||
+      patient.careFacility?.toLowerCase().includes(search.toLowerCase()) ||
+      patient.notices?.toLowerCase().includes(search.toLowerCase()) ||
+      patient.contactData
+        ?.filter((contact) => contact.type === 'telephone')
+        .findIndex(contact => contact.contact.toLowerCase()
+          .includes(search.toLowerCase())) !== -1
   );
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
@@ -78,6 +93,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
     const [isAddpayFreed, setIsAddpayFreed] = useState(false);
     const [firstContactAt, setFirstContactAt] = useState(dayjs().toDate());
     const [notices, setNotices] = useState('');
+    const [careFacility, setCareFacility] = useState('');
     const [telephoneNumber, setTelephoneNumber] = useState('');
     const [mailAddress, setMailAddress] = useState('');
 
@@ -116,6 +132,10 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
     function handleCityChange(event: React.FormEvent<HTMLInputElement>) {
       event.preventDefault();
       setCity(event.currentTarget.value);
+    }
+    function handleCareFacilityChange(event: React.FormEvent<HTMLInputElement>) {
+      event.preventDefault();
+      setCareFacility(event.currentTarget.value);
     }
     function handleIsAddpayFreedChange(
       event: React.FormEvent<HTMLInputElement>
@@ -270,11 +290,20 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
             />
           </Td>
           <Td>
+            <Input
+              id="careFacility"
+              name="careFacility"
+              value={careFacility}
+              onChange={handleCareFacilityChange}
+            />
+          </Td>
+          <Td>
             <Checkbox
               id="isAddpayFreed"
               name="isAddpayFreed"
               isChecked={isAddpayFreed}
               onChange={handleIsAddpayFreedChange}
+              borderColor={colors.gray80}
             />
           </Td>
           <Td>
@@ -306,6 +335,14 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
       </>
     );
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [ currentPatient, setCurrentPatient] = useState<Patient | undefined>(undefined);
+  function showPatientInfo(patient:Patient) {
+    setCurrentPatient(patient);
+    onOpen();
+  }
+
   const PatientRows = (): JSX.Element[] =>
     filteredPatients
       .filter(
@@ -313,7 +350,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
           i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
       )
       .map((p) => (
-        <Tr key={p.uuid}>
+        <Tr key={p.uuid} onClick={() => showPatientInfo(p)}>
           {/* <Td>{p.title}</Td> */}
           <Td>{p.firstName}</Td>
           <Td>{p.lastName}</Td>
@@ -336,11 +373,13 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
                 <div key={tel.uuid}>{tel.contact}</div>
               ))}
           </Td>
+          <Td>{p.careFacility}</Td>
           <Td>
-            <Checkbox
-              isReadOnly={true}
-              disabled={true}
-              isChecked={Boolean(p.isAddpayFreed)}
+            <Icon
+              as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
+              w={5}
+              h={5}
+              color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
             />
           </Td>
           <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
@@ -408,6 +447,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
               <Th>{t('patients.notices')} </Th>
               <Th>{t('patients.telephoneNumber')} </Th>
               <Th>{t('patients.mailAddress')} </Th>
+              <Th>{t('patients.careFacility')} </Th>
               <Th width={5}>{t('patients.isAddpayFreed')}</Th>
               <Th width={7}>{t('patients.firstContactAt')}</Th>
               {hasActions && <Th width={5}>{t('patients.actions')}</Th>}
@@ -445,6 +485,19 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
           onClick={() => setCurrentPage(currentPage + 1)}
         />
       </Flex>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay
+          css={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+          }}
+        >
+          <ModalContent>
+            <ModalBody>
+              {currentPatient ? <PatientInfo patient={currentPatient} /> : null }
+            </ModalBody>
+          </ModalContent>
+        </ModalOverlay>
+      </Modal>
     </>
   );
 }
