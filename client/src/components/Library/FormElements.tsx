@@ -13,6 +13,11 @@ const Label = styled.label(inputStyles, {
   border: '0px',
 });
 
+const TextDisplay = styled.div(inputStyles, {
+  border: 'none',
+  borderBottom: '1px solid #ababab',
+});
+
 const Select = styled.select(inputStyles, {
   borderRadius: '3px',
   fontWeight: 'bold',
@@ -48,6 +53,14 @@ const FormGroup = styled.div(
   }
 );
 
+const ModalFormGroup = styled.div(
+  {
+    display: 'grid',
+    alignItems: 'center',
+    gridTemplateColumns: '200px 1fr',
+  }
+);
+
 const RadioGroup = styled.div({
   display: 'flex',
   flexDirection: 'row',
@@ -59,4 +72,4 @@ const RadioGroup = styled.div({
 // https://styled-components.com/docs/basics#passed-props
 const DatePicker = styled(ReactDatePicker)(inputStyles);
 
-export { Input, Textarea, FormGroup, Label, Select, DatePicker, RadioGroup };
+export { Input, Textarea, FormGroup, Label, Select, DatePicker, RadioGroup, ModalFormGroup, TextDisplay };
