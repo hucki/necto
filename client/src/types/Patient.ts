@@ -18,6 +18,7 @@ export type Patient = {
   notices?: string;
   careFacility?: string;
   state?: string;
+  archived?: Boolean;
   isAddpayFreed?: Boolean;
   addPayFreedFrom?: Date;
   addPayFreedUntil?: Date;
