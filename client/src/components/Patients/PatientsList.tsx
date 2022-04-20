@@ -162,6 +162,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
         street,
         city,
         isAddpayFreed,
+        careFacility,
         notices,
         firstContactAt,
         companyId: currentCompany?.uuid,
@@ -180,6 +181,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
       setIsAddpayFreed(false);
       setNotices('');
       setTelephoneNumber('');
+      setCareFacility('');
       setMailAddress('');
       setFirstContactAt(dayjs().toDate());
     }
@@ -491,7 +493,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
         >
-          <ModalContent>
+          <ModalContent minW="80vw">
             <ModalBody>
               {currentPatient ? <PatientInfo patient={currentPatient} /> : null }
             </ModalBody>
