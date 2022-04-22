@@ -27,6 +27,7 @@ import {
   RiCheckLine,
   RiEditFill,
   RiSearchLine,
+  RiUserAddLine,
 } from 'react-icons/ri';
 import { useEffect, useState } from 'react';
 import { useCreatePatient } from '../../hooks/patient';
@@ -43,10 +44,10 @@ import { PatientInfo } from './PatientInfo';
 
 interface PatientsListProps {
   patients: Patient[];
-  hasActions?: boolean;
+  type?: 'patients' | 'waitingPatients'
 }
 
-function PatientsList({ patients, hasActions = false }: PatientsListProps) {
+function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
   const { isMobile } = useViewport();
   const toast = useToast();
   const { t } = useTranslation();
@@ -92,6 +93,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
     const [city, setCity] = useState('');
     const [isAddpayFreed, setIsAddpayFreed] = useState(false);
     const [firstContactAt, setFirstContactAt] = useState(dayjs().toDate());
+    const [isWaitingSince, setIsWaitingSince] = useState(dayjs().toDate());
     const [notices, setNotices] = useState('');
     const [careFacility, setCareFacility] = useState('');
     const [telephoneNumber, setTelephoneNumber] = useState('');
@@ -149,6 +151,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
     }
     function handleFirstContactAtChange(date: ReactDatePickerReturnType) {
       if (date) {
+        setIsWaitingSince(dayjs(date.toString()).toDate());
         setFirstContactAt(dayjs(date.toString()).toDate());
       }
     }
@@ -165,6 +168,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
         careFacility,
         notices,
         firstContactAt,
+        isWaitingSince,
         companyId: currentCompany?.uuid,
         telephoneNumber,
         mailAddress,
@@ -183,6 +187,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
       setTelephoneNumber('');
       setCareFacility('');
       setMailAddress('');
+      setIsWaitingSince(dayjs().toDate());
       setFirstContactAt(dayjs().toDate());
     }
     useEffect(() => {
@@ -323,26 +328,31 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
               }}
             />
           </Td>
-          {hasActions && (
+          {/* {hasActions && (
             <Td>
               <IconButton
-                aria-label="edit patient"
+                aria-label="add patient"
                 icon={<RiAddBoxFill color="green" />}
                 size="md"
                 onClick={() => handleSubmit()}
               />
             </Td>
-          )}
+          )} */}
         </Tr>
       </>
     );
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
+  const { isOpen: isOpenCreate, onOpen: onOpenCreate, onClose: onCloseCreate } = useDisclosure();
   const [ currentPatient, setCurrentPatient] = useState<Patient | undefined>(undefined);
+  const [ newPatient, setNewPatient] = useState<Patient | undefined>(undefined);
   function showPatientInfo(patient:Patient) {
     setCurrentPatient(patient);
-    onOpen();
+    onOpenInfo();
+  }
+  function showPatientCreate() {
+    onOpenCreate();
   }
 
   const PatientRows = (): JSX.Element[] =>
@@ -357,9 +367,9 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
           <Td>{p.firstName}</Td>
           <Td>{p.lastName}</Td>
           <Td>{p.gender}</Td>
-          <Td>{p.street}</Td>
+          {/* <Td>{p.street}</Td>
           <Td>{p.zip}</Td>
-          <Td>{p.city}</Td>
+          <Td>{p.city}</Td> */}
           <Td>{p.notices}</Td>
           <Td>
             {p.contactData
@@ -384,25 +394,11 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
               color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
             />
           </Td>
-          <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
-          {hasActions && (
-            <Td>
-              <IconButton
-                disabled={true}
-                aria-label="edit patient"
-                icon={<RiEditFill />}
-                size="xs"
-              />
-              <IconButton
-                disabled={true}
-                aria-label="archive patient"
-                icon={<RiArchiveFill color="red" />}
-                size="xs"
-                onClick={() => console.log('archive patient', p.uuid)}
-              />
-            </Td>
-          )}
-          {!hasActions && p.events?.length ? (
+          {type === 'waitingPatients'
+            ? <Td>{dayjs(p.isWaitingSince).format('ll')}</Td>
+            : <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
+          }
+          {type === 'waitingPatients' && p.events?.length ? (
             <Td>
               <b>
                 {
@@ -434,6 +430,15 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
           />
         </InputGroup>
         <FilterBar hasCompanyFilter />
+        <Button
+          aria-label="addPatient"
+          leftIcon={<RiUserAddLine />}
+          onClick={() => showPatientCreate()}
+          colorScheme={'green'}
+          w='15rem'
+        >
+          {'add Patient'}
+        </Button>
       </Flex>
       <div className="tableContainer" style={{ height: '100%' }}>
         <Table variant="striped" size="sm" colorScheme="blue">
@@ -443,22 +448,25 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
               <Th>{t('patients.firstName')}</Th>
               <Th>{t('patients.lastName')}</Th>
               <Th width={2}>{t('patients.gender')} </Th>
-              <Th>{t('patients.street')} </Th>
+              {/* <Th>{t('patients.street')} </Th>
               <Th width={5}>{t('patients.zip')} </Th>
-              <Th>{t('patients.city')} </Th>
+              <Th>{t('patients.city')} </Th> */}
               <Th>{t('patients.notices')} </Th>
               <Th>{t('patients.telephoneNumber')} </Th>
               <Th>{t('patients.mailAddress')} </Th>
               <Th>{t('patients.careFacility')} </Th>
               <Th width={5}>{t('patients.isAddpayFreed')}</Th>
-              <Th width={7}>{t('patients.firstContactAt')}</Th>
-              {hasActions && <Th width={5}>{t('patients.actions')}</Th>}
-              {!hasActions && <Th width={5}>{t('patients.diagnostic')}</Th>}
+              {type === 'waitingPatients'
+                ? <Th width={7}>{t('patients.isWaitingSince')}</Th>
+                : <Th width={7}>{t('patients.firstContactAt')}</Th>
+              }
+              {/* {<Th width={5}>{t('patients.actions')}</Th>} */}
+              {type === 'waitingPatients' && <Th width={5}>{t('patients.diagnostic')}</Th>}
             </Tr>
           </Thead>
           <Tbody>
             {PatientRows()}
-            {hasActions && PatientAddRow(currentCompany)}
+            {/* {PatientAddRow(currentCompany)} */}
           </Tbody>
         </Table>
       </div>
@@ -487,7 +495,7 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
           onClick={() => setCurrentPage(currentPage + 1)}
         />
       </Flex>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpenInfo} onClose={onCloseInfo}>
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',
@@ -495,7 +503,20 @@ function PatientsList({ patients, hasActions = false }: PatientsListProps) {
         >
           <ModalContent minW="80vw">
             <ModalBody>
-              {currentPatient ? <PatientInfo patient={currentPatient} /> : null }
+              {currentPatient ? <PatientInfo onClose={onCloseInfo} patient={currentPatient} /> : null }
+            </ModalBody>
+          </ModalContent>
+        </ModalOverlay>
+      </Modal>
+      <Modal isOpen={isOpenCreate} onClose={onCloseCreate}>
+        <ModalOverlay
+          css={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+          }}
+        >
+          <ModalContent minW="80vw">
+            <ModalBody>
+              {newPatient ? <PatientInfo onClose={onCloseCreate} patient={newPatient} type="create"/> : null }
             </ModalBody>
           </ModalContent>
         </ModalOverlay>

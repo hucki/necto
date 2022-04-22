@@ -29,6 +29,28 @@ export function useCreatePatient(): MutationResultPair<
   });
 }
 
+export function useUpdatePatient(): MutationResultPair<
+  Patient,
+  Error,
+  { patient: PatientInput },
+  string
+  > {
+  const client = useAuthenticatedClient<PatientInput>();
+  const updatePatient = async ({
+    patient,
+  }: {
+    patient: PatientInput;
+  }): Promise<Patient> => {
+    return client(`patients/${patient.uuid}`, { data: patient, method: 'PATCH' });
+  };
+  return useMutation(updatePatient, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('patients');
+      queryCache.invalidateQueries('waiting');
+    },
+  });
+}
+
 export function useAllPatients(): QueryResult<Patient[]> & {
   patients: Patient[];
   } {
