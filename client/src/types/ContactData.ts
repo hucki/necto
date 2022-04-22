@@ -11,6 +11,10 @@ export type PatientContactData = ContactData & {
   patientId?: string;
 };
 
+export type DoctorContactData = ContactData & {
+  doctorId?: string;
+};
+
 export type UserContactData = ContactData & {
   userId?: string;
 };

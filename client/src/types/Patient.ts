@@ -1,4 +1,5 @@
 import { PatientContactData } from './ContactData';
+import { Doctor } from './Doctor';
 import { Event } from './Event';
 
 export type Patient = {
@@ -16,21 +17,30 @@ export type Patient = {
   insuranceCardNumber?: string;
   insuranceCardValid?: string;
   notices?: string;
+  appointmentRequest?: string;
+  medicalReport?: string;
   careFacility?: string;
   state?: string;
   archived?: Boolean;
+  hasPrescritpion?: Boolean;
+  isWaitingAgain?: Boolean;
   isAddpayFreed?: Boolean;
   addPayFreedFrom?: Date;
   addPayFreedUntil?: Date;
   validUntil?: Date;
   createdAt?: Date;
   firstContactAt?: Date;
+  isWaitingSince?: Date;
   updatedAt?: Date;
   companyId?: string;
   tenantId?: string;
+  doctorId?: string;
   contactData?: PatientContactData[];
   events?: Event[];
+  doctor?: Doctor;
 };
+
+export type WaitingPatient = { numberInLine: number } & Patient
 
 export interface PatientInput extends Patient {
   telephoneNumber?: string;
