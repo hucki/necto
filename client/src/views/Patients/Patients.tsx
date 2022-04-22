@@ -24,7 +24,7 @@ function Patients(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <PatientsList patients={patients} hasActions />
+      <PatientsList patients={patients} />
     </div>
   );
 }

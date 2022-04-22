@@ -24,7 +24,7 @@ function WaitingList(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <PatientsList patients={patients} />
+      <PatientsList patients={patients} type="waitingPatients" />
     </div>
   );
 }
