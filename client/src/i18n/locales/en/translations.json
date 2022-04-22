@@ -67,6 +67,7 @@
     "isAddpayFreed": "freed?",
     "notices": "notices",
     "firstContactAt": "Date of reception",
+    "isWaitingSince": "waiting since",
     "telephoneNumber": "telephone",
     "mailAddress": "email",
     "actions": "Actions",
