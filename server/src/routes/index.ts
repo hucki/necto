@@ -80,6 +80,7 @@ router.delete('/events/:eventId', eventController.deleteEvent);
 // patient routes
 //router.get('/patients/:eventId', eventController.getPatients);
 router.get('/patients', patientController.getAllPatients);
+router.patch('/patients/:patientId', patientController.updatePatient);
 router.get('/waiting', patientController.getWaitingPatients);
 router.get('/patients/:patientId', patientController.getPatientsEvents);
 

@@ -17,29 +17,12 @@ export const addPatient = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    const incomingPatient = {...req.body}
+    delete incomingPatient.telephoneNumber
+    delete incomingPatient.mailAddress
     const createdPatient = await prisma.patient.create({
       data: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        title: req.body.title,
-        gender: req.body.gender,
-        street: req.body.street,
-        zip: req.body.zip,
-        city: req.body.city,
-        birthday: req.body.birthday,
-        insurance: req.body.insurance,
-        insuranceNumber: req.body.insuranceNumber,
-        insuranceCardNumber: req.body.insuranceCardNumber,
-        insuranceCardValid: req.body.insuranceCardValid,
-        notices: req.body.notices,
-        careFacility: req.body.careFacility,
-        state: req.body.state,
-        isAddpayFreed: req.body.isAddpayFreed,
-        firstContactAt: req.body.firstContactAt,
-        addPayFreedFrom: req.body.addPayFreedFrom,
-        addPayFreedUntil: req.body.addPayFreedUntil,
-        validUntil: req.body.validUntil,
-        companyId: req.body.companyId,
+        ...incomingPatient,
         tenantId: tenantId,
       },
     });
@@ -83,38 +66,21 @@ export const updatePatient = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log({ req: req.body, pId: req.params.patientId });
     const patientId = req.params.patientId;
+    const incomingPatient = {...req.body}
+    delete incomingPatient.telephoneNumber
+    delete incomingPatient.mailAddress
+    delete incomingPatient.contactData
+    delete incomingPatient.events
     const updatedPatient = await prisma.patient.update({
       where: {
         uuid: patientId,
       },
       data: {
-        firstName: req.body.userId,
-        lastName: req.body.lastName,
-        title: req.body.title,
-        gender: req.body.gender,
-        street: req.body.street,
-        zip: req.body.zip,
-        city: req.body.city,
-        birthday: req.body.birthday,
-        insurance: req.body.insurance,
-        insuranceNumber: req.body.insuranceNumber,
-        insuranceCardNumber: req.body.insuranceCardNumber,
-        insuranceCardValid: req.body.insuranceCardValid,
-        notices: req.body.notices,
-        careFacility: req.body.careFacility,
-        state: req.body.state,
-        isAddpayFreed: req.body.isAddpayFreed,
-        firstContactAt: req.body.firstContactAt,
-        addPayFreedFrom: req.body.addPayFreedFrom,
-        addPayFreedUntil: req.body.addPayFreedUntil,
-        validUntil: req.body.validUntil,
-        archived: req.body.archived,
-        // companyId: '0',
-        // tenantId: tenantId,
+        ...incomingPatient,
       },
     });
+    console.warn('contact data to be updated:',{ cd: req.body.contactData })
     res.json(updatedPatient);
     res.status(201);
     return;
@@ -191,6 +157,9 @@ export const getAllPatients = async (
         contactData: true,
         events: true,
       },
+      orderBy: {
+        lastName: 'asc',
+      },
     });
     res.json(patients);
     res.status(200);
@@ -222,6 +191,9 @@ export const getWaitingPatients = async (
       where: {
         OR: [
           {
+            isWaitingAgain: true,
+          },
+          {
             archived: false,
             events: {
               none: {},
@@ -247,7 +219,7 @@ export const getWaitingPatients = async (
         ],
       },
       orderBy: {
-        firstContactAt: 'asc',
+        isWaitingSince: 'asc',
       },
     });
     res.json(waitingPatients);
