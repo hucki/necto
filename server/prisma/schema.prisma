@@ -262,6 +262,7 @@ model ContactData {
   userId     String?   @db.Uuid
   employeeId String?   @db.Uuid
   patientId  String?   @db.Uuid
+  doctorId   String?   @db.Uuid
   type       String    @db.VarChar(64)
   contact    String    @db.VarChar(255)
   createdAt  DateTime  @default(now())
@@ -270,6 +271,7 @@ model ContactData {
   user       User?     @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
   employee   Employee? @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
   patient    Patient?  @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
+  doctor     Doctor?   @relation("contactData_referenceIdToDoctor", fields: [doctorId], references: [uuid])
 
   @@map("contactData")
 }
@@ -291,21 +293,39 @@ model Patient {
   notices             String?       @db.VarChar(255)
   careFacility        String?       @db.VarChar(64)
   state               String?       @db.VarChar(64)
+  appointmentRequest  String?       @db.VarChar(64)
+  medicalReport       String?       @db.VarChar(255)
   isAddpayFreed       Boolean
   addPayFreedFrom     DateTime?     @db.Date
   addPayFreedUntil    DateTime?     @db.Date
   validUntil          DateTime?     @db.Date
   firstContactAt      DateTime      @default(now())
+  isWaitingSince      DateTime      @default(now())
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
   companyId           String        @db.Uuid
   tenantId            String        @db.Uuid
+  doctorId            String?       @db.Uuid
   archived            Boolean       @default(false)
+  hasPrescription     Boolean       @default(false)
+  isWaitingAgain      Boolean       @default(false)
   contactData         ContactData[]  @relation("contactData_referenceIdTopatient")
   events              Event[]        @relation("event_referenceIdTopatient")
   availability        Availability[] @relation("availability_referenceIdToPatient")
-
+  doctor              Doctor?        @relation("doctor_referenceIdToPatient", fields: [doctorId], references: [uuid])
   @@map("patients")
+}
+
+model Doctor {
+  uuid                String        @id @default(uuid()) @db.Uuid
+  firstName           String?       @db.VarChar(64)
+  lastName            String?       @db.VarChar(64)
+  title               String?       @db.VarChar(64)
+  street              String?       @db.VarChar(64)
+  zip                 String?       @db.VarChar(10)
+  city                String?       @db.VarChar(64)
+  patients            Patient[]     @relation("doctor_referenceIdToPatient")
+  contactData         ContactData[] @relation("contactData_referenceIdToDoctor")
 }
 
 model CancellationReason {
