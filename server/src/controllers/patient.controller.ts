@@ -17,7 +17,11 @@ export const addPatient = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const incomingPatient = {...req.body}
+    const incomingPatient = { ...req.body }
+    delete incomingPatient.contactData
+    delete incomingPatient.events
+    delete incomingPatient.availability
+    delete incomingPatient.doctor
     delete incomingPatient.telephoneNumber
     delete incomingPatient.mailAddress
     const createdPatient = await prisma.patient.create({
@@ -67,11 +71,13 @@ export const updatePatient = async (
 ): Promise<void> => {
   try {
     const patientId = req.params.patientId;
-    const incomingPatient = {...req.body}
-    delete incomingPatient.telephoneNumber
-    delete incomingPatient.mailAddress
+    const incomingPatient = { ...req.body }
     delete incomingPatient.contactData
     delete incomingPatient.events
+    delete incomingPatient.availability
+    delete incomingPatient.doctor
+    delete incomingPatient.telephoneNumber
+    delete incomingPatient.mailAddress
     const updatedPatient = await prisma.patient.update({
       where: {
         uuid: patientId,
@@ -178,7 +184,6 @@ export const getWaitingPatients = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // TODO: fix to only get patient without events or with not cancelled diagnostic patients
     const waitingPatients = await prisma.patient.findMany({
       include: {
         events: {
