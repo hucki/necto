@@ -15,17 +15,13 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalBody
 } from '@chakra-ui/react';
-import { Patient, PatientInput } from '../../types/Patient';
+import { Patient, PatientInput, WaitingPatient } from '../../types/Patient';
 import { Button, DatePicker, IconButton, Input } from '../Library';
 import {
-  RiAddBoxFill,
-  RiArchiveFill,
   RiCheckboxBlankLine,
   RiCheckLine,
-  RiEditFill,
   RiSearchLine,
   RiUserAddLine,
 } from 'react-icons/ri';
@@ -43,7 +39,7 @@ import * as colors from '../../styles/colors';
 import { PatientInfo } from './PatientInfo';
 
 interface PatientsListProps {
-  patients: Patient[];
+  patients: Patient[] | WaitingPatient[];
   type?: 'patients' | 'waitingPatients'
 }
 
@@ -53,10 +49,15 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
 
+  const isWaitingPatient = (patient: Patient | WaitingPatient): patient is WaitingPatient => {
+    if ('numberInLine' in patient) return true;
+    return false;
+  };
+
   // search function
   const [search, setSearch] = useState('');
-  const filteredPatients = patients.filter(
-    (patient) =>
+  const filteredPatients: WaitingPatient[] | Patient[] = patients.filter(
+    (patient: Patient | WaitingPatient) =>
       patient.firstName.toLowerCase().includes(search.toLowerCase()) ||
       patient.lastName.toLowerCase().includes(search.toLowerCase()) ||
       patient.street?.toLowerCase().includes(search.toLowerCase()) ||
@@ -71,7 +72,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
-
+  console.log(filteredPatients);
   // pagination
   const rowsPerPage = isMobile ? 6 : 12;
   const numOfPages = Math.ceil(filteredPatients.length / rowsPerPage);
@@ -345,7 +346,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
 
   const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
   const { isOpen: isOpenCreate, onOpen: onOpenCreate, onClose: onCloseCreate } = useDisclosure();
-  const [ currentPatient, setCurrentPatient] = useState<Patient | undefined>(undefined);
+  const [ currentPatient, setCurrentPatient] = useState<Patient | WaitingPatient | undefined>(undefined);
   const [ newPatient, setNewPatient] = useState<Patient | undefined>(undefined);
   function showPatientInfo(patient:Patient) {
     setCurrentPatient(patient);
@@ -358,12 +359,12 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
   const PatientRows = (): JSX.Element[] =>
     filteredPatients
       .filter(
-        (p, i) =>
+        (p: Patient | WaitingPatient, i) =>
           i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
       )
-      .map((p) => (
+      .map((p: Patient | WaitingPatient)=> (
         <Tr key={p.uuid} onClick={() => showPatientInfo(p)}>
-          {/* <Td>{p.title}</Td> */}
+          { type === 'waitingPatients' && isWaitingPatient(p) && <Td><b>{p.numberInLine}</b></Td>}
           <Td>{p.firstName}</Td>
           <Td>{p.lastName}</Td>
           <Td>{p.gender}</Td>
@@ -419,32 +420,35 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
     <>
       <Flex flexDirection={isMobile ? 'column' : 'row'} p="0.5rem">
         <InputGroup>
-          <InputLeftElement>
-            <RiSearchLine color={colors.indigoLighten80} />{' '}
+          <InputLeftElement pointerEvents="none" >
+            <RiSearchLine color={colors.indigoLighten80} />
           </InputLeftElement>
           <Input
             id="search"
             name="search"
             type="text"
             onChange={handleSearch}
+            pl="2rem"
           />
         </InputGroup>
         <FilterBar hasCompanyFilter />
-        <Button
-          aria-label="addPatient"
-          leftIcon={<RiUserAddLine />}
-          onClick={() => showPatientCreate()}
-          colorScheme={'green'}
-          w='15rem'
-        >
-          {'add Patient'}
-        </Button>
+        { type === 'patients' && (
+          <Button
+            aria-label="addPatient"
+            leftIcon={<RiUserAddLine />}
+            onClick={() => showPatientCreate()}
+            colorScheme={'green'}
+            w='15rem'
+          >
+            {'add Patient'}
+          </Button>
+        )}
       </Flex>
-      <div className="tableContainer" style={{ height: '100%' }}>
+      <div className="tableContainer" style={{ height: '100%', minWidth: '100%' }}>
         <Table variant="striped" size="sm" colorScheme="blue">
           <Thead>
             <Tr>
-              {/* <Th width={5}>Title </Th> */}
+              { type === 'waitingPatients' && <Th width={5}>Nr </Th>}
               <Th>{t('patients.firstName')}</Th>
               <Th>{t('patients.lastName')}</Th>
               <Th width={2}>{t('patients.gender')} </Th>
