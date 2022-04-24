@@ -1,9 +1,9 @@
+import { Input as ChakraInput } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import ReactDatePicker from 'react-datepicker';
 
 const inputStyles = {
   border: '1px solid #ababab',
-  padding: '0.4rem 0.2rem',
   width: '100%',
 };
 
@@ -26,7 +26,7 @@ const Select = styled.select(inputStyles, {
 interface InputCallbackProps {
   disabled?: boolean;
 }
-const Input = styled.input(
+const Input = styled(ChakraInput)(
   {
     borderRadius: '3px',
   },
@@ -36,6 +36,7 @@ const Input = styled.input(
       ? { background: '#f1f1f4', fontStyle: 'italic' }
       : { background: 'white' }
 );
+
 const Textarea = styled.textarea(inputStyles);
 
 interface FormGroupProps {
@@ -70,6 +71,8 @@ const RadioGroup = styled.div({
 
 // pass props like seen here:
 // https://styled-components.com/docs/basics#passed-props
-const DatePicker = styled(ReactDatePicker)(inputStyles);
+const DatePicker = styled(ReactDatePicker)(inputStyles, {
+  padding: '0.4rem 0.2rem',
+});
 
 export { Input, Textarea, FormGroup, Label, Select, DatePicker, RadioGroup, ModalFormGroup, TextDisplay };
