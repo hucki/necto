@@ -324,6 +324,7 @@ model Doctor {
   street              String?       @db.VarChar(64)
   zip                 String?       @db.VarChar(10)
   city                String?       @db.VarChar(64)
+  tenantId            String        @db.Uuid
   patients            Patient[]     @relation("doctor_referenceIdToPatient")
   contactData         ContactData[] @relation("contactData_referenceIdToDoctor")
 }
