@@ -10,6 +10,7 @@ import {
   PopoverCloseButton,
   PopoverHeader,
   PopoverBody,
+  Checkbox,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
@@ -231,20 +232,22 @@ function CalendarEventForm({
       </FormGroup>
       <FormGroup>
         <Label htmlFor="homevisit">{t('calendar.event.homeVisit')}</Label>
-        <Input
-          type="checkbox"
+        <Checkbox
           id="isHomeVisit"
           name="Home Visit?"
+          size="lg"
+          my={2}
           checked={isHomeVisit}
           onChange={onSwitchHomeVisit}
         />
       </FormGroup>
       <FormGroup>
         <Label htmlFor="diagnostic">{t('calendar.event.diagnostic')}</Label>
-        <Input
-          type="checkbox"
+        <Checkbox
           id="isDiagnostic"
           name="Diagnostic?"
+          size="lg"
+          my={2}
           checked={isDiagnostic}
           onChange={onSwitchDiagnostic}
         />
@@ -300,10 +303,11 @@ function CalendarEventForm({
         <Label htmlFor="isRecurring">
           {t('calendar.event.recurringAppointment')}
         </Label>
-        <Input
-          type="checkbox"
+        <Checkbox
           id="isRecurring"
           name="isRecurring"
+          size="lg"
+          my={2}
           checked={isRecurring}
           onChange={onSwitchRecurring}
         />
