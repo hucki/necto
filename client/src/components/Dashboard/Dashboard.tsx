@@ -10,6 +10,7 @@ import Rooms from '../../views/Rooms/Rooms';
 import Patients from '../../views/Patients/Patients';
 import WaitingList from '../../views/Patients/WaitingList';
 import Settings from '../../views/Settings/Settings';
+import Doctors from '../../views/Doctors/Doctors';
 
 interface DashboardInputProps {
   a0Id: string;
@@ -32,6 +33,9 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
         </Route>
         <Route path="/patients">
           <Patients />
+        </Route>
+        <Route path="/doctors">
+          <Doctors />
         </Route>
         <Route path="/waiting">
           <WaitingList />

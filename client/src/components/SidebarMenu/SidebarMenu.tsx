@@ -19,6 +19,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { AppState } from '../../types/AppState';
 import { IconButton, NavigationButton, Sidebar } from '../Library';
 import { useTranslation } from 'react-i18next';
+import { FaHandHoldingMedical } from 'react-icons/fa';
 
 interface SidebarProps {
   dispatch: Dispatch<any>;
@@ -104,6 +105,16 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         onClick={() => onClickHandler('/waiting')}
       >
         {isOpen ? t('menu.waitingList') : null}
+      </NavigationButton>
+      <NavigationButton
+        colorScheme="teal"
+        variant={currentView === '/doctors' ? 'solid' : 'ghost'}
+        aria-label="Doctors"
+        leftIcon={<FaHandHoldingMedical />}
+        key="/doctors"
+        onClick={() => onClickHandler('/doctors')}
+      >
+        {isOpen ? t('menu.doctors') : null}
       </NavigationButton>
       <Divider />
       {/* Settings */}

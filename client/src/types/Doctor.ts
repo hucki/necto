@@ -12,3 +12,8 @@ export type Doctor = {
   contactData?: DoctorContactData[];
   patients?: Patient[];
 }
+
+export type DoctorInput = Doctor & {
+  telephoneNumber?: string;
+  mailAddress?: string;
+}
