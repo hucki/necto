@@ -11,6 +11,8 @@ const Label = styled.label(inputStyles, {
   borderRadius: '3px',
   fontWeight: 'bold',
   border: '0px',
+  marginLeft: '0.5rem',
+  marginRight: '0.5rem',
 });
 
 const TextDisplay = styled.div(inputStyles, {
@@ -19,8 +21,10 @@ const TextDisplay = styled.div(inputStyles, {
 });
 
 const Select = styled.select(inputStyles, {
+  height: '100%',
   borderRadius: '3px',
   fontWeight: 'bold',
+  minWidth: '250px',
 });
 
 interface InputCallbackProps {
