@@ -14,6 +14,7 @@ interface PatientFormProps {
 type PatientKey = keyof Patient;
 
 const PatientKeysToShow: PatientKey[] = [
+  'firstName',
   'lastName',
   'gender',
   'street',
