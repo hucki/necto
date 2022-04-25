@@ -135,6 +135,7 @@ function DoctorList({ doctors }: DoctorListProps) {
           onClick={() => showDoctorCreate()}
           colorScheme={'green'}
           w='15rem'
+          mx='0.5rem'
         >
           {'add Doctor'}
         </Button>
