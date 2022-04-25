@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import classes from './FilterBar.module.css';
 import { useAllTeams } from '../../hooks/teams';
-import { Label, Select } from '../Library';
+import { Label, Select, FilterBarContainer } from '../Library';
 import { useAllCompanies } from '../../hooks/companies';
 import { useFilter } from '../../hooks/useFilter';
 
@@ -61,7 +60,7 @@ const FilterBar = ({
   }
 
   return (
-    <div className={classes.FilterBar}>
+    <FilterBarContainer>
       {hasTeamsFilter && currentTeam && (
         <>
           <Label htmlFor="team">Team:</Label>
@@ -110,7 +109,7 @@ const FilterBar = ({
           </Select>
         </>
       )}
-    </div>
+    </FilterBarContainer>
   );
 };
 
