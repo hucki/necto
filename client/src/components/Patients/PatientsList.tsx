@@ -5,7 +5,6 @@ import {
   Tr,
   Th,
   Td,
-  Checkbox,
   Flex,
   useToast,
   InputGroup,
@@ -18,16 +17,14 @@ import {
   ModalBody
 } from '@chakra-ui/react';
 import { Patient, PatientInput, WaitingPatient } from '../../types/Patient';
-import { Button, DatePicker, IconButton, Input } from '../Library';
+import { Button, IconButton, Input } from '../Library';
 import {
   RiCheckboxBlankLine,
   RiCheckLine,
   RiSearchLine,
   RiUserAddLine,
 } from 'react-icons/ri';
-import { useEffect, useState } from 'react';
-import { useCreatePatient } from '../../hooks/patient';
-import { Company } from '../../types/Company';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useFilter } from '../../hooks/useFilter';
@@ -72,287 +69,42 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
-  console.log(filteredPatients);
+
   // pagination
   const rowsPerPage = isMobile ? 6 : 12;
   const numOfPages = Math.ceil(filteredPatients.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
-
-  // interactive row ro add patients
-  const PatientAddRow = (currentCompany: Company | undefined): JSX.Element => {
-    const [
-      createPatient,
-      { error, data, isSuccess, status, isIdle, isLoading },
-    ] = useCreatePatient();
-    const [newPatient, setNewPatient] = useState<PatientInput>();
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [title, setTitle] = useState('');
-    const [street, setStreet] = useState('');
-    const [gender, setGender] = useState('');
-    const [zip, setZip] = useState('');
-    const [city, setCity] = useState('');
-    const [isAddpayFreed, setIsAddpayFreed] = useState(false);
-    const [firstContactAt, setFirstContactAt] = useState(dayjs().toDate());
-    const [isWaitingSince, setIsWaitingSince] = useState(dayjs().toDate());
-    const [notices, setNotices] = useState('');
-    const [careFacility, setCareFacility] = useState('');
-    const [telephoneNumber, setTelephoneNumber] = useState('');
-    const [mailAddress, setMailAddress] = useState('');
-
-    function handleFirstNameChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setFirstName(event.currentTarget.value);
-    }
-    function handleLastNameChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setLastName(event.currentTarget.value);
-    }
-    function handleTitleChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setTitle(event.currentTarget.value);
-    }
-    function handleStreetChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setStreet(event.currentTarget.value);
-    }
-    function handleTelephoneChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setTelephoneNumber(event.currentTarget.value);
-    }
-    function handleMailChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setMailAddress(event.currentTarget.value);
-    }
-    function handleGenderChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setGender(event.currentTarget.value);
-    }
-    function handleZipChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setZip(event.currentTarget.value);
-    }
-    function handleCityChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setCity(event.currentTarget.value);
-    }
-    function handleCareFacilityChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setCareFacility(event.currentTarget.value);
-    }
-    function handleIsAddpayFreedChange(
-      event: React.FormEvent<HTMLInputElement>
-    ) {
-      event.preventDefault();
-      setIsAddpayFreed(event.currentTarget.checked);
-    }
-    function handleNoticesChange(event: React.FormEvent<HTMLInputElement>) {
-      event.preventDefault();
-      setNotices(event.currentTarget.value);
-    }
-    function handleFirstContactAtChange(date: ReactDatePickerReturnType) {
-      if (date) {
-        setIsWaitingSince(dayjs(date.toString()).toDate());
-        setFirstContactAt(dayjs(date.toString()).toDate());
-      }
-    }
-    function handleSubmit() {
-      setNewPatient({
-        firstName,
-        lastName,
-        title,
-        gender,
-        zip,
-        street,
-        city,
-        isAddpayFreed,
-        careFacility,
-        notices,
-        firstContactAt,
-        isWaitingSince,
-        companyId: currentCompany?.uuid,
-        telephoneNumber,
-        mailAddress,
-      });
-    }
-    function initNewPatient() {
-      setFirstName('');
-      setLastName('');
-      setTitle('');
-      setStreet('');
-      setGender('');
-      setZip('');
-      setCity('');
-      setIsAddpayFreed(false);
-      setNotices('');
-      setTelephoneNumber('');
-      setCareFacility('');
-      setMailAddress('');
-      setIsWaitingSince(dayjs().toDate());
-      setFirstContactAt(dayjs().toDate());
-    }
-    useEffect(() => {
-      if (!newPatient) return;
-      if ((newPatient?.firstName, newPatient?.lastName)) {
-        createPatient({ patient: newPatient }).then((res) => {
-          if (res?.uuid) {
-            toast({
-              title: 'Patient created.',
-              description: `Patient ${res.lastName}, ${res.firstName} has been created`,
-              status: 'success',
-              duration: 5000,
-              isClosable: true,
-            });
-          }
-        });
-        setNewPatient(undefined);
-        initNewPatient();
-      } else {
-        toast({
-          title: 'Missing Data!',
-          description:
-            'Be sure to provide at least the full first and last name of the patient',
-          status: 'warning',
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-    }, [newPatient]);
-    return (
-      <>
-        <Tr key="PatientAddRow">
-          <Td>
-            {' '}
-            <Input
-              id="firstName"
-              name="firstName"
-              value={firstName}
-              onChange={handleFirstNameChange}
-            />
-          </Td>
-          <Td>
-            <Input
-              id="lastName"
-              name="lastName"
-              value={lastName}
-              onChange={handleLastNameChange}
-            />
-          </Td>
-          {/* <Td>
-          <Input
-            id="title"
-            name="title"
-            value={title}
-            onChange={handleTitleChange}
-          />
-        </Td> */}
-          <Td>
-            <Input
-              id="gender"
-              name="gender"
-              value={gender}
-              onChange={handleGenderChange}
-            />
-          </Td>
-          <Td>
-            <Input
-              id="street"
-              name="street"
-              value={street}
-              onChange={handleStreetChange}
-            />
-          </Td>
-          <Td>
-            <Input id="zip" name="zip" value={zip} onChange={handleZipChange} />
-          </Td>
-          <Td>
-            <Input
-              id="city"
-              name="city"
-              value={city}
-              onChange={handleCityChange}
-            />
-          </Td>
-          <Td>
-            <Input
-              id="notices"
-              name="notices"
-              value={notices}
-              onChange={handleNoticesChange}
-            />
-          </Td>
-          <Td>
-            <Input
-              id="telephone"
-              name="telephone"
-              value={telephoneNumber}
-              onChange={handleTelephoneChange}
-            />
-          </Td>
-          <Td>
-            <Input
-              id="mail"
-              name="mail"
-              value={mailAddress}
-              onChange={handleMailChange}
-            />
-          </Td>
-          <Td>
-            <Input
-              id="careFacility"
-              name="careFacility"
-              value={careFacility}
-              onChange={handleCareFacilityChange}
-            />
-          </Td>
-          <Td>
-            <Checkbox
-              id="isAddpayFreed"
-              name="isAddpayFreed"
-              isChecked={isAddpayFreed}
-              onChange={handleIsAddpayFreedChange}
-              borderColor={colors.gray80}
-            />
-          </Td>
-          <Td>
-            <DatePicker
-              id="firstContactAt"
-              name="firstContactAt"
-              showTimeSelect
-              locale="de"
-              timeFormat="p"
-              timeIntervals={15}
-              dateFormat="Pp"
-              selected={dayjs(firstContactAt).toDate()}
-              onChange={(date: ReactDatePickerReturnType) => {
-                if (date) handleFirstContactAtChange(date);
-              }}
-            />
-          </Td>
-          {/* {hasActions && (
-            <Td>
-              <IconButton
-                aria-label="add patient"
-                icon={<RiAddBoxFill color="green" />}
-                size="md"
-                onClick={() => handleSubmit()}
-              />
-            </Td>
-          )} */}
-        </Tr>
-      </>
-    );
-  };
-
   const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
   const { isOpen: isOpenCreate, onOpen: onOpenCreate, onClose: onCloseCreate } = useDisclosure();
   const [ currentPatient, setCurrentPatient] = useState<Patient | WaitingPatient | undefined>(undefined);
-  const [ newPatient, setNewPatient] = useState<Patient | undefined>(undefined);
+  const [ newPatient, setNewPatient] = useState<PatientInput | undefined>(undefined);
   function showPatientInfo(patient:Patient) {
     setCurrentPatient(patient);
     onOpenInfo();
   }
+
+  const initNewPatient = () => {
+    setNewPatient({
+      firstName: '',
+      lastName: '',
+      title: '',
+      gender: '',
+      zip: '',
+      street: '',
+      city: '',
+      isAddpayFreed: false,
+      careFacility: '',
+      notices: '',
+      firstContactAt: dayjs().toDate(),
+      isWaitingSince: dayjs().toDate(),
+      companyId: currentCompany?.uuid,
+      telephoneNumber: '',
+      mailAddress: '',
+    });
+  };
+
   function showPatientCreate() {
+    initNewPatient();
     onOpenCreate();
   }
 
@@ -368,10 +120,8 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
           <Td>{p.firstName}</Td>
           <Td>{p.lastName}</Td>
           <Td>{p.gender}</Td>
-          {/* <Td>{p.street}</Td>
-          <Td>{p.zip}</Td>
-          <Td>{p.city}</Td> */}
           <Td>{p.notices}</Td>
+          <Td>{p.doctor && p.doctor?.lastName + ', ' + p.doctor?.firstName}</Td>
           <Td>
             {p.contactData
               ?.filter((c) => c.type === 'telephone')
@@ -439,6 +189,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
             onClick={() => showPatientCreate()}
             colorScheme={'green'}
             w='15rem'
+            mx='0.5rem'
           >
             {'add Patient'}
           </Button>
@@ -452,10 +203,8 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
               <Th>{t('patients.firstName')}</Th>
               <Th>{t('patients.lastName')}</Th>
               <Th width={2}>{t('patients.gender')} </Th>
-              {/* <Th>{t('patients.street')} </Th>
-              <Th width={5}>{t('patients.zip')} </Th>
-              <Th>{t('patients.city')} </Th> */}
               <Th>{t('patients.notices')} </Th>
+              <Th>{t('patients.doctor')} </Th>
               <Th>{t('patients.telephoneNumber')} </Th>
               <Th>{t('patients.mailAddress')} </Th>
               <Th>{t('patients.careFacility')} </Th>
