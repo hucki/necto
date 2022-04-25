@@ -6,6 +6,7 @@ import {
   Header,
   Footer,
 } from './AppLayout';
+import { FilterBarContainer } from './FilterBar';
 import { FullPageSpinner } from './LoadingSpinner';
 import {
   Input,
@@ -34,6 +35,7 @@ export {
   Content,
   Header,
   Footer,
+  FilterBarContainer,
   FullPageSpinner,
   Input,
   Textarea,
