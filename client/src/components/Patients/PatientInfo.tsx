@@ -1,9 +1,9 @@
-import { Icon, ModalFooter, ModalHeader } from '@chakra-ui/react';
+import { Icon, ModalFooter, ModalHeader, useToast } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaArchive, FaEdit } from 'react-icons/fa';
 import { RiUser5Line } from 'react-icons/ri';
-import { useUpdatePatient } from '../../hooks/patient';
+import { useCreatePatient, useUpdatePatient } from '../../hooks/patient';
 import { Patient } from '../../types/Patient';
 import { Button, ControlWrapper } from '../Library';
 import { PatientForm } from './PatientForm';
@@ -15,17 +15,56 @@ interface PatientInfoProps {
 }
 
 export const PatientInfo = ({ patient, onClose, type = 'view' }: PatientInfoProps) => {
+  const toast = useToast();
   const  [updatePatient, { error: updatePatientError }] = useUpdatePatient();
-  const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
+  const  [createPatient, { error: createPatientError }] = useCreatePatient();
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'view');
   const [currentPatient, setCurrentPatient] = useState<Patient>(() => ({...patient}));
+
   const handleCurrentPatientChange = (patient: Patient) => {
     setCurrentPatient(cur => ({...cur, ...patient}));
   };
 
   const onSaveChanges = () => {
-    setIsReadOnly(!isReadOnly);
-    updatePatient({patient: currentPatient});
-    onClose();
+    if (currentPatient?.firstName && currentPatient?.lastName) {
+      if (type === 'view') {
+        setIsReadOnly(!isReadOnly);
+        updatePatient({patient: currentPatient}).then((res) => {
+          if (res?.uuid) {
+            toast({
+              title: 'Patient updated.',
+              description: `Patient ${res.lastName}, ${res.firstName} has been updated`,
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+            });
+            onClose();
+          }
+        });
+      } else {
+        createPatient({ patient: currentPatient }).then((res) => {
+          if (res?.uuid) {
+            toast({
+              title: 'Patient created.',
+              description: `Patient ${res.lastName}, ${res.firstName} has been created`,
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+            });
+            onClose();
+          }
+        });
+      }
+    } else {
+      toast({
+        title: 'Missing Data!',
+        description:
+          'Be sure to provide at least the full first and last name of the patient',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   const { t } = useTranslation();
