@@ -56,7 +56,7 @@
     "eventSettings": "events"
 
   },
-  "patients": {
+  "label": {
     "firstName": "first name",
     "lastName": "last name",
     "title": "title",
@@ -72,6 +72,7 @@
     "mailAddress": "email",
     "actions": "Actions",
     "diagnostic": "diagnostic",
-    "careFacility": "care facility"
+    "careFacility": "care facility",
+    "doctor": "doctor"
   }
 }

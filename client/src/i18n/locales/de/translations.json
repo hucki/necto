@@ -55,7 +55,7 @@
     "settings": "Einstellungen",
     "eventSettings": "Termine"
   },
-  "patients": {
+  "label": {
     "firstName": "Vorname",
     "lastName": "Nachname",
     "title": "Titel",
@@ -71,6 +71,7 @@
     "mailAddress": "eMail",
     "actions": "Actions",
     "diagnostic": "Diagnostik",
-    "careFacility": "Einrichtung"
+    "careFacility": "Einrichtung",
+    "doctor": "Arzt"
   }
 }
