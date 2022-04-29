@@ -162,6 +162,7 @@ export const getAllPatients = async (
       include: {
         contactData: true,
         events: true,
+        doctor: true,
       },
       orderBy: {
         lastName: 'asc',
@@ -192,6 +193,7 @@ export const getWaitingPatients = async (
           },
         },
         contactData: true,
+        doctor: true,
       },
       where: {
         OR: [
