@@ -144,14 +144,14 @@ function DoctorList({ doctors }: DoctorListProps) {
         <Table variant="striped" size="sm" colorScheme="blue">
           <Thead>
             <Tr>
-              <Th>{t('patients.title')}</Th>
-              <Th>{t('patients.firstName')}</Th>
-              <Th>{t('patients.lastName')}</Th>
-              <Th>{t('patients.street')}</Th>
-              <Th>{t('patients.zip')}</Th>
-              <Th>{t('patients.city')}</Th>
-              <Th>{t('patients.telephoneNumber')} </Th>
-              <Th>{t('patients.mailAddress')} </Th>
+              <Th>{t('label.title')}</Th>
+              <Th>{t('label.firstName')}</Th>
+              <Th>{t('label.lastName')}</Th>
+              <Th>{t('label.street')}</Th>
+              <Th>{t('label.zip')}</Th>
+              <Th>{t('label.city')}</Th>
+              <Th>{t('label.telephoneNumber')} </Th>
+              <Th>{t('label.mailAddress')} </Th>
             </Tr>
           </Thead>
           <Tbody>

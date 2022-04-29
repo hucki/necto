@@ -88,7 +88,7 @@ export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormPro
         <GridItem>{autoFormFields()}</GridItem>
         <GridItem>
           <ModalFormGroup>
-            <Label htmlFor="doctorId">{t('patients.doctor')}</Label>
+            <Label htmlFor="doctorId">{t('label.doctor')}</Label>
             {type === 'view' ? (
               <TextDisplay id="doctorId">
                 {currentPatient['doctorId']}

@@ -121,7 +121,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
           <Td>{p.lastName}</Td>
           <Td>{p.gender}</Td>
           <Td>{p.notices}</Td>
-          <Td>{p.doctor && p.doctor?.lastName + ', ' + p.doctor?.firstName}</Td>
+          <Td>{p.doctor && p.doctor.title + ' ' + p.doctor?.firstName.substring(0,1) + '. ' + p.doctor?.lastName}</Td>
           <Td>
             {p.contactData
               ?.filter((c) => c.type === 'telephone')
@@ -200,21 +200,21 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
           <Thead>
             <Tr>
               { type === 'waitingPatients' && <Th width={5}>Nr </Th>}
-              <Th>{t('patients.firstName')}</Th>
-              <Th>{t('patients.lastName')}</Th>
-              <Th width={2}>{t('patients.gender')} </Th>
-              <Th>{t('patients.notices')} </Th>
-              <Th>{t('patients.doctor')} </Th>
-              <Th>{t('patients.telephoneNumber')} </Th>
-              <Th>{t('patients.mailAddress')} </Th>
-              <Th>{t('patients.careFacility')} </Th>
-              <Th width={5}>{t('patients.isAddpayFreed')}</Th>
+              <Th>{t('label.firstName')}</Th>
+              <Th>{t('label.lastName')}</Th>
+              <Th width={2}>{t('label.gender')} </Th>
+              <Th>{t('label.notices')} </Th>
+              <Th>{t('label.doctor')} </Th>
+              <Th>{t('label.telephoneNumber')} </Th>
+              <Th>{t('label.mailAddress')} </Th>
+              <Th>{t('label.careFacility')} </Th>
+              <Th width={5}>{t('label.isAddpayFreed')}</Th>
               {type === 'waitingPatients'
-                ? <Th width={7}>{t('patients.isWaitingSince')}</Th>
-                : <Th width={7}>{t('patients.firstContactAt')}</Th>
+                ? <Th width={7}>{t('label.isWaitingSince')}</Th>
+                : <Th width={7}>{t('label.firstContactAt')}</Th>
               }
-              {/* {<Th width={5}>{t('patients.actions')}</Th>} */}
-              {type === 'waitingPatients' && <Th width={5}>{t('patients.diagnostic')}</Th>}
+              {/* {<Th width={5}>{t('label.actions')}</Th>} */}
+              {type === 'waitingPatients' && <Th width={5}>{t('label.diagnostic')}</Th>}
             </Tr>
           </Thead>
           <Tbody>
