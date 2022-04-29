@@ -3,7 +3,7 @@
 import { Spinner } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
-import PatientsList from '../../components/Patients/PatientsList';
+import PersonList from '../../components/Person/PersonList';
 import { useAllWaitingPatients } from '../../hooks/patient';
 
 function WaitingList(): JSX.Element {
@@ -25,7 +25,7 @@ function WaitingList(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <PatientsList patients={waitingPatients} type="waitingPatients" />
+      <PersonList persons={waitingPatients} type="waitingPatients" />
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { Spinner } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
-import DoctorList from '../../components/Doctors/DoctorList';
+import PersonList from '../../components/Person/PersonList';
 import { useAllDoctors } from '../../hooks/doctor';
 
 function Doctors(): JSX.Element {
@@ -24,7 +24,7 @@ function Doctors(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <DoctorList doctors={doctors} />
+      <PersonList persons={doctors} type="doctors" />
     </div>
   );
 }
