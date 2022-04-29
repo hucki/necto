@@ -78,6 +78,7 @@ export const updatePatient = async (
     delete incomingPatient.doctor
     delete incomingPatient.telephoneNumber
     delete incomingPatient.mailAddress
+    delete incomingPatient.numberInLine
     const updatedPatient = await prisma.patient.update({
       where: {
         uuid: patientId,
