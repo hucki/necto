@@ -2,9 +2,11 @@ import { GridItem, Icon, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
+import { getDisplayName } from '../../helpers/displayNames';
+import { useAllDoctors } from '../../hooks/doctor';
 import { useViewport } from '../../hooks/useViewport';
 import { Patient } from '../../types/Patient';
-import { Input, Label, ModalFormGroup, TextDisplay } from '../Library';
+import { Input, Label, ModalFormGroup, Select, TextDisplay } from '../Library';
 
 interface PatientFormProps {
   patient: Patient
@@ -31,6 +33,7 @@ const autoFormFieldKeys: PatientKey[] = [
 export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormProps) => {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
+  const { isLoading, error, doctors } = useAllDoctors();
   const [currentPatient, setCurrentPatient] = useState<Patient>(() => ({...patient}));
 
   interface OnInputChangeProps {
@@ -41,6 +44,17 @@ export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormPro
   function onInputChange({event, key}: OnInputChangeProps) {
     event.preventDefault();
     setCurrentPatient(patient => ({...patient, [`${key}`]: event.currentTarget.value}));
+  }
+
+  interface OnSelectChangeProps {
+    event: React.FormEvent<HTMLSelectElement>
+    key: PatientKey
+  }
+
+  function onSelectChange({event, key}: OnSelectChangeProps) {
+    event.preventDefault();
+    const val = event.currentTarget.value === 'remove' ? null : event.currentTarget.value;
+    setCurrentPatient(patient => ({...patient, [`${key}`]: val}));
   }
 
   useEffect(() => {
@@ -57,7 +71,7 @@ export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormPro
         typeof currentPatient[key as keyof Patient] === 'string' ||
         typeof currentPatient[key as keyof Patient] === 'boolean' ? (
             <ModalFormGroup key={key}>
-              <Label htmlFor={key}>{t(`patients.${key}`)}</Label>
+              <Label htmlFor={key}>{t(`label.${key}`)}</Label>
               {typeof currentPatient[key as PatientKey] === 'boolean' ? (
                 <Icon
                   id={key}
@@ -91,10 +105,23 @@ export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormPro
             <Label htmlFor="doctorId">{t('label.doctor')}</Label>
             {type === 'view' ? (
               <TextDisplay id="doctorId">
-                {currentPatient['doctorId']}
+                {currentPatient['doctor'] && getDisplayName(currentPatient['doctor'])}
               </TextDisplay>
             ) : (
-              <Input id="doctorId" onChange={(e) => onInputChange({event: e, key: 'doctorId'})} value={currentPatient['doctorId']}></Input>
+              <>
+                <Select
+                  name="employee"
+                  value={currentPatient['doctorId']}
+                  onChange={(e) => onSelectChange({event: e, key: 'doctorId'})}
+                >
+                  <option value={'remove'}>No Doctor</option>
+                  {doctors.map((t, i) => (
+                    <option key={i} value={t.uuid}>
+                      {t.firstName + ' ' + t.lastName}
+                    </option>
+                  ))}
+                </Select>
+              </>
             )}
           </ModalFormGroup>
         </GridItem>

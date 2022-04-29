@@ -34,6 +34,7 @@ import { useViewport } from '../../hooks/useViewport';
 import FilterBar from '../FilterBar/FilterBar';
 import * as colors from '../../styles/colors';
 import { PatientInfo } from './PatientInfo';
+import { getDisplayName } from '../../helpers/displayNames';
 
 interface PatientsListProps {
   patients: Patient[] | WaitingPatient[];
@@ -74,6 +75,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
   const rowsPerPage = isMobile ? 6 : 12;
   const numOfPages = Math.ceil(filteredPatients.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
+
   const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
   const { isOpen: isOpenCreate, onOpen: onOpenCreate, onClose: onCloseCreate } = useDisclosure();
   const [ currentPatient, setCurrentPatient] = useState<Patient | WaitingPatient | undefined>(undefined);
@@ -121,7 +123,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
           <Td>{p.lastName}</Td>
           <Td>{p.gender}</Td>
           <Td>{p.notices}</Td>
-          <Td>{p.doctor && p.doctor.title + ' ' + p.doctor?.firstName.substring(0,1) + '. ' + p.doctor?.lastName}</Td>
+          <Td>{p.doctor && getDisplayName(p.doctor)}</Td>
           <Td>
             {p.contactData
               ?.filter((c) => c.type === 'telephone')
