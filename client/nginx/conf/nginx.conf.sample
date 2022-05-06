@@ -1,0 +1,54 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name host.example.com;
+    server_tokens off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://host.example.com/$request_uri;
+    }
+}
+
+server {
+    listen 443 default_server ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name host.example.com;
+
+    root /usr/share/nginx/html;
+    index index.html index.htm;
+
+    ssl_certificate /etc/nginx/ssl/live/host.example.com/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/live/host.example.com/privkey.pem;
+
+    location ~* \.(?:css|js)$ {
+      try_files $uri =404;
+      expires 1y;
+      access_log off;
+      add_header Cache-Control "public";
+    }
+
+    # Any route containing a file extension (e.g. /devicesfile.js)
+    location ~ ^.+\..+$ {
+      try_files $uri =404;
+    }
+
+    location /api {
+        proxy_pass         http://server:3001/api;
+        proxy_redirect     off;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Host $server_name;
+        proxy_set_header   X-Forwarded-Proto https;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
