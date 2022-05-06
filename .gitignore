@@ -6,3 +6,5 @@ node_modules
 /db-data
 docker-compose.yml
 docker-compose-prod.yml
+/pgadmin/pgadmin.env
+/client/nginx/conf/nginx.conf
