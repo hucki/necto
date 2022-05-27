@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { logout } from './Auth';
 
 const serverApiUrl =
   process.env.NODE_ENV === 'production'
@@ -37,6 +36,7 @@ export async function client<T, P = T>(
     method: data ? 'POST' : 'GET',
     body: data ? JSON.stringify(data) : undefined,
     headers,
+    credentials: 'include',
     ...options,
   };
   const queryString = queryParamsToString(queryParams);
@@ -51,6 +51,11 @@ export async function client<T, P = T>(
       if (response.ok) {
         return data;
       } else {
+        if (response.status === 401) {
+          logout();
+          window.location.assign(window.location.toString());
+          return Promise.reject({message: 'Please re-authenticate.'});
+        }
         return Promise.reject(data);
       }
     } catch (e) {
@@ -68,41 +73,3 @@ const queryParamsToString: (queryParams: QueryParams) => string = (
 
   return queryString ? `?${queryString}` : '';
 };
-
-type ClientFunction<T, P = T> = (
-  endpoint: string,
-  config?: ClientConfigOptions<T> & RequestInit
-) => Promise<P>;
-
-export function useAuthenticatedClient<T, P = T>(): ClientFunction<T, P> {
-  const { getAccessTokenSilently, isAuthenticated, getAccessTokenWithPopup } =
-    useAuth0();
-
-  return useCallback(
-    async (endpoint, config) => {
-      /* eslint-disable */
-      let accessToken = undefined;
-      const getTokenAndTryAgain = async () => {
-        accessToken = await getAccessTokenWithPopup({
-          audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL,
-        });
-        // refresh();
-      };
-      try {
-        accessToken = isAuthenticated
-          ? await getAccessTokenSilently({
-              audience: process.env.REACT_APP_AUTH0_API_AUDIENCE_URL,
-            })
-          : undefined;
-      } catch (error1) {
-        try {
-          await getTokenAndTryAgain();
-        } catch (error2) {
-          console.error({ error1, error2 });
-        }
-      }
-      return client<T, P>(endpoint, { ...config, accessToken });
-    },
-    [isAuthenticated, getAccessTokenSilently]
-  );
-}
