@@ -13,10 +13,10 @@ import Settings from '../../views/Settings/Settings';
 import Doctors from '../../views/Doctors/Doctors';
 
 interface DashboardInputProps {
-  a0Id: string;
+  id: string;
   style?: CSSProperties;
 }
-const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
+const Dashboard = ({ id }: DashboardInputProps): JSX.Element => {
   const { isLoading, error, teamMembers } = useAllTeamMembers();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error getting teamMembers: {error}</div>;
@@ -44,10 +44,10 @@ const Dashboard = ({ a0Id }: DashboardInputProps): JSX.Element => {
           <TeamCalendar />
         </Route>
         <Route path="/personalcal">
-          <PersonalCalendar a0Id={a0Id} />
+          <PersonalCalendar id={id}/>
         </Route>
         <Route path="/settings">
-          <Settings a0Id={a0Id} />
+          <Settings />
         </Route>
         <Route path="*">
           <div>Route not found</div>
