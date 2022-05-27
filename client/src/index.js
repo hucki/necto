@@ -3,18 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './containers/App';
 import './i18n/config';
-import { Auth0Provider } from '@auth0/auth0-react';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Auth0Provider
-      domain="necto.eu.auth0.com"
-      clientId="xYfQs4MCa6xPRb1xOdZ7LoU7QKy2cYQ2"
-      redirectUri={window.location.origin}
-    >
-      <App />
-    </Auth0Provider>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
