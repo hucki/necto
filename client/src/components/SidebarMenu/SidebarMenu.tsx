@@ -15,11 +15,11 @@ import {
 import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
 import { useHistory, useLocation } from 'react-router';
-import { useAuth0 } from '@auth0/auth0-react';
 import { AppState } from '../../types/AppState';
 import { IconButton, NavigationButton, Sidebar } from '../Library';
 import { useTranslation } from 'react-i18next';
 import { FaHandHoldingMedical } from 'react-icons/fa';
+import { logout } from '../../services/Auth';
 
 interface SidebarProps {
   dispatch: Dispatch<any>;
@@ -33,7 +33,9 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
     history.push(route);
     dispatch(switchView(route));
   };
-  const { logout } = useAuth0();
+  const handleLogout = () => {
+    logout({returnTo: window.location.toString()});
+  };
   const { t } = useTranslation();
   return (
     <Sidebar collapsed={!isOpen}>
@@ -133,7 +135,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
       <NavigationButton
         key="/logout"
         colorScheme="orange"
-        onClick={() => logout({ returnTo: window.location.origin })}
+        onClick={handleLogout}
         variant="ghost"
         aria-label="Logout"
         leftIcon={<RiLogoutBoxFill />}
@@ -147,7 +149,6 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
 const MapStateToProps = (state: AppState) => {
   return {
     currentView: state.settings.currentView,
-    user: state.userData.currentUser,
   };
 };
 
