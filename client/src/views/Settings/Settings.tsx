@@ -13,12 +13,11 @@ import {
 import UserProfile from '../../components/UserProfile/UserProfile';
 import { useTranslation } from 'react-i18next';
 import EventSettings from '../EventSettings/EventSettings';
+import { useContext } from 'react';
+import { AuthContext } from '../../providers/Auth';
 
-interface SettingsProps {
-  a0Id: string;
-}
-
-const Settings = ({ a0Id }: SettingsProps): JSX.Element => {
+const Settings = (): JSX.Element => {
+  const { user } = useContext(AuthContext);
   const { t } = useTranslation();
 
   return (
@@ -52,9 +51,11 @@ const Settings = ({ a0Id }: SettingsProps): JSX.Element => {
         <TabPanel>
           <EventSettings />
         </TabPanel>
-        <TabPanel>
-          <UserProfile a0Id={a0Id} />
-        </TabPanel>
+        {user && (
+          <TabPanel>
+            <UserProfile id={user.uuid}/>
+          </TabPanel>
+        )}
       </TabPanels>
     </Tabs>
   );
