@@ -10,7 +10,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FullPageSpinner, Label, Select } from '../../components/Library';
 import { useContext, useEffect, useState } from 'react';
 import { EmployeeRessource } from '../../types/Ressource';
-import { useAuth0User } from '../../hooks/user';
+import { useUser } from '../../hooks/user';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
@@ -23,10 +23,10 @@ dayjs.extend(utc);
 dayjs.locale('de');
 
 interface PersonalCalendarInputProps {
-  a0Id: string;
+  id: string;
 }
 
-function PersonalCalendar({ a0Id }: PersonalCalendarInputProps): JSX.Element {
+function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   const { t } = useTranslation();
   const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
@@ -36,7 +36,7 @@ function PersonalCalendar({ a0Id }: PersonalCalendarInputProps): JSX.Element {
     useDaysEvents(calendarDate);
   const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } =
     useWeeksEvents(calendarDate.year(), calendarDate.week());
-  const { user, isLoading: isLoadingUser } = useAuth0User(a0Id);
+  const { user, isLoading: isLoadingUser } = useUser(id);
   const isLoading =
     isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
 
