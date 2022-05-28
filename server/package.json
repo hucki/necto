@@ -17,8 +17,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/auth0": "^2.34.10",
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/node": "^14.18.5",
+    "@types/passport": "^1.0.7",
+    "@types/passport-jwt": "^3.0.6",
+    "@types/passport-local": "^1.0.34",
     "@types/uuid": "^8.3.4",
     "@types/validator": "^13.7.1",
     "concurrently": "^5.3.0",
@@ -31,12 +35,21 @@
   "dependencies": {
     "@prisma/client": "^3.10.0",
     "auth0": "^2.37.0",
+    "bcrypt": "^5.0.1",
+    "connect-redis": "^6.1.3",
     "cors": "^2.8.5",
     "dayjs": "^1.10.7",
     "dotenv": "^8.6.0",
     "express": "^4.17.2",
     "express-jwt": "^6.1.2",
+    "express-session": "^1.17.2",
+    "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.5",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "redis": "4.0.6"
   }
 }
