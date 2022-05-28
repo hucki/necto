@@ -1,8 +1,7 @@
 import React, { Dispatch, useEffect } from 'react';
 import Dashboard from '../components/Dashboard/Dashboard';
 import { connect } from 'react-redux';
-import { useAuth0User } from '../hooks/user';
-import UserProfile from '../components/UserProfile/UserProfile';
+import { useUser } from '../hooks/user';
 import { logIn } from '../actions/actions';
 import {
   App,
@@ -12,19 +11,18 @@ import {
   ContentContainer,
 } from '../components/Library/AppLayout';
 import SidebarMenu from '../components/SidebarMenu/SidebarMenu';
-import UserInfo from '../components/UserInfo/UserInfo';
 import NavBar from '../components/NavBar/NavBar';
 
 interface AuthenticatedAppInputProps {
-  a0Id: string;
+  id: string;
   dispatch: Dispatch<any>;
 }
 
 function AuthenticatedApp({
-  a0Id,
+  id,
   dispatch,
 }: AuthenticatedAppInputProps): JSX.Element {
-  const { user, isError } = useAuth0User(a0Id);
+  const { user, isError, error} = useUser(id);
   useEffect(() => {
     if (!user) return;
     dispatch(logIn(user));
@@ -40,11 +38,9 @@ function AuthenticatedApp({
           </Header>
           <Content id="Content" bg="whitesmoke" pr={1}>
             {isError ? (
-              <div>Error connecting to backend. Please try again later!</div>
-            ) : !user ? (
-              <UserProfile purpose="new" a0Id={a0Id} />
+              <div className="error">an error occured</div>
             ) : (
-              <Dashboard style={{ height: '100%' }} a0Id={a0Id} />
+              <Dashboard id={id} style={{ height: '100%' }} />
             )}
           </Content>
           <Footer>
