@@ -4,25 +4,24 @@ import { jsx } from '@emotion/react';
 import React, { FormEvent, useEffect, useState } from 'react';
 
 import {
-  useAddUser,
-  useAuth0User,
   useCreateUserSettings,
   useUpdateUser,
+  useUser,
 } from '../../hooks/user';
 import { useAllEmployees } from '../../hooks/employees';
 import { FormGroup, Input, Button, Label, Select } from '../Library';
 import { RiEditFill } from 'react-icons/ri';
+import { useTranslation } from 'react-i18next';
 
 interface UserProfileProps {
-  purpose?: string;
-  a0Id: string;
+  id: string;
 }
 
 const UserProfile = ({
-  purpose = 'view',
-  a0Id,
+  id
 }: UserProfileProps): JSX.Element => {
-  const [createUser] = useAddUser();
+  const { t } = useTranslation();
+  const { isLoading, user } = useUser(id);
   const [updateUser] = useUpdateUser();
   const [createUserSettings] = useCreateUserSettings();
   const {
@@ -31,15 +30,14 @@ const UserProfile = ({
     employees,
     refetch,
   } = useAllEmployees();
-  const [state, setState] = useState(purpose);
-  const { user, isLoading } = useAuth0User(a0Id);
+  const [state, setState] = useState<'view' | 'edit'>('view');
   const [userState, setUserState] = useState({
-    a0Id: a0Id,
+    uuid: user?.uuid,
     firstName: user ? user.firstName : '',
     lastName: user ? user.lastName : '',
-    employeeId: '',
+    employeeId: user && user?.userSettings?.length &&
+    user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
   });
-
   useEffect(() => {
     if (!isLoading && user?.uuid && !user.userSettings?.length) {
       createUserSettings({
@@ -48,15 +46,13 @@ const UserProfile = ({
         },
       });
     }
-    if (
-      !isLoading &&
-      user?.userSettings?.length &&
-      user.userSettings[0].employeeId
-    ) {
+    if ( !isLoading && user ) {
       setUserState((currentState) => ({
         ...currentState,
-        employeeId:
-          (user && user.userSettings && user.userSettings[0].employeeId) || '',
+        uuid: user.uuid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        employeeId: user?.userSettings?.length && user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
       }));
     }
   }, [user, isLoading]);
@@ -70,7 +66,6 @@ const UserProfile = ({
   };
 
   const onSelectHandler = (e: any): void => {
-    // console.log({selected: e.target.value});
     setUserState((currentState) => ({
       ...currentState,
       employeeId: e.target.value,
@@ -79,8 +74,12 @@ const UserProfile = ({
 
   const onSubmitHandler = (e: FormEvent): void => {
     e.preventDefault();
-    state === 'new' ? createUser({ user: userState }) : onUpdateUser();
+    onUpdateUser();
     toggleEdit(e);
+  };
+
+  const cancelEdit = () => {
+    setState((currentState) => (currentState === 'view' ? 'edit' : 'view'));
   };
 
   const onUpdateUser = () => {
@@ -108,6 +107,7 @@ const UserProfile = ({
   };
 
   if (isLoading) return <div>fetching data</div>;
+  if (!isLoading && !user) return <div>no user</div>;
   return (
     <div>
       <form
@@ -123,7 +123,6 @@ const UserProfile = ({
           },
         }}
       >
-        {state === 'new' && <div>Please Enter your Name and choose and connect to your employee account</div>}
         <FormGroup>
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -152,7 +151,7 @@ const UserProfile = ({
             value={userState.employeeId}
             onChange={onSelectHandler}
           >
-            {employees.map((e, i) => (
+            {employees.filter(e => !e.user || e.user.userId === userState.uuid).map((e, i) => (
               <option key={i} value={e.uuid}>
                 {e.lastName + ', ' + e.firstName}
               </option>
@@ -164,9 +163,14 @@ const UserProfile = ({
             <RiEditFill />
           </Button>
         ) : (
-          <Button aria-label="save changes" type="submit">
-            {state === 'new' ? 'Create User' : 'Save changes'}
-          </Button>
+          <div>
+            <Button aria-label="save changes" type="submit">
+              {t('button.save')}
+            </Button>
+            <Button aria-label="cancel changes" type="button" onClick={cancelEdit}>
+              {t('button.cancel')}
+            </Button>
+          </div>
         )}
       </form>
     </div>
