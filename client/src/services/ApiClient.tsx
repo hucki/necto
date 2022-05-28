@@ -52,8 +52,7 @@ export async function client<T, P = T>(
         return data;
       } else {
         if (response.status === 401) {
-          logout();
-          window.location.assign(window.location.toString());
+          logout({returnTo: window.location.toString()});
           return Promise.reject({message: 'Please re-authenticate.'});
         }
         return Promise.reject(data);
