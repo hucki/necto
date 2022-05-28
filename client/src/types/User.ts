@@ -3,7 +3,7 @@ import { UserSettings } from './UserSettings';
 
 export type User = {
   uuid?: string;
-  a0Id: string;
+  a0Id?: string;
   firstName: string;
   lastName: string;
   validUntil?: Date;
@@ -14,7 +14,7 @@ export type User = {
 
 export type TeamMember = {
   uuid: string;
-  a0Id: string;
+  a0Id?: string;
   firstName: string;
   lastName: string;
   validUntil: Date;
