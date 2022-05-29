@@ -18,6 +18,7 @@ export const getAllUsers = async (
     next(e);
   }
 };
+
 /**
  * get one User with the given Auth0 ID
  *  @param {string} req.params.a0Id
@@ -31,6 +32,46 @@ export const getOneUserByAuth0Id = async (
     const user = await prisma.user.findFirst({
       where: {
         a0Id: req.params.a0Id,
+      },
+      include: {
+        userSettings: {
+          where: {
+            validUntil: {
+              equals: null,
+            },
+          },
+          include: {
+            employee: {
+              include: {
+                contract: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    res.json(user);
+    res.status(200);
+    return;
+  } catch (e) {
+    console.log(e);
+    next(e);
+  }
+};
+
+/**
+ * get one User with uuid
+ *  @param {string} req.params.uuid
+ */
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        uuid: req.params.uuid,
       },
       include: {
         userSettings: {
@@ -85,6 +126,8 @@ export const addUser = async (
     const createdUser = await prisma.user.create({
       data: {
         tenantId: tenantId,
+        email: req.body.email,
+        password: '',// bcrypt.hash(req.body.email),
         a0Id: req.body.a0Id,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -129,7 +172,6 @@ export const updateUser = async (
       },
     });
     let updatedSettings;
-
     if (req.body.userSettings.length) {
       updatedSettings = await prisma.userSettings.upsert({
         where: {
