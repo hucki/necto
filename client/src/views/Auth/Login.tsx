@@ -104,17 +104,6 @@ const Login = (): JSX.Element => {
           {message || 'Log In'}
         </Button>
       </form>
-      <Button
-        aria-label="logout"
-        type="button"
-        disabled={!isAuthenticated}
-        colorScheme={!isAuthenticated && 'red' || 'orange'}
-        onClick={() => setIsAuthenticated(false)}
-      >
-        {isAuthenticated && 'Log out' || 'not Authenticated'}
-      </Button>
-      <br />
-      {user && <pre> {user.email}</pre>}
     </div>
   );
 };
