@@ -19,10 +19,10 @@ const AuthContext = createContext<AuthContextType>({
 
 function AuthProvider({children}:{children: any}) {
   const userToken = getToken();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!getToken());
-  const [user, setUser] = useState<MinimalUser | undefined>(undefined);
-  const value = { isAuthenticated, setIsAuthenticated, user, setUser, isLoading};
+  const [ isLoading, setIsLoading ] = useState<boolean>(false);
+  const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>(() => !!getToken());
+  const [ user, setUser ] = useState<MinimalUser | undefined>(undefined);
+  const value = { isAuthenticated, setIsAuthenticated, user, setUser, isLoading };
 
   useEffect(()=>{
     if (!userToken) {
