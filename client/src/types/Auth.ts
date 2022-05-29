@@ -7,6 +7,8 @@ export type LoginResponse = {
   token: string
 }
 
+export type RegisterResponse = MinimalUser
+
 export type LogoutOptions = {
   returnTo?: string
 }
