@@ -23,7 +23,8 @@ export const getAllEmployees = async (
           select: {
             team: true
           }
-        }
+        },
+        user: true
       },
     });
     res.json(employees);
