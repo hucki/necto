@@ -28,13 +28,13 @@ function getToken(req: Request): string {
   return authHeader.split(' ')[1];
 }
 
-export async function getEmailAddress(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  const authToken = getToken(req);
-  const { email } = await auth0.getProfile(authToken);
-  req.email = email;
-  next();
-}
+// export async function getEmailAddress(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ): Promise<void> {
+//   const authToken = getToken(req);
+//   const { email } = await auth0.getProfile(authToken);
+//   req.email = email;
+//   next();
+// }
