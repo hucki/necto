@@ -104,6 +104,25 @@ async function main() {
     ],
   });
 
+  const permissionLevels = await prisma.permissionLevel.createMany({
+    data: [
+      {
+        displayName: 'admin',
+        description: 'admin role',
+        tenantId
+      },
+      {
+        displayName: 'employee',
+        description: 'employee role',
+        tenantId
+      },
+      {
+        displayName: 'planer',
+        description: 'planer role',
+        tenantId
+      },
+    ]
+  })
   // results
   console.log({
     tenant,
@@ -114,6 +133,7 @@ async function main() {
     employees,
     contracts,
     teams,
+    permissionLevels
   });
 }
 
