@@ -1,4 +1,5 @@
 import express from 'express';
+import * as authController from '../controllers/auth.controller';
 import * as userController from '../controllers/user.controller';
 import * as employeeController from '../controllers/employee.controller';
 import * as teamController from '../controllers/team.controller';
@@ -16,7 +17,10 @@ import * as eventSettingsController from '../controllers/eventSettings.controlle
 import * as tenantController from '../controllers/tenant.controller';
 import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
-import { jwtCheck } from '../middleware/authentication';
+import * as seedController from '../controllers/seed.controller';
+// import expressjwt from 'express-jwt';
+// import { jwtCheck } from '../middleware/authentication';
+import passport from 'passport';
 const router = express.Router();
 const errorRouter = express.Router();
 errorRouter.get('*', errorController.getError);
@@ -24,12 +28,34 @@ errorRouter.post('*', errorController.postError);
 errorRouter.delete('*', errorController.deleteError);
 
 // unauthenticated routes
-// NONE
+router.post(
+  '/login',
+  authController.validateLogin,
+  // authController.login,
+  (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) return next(err);
+      if (!user && info) {
+        return res.status(401).json({...info, status: 401});
+      }
+      req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        return next();
+      });
+    })(req, res, next);
+  },
+  authController.issueToken);
 
-// check Authentication
-router.use(jwtCheck);
+router.post('/register', authController.registerUser);
 
 // authenticated routes
+router.use(authController.isAuthenticated)
+// router.use(passport.authenticate('jwt' /*, {session: false}*/))
+// router.get('/me', passport.authenticate('jwt'/*, {session: false}*/), authController.getMe);
+router.get('/me', authController.getMe);
+router.post('/logout', authController.logout);
+// check Authentication
+// router.use(jwtCheck);
 
 router.get('/teammembers', teamMemberController.getAllTeamMembers);
 
@@ -37,9 +63,11 @@ router.get('/teammembers', teamMemberController.getAllTeamMembers);
 //router.get('/auth/is', authController.isAuthenticated);
 
 // user routes
+
 router.get('/a0users/:a0Id', userController.getOneUserByAuth0Id);
 // router.get('/users/:userId', userController.getOneUser);
 router.get('/users', userController.getAllUsers);
+router.get('/users/:uuid', userController.getUser);
 router.post('/users', userController.addUser);
 router.patch('/users', userController.updateUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
@@ -115,5 +143,8 @@ router.post('/tenant', tenantController.addTenant);
 
 // company routes
 router.get('/companies', companyController.getAllCompanies);
+
+// seed routes
+// router.get('/seed/levels', seedController.permissionLevels);
 
 export { router, errorRouter };
