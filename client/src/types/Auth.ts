@@ -3,9 +3,13 @@ export type LoginData = {
   password: string
 }
 
+export type ResetData = Omit<LoginData, "password">;
+
 export type LoginResponse = {
   token: string
 }
+
+export type ResetResponse = string
 
 export type RegisterResponse = MinimalUser
 

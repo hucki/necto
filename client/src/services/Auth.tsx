@@ -1,4 +1,4 @@
-import { LoginData, LoginResponse, LogoutOptions, MinimalUser, RegisterResponse } from '../types/Auth';
+import { LoginData, LoginResponse, LogoutOptions, MinimalUser, RegisterResponse, ResetData, ResetResponse } from '../types/Auth';
 
 const tokenKey = 'necto_auth';
 
@@ -25,6 +25,12 @@ export const register = async ({
   password,
 }: LoginData): Promise<RegisterResponse> => {
   return authClient('register/', { email, password });
+};
+
+export const resetPassword = async ({
+  email
+}: ResetData): Promise<ResetResponse> => {
+  return authClient('reset/', { email });
 };
 
 export const getToken = () => {
