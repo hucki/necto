@@ -23,6 +23,7 @@ const Register = (): JSX.Element => {
     email: '',
     emailConfirmation: '',
     password: '',
+    passwordConfirmation: '',
   });
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -62,7 +63,7 @@ const Register = (): JSX.Element => {
     if (registerState.emailConfirmation && registerState.email !== registerState.emailConfirmation) setMessage('email addresses do not match!');
   }, [registerState.email, registerState.emailConfirmation, registerState.password]);
 
-  const readyToRegister = Boolean(!message && registerState.email.length && registerState.password.length && registerState.email === registerState.emailConfirmation);
+  const readyToRegister = Boolean(!message && registerState.email.length && registerState.password.length && registerState.email === registerState.emailConfirmation && registerState.password === registerState.passwordConfirmation);
 
   return (
     <div>
@@ -106,6 +107,16 @@ const Register = (): JSX.Element => {
             name="password"
             autoComplete="new-password"
             value={registerState.password}
+            onChange={onChangeHandler}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="passwordConfirmation">confirm password</Label>
+          <Input
+            type="password"
+            name="passwordConfirmation"
+            autoComplete="new-password"
+            value={registerState.passwordConfirmation}
             onChange={onChangeHandler}
           />
         </FormGroup>
