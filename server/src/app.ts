@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { router } from './routes';
 import './middleware/passport';
+import { transporter } from './utils/nodemailer';
 dotenv.config();
 const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 3001;
@@ -18,12 +19,20 @@ const redisPort = process.env.REDIS_PORT as unknown as number || 6379;
 const redisClient = new Redis(redisPort, redisHost);
 const RedisStore = connectRedis(session);
 redisClient.on('connect', function() {
-  console.log('🚀 Redis connected!');
+  console.log('✅ Redis connected!');
 });
 redisClient.on('error', (err) => {
   console.log('❌ new Redis error: ', err);
 });
 
+// verify connection configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log('❌ mailserver error: ', error);
+  } else {
+    console.log('✅ mailserver is ready to take our messages');
+  }
+});
 const app: express.Application = express();
 app.set('trust proxy', true);
 
@@ -47,5 +56,5 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api', router);
 app.listen(port, () => {
-  console.log(`🚀 Server running at http://${host}:${port}`);
+  console.log(`✅ Server running at http://${host}:${port}`);
 });
