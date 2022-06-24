@@ -53,8 +53,8 @@
     "profile": "Profile",
     "logout": "logout",
     "settings": "settings",
-    "eventSettings": "events"
-
+    "eventSettings": "events",
+    "doctors": "Doctors"
   },
   "label": {
     "firstName": "first name",

@@ -53,7 +53,8 @@
     "profile": "Profil",
     "logout": "abmelden",
     "settings": "Einstellungen",
-    "eventSettings": "Termine"
+    "eventSettings": "Termine",
+    "doctors": "Ärzte"
   },
   "label": {
     "firstName": "Vorname",
