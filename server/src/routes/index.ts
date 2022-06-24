@@ -17,7 +17,7 @@ import * as eventSettingsController from '../controllers/eventSettings.controlle
 import * as tenantController from '../controllers/tenant.controller';
 import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
-import * as seedController from '../controllers/seed.controller';
+// import * as seedController from '../controllers/seed.controller';
 // import expressjwt from 'express-jwt';
 // import { jwtCheck } from '../middleware/authentication';
 import passport from 'passport';
@@ -47,6 +47,7 @@ router.post(
   authController.issueToken);
 
 router.post('/register', authController.registerUser);
+router.post('/reset', authController.resetPassword);
 
 // authenticated routes
 router.use(authController.isAuthenticated)
