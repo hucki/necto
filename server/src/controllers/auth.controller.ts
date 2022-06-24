@@ -5,8 +5,21 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator';
 import { User } from '@prisma/client';
+import { transporter } from '../utils/nodemailer';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
+
+const generatePassword = () => {
+  let password = '';
+  const allowedChars = 'ABCDEFGHIJKLFMNOPQRSTUVWXYZ'
+    + 'abcdefghijklfmnopqrstuvwxyz'
+    + '0123456789$_=%';
+  for (let i = 0; i <= 8; i++) {
+    const char =  Math.floor(Math.random() * allowedChars.length + 1);
+    password += allowedChars.charAt(char);
+  }
+  return password;
+}
 
 // TODO:
 // renew token regularly upon interaction
@@ -114,6 +127,55 @@ export const logout = async (
 ): Promise<void> => {
   req.logout();
   res.status(200).json('logged out');
+  return;
+};
+
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const {email} = req?.body;
+  const user = await prisma.user.findUnique({where: { email }})
+  console.log({email,user})
+  if (!user) {
+    // no action required if no user found with the provided email
+    res.status(200).json('ok');
+    return
+  }
+  // reset password
+  const newPassword = generatePassword();
+  const hashedPassword = await bcrypt.hash(newPassword,10);
+  try {
+    const updatedUser = await prisma.user.update(
+      {
+        where: {
+          uuid: user.uuid
+        },
+        data: {
+          password: hashedPassword
+        }
+      })
+    // send new password
+    await transporter.sendMail({
+      from: process.env.MAIL_HOST,
+      to: updatedUser.email,
+      subject: 'Password reset',
+      text: `Hi ${updatedUser.firstName}, \n
+              here is the new password you requested:\n
+              ${newPassword} \n
+              Best, \n
+              Mundwerk IT`,
+      html: `Hi ${user.firstName},<br /><br />
+              here is the new password you requested<br /><br />
+              <strong>${newPassword}</strong><br /><br />
+              Best,<br /><br />
+              Mundwerk IT`,
+    });
+  } catch (error) {
+    console.error('could not update user')
+  }
+  res.status(200).json('ok');
   return;
 };
 
