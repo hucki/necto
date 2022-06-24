@@ -6,6 +6,7 @@ const serverApiUrl =
     : process.env.REACT_APP_API_URL;
 
 console.log('🍕 on ENV', process.env.NODE_ENV);
+console.log('🍍 API URL', serverApiUrl);
 
 export type QueryParams = {
   [key: string]: string;
