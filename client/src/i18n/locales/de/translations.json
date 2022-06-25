@@ -30,7 +30,8 @@
     "cancelEvent": "absagen",
     "preview": "Vorschau",
     "edit": "bearbeiten",
-    "delete": "löschen"
+    "delete": "löschen",
+    "archive": "archivieren"
   },
   "dict": {
     "for": "für"
@@ -46,15 +47,15 @@
     "personalCalendar": "Du",
     "teamCalendar": "Team",
     "roomCalendar": "Raumbelegung",
-    "patients": "Patienten",
+    "patients": "Patient:in",
     "waitingList": "Warteliste",
     "teamSettings": "Team",
-    "employeeSettings": "Mitarbeiter",
+    "employeeSettings": "Mitarbeiter:in",
     "profile": "Profil",
     "logout": "abmelden",
     "settings": "Einstellungen",
     "eventSettings": "Termine",
-    "doctors": "Ärzte"
+    "doctors": "Ärzt:in"
   },
   "label": {
     "firstName": "Vorname",
@@ -73,6 +74,10 @@
     "actions": "Actions",
     "diagnostic": "Diagnostik",
     "careFacility": "Einrichtung",
-    "doctor": "Arzt"
+    "doctor": "Ärzt:in",
+    "therapist": "Behandler:in",
+    "date": "Datum",
+    "appointments": "Termine",
+    "no": "keine"
   }
 }

@@ -30,7 +30,8 @@
     "cancelEvent": "cancel Event",
     "preview": "preview",
     "edit": "edit",
-    "delete": "delete"
+    "delete": "delete",
+    "archive": "archive"
   },
   "dict": {
     "for": "for"
@@ -73,6 +74,11 @@
     "actions": "Actions",
     "diagnostic": "diagnostic",
     "careFacility": "care facility",
-    "doctor": "doctor"
+    "doctor": "doctor",
+    "therapist": "therapist",
+    "date": "date",
+    "appointments": "Appointments",
+    "no": "no"
+
   }
 }
