@@ -41,7 +41,7 @@ export const validateLogin = async (
   await check('password', 'password must not be blank').isLength({min: 1}).run(req);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(400).json(errors)
+    res.status(400).json(errors);
     return;
   }
   return next();
@@ -137,7 +137,6 @@ export const resetPassword = async (
 ): Promise<void> => {
   const {email} = req?.body;
   const user = await prisma.user.findUnique({where: { email }})
-  console.log({email,user})
   if (!user) {
     // no action required if no user found with the provided email
     res.status(200).json('ok');
@@ -172,6 +171,38 @@ export const resetPassword = async (
               Best,<br /><br />
               Mundwerk IT`,
     });
+  } catch (error) {
+    console.error('could not update user')
+  }
+  res.status(200).json('ok');
+  return;
+};
+export const updatePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const authenticatedUser = req.user as User
+  const {oldPassword, newPassword} = req?.body;
+  const user = await prisma.user.findUnique({where: { uuid: authenticatedUser.uuid }})
+
+  // update password
+  const hashedPassword = await bcrypt.hash(newPassword,10);
+  try {
+    const isValidPassword = await bcrypt.compare(oldPassword, user.password)
+    if (!isValidPassword) {
+      res.status(400).json('invalid_old_password');
+      return
+    }
+    await prisma.user.update(
+      {
+        where: {
+          uuid: user.uuid
+        },
+        data: {
+          password: hashedPassword
+        }
+      })
   } catch (error) {
     console.error('could not update user')
   }
