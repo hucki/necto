@@ -1,4 +1,4 @@
-import { LoginData, LoginResponse, LogoutOptions, MinimalUser, RegisterResponse, ResetData, ResetResponse } from '../types/Auth';
+import { LoginData, LoginResponse, LogoutOptions, MinimalUser, RegisterResponse, ResetData, ResetResponse, UpdateData } from '../types/Auth';
 
 const tokenKey = 'necto_auth';
 
@@ -30,7 +30,15 @@ export const register = async ({
 export const resetPassword = async ({
   email
 }: ResetData): Promise<ResetResponse> => {
-  return authClient('reset/', { email });
+  return authClient('/pw/reset/', { email });
+};
+
+export const updatePassword = async ({
+  oldPassword,
+  newPassword
+}: UpdateData): Promise<ResetResponse> => {
+  const method = 'PATCH';
+  return authClient('pw/update/', { oldPassword, newPassword }, method);
 };
 
 export const getToken = () => {
@@ -51,12 +59,13 @@ export const me = async (): Promise<MinimalUser> => {
 const authClient = async (
   endpoint: string,
   data?: unknown,
+  method?: string
 ) => {
   const headers = new Headers();
   if (data) headers.append('Content-Type', 'application/json');
 
   const config: RequestInit = {
-    method: endpoint === 'me/' ? 'GET': 'POST',
+    method: method ? method : endpoint === 'me/' ? 'GET': 'POST',
     body: data ? JSON.stringify(data) : undefined,
     headers,
     credentials: 'include',

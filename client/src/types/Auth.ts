@@ -3,6 +3,11 @@ export type LoginData = {
   password: string
 }
 
+export type UpdateData = {
+  oldPassword: string
+  newPassword: string
+}
+
 export type ResetData = Omit<LoginData, "password">;
 
 export type LoginResponse = {
@@ -10,6 +15,7 @@ export type LoginResponse = {
 }
 
 export type ResetResponse = string
+export type UpdateResponse = string
 
 export type RegisterResponse = MinimalUser
 
