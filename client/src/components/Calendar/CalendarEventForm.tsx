@@ -237,7 +237,7 @@ function CalendarEventForm({
           name="Home Visit?"
           size="lg"
           my={2}
-          checked={isHomeVisit}
+          isChecked={isHomeVisit}
           onChange={onSwitchHomeVisit}
         />
       </FormGroup>
@@ -248,7 +248,7 @@ function CalendarEventForm({
           name="Diagnostic?"
           size="lg"
           my={2}
-          checked={isDiagnostic}
+          isChecked={isDiagnostic}
           onChange={onSwitchDiagnostic}
         />
       </FormGroup>
@@ -308,7 +308,7 @@ function CalendarEventForm({
           name="isRecurring"
           size="lg"
           my={2}
-          checked={isRecurring}
+          isChecked={isRecurring}
           onChange={onSwitchRecurring}
         />
       </FormGroup>

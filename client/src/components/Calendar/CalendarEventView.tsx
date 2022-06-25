@@ -9,6 +9,7 @@ export function CalendarEventView({
   eventTitle,
   isHomeVisit,
   isRecurring,
+  isDiagnostic,
   eventStartTime,
   eventEndTime,
   eventPatient,
@@ -21,6 +22,7 @@ export function CalendarEventView({
   }}>
     <div>{t('calendar.event.patient') + ': '}</div><div css={{fontWeight: 'bold'}}>{eventPatient ? eventPatient.lastName + ', ' +  eventPatient.firstName : 'no Patient'}</div>
     <div>{t('calendar.event.title') + ': '}</div><div css={{fontWeight: 'bold'}}>{ eventTitle}</div>
+    <div>{t('calendar.event.diagnostic') + ': '}</div><div css={{fontWeight: 'bold'}}>{isDiagnostic && <FaCheck /> }</div>
     <div>{t('calendar.event.homeVisit') + ': '}</div><div css={{fontWeight: 'bold'}}>{isHomeVisit && <FaCheck /> }</div>
     <div>{t('calendar.event.recurringAppointment') + ': '}</div><div css={{fontWeight: 'bold'}}>{isRecurring && <FaCheck /> }</div>
     <div>{t('calendar.event.start') + ': ' }</div><div css={{fontWeight: 'bold'}}>{ dayjs(eventStartTime).format('llll')}</div>
