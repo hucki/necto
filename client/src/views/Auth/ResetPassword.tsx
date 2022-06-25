@@ -1,9 +1,9 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { FormGroup, Input, Button, Label } from '../../components/Library';
-import { register, resetPassword } from '../../services/Auth';
+import { resetPassword } from '../../services/Auth';
 import { ResetResponse } from '../../types/Auth';
 
 interface RegisterError {
