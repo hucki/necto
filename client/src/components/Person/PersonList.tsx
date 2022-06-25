@@ -177,7 +177,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
               <b>
                 {
                   p.events.filter((event) => !event.isCancelled)[0].employee
-                    ?.firstName
+                    ?.alias
                 }
               </b>
               :<br />
