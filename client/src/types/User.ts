@@ -6,6 +6,7 @@ export type User = {
   a0Id?: string;
   firstName: string;
   lastName: string;
+  email?: string;
   validUntil?: Date;
   createdAt?: Date;
   updatedAt?: Date;
