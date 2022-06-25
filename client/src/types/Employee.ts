@@ -14,6 +14,7 @@ export type Employee = {
   uuid: string;
   firstName: string;
   lastName: string;
+  alias?: string;
   contract: Contract[];
   teams: [
     {team: Team}
