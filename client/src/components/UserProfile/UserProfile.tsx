@@ -12,6 +12,9 @@ import { useAllEmployees } from '../../hooks/employees';
 import { FormGroup, Input, Button, Label, Select } from '../Library';
 import { RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
+import { FormControl, FormErrorMessage, Heading, useToast, UseToastOptions } from '@chakra-ui/react';
+import { updatePassword } from '../../services/Auth';
+import { UpdateResponse } from '../../types/Auth';
 
 interface UserProfileProps {
   id: string;
@@ -23,6 +26,7 @@ const UserProfile = ({
   const { t } = useTranslation();
   const { isLoading, user } = useUser(id);
   const [updateUser] = useUpdateUser();
+  const [ response, setResponse] = useState<UpdateResponse | undefined>();
   const [createUserSettings] = useCreateUserSettings();
   const {
     isLoading: isLoadingEmployees,
@@ -35,9 +39,35 @@ const UserProfile = ({
     uuid: user?.uuid,
     firstName: user ? user.firstName : '',
     lastName: user ? user.lastName : '',
+    email: user ? user.email : '',
     employeeId: user && user?.userSettings?.length &&
     user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
   });
+  const [passwordState, setPasswordState] = useState({
+    oldPassword: '',
+    newPassword: '',
+    newPasswordConfirmation: '',
+  });
+  const [passwordUpdateResponse, setPasswordUpdateResponse] = useState<string | undefined>();
+  const toast = useToast();
+  const updatePasswordErrorOptions: UseToastOptions = {
+    title: 'Password not updated.',
+    description: `Password not updated: ${passwordUpdateResponse}!`,
+    status: 'error',
+    duration: 4000,
+    isClosable: true,
+  };
+  const updatePasswordSuccessOptions: UseToastOptions = {
+    title: 'Password updated.',
+    description: 'Password was sucessfully updated!',
+    status: 'success',
+    duration: 4000,
+    isClosable: true,
+  };
+  const isChangingPassword = passwordState.oldPassword || passwordState.newPassword || passwordState.newPasswordConfirmation;
+  const newPasswordConfirmed = passwordState.newPassword === passwordState.newPasswordConfirmation;
+  const isReadyToSubmit = !isChangingPassword || passwordState.oldPassword && passwordState.newPassword && newPasswordConfirmed;
+
   useEffect(() => {
     if (!isLoading && user?.uuid && !user.userSettings?.length) {
       createUserSettings({
@@ -64,6 +94,13 @@ const UserProfile = ({
       [e.target.name]: e.target.value,
     }));
   };
+  const onPasswordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+    setPasswordState((currentState) => ({
+      ...currentState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const onSelectHandler = (e: any): void => {
     setUserState((currentState) => ({
@@ -75,6 +112,7 @@ const UserProfile = ({
   const onSubmitHandler = (e: FormEvent): void => {
     e.preventDefault();
     onUpdateUser();
+    onUpdatePassword();
     toggleEdit(e);
   };
 
@@ -101,6 +139,29 @@ const UserProfile = ({
       },
     });
   };
+
+  const onUpdatePassword = async () => {
+    if (!isChangingPassword || !newPasswordConfirmed) return;
+    try {
+      const response = await updatePassword({
+        oldPassword: passwordState.oldPassword,
+        newPassword: passwordState.newPassword
+      });
+      setPasswordUpdateResponse(response);
+      toast(updatePasswordSuccessOptions);
+      // console.log('✅ changePassword response:', response);
+    } catch (error) {
+      setPasswordUpdateResponse(error as string);
+      toast(updatePasswordErrorOptions);
+      // console.log('❌ changePassword error:', error);
+    }
+    setPasswordState({
+      oldPassword: '',
+      newPassword: '',
+      newPasswordConfirmation: '',
+    });
+  };
+
   const toggleEdit = (e: FormEvent): void => {
     e.preventDefault();
     setState((currentState) => (currentState === 'view' ? 'edit' : 'view'));
@@ -116,19 +177,22 @@ const UserProfile = ({
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          '> div': {
+          '> div, h2, h3, button': {
             margin: '10px auto',
             width: '100%',
             maxWidth: '300px',
           },
         }}
       >
+        <Heading as='h2' size='lg'>User Profile</Heading>
+        <Heading as='h3' size='md'>Personal Data</Heading>
         <FormGroup>
           <Label htmlFor="firstName">First Name</Label>
           <Input
             disabled={state === 'view'}
             type="text"
             name="firstName"
+            autoComplete="given-name"
             value={userState.firstName}
             onChange={onChangeHandler}
           />
@@ -139,6 +203,7 @@ const UserProfile = ({
             disabled={state === 'view'}
             type="text"
             name="lastName"
+            autoComplete="family-name"
             value={userState.lastName}
             onChange={onChangeHandler}
           />
@@ -158,13 +223,58 @@ const UserProfile = ({
             ))}
           </Select>
         </FormGroup>
+        <Heading as='h3' size='md'>Password</Heading>
+        <Input
+          type="text"
+          name="email"
+          hidden
+          readOnly
+          autoComplete="username"
+          value={userState.email}
+        />
+        <FormGroup>
+          <Label htmlFor="oldPassword">old password</Label>
+          <Input
+            disabled={state === 'view'}
+            type="password"
+            name="oldPassword"
+            autoComplete="old-password"
+            value={passwordState.oldPassword}
+            onChange={onPasswordChangeHandler}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="newPassword">new password</Label>
+          <Input
+            disabled={state === 'view'}
+            type="password"
+            name="newPassword"
+            autoComplete="new-password"
+            value={passwordState.newPassword}
+            onChange={onPasswordChangeHandler}
+          />
+        </FormGroup>
+        <FormControl isInvalid={!newPasswordConfirmed}>
+          <FormGroup>
+            <Label htmlFor="newPasswordConfirmation">confirm new password</Label>
+            <Input
+              disabled={state === 'view'}
+              type="password"
+              name="newPasswordConfirmation"
+              autoComplete="new-password"
+              value={passwordState.newPasswordConfirmation}
+              onChange={onPasswordChangeHandler}
+            />
+            {!newPasswordConfirmed && <FormErrorMessage>Email is required.</FormErrorMessage>}
+          </FormGroup>
+        </FormControl>
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
             <RiEditFill />
           </Button>
         ) : (
           <div>
-            <Button aria-label="save changes" type="submit">
+            <Button aria-label="save changes" type="submit" disabled={!isReadyToSubmit}>
               {t('button.save')}
             </Button>
             <Button aria-label="cancel changes" type="button" onClick={cancelEdit}>
