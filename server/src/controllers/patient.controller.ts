@@ -162,7 +162,11 @@ export const getAllPatients = async (
       },
       include: {
         contactData: true,
-        events: true,
+        events: {
+          include: {
+            employee: true,
+          },
+        },
         doctor: true,
       },
       orderBy: {
