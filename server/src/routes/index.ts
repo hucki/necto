@@ -47,12 +47,13 @@ router.post(
   authController.issueToken);
 
 router.post('/register', authController.registerUser);
-router.post('/reset', authController.resetPassword);
+router.post('/pw/reset', authController.resetPassword);
 
 // authenticated routes
 router.use(authController.isAuthenticated)
 // router.use(passport.authenticate('jwt' /*, {session: false}*/))
 // router.get('/me', passport.authenticate('jwt'/*, {session: false}*/), authController.getMe);
+router.patch('/pw/update', authController.updatePassword);
 router.get('/me', authController.getMe);
 router.post('/logout', authController.logout);
 // check Authentication
