@@ -157,7 +157,7 @@ export const resetPassword = async (
       })
     // send new password
     await transporter.sendMail({
-      from: process.env.MAIL_HOST,
+      from: process.env.MAIL_FROM,
       to: updatedUser.email,
       subject: 'Password reset',
       text: `Hi ${updatedUser.firstName}, \n
