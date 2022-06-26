@@ -16,12 +16,12 @@ export type Employee = {
   lastName: string;
   alias?: string;
   contract: Contract[];
-  teams: [
+  teams?: [
     {team: Team}
   ];
-  createdAt: Date;
-  updatedAt: Date;
-  user: UserSettings;
+  createdAt?: Date;
+  updatedAt?: Date;
+  user?: UserSettings;
 };
 
 export type Contract = {

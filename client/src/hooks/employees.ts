@@ -1,4 +1,4 @@
-import { useQuery, QueryResult } from 'react-query';
+import { useQuery, QueryResult, queryCache, useMutation, MutationResultPair } from 'react-query';
 import { client } from '../services/ApiClient';
 import { Employee } from '../types/Employee';
 
@@ -13,6 +13,22 @@ export function useEmployee(
     employee,
     ...employeeQuery,
   };
+}
+
+export function useUpdateEmployee(): MutationResultPair<
+  Employee,
+  Error,
+  { employee: Employee },
+  string
+  > {
+  const updateEmployee = async ({ employee }: { employee: Employee }): Promise<Employee> => {
+    return client<Employee>('employees', { data: employee, method: 'PATCH' });
+  };
+  return useMutation(updateEmployee, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('employees');
+    },
+  });
 }
 
 export function useAllEmployees(): QueryResult<Employee[]> & {
