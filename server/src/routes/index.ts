@@ -77,6 +77,7 @@ router.patch('/users', userController.updateUser);
 // employee routes
 router.get('/employees', employeeController.getAllEmployees);
 router.post('/employees', employeeController.addEmployee);
+router.patch('/employees', employeeController.updateEmployee);
 
 // team routes
 router.get('/teams', teamController.getAllTeams);
