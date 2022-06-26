@@ -1,12 +1,12 @@
 import { Icon, ModalFooter, ModalHeader, useToast, UseToastOptions } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaArchive, FaEdit } from 'react-icons/fa';
+import { FaArchive, FaEdit, FaTimes } from 'react-icons/fa';
 import { RiUser5Line } from 'react-icons/ri';
 import { useCreateDoctor, useUpdateDoctor } from '../../hooks/doctor';
 import { useCreatePatient, useUpdatePatient } from '../../hooks/patient';
 import { Person } from '../../types/Person';
-import { Button, ControlWrapper } from '../Library';
+import { Button, ControlWrapper, IconButton } from '../Library';
 import { PersonForm } from './PersonForm';
 
 interface PersonModalProps {
@@ -95,9 +95,16 @@ export const PersonModal = ({person, onClose, type = 'view', personType = 'patie
 
   return (
     <>
-      <ModalHeader alignItems="center" display="flex">
-        <Icon as={RiUser5Line} w={10} h={10} mr={2} />
-        {currentPerson.lastName + ', ' + currentPerson.firstName}
+      <ModalHeader alignItems="center" display="flex" justifyContent="space-between">
+        <div className="person-info">
+          <Icon as={RiUser5Line} w={10} h={10} mr={2} />
+          {currentPerson.lastName + ', ' + currentPerson.firstName}
+        </div>
+        <IconButton
+          aria-label="close modal"
+          icon={<FaTimes />}
+          onClick={onClose}
+        />
       </ModalHeader>
       <PersonForm type={isReadOnly ? 'view' : 'update'} person={currentPerson} onChange={handleCurrentPersonChange} personType={personType}/>
       {/* <PatientForm type={isReadOnly ? 'view' : 'update'} patient={currentPerson} onChange={handleCurrentPatientChange}/> */}
@@ -142,16 +149,21 @@ export const PersonModal = ({person, onClose, type = 'view', personType = 'patie
                 {t('button.edit')}
               </Button>
             ) : (
-              <Button
-                aria-label="save changes"
-                type="button"
-                disabled={isReadOnly}
-                onClick={onSaveChanges}
-                size="sm"
-                colorScheme="blue"
-              >
-                {t('button.save')}
-              </Button>
+              <>
+                <Button aria-label="cancel changes" type="button" size="sm" onClick={onClose}>
+                  {t('button.cancel')}
+                </Button>
+                <Button
+                  aria-label="save changes"
+                  type="button"
+                  disabled={isReadOnly}
+                  onClick={onSaveChanges}
+                  size="sm"
+                  colorScheme="blue"
+                >
+                  {t('button.save')}
+                </Button>
+              </>
             )}
           </ControlWrapper>
         </div>
