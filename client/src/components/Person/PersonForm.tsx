@@ -82,7 +82,6 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
     onChange(currentPerson);
   }, [currentPerson]);
 
-  console.log({type, currentPerson});
   const autoFormFields = () => {
     return Object.keys(currentPerson)
       .filter(

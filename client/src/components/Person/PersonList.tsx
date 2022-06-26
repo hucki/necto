@@ -72,7 +72,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
     setSearch(event.currentTarget.value);
   };
 
-  // pagination
+  // pagination Config
   const rowsPerPage = isMobile ? 6 : 12;
   const numOfPages = Math.ceil(filteredPersons.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
@@ -120,6 +120,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
 
   const PersonRows = (): JSX.Element[] =>
     filteredPatients
+      // pagination Filter
       .filter(
         (p: Person | WaitingPatient, i) =>
           i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
@@ -259,11 +260,10 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           </Tbody>
         </Table>
       </div>
-      {/* pagination controls */}
-
+      {/* pagination controls START */}
       <Flex m={2} alignSelf="flex-end">
         <IconButton
-          aria-label="previous day"
+          aria-label="previous page"
           leftIcon={<FaCaretLeft />}
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
@@ -278,12 +278,13 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           </Button>
         ))}
         <IconButton
-          aria-label="next day"
+          aria-label="next page"
           icon={<FaCaretRight />}
           disabled={currentPage === numOfPages}
           onClick={() => setCurrentPage(currentPage + 1)}
         />
       </Flex>
+      {/* pagination controls END */}
       <Modal isOpen={isOpenInfo} onClose={onCloseInfo}>
         <ModalOverlay
           css={{
@@ -292,7 +293,6 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         >
           <ModalContent minW="80vw">
             <ModalBody>
-              🚧 work in Progress
               {currentPerson ? <PersonModal onClose={onCloseInfo} person={currentPerson} personType={type !== 'doctors' ? 'patient': 'doctor'}/> : null}
             </ModalBody>
           </ModalContent>
@@ -306,9 +306,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         >
           <ModalContent minW="80vw">
             <ModalBody>
-              🚧 work in Progress
               {newPerson ? <PersonModal onClose={onCloseCreate} person={newPerson} personType={type !== 'doctors' ? 'patient': 'doctor'} type="create" /> : null}
-              {/* {newPatient ? <PatientInfo onClose={onCloseCreate} patient={newPatient} type="create"/> : null } */}
             </ModalBody>
           </ModalContent>
         </ModalOverlay>
