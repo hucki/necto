@@ -17,7 +17,11 @@ interface ErrorResponse {
   message?: string
 }
 
-const ResetPassword = (): JSX.Element => {
+interface ResetPasswordProps {
+  onSubmit: () => void
+}
+
+const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
   const [ message, setMessage] = useState<string| undefined>(undefined);
   const [pending, setPending] = useState(false);
   const [ resetState, setResetState] = useState({
@@ -49,6 +53,7 @@ const ResetPassword = (): JSX.Element => {
         setMessage('reset successfull');
       }
       setPending(false);
+      onSubmit();
     } catch (error) {
       setPending(false);
       const errorResponse = error as ErrorResponse;

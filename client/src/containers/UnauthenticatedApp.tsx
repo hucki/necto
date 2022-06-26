@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   App,
   Button,
@@ -11,7 +11,17 @@ import ResetPassword from '../views/Auth/ResetPassword';
 
 function UnauthenticatedApp(): JSX.Element {
   const [ registrationActive, setRegistrationActive ] = useState(false);
+  const [ tabIndex, setTabIndex ] = useState(0);
   const [ resetActive, setResetActive ] = useState(false);
+
+  const handleResetPassword = () => {
+    setResetActive(true);
+    setTabIndex(2);
+  };
+  const hasResetPassword = () => {
+    setTabIndex(0);
+    setResetActive(false);
+  };
   return (
     <App id="App">
       <ContentContainer alignItems="center" justifyContent="center">
@@ -22,7 +32,7 @@ function UnauthenticatedApp(): JSX.Element {
         >
           <Stack spacing="4">
             <h1>Welcome</h1>
-            <Tabs>
+            <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)}>
               <TabList>
                 <Tab>
                   Login
@@ -30,21 +40,28 @@ function UnauthenticatedApp(): JSX.Element {
                 <Tab>
                   Register
                 </Tab>
-                <Tab>
+                {
+                  resetActive &&
+
+                (<Tab>
                   Reset Password
-                </Tab>
+                </Tab>)
+                }
               </TabList>
               <TabPanels>
                 <TabPanel>
                   <Login />
-                  <Button type='reset' onClick={() => setResetActive(true)}>Forgot Password? Click here!</Button>
+                  <Button type='reset' onClick={handleResetPassword}>Forgot Password? Click here!</Button>
                 </TabPanel>
                 <TabPanel>
                   <Register />
                 </TabPanel>
-                <TabPanel>
-                  <ResetPassword />
-                </TabPanel>
+                {
+                  resetActive &&
+                (<TabPanel>
+                  <ResetPassword onSubmit={hasResetPassword}/>
+                </TabPanel>)
+                }
               </TabPanels>
             </Tabs>
           </Stack>
