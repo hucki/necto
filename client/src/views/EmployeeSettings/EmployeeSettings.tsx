@@ -18,8 +18,8 @@ interface EmployeeOverviewProps {
 const EmployeeOverview = ({ employee }: EmployeeOverviewProps) => {
   return (
     <>
-      <Heading as='h3' size='sm'>Contract Data</Heading>
-      <List>
+      <Heading as='h2' size='sm' mb="2">Contract Data</Heading>
+      <List mb="5">
         <ListItem>
           <ListIcon as={RiArrowDropRightLine}/>
           AppointmentsPerWeek:{' '} <strong>{employee.contract[0].appointmentsPerWeek}</strong>
@@ -33,10 +33,10 @@ const EmployeeOverview = ({ employee }: EmployeeOverviewProps) => {
           bgColor: <strong>{employee.contract[0].bgColor}</strong>
         </ListItem>
       </List>
-      <Heading as='h3' size='sm'>Teams</Heading>
+      <Heading as='h2' size='sm' mb="2">Teams</Heading>
       {employee.teams?.length ? (
         <>
-          <Heading as='h4' size='sm'>current teams</Heading>
+          <Heading as='h3' size='sm' mb="2">current teams</Heading>
           <List>
             {employee.teams.map((t, i) => (
               <ListItem key={i}>
@@ -158,7 +158,6 @@ const EmployeeSettings = () => {
     }
   }, [currentEmployee, isLoading]);
 
-  console.log(employeeState);
   return !currentEmployee ? (
     <>
       <pre>pending</pre>
@@ -175,7 +174,7 @@ const EmployeeSettings = () => {
           maxWidth: '500px',
         }}
       >
-        <Heading as='h2' size='lg'>Employee Profile</Heading>
+        <Heading as='h1' size='md' mb="2">Employee Profile</Heading>
         <FormGroup>
           <Label htmlFor="employee">select employee</Label>
           <Select
@@ -190,7 +189,7 @@ const EmployeeSettings = () => {
             ))}
           </Select>
         </FormGroup>
-        <Heading as='h3' size='sm'>Personal Data</Heading>
+        <Heading as='h2' size='sm' mb="2">Personal Data</Heading>
         <FormGroup>
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -259,9 +258,9 @@ const EmployeeSettings = () => {
         <EmployeeOverview employee={currentEmployee} />
         <br />
         {currentTeam && (
-          <>
-            add selected employee to team:
-            <select
+          <FormGroup>
+            <Label htmlFor="team">add to team:</Label>
+            <Select
               name="team"
               value={currentTeam.uuid}
               onChange={onTeamChangeHandler}
@@ -271,12 +270,12 @@ const EmployeeSettings = () => {
                   {t.displayName}
                 </option>
               ))}
-            </select>
-          </>
+            </Select>
+          </FormGroup>
         )}
-        <button type="button" onClick={handleAddEmployeeToTeam}>
+        <Button type="button" onClick={handleAddEmployeeToTeam}>
           Add
-        </button>
+        </Button>
       </form>
     </>
   );
