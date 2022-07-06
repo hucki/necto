@@ -10,7 +10,15 @@ export const getAllUsers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      include: {
+        permissions: {
+          include: {
+            permission: true
+          }
+        }
+      }
+    });
     res.json(users);
     res.status(200);
     return;
@@ -48,6 +56,11 @@ export const getOneUserByAuth0Id = async (
             },
           },
         },
+        permissions: {
+          include: {
+            permission: true
+          },
+        }
       },
     });
     res.json(user);
@@ -86,6 +99,11 @@ export const getUser = async (
                 contract: true,
               },
             },
+          },
+        },
+        permissions: {
+          include: {
+            permission: true
           },
         },
       },
@@ -172,7 +190,7 @@ export const updateUser = async (
       },
     });
     let updatedSettings;
-    if (req.body.userSettings.length) {
+    if (req.body.userSettings?.length) {
       updatedSettings = await prisma.userSettings.upsert({
         where: {
           id: req.body.userSettings[0].id,
@@ -186,6 +204,24 @@ export const updateUser = async (
           tenantId: tenantId,
         },
       });
+    }
+    if (req.body.permissions?.length) {
+      for (let i = 0; i < req.body.permissions.length; i++) {
+        const u2p = await prisma.userToPermissions.upsert({
+          where: {
+            userId_permissionId: {
+              userId: req.body.uuid,
+              permissionId: req.body.permissions[i].permissionId
+            }
+          },
+          update: {},
+          create: {
+            userId: req.body.uuid,
+            permissionId: req.body.permissions[i].permissionId,
+            tenantId: tenantId,
+          },
+        });
+      }
     }
     res.json({ updatedUser, updatedSettings });
     res.status(201);
