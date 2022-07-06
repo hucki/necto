@@ -1,5 +1,5 @@
 import { BgColor } from './Colors';
-import { UserSettings } from './UserSettings';
+import { UserSettings, UserToPermissions } from './UserSettings';
 
 export type User = {
   uuid?: string;
@@ -11,6 +11,7 @@ export type User = {
   createdAt?: Date;
   updatedAt?: Date;
   userSettings?: UserSettings[];
+  permissions?: UserToPermissions[];
 };
 
 export type TeamMember = {
