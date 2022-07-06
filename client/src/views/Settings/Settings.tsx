@@ -7,6 +7,7 @@ import EmployeeSettings from '../EmployeeSettings/EmployeeSettings';
 import {
   RiCalendarEventLine,
   RiProfileLine,
+  RiShieldUserLine,
   RiUserSettingsFill,
   RiUserSettingsLine,
 } from 'react-icons/ri';
@@ -15,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import EventSettings from '../EventSettings/EventSettings';
 import { useContext } from 'react';
 import { AuthContext } from '../../providers/Auth';
+import { UserSettings } from '../UserSettings/UserSettings';
 
 const Settings = (): JSX.Element => {
   const { user } = useContext(AuthContext);
@@ -30,6 +32,10 @@ const Settings = (): JSX.Element => {
         <Tab>
           <RiUserSettingsLine />
           {t('menu.employeeSettings')}
+        </Tab>
+        <Tab>
+          <RiShieldUserLine />
+          {t('menu.userSettings')}
         </Tab>
         <Tab>
           <RiCalendarEventLine />
@@ -48,7 +54,10 @@ const Settings = (): JSX.Element => {
         <TabPanel>
           <EmployeeSettings />
         </TabPanel>
-        <TabPanel>
+        <TabPanel maxW="500px">
+          <UserSettings />
+        </TabPanel>
+        <TabPanel maxW="500px">
           <EventSettings />
         </TabPanel>
         {user && (
