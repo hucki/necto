@@ -10,7 +10,7 @@ type CalenderEventViewProps = {
 
 type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
 
-type RecurringFrequency = 'WEEKLY' | 'MONTHLY';
+type RecurringFrequency = 'WEEKLY' | 'MONTHLY' | 'BIWEEKLY';
 type RecurringInterval =
   | 1
   | 2
