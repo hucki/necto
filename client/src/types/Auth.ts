@@ -28,4 +28,7 @@ export type MinimalUser = {
   email: string
   firstName?: string
   lastName?: String
+  isAdmin?: boolean
+  isPlanner?: boolean
+  isEmployee?: boolean
 }

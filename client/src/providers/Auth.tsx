@@ -38,7 +38,10 @@ function AuthProvider({children}:{children: any}) {
           uuid: thisIsMe.uuid,
           email: thisIsMe.email,
           firstName: thisIsMe.firstName,
-          lastName: thisIsMe.lastName
+          lastName: thisIsMe.lastName,
+          isAdmin: thisIsMe.isAdmin,
+          isPlanner: thisIsMe.isPlanner,
+          isEmployee: thisIsMe.isEmployee
         });
       } catch (error) {
         console.error(error);
