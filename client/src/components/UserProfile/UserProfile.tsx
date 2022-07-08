@@ -8,7 +8,7 @@ import {
   useUpdateUser,
   useUser,
 } from '../../hooks/user';
-import { useAllEmployees } from '../../hooks/employees';
+// import { useAllEmployees } from '../../hooks/employees';
 import { FormGroup, Input, Button, Label, Select } from '../Library';
 import { RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
@@ -28,20 +28,20 @@ const UserProfile = ({
   const [updateUser] = useUpdateUser();
   const [ response, setResponse] = useState<UpdateResponse | undefined>();
   const [createUserSettings] = useCreateUserSettings();
-  const {
-    isLoading: isLoadingEmployees,
-    error,
-    employees,
-    refetch,
-  } = useAllEmployees();
+  // const {
+  //   isLoading: isLoadingEmployees,
+  //   error,
+  //   employees,
+  //   refetch,
+  // } = useAllEmployees();
   const [state, setState] = useState<'view' | 'edit'>('view');
   const [userState, setUserState] = useState({
     uuid: user?.uuid,
     firstName: user ? user.firstName : '',
     lastName: user ? user.lastName : '',
     email: user ? user.email : '',
-    employeeId: user && user?.userSettings?.length &&
-    user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
+    // employeeId: user && user?.userSettings?.length &&
+    // user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
   });
   const [passwordState, setPasswordState] = useState({
     oldPassword: '',
@@ -82,7 +82,7 @@ const UserProfile = ({
         uuid: user.uuid,
         firstName: user.firstName,
         lastName: user.lastName,
-        employeeId: user?.userSettings?.length && user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
+        // employeeId: user?.userSettings?.length && user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
       }));
     }
   }, [user, isLoading]);
@@ -133,7 +133,7 @@ const UserProfile = ({
           {
             id: user?.userSettings[0].id,
             userId: user?.uuid,
-            employeeId: userState.employeeId,
+            // employeeId: userState.employeeId,
           },
         ],
       },
@@ -184,10 +184,10 @@ const UserProfile = ({
           },
         }}
       >
-        <Heading as='h2' size='lg'>User Profile</Heading>
-        <Heading as='h3' size='md'>Personal Data</Heading>
+        <Heading as='h2' size='lg'>{t('menu.profile')}</Heading>
+        <Heading as='h3' size='md'>{t('menu.personalData')}</Heading>
         <FormGroup>
-          <Label htmlFor="firstName">First Name</Label>
+          <Label htmlFor="firstName">{t('label.firstName')}</Label>
           <Input
             disabled={state === 'view'}
             type="text"
@@ -198,7 +198,7 @@ const UserProfile = ({
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="lastName">Last Name</Label>
+          <Label htmlFor="lastName">{t('label.lastName')}</Label>
           <Input
             disabled={state === 'view'}
             type="text"
@@ -208,7 +208,7 @@ const UserProfile = ({
             onChange={onChangeHandler}
           />
         </FormGroup>
-        <FormGroup>
+        {/* <FormGroup>
           <Label htmlFor="employee">Employee</Label>
           <Select
             disabled={state === 'view'}
@@ -222,8 +222,8 @@ const UserProfile = ({
               </option>
             ))}
           </Select>
-        </FormGroup>
-        <Heading as='h3' size='md'>Password</Heading>
+        </FormGroup> */}
+        <Heading as='h3' size='md'>{t('auth.password')}</Heading>
         <Input
           type="text"
           name="email"
@@ -233,7 +233,7 @@ const UserProfile = ({
           value={userState.email}
         />
         <FormGroup>
-          <Label htmlFor="oldPassword">old password</Label>
+          <Label htmlFor="oldPassword">{t('auth.oldPassword')}</Label>
           <Input
             disabled={state === 'view'}
             type="password"
@@ -244,7 +244,7 @@ const UserProfile = ({
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="newPassword">new password</Label>
+          <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
           <Input
             disabled={state === 'view'}
             type="password"
@@ -256,7 +256,7 @@ const UserProfile = ({
         </FormGroup>
         <FormControl isInvalid={!newPasswordConfirmed}>
           <FormGroup>
-            <Label htmlFor="newPasswordConfirmation">confirm new password</Label>
+            <Label htmlFor="newPasswordConfirmation">{t('auth.confirmPassword')}</Label>
             <Input
               disabled={state === 'view'}
               type="password"
