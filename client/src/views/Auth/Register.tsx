@@ -2,6 +2,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import React, { FormEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FormGroup, Input, Button, Label } from '../../components/Library';
 import { register } from '../../services/Auth';
 import { RegisterResponse } from '../../types/Auth';
@@ -18,6 +19,7 @@ interface ErrorResponse {
 }
 
 const Register = (): JSX.Element => {
+  const { t } = useTranslation();
   const [ message, setMessage] = useState<string| undefined>(undefined);
   const [ registerState, setRegisterState] = useState({
     email: '',
@@ -81,7 +83,7 @@ const Register = (): JSX.Element => {
         }}
       >
         <FormGroup>
-          <Label htmlFor="email">email</Label>
+          <Label htmlFor="email">{t('auth.email')}</Label>
           <Input
             type="text"
             name="email"
@@ -91,7 +93,7 @@ const Register = (): JSX.Element => {
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="emailConfirmation">confirm email</Label>
+          <Label htmlFor="emailConfirmation">{t('auth.confirmEmail')}</Label>
           <Input
             type="text"
             name="emailConfirmation"
@@ -101,7 +103,7 @@ const Register = (): JSX.Element => {
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="password">password</Label>
+          <Label htmlFor="password">{t('auth.password')}</Label>
           <Input
             type="password"
             name="password"
@@ -111,7 +113,7 @@ const Register = (): JSX.Element => {
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="passwordConfirmation">confirm password</Label>
+          <Label htmlFor="passwordConfirmation">{t('auth.confirmPassword')}</Label>
           <Input
             type="password"
             name="passwordConfirmation"
@@ -125,7 +127,7 @@ const Register = (): JSX.Element => {
           disabled={!readyToRegister}
           colorScheme={!!message && 'red' || 'green'}
         >
-          {message || 'Register'}
+          {message || t('auth.register')}
         </Button>
       </form>
     </div>

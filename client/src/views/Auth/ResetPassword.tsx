@@ -2,6 +2,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import React, { FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FormGroup, Input, Button, Label } from '../../components/Library';
 import { resetPassword } from '../../services/Auth';
 import { ResetResponse } from '../../types/Auth';
@@ -22,6 +23,7 @@ interface ResetPasswordProps {
 }
 
 const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
+  const { t } = useTranslation();
   const [ message, setMessage] = useState<string| undefined>(undefined);
   const [pending, setPending] = useState(false);
   const [ resetState, setResetState] = useState({
@@ -86,7 +88,7 @@ const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
         }}
       >
         <FormGroup>
-          <Label htmlFor="email">email</Label>
+          <Label htmlFor="email">{t('auth.email')}</Label>
           <Input
             type="text"
             name="email"
@@ -99,7 +101,7 @@ const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
           disabled={!readyToReset || !!response}
           colorScheme={message && response !== 'ok' ? 'red' : 'green'}
         >
-          {message || 'Reset'}
+          {message || t('auth.reset')}
         </Button>
       </form>
     </div>

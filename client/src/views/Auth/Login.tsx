@@ -2,6 +2,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FormGroup, Input, Button, Label } from '../../components/Library';
 import { AuthContext } from '../../providers/Auth';
 import { login } from '../../services/Auth';
@@ -19,6 +20,7 @@ interface ErrorResponse {
 }
 
 const Login = (): JSX.Element => {
+  const { t } = useTranslation();
   const [ message, setMessage] = useState<string| undefined>(undefined);
   const { isAuthenticated, setIsAuthenticated, user, setUser } = useContext(AuthContext);
   const [ loginState, setLoginState] = useState({
@@ -77,7 +79,7 @@ const Login = (): JSX.Element => {
         }}
       >
         <FormGroup>
-          <Label htmlFor="email">email</Label>
+          <Label htmlFor="email">{t('auth.email')}</Label>
           <Input
             type="text"
             name="email"
@@ -87,7 +89,7 @@ const Login = (): JSX.Element => {
           />
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="password">password</Label>
+          <Label htmlFor="password">{t('auth.password')}</Label>
           <Input
             type="password"
             name="password"
@@ -101,7 +103,7 @@ const Login = (): JSX.Element => {
           disabled={!!message || isAuthenticated}
           colorScheme={!!message && 'red' || 'green'}
         >
-          {message || 'Log In'}
+          {message || t('auth.login')}
         </Button>
       </form>
     </div>

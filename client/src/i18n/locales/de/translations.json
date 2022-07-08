@@ -1,6 +1,7 @@
 {
   "calendar": {
     "view": {
+      "label": "Ansicht",
       "day": "Tag",
       "week": "Woche",
       "month": "Monat"
@@ -80,5 +81,17 @@
     "date": "Datum",
     "appointments": "Termine",
     "no": "keine"
+  },
+  "auth": {
+    "login": "anmelden",
+    "register": "registrieren",
+    "welcome": "Willkommen!",
+    "email": "eMail",
+    "confirmEmail": "eMail bestätigen",
+    "confirmPassword": "Passwort bestätigen",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen? Klick hier!",
+    "resetPassword": "Passwort zurücksetzen",
+    "reset": "zurücksetzen"
   }
 }

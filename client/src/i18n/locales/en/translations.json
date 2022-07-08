@@ -1,6 +1,7 @@
 {
   "calendar": {
     "view": {
+      "label": "view",
       "day": "Day",
       "week": "Week",
       "month": "Month"
@@ -81,5 +82,17 @@
     "appointments": "Appointments",
     "no": "no"
 
+  },
+  "auth": {
+    "login": "login",
+    "register": "register",
+    "welcome": "welcome",
+    "email": "email",
+    "password": "password",
+    "confirmEmail": "confirm email",
+    "confirmPassword": "confirm password",
+    "forgotPassword": "Forgot password? Click here!",
+    "resetPassword": "reset password",
+    "reset": "reset"
   }
 }
