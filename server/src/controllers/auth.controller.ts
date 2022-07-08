@@ -4,7 +4,7 @@ import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator';
-import { User } from '@prisma/client';
+import { PermissionLevel, User, UserToPermissions } from '@prisma/client';
 import { transporter } from '../utils/nodemailer';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
@@ -19,6 +19,12 @@ const generatePassword = () => {
     password += allowedChars.charAt(char);
   }
   return password;
+}
+
+type UserRoles = {
+  isAdmin: boolean
+  isEmployee: boolean
+  isPlanner: boolean
 }
 
 // TODO:
@@ -110,12 +116,15 @@ export const getMe = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const user = req.user as User
+  const user = req.user as User & {permissions: (UserToPermissions & {permission: PermissionLevel})[]}
   res.json({
     uuid: user.uuid,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
+    isAdmin: Boolean(user?.permissions?.find(p => p.permission?.displayName === 'admin')),
+    isPlanner: Boolean(user?.permissions?.find(p => p.permission?.displayName === 'planner')),
+    isEmployee: Boolean(user?.permissions?.find(p => p.permission?.displayName === 'employee'))
   });
   return;
 };
