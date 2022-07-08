@@ -21,6 +21,7 @@ interface ErrorResponse {
 const Register = (): JSX.Element => {
   const { t } = useTranslation();
   const [ message, setMessage] = useState<string| undefined>(undefined);
+  const [ state, setState ] = useState<'error' | 'success'>('success');
   const [ registerState, setRegisterState] = useState({
     email: '',
     emailConfirmation: '',
@@ -43,8 +44,10 @@ const Register = (): JSX.Element => {
       if (!registerResponse) {
         setTimeout(() => setMessage(undefined), 2500);
         setMessage('Registration failed');
+        setState('error');
       } else {
         setMessage('Registration successfull');
+        setState('success');
       }
     } catch (error) {
       const errorResponse = error as ErrorResponse;
@@ -57,12 +60,19 @@ const Register = (): JSX.Element => {
       };
       setTimeout(() => setMessage(undefined), 2500);
       setMessage(messages.join());
+      setState('error');
     }
   };
   // reset error message upon changes to loginState contents
   useEffect(() => {
-    if (message) setMessage(undefined);
-    if (registerState.emailConfirmation && registerState.email !== registerState.emailConfirmation) setMessage('email addresses do not match!');
+    if (message) {
+      setMessage(undefined);
+      setState('success');
+    }
+    if (registerState.emailConfirmation && registerState.email !== registerState.emailConfirmation) {
+      setMessage('email addresses do not match!');
+      setState('error');
+    }
   }, [registerState.email, registerState.emailConfirmation, registerState.password]);
 
   const readyToRegister = Boolean(!message && registerState.email.length && registerState.password.length && registerState.email === registerState.emailConfirmation && registerState.password === registerState.passwordConfirmation);
@@ -125,7 +135,7 @@ const Register = (): JSX.Element => {
 
         <Button aria-label="login" type="submit"
           disabled={!readyToRegister}
-          colorScheme={!!message && 'red' || 'green'}
+          colorScheme={state === 'error' ? 'red' : 'green'}
         >
           {message || t('auth.register')}
         </Button>
