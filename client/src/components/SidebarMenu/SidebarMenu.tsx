@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useContext } from 'react';
 import { useDisclosure, Divider } from '@chakra-ui/react';
 import {
   RiCalendarEventFill,
@@ -20,6 +20,7 @@ import { IconButton, NavigationButton, Sidebar } from '../Library';
 import { useTranslation } from 'react-i18next';
 import { FaHandHoldingMedical } from 'react-icons/fa';
 import { logout } from '../../services/Auth';
+import { AuthContext } from '../../providers/Auth';
 
 interface SidebarProps {
   dispatch: Dispatch<any>;
@@ -27,6 +28,7 @@ interface SidebarProps {
 
 const SidebarMenu = ({ dispatch }: SidebarProps) => {
   const { pathname: currentView } = useLocation();
+  const { user } = useContext(AuthContext);
   const history = useHistory();
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const onClickHandler = (route: string) => {
@@ -69,6 +71,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         {isOpen ? t('menu.personalCalendar') : null}
       </NavigationButton>
       <NavigationButton
+        hidden={!user?.isAdmin && !user?.isPlanner}
         variant={currentView === '/teamcal' ? 'solid' : 'ghost'}
         colorScheme="teal"
         aria-label="Team Calendar"
@@ -89,6 +92,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         {isOpen ? t('menu.roomCalendar') : null}
       </NavigationButton>
       <NavigationButton
+        hidden={!user?.isAdmin && !user?.isPlanner}
         colorScheme="teal"
         variant={currentView === '/patients' ? 'solid' : 'ghost'}
         aria-label="Patients"
@@ -99,6 +103,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         {isOpen ? t('menu.patients') : null}
       </NavigationButton>
       <NavigationButton
+        hidden={!user?.isAdmin && !user?.isPlanner && !user?.isEmployee}
         colorScheme="teal"
         variant={currentView === '/waiting' ? 'solid' : 'ghost'}
         aria-label="WaitingList"
@@ -109,6 +114,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
         {isOpen ? t('menu.waitingList') : null}
       </NavigationButton>
       <NavigationButton
+        hidden={!user?.isAdmin && !user?.isPlanner}
         colorScheme="teal"
         variant={currentView === '/doctors' ? 'solid' : 'ghost'}
         aria-label="Doctors"
