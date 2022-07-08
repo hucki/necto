@@ -26,8 +26,8 @@ const tenantId = process.env.TENANT_UUID;
           tenantId
         },
         {
-          displayName: 'planer',
-          description: 'planer role',
+          displayName: 'planner',
+          description: 'planner role',
           tenantId
         },
       ]
