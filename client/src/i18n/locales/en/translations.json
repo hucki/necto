@@ -46,6 +46,7 @@
   "menu": {
     "home": "home",
     "personalCalendar": "You",
+    "personalData": "Personal Data",
     "teamCalendar": "Team",
     "roomCalendar": "Roombookings",
     "patients": "Patients",
@@ -81,15 +82,17 @@
     "date": "date",
     "appointments": "Appointments",
     "no": "no"
-
   },
   "auth": {
     "login": "login",
     "register": "register",
     "welcome": "welcome",
     "email": "email",
-    "password": "password",
     "confirmEmail": "confirm email",
+    "emailRequired": "email is required",
+    "password": "password",
+    "oldPassword": "old password",
+    "newPassword": "new password",
     "confirmPassword": "confirm password",
     "forgotPassword": "Forgot password? Click here!",
     "resetPassword": "reset password",

@@ -46,6 +46,7 @@
   "menu": {
     "home": "home",
     "personalCalendar": "Du",
+    "personalData": "Persönliche Daten",
     "teamCalendar": "Team",
     "roomCalendar": "Raumbelegung",
     "patients": "Patient:in",
@@ -88,8 +89,11 @@
     "welcome": "Willkommen!",
     "email": "eMail",
     "confirmEmail": "eMail bestätigen",
-    "confirmPassword": "Passwort bestätigen",
+    "emailRequired": "bitte eMail eingeben",
     "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "oldPassword": "altes Passwort",
+    "newPassword": "neues Passwort",
     "forgotPassword": "Passwort vergessen? Klick hier!",
     "resetPassword": "Passwort zurücksetzen",
     "reset": "zurücksetzen"
