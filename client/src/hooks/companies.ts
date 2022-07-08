@@ -1,14 +1,13 @@
 import { useQuery, QueryResult } from 'react-query';
-import { useAuthenticatedClient } from '../services/ApiClient';
+import { client } from '../services/ApiClient';
 import { Company } from '../types/Company';
 
 export function useAllCompanies(): QueryResult<Company[]> & {
   companies: Company[];
   } {
-  const client = useAuthenticatedClient<Company[]>();
 
   const companiesQuery = useQuery('companies', async () => {
-    return client('companies');
+    return client<Company[]>('companies');
   });
 
   const companies =

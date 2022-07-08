@@ -1,13 +1,12 @@
-import { useQuery, QueryResult } from 'react-query';
-import { useAuthenticatedClient } from '../services/ApiClient';
-import { Employee, Contract, Team } from '../types/Employee';
+import { useQuery, QueryResult, queryCache, useMutation, MutationResultPair } from 'react-query';
+import { client } from '../services/ApiClient';
+import { Employee } from '../types/Employee';
 
 export function useEmployee(
   uuid: string
 ): QueryResult<Employee> & { employee: Employee | undefined } {
-  const client = useAuthenticatedClient<Employee>();
   const employeeQuery = useQuery(['employee', uuid], async () => {
-    return client(`employees/${uuid}`);
+    return client<Employee>(`employees/${uuid}`);
   });
   const employee = employeeQuery.data;
   return {
@@ -16,13 +15,28 @@ export function useEmployee(
   };
 }
 
+export function useUpdateEmployee(): MutationResultPair<
+  Employee,
+  Error,
+  { employee: Employee },
+  string
+  > {
+  const updateEmployee = async ({ employee }: { employee: Employee }): Promise<Employee> => {
+    return client<Employee>('employees', { data: employee, method: 'PATCH' });
+  };
+  return useMutation(updateEmployee, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('employees');
+    },
+  });
+}
+
 export function useAllEmployees(): QueryResult<Employee[]> & {
   employees: Employee[];
   } {
-  const client = useAuthenticatedClient<Employee[]>();
 
   const employeesQuery = useQuery('employees', async () => {
-    return client('employees');
+    return client<Employee[]>('employees');
   });
 
   const employees = employeesQuery.data ?? [];

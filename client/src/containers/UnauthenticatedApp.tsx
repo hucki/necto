@@ -1,19 +1,35 @@
-import React from 'react';
-import LoginButton from '../components/Auth/LoginButton';
-import { Route, Switch } from 'react-router';
-import VerifySignup from '../components/Auth/VerifySignup';
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { useEffect, useState } from 'react';
 import {
   App,
+  Button,
   ContentContainer,
-  FullPageSpinner,
-  Header,
 } from '../components/Library';
-import UserInfo from '../components/UserInfo/UserInfo';
-import { Box, Stack } from '@chakra-ui/react';
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import Login from '../views/Auth/Login';
+import Register from '../views/Auth/Register';
+import ResetPassword from '../views/Auth/ResetPassword';
+import { useTranslation } from 'react-i18next';
 
 function UnauthenticatedApp(): JSX.Element {
-  const { isLoading } = useAuth0();
+  const { t } = useTranslation();
+  const [ registrationActive, setRegistrationActive ] = useState(false);
+  const [ tabIndex, setTabIndex ] = useState(0);
+  const [ resetActive, setResetActive ] = useState(false);
+  const resetTabIndex = 2;
+
+  const handleResetPassword = () => {
+    setResetActive(true);
+    setTabIndex(resetTabIndex);
+  };
+  const hasResetPassword = () => {
+    setTabIndex(0);
+    setResetActive(false);
+  };
+  useEffect(() => {
+    if (tabIndex !== resetTabIndex) {
+      setResetActive(false);
+    }
+  }, [tabIndex]);
   return (
     <App id="App">
       <ContentContainer alignItems="center" justifyContent="center">
@@ -23,21 +39,38 @@ function UnauthenticatedApp(): JSX.Element {
           p="8"
         >
           <Stack spacing="4">
-            <UserInfo userName="Guest" />
-            {isLoading ? (
-              <FullPageSpinner />
-            ) : (
-              <Switch>
-                <Route path="/verify">
-                  <VerifySignup />
-                </Route>
-                <Route path="*">
-                  <h1>Welcome</h1>
-                  <div>Please login</div>
-                  <LoginButton />
-                </Route>
-              </Switch>
-            )}
+            <h1>{t('auth.welcome')}</h1>
+            <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)}>
+              <TabList>
+                <Tab>
+                  {t('auth.login')}
+                </Tab>
+                <Tab>
+                  {t('auth.register')}
+                </Tab>
+                {
+                  resetActive &&
+                (<Tab>
+                  {t('auth.resetPassword')}
+                </Tab>)
+                }
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <Login />
+                  <Button w="100%" type='reset' onClick={handleResetPassword}>{t('auth.forgotPassword')}</Button>
+                </TabPanel>
+                <TabPanel>
+                  <Register />
+                </TabPanel>
+                {
+                  resetActive &&
+                (<TabPanel>
+                  <ResetPassword onSubmit={hasResetPassword}/>
+                </TabPanel>)
+                }
+              </TabPanels>
+            </Tabs>
           </Stack>
         </Box>
       </ContentContainer>

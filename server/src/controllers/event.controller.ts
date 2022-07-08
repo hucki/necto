@@ -185,6 +185,9 @@ export const getWeeksEvents = async (
           { startTime: { lte: lastOfWeek.toISOString() } },
         ],
       },
+      include: {
+        patient: true,
+      },
     });
     res.json(events);
     res.status(200);

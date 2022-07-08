@@ -22,3 +22,16 @@ export type Contract = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+export type UserToPermissions = {
+  userId: string;
+  permissionId: string;
+  tenantId?: string;
+  permission?: PermissionLevel;
+}
+
+export type PermissionLevel = {
+  uuid: string;
+  displayName: string;
+  description: string;
+}

@@ -1,4 +1,4 @@
-import { Input as ChakraInput } from '@chakra-ui/react';
+import { Input as ChakraInput, Select as ChakraSelect } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import ReactDatePicker from 'react-datepicker';
 
@@ -20,8 +20,7 @@ const TextDisplay = styled.div(inputStyles, {
   borderBottom: '1px solid #ababab',
 });
 
-const Select = styled.select(inputStyles, {
-  height: '100%',
+const Select = styled(ChakraSelect)(inputStyles, {
   borderRadius: '3px',
   fontWeight: 'bold',
   minWidth: '250px',

@@ -10,6 +10,11 @@ import {
 import { Flex } from '@chakra-ui/react';
 import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
+import { registerLocale } from 'react-datepicker';
+import de from 'date-fns/locale/de';
+registerLocale('de', de);
+
+
 
 const NavBar = () => {
   const { currentDate, setCurrentDate } = useContext(UserDateContext);
@@ -68,6 +73,7 @@ const NavBar = () => {
         onClick={prevDayHandler}
       />
       <DatePicker
+        locale="de"
         onChange={onChangeHandler}
         dateFormat={isMobile ? 'dd.MM.' : 'dd.MM.y'}
         selected={currentDate?.toDate()}

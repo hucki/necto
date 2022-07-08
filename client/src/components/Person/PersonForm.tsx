@@ -1,4 +1,4 @@
-import { GridItem, Icon, SimpleGrid } from '@chakra-ui/react';
+import { Checkbox, Divider, GridItem, Icon, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
@@ -9,6 +9,7 @@ import { Doctor } from '../../types/Doctor';
 import { Patient } from '../../types/Patient';
 import { Person } from '../../types/Person';
 import { Input, Label, ModalFormGroup, Select, TextDisplay } from '../Library';
+import { AppointmentList } from '../List/Appointments';
 
 interface PersonFormProps {
   person: Person
@@ -24,6 +25,7 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
   const { t } = useTranslation();
   const { isLoading, error, doctors } = useAllDoctors();
   const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({...person}));
+  const currentPatient = personType !== 'doctor' ? currentPerson as Patient : undefined;
 
   const isWaitingPatient = (person: Person): person is Patient => {
     if ('firstContactedAt' in person) return true;
@@ -60,6 +62,10 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
     event.preventDefault();
     setCurrentPerson(person => ({...person, [`${key}`]: event.currentTarget.value}));
   }
+  function onCheckboxChange({event, key}: OnInputChangeProps) {
+    event.preventDefault();
+    setCurrentPerson(person => ({...person, [`${key}`]: event.currentTarget.checked}));
+  }
 
   interface OnSelectChangeProps {
     event: React.FormEvent<HTMLSelectElement>
@@ -87,26 +93,36 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
         typeof currentPerson[key as keyof Person] === 'boolean' ? (
             <ModalFormGroup key={key}>
               <Label htmlFor={key}>{t(`label.${key}`)}</Label>
-              {typeof currentPerson[key as keyof Person] === 'boolean' ? (
-                <Icon
-                  id={key}
-                  as={
-                    currentPerson[key as keyof Person]
-                      ? RiCheckLine
-                      : RiCheckboxBlankLine
-                  }
-                  w={5}
-                  h={5}
-                  color={currentPerson[key as keyof Person] ? 'indigo' : 'gray.400'}
-                />
-              ) :
-                type === 'view' ? (
-                  <TextDisplay id={key}>
+              {typeof currentPerson[key as keyof Person] === 'boolean'
+                ? type === 'view'
+                  ? (<Icon
+                    id={key}
+                    as={
+                      currentPerson[key as keyof Person]
+                        ? RiCheckLine
+                        : RiCheckboxBlankLine
+                    }
+                    w={5}
+                    h={5}
+                    color={currentPerson[key as keyof Person] ? 'indigo' : 'gray.400'}
+                  />)
+                  : (<Checkbox
+                    id={key}
+                    name={key}
+                    size="lg"
+                    my={2}
+                    isChecked={currentPerson[key as keyof Person] ? true : false}
+                    onChange={(e) => onCheckboxChange({event: e, key: key as keyof Person})}
+                  />)
+                : type === 'view'
+                  ? (<TextDisplay id={key}>
                     {currentPerson[key as keyof Person]?.toString()}&nbsp;
-                  </TextDisplay>
-                ) : (
-                  <Input onChange={(e) => onInputChange({event: e, key: key as keyof Person})} id={key} value={currentPerson[key as keyof Person]?.toString()}></Input>
-                )}
+                  </TextDisplay>)
+                  : (<Input
+                    onChange={(e) => onInputChange({event: e, key: key as keyof Person})}
+                    id={key}
+                    value={currentPerson[key as keyof Person]?.toString()}>
+                  </Input>)}
             </ModalFormGroup>
           ) : null
       );
@@ -117,19 +133,19 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
       <SimpleGrid columns={[1, null, 2]} gap={6}>
         <GridItem>{autoFormFields()}</GridItem>
         <GridItem>
-          {/* {personType !== 'doctor' && (
+          {personType !== 'doctor' && currentPatient && (
             <>
               <ModalFormGroup>
                 <Label htmlFor="doctorId">{t('label.doctor')}</Label>
                 {type === 'view' ? (
                   <TextDisplay id="doctorId">
-                    {(currentPerson as Patient)['doctor'] && getDisplayName(currentPerson['doctor'])}
+                    {currentPatient['doctor'] && getDisplayName(currentPatient['doctor'])}
                   </TextDisplay>
                 ) : (
                   <>
                     <Select
                       name="employee"
-                      value={currentPerson as Patient['doctorId']}
+                      value={currentPatient['doctorId']}
                       onChange={(e) => onSelectChange({event: e, key: 'doctorId'})}
                     >
                       <option value={'remove'}>No Doctor</option>
@@ -142,11 +158,18 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
                   </>
                 )}
               </ModalFormGroup>
+              <Divider m="1" />
+              {currentPatient.events?.length
+                ? <>
+                  <b style={{marginLeft: '0.5rem'}}>{t('label.appointments')}:</b>
+                  <AppointmentList events={currentPatient.events}/>
+                </>
+                : <b style={{marginLeft: '0.5rem'}}>{t('label.no') + ' ' + t('label.appointments')}</b>
+              }
             </>
-          )} */}
+          )}
         </GridItem>
       </SimpleGrid>
-      {/* <b>Termine:</b>{currentPerson.events && currentPerson.events.map(event => <div key={event.uuid}>{event.startTime}</div>)} */}
     </>
   );
 };

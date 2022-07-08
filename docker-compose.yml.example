@@ -31,12 +31,16 @@ services:
     volumes:
       - ./server/src:/usr/app/src
     depends_on:
-     - database
+      - database
+      - sessions
     env_file:
       - ./server/.env
     environment:
+      REDIS_HOST: sessions
+      SESSION_SECRET: session_secret
+      JWT_SECRET: token_secret
       # TODO: use below user/password combination defined in the database section
-      - DATABASE_URL=postgresql://user:password@database:5432/necto_prod?schema=public
+      DATABASE_URL: postgresql://user:password@database:5432/necto_prod?schema=public
     command: node dist/src/app.js
 
   database:
@@ -49,6 +53,13 @@ services:
       POSTGRES_DB: necto_prod
     volumes:
       - ./db-data/:/var/lib/postgresql/data/
+
+  sessions:
+      image: 'redis:alpine'
+      networks:
+        - pern-network
+      ports:
+        - '6379:6379'
 
 networks:
   necto-network:

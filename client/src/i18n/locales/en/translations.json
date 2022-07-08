@@ -1,6 +1,7 @@
 {
   "calendar": {
     "view": {
+      "label": "view",
       "day": "Day",
       "week": "Week",
       "month": "Month"
@@ -16,6 +17,7 @@
       "recurringAppointment": "recurring Appointment",
       "frequency": "frequency",
       "frequencyWeekly": "weekly",
+      "frequencyBiWeekly": "bi-weekly",
       "frequencyMonthly": "monthly",
       "interval": "interval",
       "start": "start",
@@ -30,7 +32,8 @@
     "cancelEvent": "cancel Event",
     "preview": "preview",
     "edit": "edit",
-    "delete": "delete"
+    "delete": "delete",
+    "archive": "archive"
   },
   "dict": {
     "for": "for"
@@ -44,17 +47,19 @@
   "menu": {
     "home": "home",
     "personalCalendar": "You",
+    "personalData": "Personal Data",
     "teamCalendar": "Team",
     "roomCalendar": "Roombookings",
     "patients": "Patients",
     "waitingList": "Waiting List",
     "teamSettings": "Team",
     "employeeSettings": "Employees",
+    "userSettings": "User",
     "profile": "Profile",
     "logout": "logout",
     "settings": "settings",
-    "eventSettings": "events"
-
+    "eventSettings": "events",
+    "doctors": "Doctors"
   },
   "label": {
     "firstName": "first name",
@@ -73,6 +78,25 @@
     "actions": "Actions",
     "diagnostic": "diagnostic",
     "careFacility": "care facility",
-    "doctor": "doctor"
+    "doctor": "doctor",
+    "therapist": "therapist",
+    "date": "date",
+    "appointments": "Appointments",
+    "no": "no"
+  },
+  "auth": {
+    "login": "login",
+    "register": "register",
+    "welcome": "welcome",
+    "email": "email",
+    "confirmEmail": "confirm email",
+    "emailRequired": "email is required",
+    "password": "password",
+    "oldPassword": "old password",
+    "newPassword": "new password",
+    "confirmPassword": "confirm password",
+    "forgotPassword": "Forgot password? Click here!",
+    "resetPassword": "reset password",
+    "reset": "reset"
   }
 }

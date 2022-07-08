@@ -6,15 +6,14 @@ import {
   MutationResultPair,
   queryCache,
 } from 'react-query';
-import { useAuthenticatedClient } from '../services/ApiClient';
+import { client } from '../services/ApiClient';
 import { CancellationReason, Event } from '../types/Event';
 
 export function useEvent(
   id: number
 ): QueryResult<Event> & { event: Event | undefined } {
-  const client = useAuthenticatedClient<Event>();
   const eventQuery = useQuery(['event', id], async () => {
-    return client(`events/${id}`);
+    return client<Event>(`events/${id}`);
   });
   const event = eventQuery.data;
   return {
@@ -29,14 +28,12 @@ export function useDeleteEvent(): MutationResultPair<
   { uuid: string },
   string
   > {
-  const client = useAuthenticatedClient<{ message: string }>();
-
   const deleteEvent = async ({
     uuid,
   }: {
     uuid: string;
   }): Promise<{ message: string }> => {
-    return client(`events/${uuid}`, { method: 'DELETE' });
+    return client<{ message: string }>(`events/${uuid}`, { method: 'DELETE' });
   };
 
   return useMutation(deleteEvent, {
@@ -47,10 +44,8 @@ export function useDeleteEvent(): MutationResultPair<
 }
 
 export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
-  const client = useAuthenticatedClient<Event[]>();
-
   const eventsQuery = useQuery('events', async () => {
-    return client('events');
+    return client<Event[]>('events');
   });
 
   const events = eventsQuery.data ?? [];
@@ -65,10 +60,8 @@ export function useWeeksEvents(
   year: number,
   week: number
 ): QueryResult<Event[]> & { rawEvents: Event[] } {
-  const client = useAuthenticatedClient<Event[]>();
-
   const eventsQuery = useQuery(['events', year, week], async () => {
-    return client(`events/w/${year}/${week}`);
+    return client<Event[]>(`events/w/${year}/${week}`);
   });
 
   const rawEvents = eventsQuery.data ?? [];
@@ -81,12 +74,11 @@ export function useWeeksEvents(
 export function useDaysEvents(
   currentDate: Dayjs
 ): QueryResult<Event[]> & { rawEvents: Event[] } {
-  const client = useAuthenticatedClient<Event[]>();
   const year = dayjs(currentDate).format('YYYY');
   const month = dayjs(currentDate).format('MM');
   const day = dayjs(currentDate).format('DD');
   const eventsDayQuery = useQuery(['events', currentDate], async () => {
-    return client(`events/d/${year}/${month}/${day}`);
+    return client<Event[]>(`events/d/${year}/${month}/${day}`);
   });
 
   const rawEvents = eventsDayQuery.data ?? [];
@@ -102,9 +94,8 @@ export function useCreateEvent(): MutationResultPair<
   { event: Event },
   string
   > {
-  const client = useAuthenticatedClient<Event>();
   const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
-    return client('events', { data: event });
+    return client<Event>('events', { data: event });
   };
   return useMutation(createEvent, {
     onSuccess: () => {
@@ -119,9 +110,8 @@ export function useUpdateEvent(): MutationResultPair<
   { event: Event },
   string
   > {
-  const client = useAuthenticatedClient<Event>();
   const updateEvent = async ({ event }: { event: Event }): Promise<Event> => {
-    return client(`events/${event.uuid}`, { data: event, method: 'PATCH' });
+    return client<Event>(`events/${event.uuid}`, { data: event, method: 'PATCH' });
   };
   return useMutation(updateEvent, {
     onSuccess: () => {
@@ -138,9 +128,8 @@ export function useCreateCancellationReason(): MutationResultPair<
   { cr: CancellationReason },
   string
   > {
-  const client = useAuthenticatedClient<CancellationReason>();
   const createCancellationReason = async ({ cr }: { cr: CancellationReason }): Promise<CancellationReason> => {
-    return client(cancellationReasonsRoute, { data: cr });
+    return client<CancellationReason>(cancellationReasonsRoute, { data: cr });
   };
   return useMutation(createCancellationReason, {
     onSuccess: () => {
@@ -155,9 +144,8 @@ CancellationReason,
   { cr: CancellationReason },
   string
   > {
-  const client = useAuthenticatedClient<CancellationReason>();
   const updateCancellationReason = async ({ cr }: { cr: CancellationReason }): Promise<CancellationReason> => {
-    return client(cancellationReasonsRoute, { data: cr, method: 'PATCH' });
+    return client<CancellationReason>(cancellationReasonsRoute, { data: cr, method: 'PATCH' });
   };
   return useMutation(updateCancellationReason, {
     onSuccess: () => {
@@ -167,10 +155,8 @@ CancellationReason,
 }
 
 export function useAllCancellationReasons(): QueryResult<CancellationReason[]> & { cancellationReasons: CancellationReason[] } {
-  const client = useAuthenticatedClient<CancellationReason[]>();
-
   const usersQuery = useQuery(cancellationReasonsRoute, async () => {
-    return client(cancellationReasonsRoute);
+    return client<CancellationReason[]>(cancellationReasonsRoute);
   });
 
   const cancellationReasons = usersQuery.data ?? [];

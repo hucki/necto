@@ -48,6 +48,7 @@ function CalendarColumn({
   columnHeaderFormat = 'dddd',
 }: CalendarColumnInputProps): JSX.Element {
   const isToday = dayjs().isSame(dateInput, 'day');
+  const isWeekend = dayjs(dateInput).day() === 0 || dayjs(dateInput).day() === 6;
   const date = dateInput.locale('de');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -131,6 +132,7 @@ function CalendarColumn({
         width: `calc(100% / ${ressources.length})`,
         height: '100%',
         position: 'relative',
+        backgroundColor: isWeekend ? '#3333' : undefined,
         borderRight:
           index === ressources.length - 1
             ? '2px solid gray'

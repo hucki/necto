@@ -2,6 +2,7 @@ type CalenderEventViewProps = {
   eventTitle: Event['title']
   isHomeVisit: Event['isHomeVisit']
   isRecurring: Event['isRecurring']
+  isDiagnostic: Event['isDiagnostic']
   eventStartTime: Event['startTime']
   eventEndTime: Event['endTime']
   eventPatient: Event['patient']
@@ -9,7 +10,7 @@ type CalenderEventViewProps = {
 
 type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
 
-type RecurringFrequency = 'WEEKLY' | 'MONTHLY';
+type RecurringFrequency = 'WEEKLY' | 'MONTHLY' | 'BIWEEKLY';
 type RecurringInterval =
   | 1
   | 2

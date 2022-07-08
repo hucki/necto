@@ -108,7 +108,6 @@ export const addDoctor = async (
         city
       },
     });
-    console.warn('contact data to be updated:',{ cd: req.body.contactData })
     res.json(updatedDoctor);
     res.status(201);
     return;

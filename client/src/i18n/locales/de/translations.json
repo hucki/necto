@@ -1,6 +1,7 @@
 {
   "calendar": {
     "view": {
+      "label": "Ansicht",
       "day": "Tag",
       "week": "Woche",
       "month": "Monat"
@@ -16,6 +17,7 @@
       "recurringAppointment": "Terminserie",
       "frequency": "Frequenz",
       "frequencyWeekly": "1 x pro Woche",
+      "frequencyBiWeekly": "jede 2. Woche",
       "frequencyMonthly": "1 x pro Monat",
       "interval": "Intervall",
       "start": "Start",
@@ -30,7 +32,8 @@
     "cancelEvent": "absagen",
     "preview": "Vorschau",
     "edit": "bearbeiten",
-    "delete": "löschen"
+    "delete": "löschen",
+    "archive": "archivieren"
   },
   "dict": {
     "for": "für"
@@ -44,16 +47,19 @@
   "menu": {
     "home": "home",
     "personalCalendar": "Du",
+    "personalData": "Persönliche Daten",
     "teamCalendar": "Team",
     "roomCalendar": "Raumbelegung",
-    "patients": "Patienten",
+    "patients": "Patient:in",
     "waitingList": "Warteliste",
     "teamSettings": "Team",
-    "employeeSettings": "Mitarbeiter",
+    "employeeSettings": "Mitarbeiter:in",
+    "userSettings": "User",
     "profile": "Profil",
     "logout": "abmelden",
     "settings": "Einstellungen",
-    "eventSettings": "Termine"
+    "eventSettings": "Termine",
+    "doctors": "Ärzt:in"
   },
   "label": {
     "firstName": "Vorname",
@@ -72,6 +78,25 @@
     "actions": "Actions",
     "diagnostic": "Diagnostik",
     "careFacility": "Einrichtung",
-    "doctor": "Arzt"
+    "doctor": "Ärzt:in",
+    "therapist": "Behandler:in",
+    "date": "Datum",
+    "appointments": "Termine",
+    "no": "keine"
+  },
+  "auth": {
+    "login": "anmelden",
+    "register": "registrieren",
+    "welcome": "Willkommen!",
+    "email": "eMail",
+    "confirmEmail": "eMail bestätigen",
+    "emailRequired": "bitte eMail eingeben",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "oldPassword": "altes Passwort",
+    "newPassword": "neues Passwort",
+    "forgotPassword": "Passwort vergessen? Klick hier!",
+    "resetPassword": "Passwort zurücksetzen",
+    "reset": "zurücksetzen"
   }
 }

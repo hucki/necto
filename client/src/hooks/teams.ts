@@ -5,15 +5,14 @@ import {
   useMutation,
   queryCache,
 } from 'react-query';
-import { useAuthenticatedClient } from '../services/ApiClient';
+import { client } from '../services/ApiClient';
 import { Employee, Employee2Team, Team } from '../types/Employee';
 
 export function useTeam(
   uuid: string
 ): QueryResult<Team> & { team: Team | undefined } {
-  const client = useAuthenticatedClient<Team>();
   const teamQuery = useQuery(['team', uuid], async () => {
-    return client(`teams/${uuid}`);
+    return client<Team>(`teams/${uuid}`);
   });
   const team = teamQuery.data;
   return {
@@ -23,10 +22,8 @@ export function useTeam(
 }
 
 export function useAllTeams(): QueryResult<Team[]> & { teams: Team[] } {
-  const client = useAuthenticatedClient<Team[]>();
-
   const teamsQuery = useQuery('teams', async () => {
-    return client('teams');
+    return client<Team[]>('teams');
   });
 
   const teams =
@@ -47,13 +44,12 @@ export function useAddEmployeeToTeam(): MutationResultPair<
   { employee2Team: Employee2Team },
   string
   > {
-  const client = useAuthenticatedClient<Employee2Team>();
   const addEmployeeToTeam = async ({
     employee2Team,
   }: {
     employee2Team: Employee2Team;
   }): Promise<Employee2Team> => {
-    return client('employee2Team', { data: employee2Team });
+    return client<Employee2Team>('employee2Team', { data: employee2Team });
   };
   return useMutation(addEmployeeToTeam, {
     onSuccess: () => {

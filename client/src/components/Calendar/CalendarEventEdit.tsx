@@ -25,7 +25,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CancellationReason, Event } from '../../types/Event';
-import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash, FaCommentMedical } from 'react-icons/fa';
 
 import { CalendarEventView } from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
@@ -164,6 +164,12 @@ function CalendarEventEdit({
                   }}
                 />
               )}
+              {changedEvent.isDiagnostic && (
+                <FaCommentMedical css={{
+                  width: '2rem',
+                  height: '2rem',
+                }} />
+              )}
               <IconButton
                 aria-label="close modal"
                 icon={<FaTimes />}
@@ -176,6 +182,7 @@ function CalendarEventEdit({
                   eventTitle={changedEvent.title}
                   isHomeVisit={changedEvent.isHomeVisit}
                   isRecurring={changedEvent.isRecurring}
+                  isDiagnostic={changedEvent.isDiagnostic}
                   eventStartTime={changedEvent.startTime}
                   eventEndTime={changedEvent.endTime}
                   eventPatient={changedEvent.patient}

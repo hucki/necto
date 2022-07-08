@@ -71,7 +71,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
     setSearch(event.currentTarget.value);
   };
 
-  // pagination
+  // pagination controls
   const rowsPerPage = isMobile ? 6 : 12;
   const numOfPages = Math.ceil(filteredPatients.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,6 +112,7 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
 
   const PatientRows = (): JSX.Element[] =>
     filteredPatients
+      // pagination filter
       .filter(
         (p: Patient | WaitingPatient, i) =>
           i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
@@ -225,11 +226,10 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
           </Tbody>
         </Table>
       </div>
-      {/* pagination controls */}
-
+      {/* pagination controls START */}
       <Flex m={2} alignSelf="flex-end">
         <IconButton
-          aria-label="previous day"
+          aria-label="previous page"
           leftIcon={<FaCaretLeft />}
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
@@ -244,12 +244,13 @@ function PatientsList({ patients, type = 'patients' }: PatientsListProps) {
           </Button>
         ))}
         <IconButton
-          aria-label="next day"
+          aria-label="next page"
           icon={<FaCaretRight />}
           disabled={currentPage === numOfPages}
           onClick={() => setCurrentPage(currentPage + 1)}
         />
       </Flex>
+      {/* pagination controls END */}
       <Modal isOpen={isOpenInfo} onClose={onCloseInfo}>
         <ModalOverlay
           css={{

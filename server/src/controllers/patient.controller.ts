@@ -3,9 +3,26 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
+import { decryptData, encryptData } from '../utils/crypto';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
+
+const encryptPatient = (patient) => {
+  let encryptedPatient = {
+    ...patient,
+    notices: patient.notices ? encryptData(patient.notices) : undefined,
+  }
+  return encryptedPatient
+}
+
+const decryptPatient = (patient) => {
+  let decryptedPatient = {
+    ...patient,
+    notices: patient.notices ? decryptData(patient.notices) : undefined,
+  }
+  return decryptedPatient
+}
 
 /**
  * add one Patient
@@ -24,9 +41,11 @@ export const addPatient = async (
     delete incomingPatient.doctor
     delete incomingPatient.telephoneNumber
     delete incomingPatient.mailAddress
+
+    const encryptedPatient = encryptPatient(incomingPatient);
     const createdPatient = await prisma.patient.create({
       data: {
-        ...incomingPatient,
+        ...encryptedPatient,
         tenantId: tenantId,
       },
     });
@@ -79,15 +98,16 @@ export const updatePatient = async (
     delete incomingPatient.telephoneNumber
     delete incomingPatient.mailAddress
     delete incomingPatient.numberInLine
+
+    const encryptedPatient = encryptPatient(incomingPatient);
     const updatedPatient = await prisma.patient.update({
       where: {
         uuid: patientId,
       },
       data: {
-        ...incomingPatient,
+        ...encryptedPatient,
       },
     });
-    console.warn('contact data to be updated:',{ cd: req.body.contactData })
     res.json(updatedPatient);
     res.status(201);
     return;
@@ -162,13 +182,20 @@ export const getAllPatients = async (
       },
       include: {
         contactData: true,
-        events: true,
+        events: {
+          include: {
+            employee: true,
+          },
+        },
         doctor: true,
       },
       orderBy: {
         lastName: 'asc',
       },
     });
+    for (let i = 0; i < patients.length; i++) {
+      patients[i] = decryptPatient(patients[i]);
+    }
     res.json(patients);
     res.status(200);
     return;
@@ -230,6 +257,9 @@ export const getWaitingPatients = async (
         isWaitingSince: 'asc',
       },
     });
+    for (let i = 0; i < waitingPatients.length; i++) {
+      waitingPatients[i] = decryptPatient(waitingPatients[i]);
+    }
     res.json(waitingPatients);
     res.status(200);
     return;

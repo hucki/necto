@@ -44,8 +44,8 @@
   font-size: 0.7em;
   font-weight: 300;
   justify-content: space-between;
-  display: grid;
-  grid-template-columns: auto;
+  /* display: grid; */
+  /* grid-template-columns: auto; */
   overflow: hidden;
   border-radius: 0 0.2rem 0 0.2rem;
   /* border-radius: 0.5rem; */
@@ -67,6 +67,7 @@
   font-size: 0.6rem;
   line-height: initial;
   text-align: center;
+  font-weight: bold;
 }
 .event_container {
   display: grid;
@@ -80,6 +81,7 @@
   font-size: 1em;
   text-shadow: 0 0 5px #3333;
   color: #3338;
+  justify-content: space-between;
 }
 
 .bg_grey {

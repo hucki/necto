@@ -5,7 +5,7 @@ import {
   MutationResultPair,
   queryCache,
 } from 'react-query';
-import { useAuthenticatedClient } from '../services/ApiClient';
+import { client } from '../services/ApiClient';
 import { Patient, PatientInput } from '../types/Patient';
 
 export function useCreatePatient(): MutationResultPair<
@@ -14,13 +14,12 @@ export function useCreatePatient(): MutationResultPair<
   { patient: PatientInput },
   string
   > {
-  const client = useAuthenticatedClient<PatientInput>();
   const createPatient = async ({
     patient,
   }: {
     patient: PatientInput;
   }): Promise<Patient> => {
-    return client('patients', { data: patient });
+    return client<PatientInput>('patients', { data: patient });
   };
   return useMutation(createPatient, {
     onSuccess: () => {
@@ -35,13 +34,12 @@ export function useUpdatePatient(): MutationResultPair<
   { patient: PatientInput },
   string
   > {
-  const client = useAuthenticatedClient<PatientInput>();
   const updatePatient = async ({
     patient,
   }: {
     patient: PatientInput;
   }): Promise<Patient> => {
-    return client(`patients/${patient.uuid}`, { data: patient, method: 'PATCH' });
+    return client<PatientInput>(`patients/${patient.uuid}`, { data: patient, method: 'PATCH' });
   };
   return useMutation(updatePatient, {
     onSuccess: () => {
@@ -54,10 +52,8 @@ export function useUpdatePatient(): MutationResultPair<
 export function useAllPatients(): QueryResult<Patient[]> & {
   patients: Patient[];
   } {
-  const client = useAuthenticatedClient<Patient[]>();
-
   const patientsQuery = useQuery('patients', async () => {
-    return client('patients');
+    return client<Patient[]>('patients');
   });
 
   const patients = patientsQuery.data ?? [];
@@ -71,10 +67,8 @@ export function useAllPatients(): QueryResult<Patient[]> & {
 export function useAllWaitingPatients(): QueryResult<Patient[]> & {
   patients: Patient[];
   } {
-  const client = useAuthenticatedClient<Patient[]>();
-
   const patientsQuery = useQuery('waiting', async () => {
-    return client('waiting');
+    return client<Patient[]>('waiting');
   });
 
   const patients = patientsQuery.data ?? [];

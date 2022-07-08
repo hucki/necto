@@ -21,7 +21,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../hooks/events';
 import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
-import { FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
+import { FaCommentMedical, FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
 import CalendarEventForm from './CalendarEventForm';
 import { checkOverlap } from '../../helpers/eventChecker';
@@ -184,6 +184,12 @@ function CalendarEventInput({
                     height: '2rem',
                   }}
                 />
+              )}
+              {newEvent.isDiagnostic && (
+                <FaCommentMedical css={{
+                  width: '2rem',
+                  height: '2rem',
+                }} />
               )}
               <IconButton
                 aria-label="close modal"

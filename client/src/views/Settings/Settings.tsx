@@ -1,60 +1,81 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import TeamSettings from '../TeamSettings/TeamSettings';
 import EmployeeSettings from '../EmployeeSettings/EmployeeSettings';
 import {
   RiCalendarEventLine,
   RiProfileLine,
+  RiShieldUserLine,
   RiUserSettingsFill,
   RiUserSettingsLine,
 } from 'react-icons/ri';
 import UserProfile from '../../components/UserProfile/UserProfile';
 import { useTranslation } from 'react-i18next';
 import EventSettings from '../EventSettings/EventSettings';
+import { useContext } from 'react';
+import { AuthContext } from '../../providers/Auth';
+import { UserSettings } from '../UserSettings/UserSettings';
 
-interface SettingsProps {
-  a0Id: string;
-}
+type AllowedRoles = ('employee'|'planner'|'admin'|'user')[]
 
-const Settings = ({ a0Id }: SettingsProps): JSX.Element => {
+const Settings = (): JSX.Element => {
+  const { user } = useContext(AuthContext);
   const { t } = useTranslation();
+  const tabData = [
+    {
+      allowedRoles: ['admin', 'planner', 'employee'],
+      label: <><RiUserSettingsFill /> {t('menu.teamSettings')}</>,
+      content: <TeamSettings />
+    },
+    {
+      allowedRoles: ['admin', 'planner'],
+      label: <><RiUserSettingsLine />{t('menu.employeeSettings')}</>,
+      content: <EmployeeSettings />
+    },
+    {
+      allowedRoles: ['admin'],
+      label: <><RiShieldUserLine />{t('menu.userSettings')}</>,
+      content: <UserSettings />
+    },
+    {
+      allowedRoles: ['admin', 'planner'],
+      label: <><RiCalendarEventLine />{t('menu.eventSettings')}</>,
+      content: <EventSettings />
+    },
+    {
+      allowedRoles: ['admin', 'planner','employee','user'],
+      label: <><RiProfileLine />{t('menu.profile')}</>,
+      content: <UserProfile id={user?.uuid || ''}/>
+    },
+  ];
+
+  const hasSufficientRole = (allowedRoles: AllowedRoles) => {
+    if (user?.isEmployee && Boolean(allowedRoles.find(r => r === 'employee'))) return true;
+    if (user?.isPlanner && Boolean(allowedRoles.find(r => r === 'planner'))) return true;
+    if (user?.isAdmin && Boolean(allowedRoles.find(r => r === 'admin'))) return true;
+    if (allowedRoles.find(r => r === 'user')) return true;
+    if (user?.isAdmin) return true;
+    return false;
+  };
 
   return (
     <Tabs>
       <TabList>
-        <Tab>
-          <RiUserSettingsFill />
-          {t('menu.teamSettings')}
-        </Tab>
-        <Tab>
-          <RiUserSettingsLine />
-          {t('menu.employeeSettings')}
-        </Tab>
-        <Tab>
-          <RiCalendarEventLine />
-          {t('menu.eventSettings')}
-        </Tab>
-        <Tab>
-          <RiProfileLine />
-          {t('menu.profile')}
-        </Tab>
+        {tabData.map((tab, index) => {
+          if (hasSufficientRole(tab.allowedRoles as AllowedRoles))
+            return (
+              <Tab key={index}>{tab.label}</Tab>
+            );})
+        }
       </TabList>
-
       <TabPanels>
-        <TabPanel>
-          <TeamSettings />
-        </TabPanel>
-        <TabPanel>
-          <EmployeeSettings />
-        </TabPanel>
-        <TabPanel>
-          <EventSettings />
-        </TabPanel>
-        <TabPanel>
-          <UserProfile a0Id={a0Id} />
-        </TabPanel>
+        {tabData.map((tab, index) => {
+          if (hasSufficientRole(tab.allowedRoles as AllowedRoles))
+            return (
+              <TabPanel key={index}>{tab.content}</TabPanel>
+            );
+        }
+        )}
       </TabPanels>
     </Tabs>
   );

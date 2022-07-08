@@ -22,9 +22,9 @@ import {
   Select,
   Button,
 } from '../Library';
-import RRule from 'rrule';
+import RRule, { Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import de from 'date-fns/locale/de';
@@ -48,74 +48,67 @@ function CalendarEventForm({
   const { t } = useTranslation();
   const { isLoading: isLoadingPatients, error, patients } = useAllPatients();
 
+  const getNewUTCDate = (dateTime: Dayjs) => {
+    const dt = dayjs.utc(dateTime);
+    return new Date(Date.UTC(dt.year(),dt.month(),dt.date(),dt.hour(),dt.minute(),0));
+  };
+
   // Form state
-  const [eventTitle, setEventTitle] = useState(event.title);
-  const [eventPatientId, setEventPatientId] = useState(event.patientId);
+  const [currentEvent, setCurrentEvent] = useState<Event>(() => ({...event}));
+  const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
+    freq: RRule.WEEKLY,
+    interval: 1,
+    tzid: 'Europe/Amsterdam',
+    count: 10,
+    dtstart: getNewUTCDate(currentEvent.startTime),
+  });
+
   const [eventDuration, setEventDuration] = useState(
     dayjs(event.endTime).diff(dayjs(event.startTime), 'm')
-  );
-  const [eventStartTime, setEventStartTime] = useState(event.startTime);
-  const [eventEndTime, setEventEndTime] = useState(event.endTime);
-  const [eventType, setEventType] = useState(event.type);
-  const [isDiagnostic, setIsDiagnostic] = useState(event.isDiagnostic);
-  const [isHomeVisit, setIsHomeVisit] = useState(event.isHomeVisit);
-  const [isRecurring, setIsRecurring] = useState(event.isRecurring);
-  const [isAllDay, setIsAllDay] = useState(event.isAllDay);
-  const [isCancelled, setIsCancelled] = useState(event.isCancelled);
-  const [isCancelledReason, setIsCancelledReason] = useState(
-    event.isCancelledReason
   );
   const [recurringFrequency, setRecurringFrequency] =
     useState<RecurringFrequency>('WEEKLY');
   const [recurringInterval, setRecurringInterval] =
     useState<RecurringInterval>(10);
-  const [recurringRule, setRecurringRule] = useState(event.rrule);
   const [timeline, setTimeline] = useState<ReactElement<any, any>>();
 
-  function handleTitleChange(event: React.FormEvent<HTMLInputElement>) {
+  function onInputChange(event:React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
-    setEventTitle(event.currentTarget.value);
+    setCurrentEvent(cur => ({...cur, [`${event.currentTarget.name}`]: event.currentTarget.value}));
     setMessage(null);
   }
-  function handleStartTimeChange(date: ReactDatePickerReturnType) {
+
+  function onCheckboxChange(event: React.FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    setCurrentEvent(cur => ({...cur, [`${event.currentTarget.name}`]: event.currentTarget.checked}));
+    setMessage(null);
+  }
+
+  type TimeChangeProps = {
+    date: ReactDatePickerReturnType
+    key: 'startTime' | 'endTime'
+  }
+
+  function handleTimeChange({date, key}: TimeChangeProps) {
     if (date) {
-      setEventStartTime(dayjs(date.toString()));
-      setEventEndTime(dayjs(date.toString()).add(eventDuration, 'm'));
+      setCurrentEvent(cur => ({...cur, [`${key}`]: dayjs(date.toString())}));
+      if (key === 'startTime') setCurrentEvent(cur => ({...cur, endTime: dayjs(date.toString()).add(eventDuration, 'm')}));
     }
     setMessage(null);
   }
 
-  function handleEndTimeChange(date: ReactDatePickerReturnType) {
-    if (date) {
-      setEventEndTime(dayjs(date.toString()));
+  function onSelectChange(event: React.FormEvent<HTMLSelectElement>) {
+    event.preventDefault();
+    if (event.currentTarget.name === 'frequency') {
+      setRecurringFrequency(event.currentTarget.value as RecurringFrequency);
+    } else {
+      setCurrentEvent(cur => ({...cur, [`${event.currentTarget.name}`]: event.currentTarget.value}));
     }
-    setMessage(null);
-  }
-
-  function onSwitchDiagnostic(event: BaseSyntheticEvent) {
-    setIsDiagnostic(event.target.checked);
-    setMessage(null);
-  }
-  function onSwitchHomeVisit(event: BaseSyntheticEvent) {
-    setIsHomeVisit(event.target.checked);
-    setMessage(null);
-  }
-  function onSwitchRecurring(event: BaseSyntheticEvent) {
-    // checkOverlap();
-    setIsRecurring(event.target.checked);
-    setMessage(null);
   }
 
   function handleEventDurationChange(event: BaseSyntheticEvent) {
     setEventDuration(event.target.value);
-    setEventEndTime(
-      dayjs(eventStartTime.toString()).add(event.target.value, 'm')
-    );
-
-    setMessage(null);
-  }
-  function handleEventPatientIdChange(event: BaseSyntheticEvent) {
-    setEventPatientId(event.target.value);
+    setCurrentEvent(cur => ({...cur, endTime: dayjs(cur.startTime.toString()).add(event.target.value, 'm')}));
     setMessage(null);
   }
 
@@ -131,29 +124,29 @@ function CalendarEventForm({
   }
 
   useEffect(() => {
-    if (isRecurring) {
-      const dt = dayjs.utc(eventStartTime);
-      const rrule = new RRule({
-        freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
-        tzid: 'Europe/Amsterdam',
+    if (currentEvent.isRecurring) {
+      setRruleOptions(cur => ({
+        ...cur,
+        freq: recurringFrequency === 'WEEKLY' || recurringFrequency === 'BIWEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
+        interval: recurringFrequency === 'BIWEEKLY' ? 2 : 1,
         count: recurringInterval,
-        dtstart: new Date(Date.UTC(dt.year(),dt.month(),dt.date(),dt.hour(),dt.minute(),0)),
-      });
-      setRecurringRule(rrule.toString());
+        dtstart: getNewUTCDate(currentEvent.startTime),
+      }));
     } else {
-      setRecurringRule('');
+      setCurrentEvent(cur => ({...cur, rrule: ''}));
     }
-  }, [isRecurring]);
+  }, [currentEvent.isRecurring, recurringFrequency, recurringInterval, currentEvent.startTime]);
+
+  useEffect(() => {
+    const rrule = new RRule(rruleOptions);
+    if (currentEvent.isRecurring) {
+      setCurrentEvent(cur => ({...cur, rrule: rrule.toString()}));
+    }
+  }, [rruleOptions]);
 
   function onBuildTimelineHandler() {
-    const dt = dayjs.utc(eventStartTime);
-    const rrule = new RRule({
-      freq: recurringFrequency === 'WEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
-      tzid: 'Europe/Amsterdam',
-      count: recurringInterval,
-      dtstart: new Date(Date.UTC(dt.year(),dt.month(),dt.date(),dt.hour(),dt.minute(),0)),
-    });
-    setRecurringRule(rrule.toString());
+    const rrule = new RRule(rruleOptions);
+    const dt = dayjs.utc(currentEvent.startTime);
     setTimeline(
       <ul>
         {rrule.all().map((date) =>  {
@@ -168,48 +161,48 @@ function CalendarEventForm({
 
   useEffect(() => {
     handleChangedEvent({
-      uuid: event.uuid,
-      userId: event.userId,
-      ressourceId: event.ressourceId,
-      title: eventTitle,
-      type: eventType,
-      isDiagnostic: isDiagnostic,
-      isHomeVisit: isHomeVisit,
-      isAllDay: isAllDay,
-      isRecurring: isRecurring,
-      isCancelled: isCancelled,
-      isCancelledReason: isCancelledReason,
-      rrule: recurringRule,
-      startTime: eventStartTime,
-      endTime: eventEndTime,
-      patientId: eventPatientId,
-      roomId: event.roomId,
-      bgColor: event.bgColor,
+      uuid: currentEvent.uuid,
+      userId: currentEvent.userId,
+      ressourceId: currentEvent.ressourceId,
+      title: currentEvent.title,
+      type: currentEvent.type,
+      isDiagnostic: currentEvent.isDiagnostic,
+      isHomeVisit: currentEvent.isHomeVisit,
+      isAllDay: currentEvent.isAllDay,
+      isRecurring: currentEvent.isRecurring,
+      isCancelled: currentEvent.isCancelled,
+      isCancelledReason: currentEvent.isCancelledReason,
+      rrule: currentEvent.rrule,
+      startTime: currentEvent.startTime,
+      endTime: currentEvent.endTime,
+      patientId: currentEvent.patientId,
+      roomId: currentEvent.roomId,
+      bgColor: currentEvent.bgColor,
     });
   }, [
-    eventTitle,
-    eventType,
-    isDiagnostic,
-    isHomeVisit,
-    isAllDay,
-    isRecurring,
-    isCancelled,
-    isCancelledReason,
-    recurringRule,
-    eventStartTime,
-    eventEndTime,
-    eventPatientId,
+    currentEvent.title,
+    currentEvent.type,
+    currentEvent.isDiagnostic,
+    currentEvent.isHomeVisit,
+    currentEvent.isAllDay,
+    currentEvent.isRecurring,
+    currentEvent.isCancelled,
+    currentEvent.isCancelledReason,
+    currentEvent.rrule,
+    currentEvent.startTime,
+    currentEvent.endTime,
+    currentEvent.patientId,
   ]);
 
   return (
     <div>
       <FormGroup>
-        <Label htmlFor="patient">{t('calendar.event.patient')}</Label>
+        <Label htmlFor="patientId">{t('calendar.event.patient')}</Label>
         <Select
           id="patient"
-          name="patient"
-          value={eventPatientId}
-          onChange={handleEventPatientIdChange}
+          name="patientId"
+          value={currentEvent.patientId}
+          onChange={onSelectChange}
         >
           <option key="noPatient" value="">
             No {t('calendar.event.patient')}
@@ -222,34 +215,34 @@ function CalendarEventForm({
         </Select>
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="eventTitleInput">{t('calendar.event.title')}</Label>
+        <Label htmlFor="title">{t('calendar.event.title')}</Label>
         <Input
           id="eventTitleInput"
           name="title"
-          value={eventTitle}
-          onChange={handleTitleChange}
+          value={currentEvent.title}
+          onChange={onInputChange}
         />
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="homevisit">{t('calendar.event.homeVisit')}</Label>
+        <Label htmlFor="isHomeVisit">{t('calendar.event.homeVisit')}</Label>
         <Checkbox
           id="isHomeVisit"
-          name="Home Visit?"
+          name="isHomeVisit"
           size="lg"
           my={2}
-          checked={isHomeVisit}
-          onChange={onSwitchHomeVisit}
+          isChecked={currentEvent.isHomeVisit}
+          onChange={onCheckboxChange}
         />
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="diagnostic">{t('calendar.event.diagnostic')}</Label>
+        <Label htmlFor="isDiagnostic">{t('calendar.event.diagnostic')}</Label>
         <Checkbox
           id="isDiagnostic"
-          name="Diagnostic?"
+          name="isDiagnostic"
           size="lg"
           my={2}
-          checked={isDiagnostic}
-          onChange={onSwitchDiagnostic}
+          isChecked={currentEvent.isDiagnostic}
+          onChange={onCheckboxChange}
         />
       </FormGroup>
       <FormGroup>
@@ -264,9 +257,9 @@ function CalendarEventForm({
           timeFormat="p"
           timeIntervals={15}
           dateFormat="Pp"
-          selected={dayjs(eventStartTime).toDate()}
+          selected={dayjs(currentEvent.startTime).toDate()}
           onChange={(date: ReactDatePickerReturnType) => {
-            if (date) handleStartTimeChange(date);
+            if (date) handleTimeChange({date, key: 'startTime'});
           }}
         />
       </FormGroup>
@@ -292,9 +285,9 @@ function CalendarEventForm({
           timeFormat="p"
           timeIntervals={15}
           dateFormat="Pp"
-          selected={dayjs(eventEndTime).toDate()}
-          onChange={(date) => {
-            if (date) handleEndTimeChange(date);
+          selected={dayjs(currentEvent.endTime).toDate()}
+          onChange={(date: ReactDatePickerReturnType) => {
+            if (date) handleTimeChange({date, key: 'endTime'});
           }}
         />
       </FormGroup>
@@ -308,14 +301,19 @@ function CalendarEventForm({
           name="isRecurring"
           size="lg"
           my={2}
-          checked={isRecurring}
-          onChange={onSwitchRecurring}
+          isChecked={currentEvent.isRecurring}
+          onChange={onCheckboxChange}
         />
       </FormGroup>
       <FormGroup>
         <Label htmlFor="frequency">{t('calendar.event.frequency')}</Label>
-        <Select id="frequency" name="frequency" disabled={!isRecurring}>
+        <Select
+          id="frequency"
+          name="frequency"
+          disabled={!currentEvent.isRecurring}
+          onChange={onSelectChange}>
           <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
+          <option value="BIWEEKLY">{t('calendar.event.frequencyBiWeekly')}</option>
           <option value="MONTHLY" disabled>
             {t('calendar.event.frequencyMonthly')}
           </option>
@@ -327,7 +325,7 @@ function CalendarEventForm({
           type="number"
           min={1}
           max={20}
-          disabled={!isRecurring}
+          disabled={!currentEvent.isRecurring}
           defaultValue={recurringInterval}
           onChange={handleRecurringIntervalChange}
         />
@@ -338,7 +336,7 @@ function CalendarEventForm({
             aria-label="preview recurring events"
             type="button"
             onClick={onBuildTimelineHandler}
-            disabled={!isRecurring}
+            disabled={!currentEvent.isRecurring}
             css={{
               alignSelf: 'flex-end',
             }}

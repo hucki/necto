@@ -1,13 +1,12 @@
 import { useQuery, QueryResult } from 'react-query';
-import { useAuthenticatedClient } from '../services/ApiClient';
+import { client } from '../services/ApiClient';
 import { Room } from '../types/Ressource';
 
 export function useRoom(
   uuid: string
 ): QueryResult<Room> & { room: Room | undefined } {
-  const client = useAuthenticatedClient<Room>();
   const roomQuery = useQuery(['room', uuid], async () => {
-    return client(`rooms/${uuid}`);
+    return client<Room>(`rooms/${uuid}`);
   });
   const room = roomQuery.data;
   return {
@@ -17,10 +16,9 @@ export function useRoom(
 }
 
 export function useAllRooms(): QueryResult<Room[]> & { rooms: Room[] } {
-  const client = useAuthenticatedClient<Room[]>();
 
   const roomsQuery = useQuery('rooms', async () => {
-    return client('rooms');
+    return client<Room[]>('rooms');
   });
 
   const rooms =
