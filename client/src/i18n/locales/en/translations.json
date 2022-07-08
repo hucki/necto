@@ -17,6 +17,7 @@
       "recurringAppointment": "recurring Appointment",
       "frequency": "frequency",
       "frequencyWeekly": "weekly",
+      "frequencyBiWeekly": "bi-weekly",
       "frequencyMonthly": "monthly",
       "interval": "interval",
       "start": "start",

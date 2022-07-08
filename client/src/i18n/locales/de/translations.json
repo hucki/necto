@@ -17,6 +17,7 @@
       "recurringAppointment": "Terminserie",
       "frequency": "Frequenz",
       "frequencyWeekly": "1 x pro Woche",
+      "frequencyBiWeekly": "jede 2. Woche",
       "frequencyMonthly": "1 x pro Monat",
       "interval": "Intervall",
       "start": "Start",
