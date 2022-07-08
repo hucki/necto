@@ -1,6 +1,6 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useContext } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import classes from './Dashboard.module.css';
 import { useAllTeamMembers } from '../../hooks/user';
 import { AppState } from '../../types/AppState';
@@ -11,16 +11,22 @@ import Patients from '../../views/Patients/Patients';
 import WaitingList from '../../views/Patients/WaitingList';
 import Settings from '../../views/Settings/Settings';
 import Doctors from '../../views/Doctors/Doctors';
+import { AuthContext } from '../../providers/Auth';
 
 interface DashboardInputProps {
   id: string;
   style?: CSSProperties;
 }
 const Dashboard = ({ id }: DashboardInputProps): JSX.Element => {
+  const { user } = useContext(AuthContext);
   const { isLoading, error, teamMembers } = useAllTeamMembers();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error getting teamMembers: {error}</div>;
   if (!teamMembers) return <div>Data missing</div>;
+
+  const RedirectHome = () => {
+    return <Redirect to="/" />;
+  };
 
   return (
     <div className={classes.Dashboard}>
@@ -28,27 +34,15 @@ const Dashboard = ({ id }: DashboardInputProps): JSX.Element => {
         <Route exact path="/">
           <h1>Welcome home</h1>
         </Route>
-        <Route path="/rooms">
-          <Rooms />
-        </Route>
-        <Route path="/patients">
-          <Patients />
-        </Route>
-        <Route path="/doctors">
-          <Doctors />
-        </Route>
-        <Route path="/waiting">
-          <WaitingList />
-        </Route>
-        <Route path="/teamcal">
-          <TeamCalendar />
-        </Route>
+        <Route path="/rooms" component={Rooms} />
+        <Route path="/patients" component={user?.isPlanner || user?.isAdmin || user?.isEmployee ? Patients : RedirectHome} />
+        <Route path="/doctors" component={user?.isPlanner || user?.isAdmin ? Doctors : RedirectHome} />
+        <Route path="/waiting" component={user?.isPlanner || user?.isAdmin ? WaitingList : RedirectHome} />
+        <Route path="/teamcal" component={user?.isAdmin ? TeamCalendar : RedirectHome} />
         <Route path="/personalcal">
           <PersonalCalendar id={id}/>
         </Route>
-        <Route path="/settings">
-          <Settings />
-        </Route>
+        <Route path="/settings" component={Settings} />
         <Route path="*">
           <div>Route not found</div>
         </Route>
