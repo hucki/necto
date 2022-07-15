@@ -30,7 +30,7 @@ export const register = async ({
 export const resetPassword = async ({
   email
 }: ResetData): Promise<ResetResponse> => {
-  return authClient('/pw/reset/', { email });
+  return authClient('pw/reset/', { email });
 };
 
 export const updatePassword = async ({
