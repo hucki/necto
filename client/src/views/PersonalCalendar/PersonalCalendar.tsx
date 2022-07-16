@@ -82,7 +82,7 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <Flex w={300} ml="3rem" alignItems="center">
+      <Flex alignItems="center" maxW="100%">
         <Label htmlFor="view">{t('calendar.view.label')}</Label>
         <Select name="view" value={currentView} onChange={onCurrentViewChange}>
           <option value="day">{t('calendar.view.day')}</option>

@@ -26,6 +26,7 @@ import de from 'date-fns/locale/de';
 import CalendarEventForm from './CalendarEventForm';
 import { checkOverlap } from '../../helpers/eventChecker';
 import { rrulestr } from 'rrule';
+import { useViewport } from '../../hooks/useViewport';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -49,6 +50,7 @@ function CalendarEventInput({
   onClose,
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
+  const { isMobile } = useViewport();
   const defaultEvent: Event = {
     userId: uuid.toString(),
     ressourceId: uuid,
@@ -145,7 +147,7 @@ function CalendarEventInput({
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size={isMobile ? 'full': undefined}>
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',

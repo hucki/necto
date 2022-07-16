@@ -23,7 +23,7 @@ const TextDisplay = styled.div(inputStyles, {
 const Select = styled(ChakraSelect)(inputStyles, {
   borderRadius: '3px',
   fontWeight: 'bold',
-  minWidth: '250px',
+  // minWidth: '250px',
 });
 
 interface InputCallbackProps {

@@ -1,7 +1,6 @@
 import * as mq from '../../styles/media-queries';
 import { ModalContent, ModalHeader, ModalBody } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
-import * as colors from '../../styles/colors';
 import { BgColor } from '../../types/Colors';
 
 const EventModalContent = styled(ModalContent)({
@@ -11,11 +10,11 @@ const EventModalContent = styled(ModalContent)({
   borderRadius: '3px',
   backgroundColor: 'white',
   boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
-  margin: '20vh auto',
-  [mq.small]: {
-    width: '100%',
-    margin: '10vh auto',
-  },
+  // margin: '20vh auto',
+  // [mq.small]: {
+  // width: '100vw',
+  // margin: '10vh auto',
+  // },
 });
 
 interface EventModalHeaderProps {

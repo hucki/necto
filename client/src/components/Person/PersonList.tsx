@@ -285,7 +285,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         />
       </Flex>
       {/* pagination controls END */}
-      <Modal isOpen={isOpenInfo} onClose={onCloseInfo}>
+      <Modal isOpen={isOpenInfo} onClose={onCloseInfo} scrollBehavior="inside" size={isMobile ? 'full' : undefined}>
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',
@@ -298,7 +298,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           </ModalContent>
         </ModalOverlay>
       </Modal>
-      <Modal isOpen={isOpenCreate} onClose={onCloseCreate}>
+      <Modal isOpen={isOpenCreate} onClose={onCloseCreate} scrollBehavior="inside" size={isMobile ? 'full' : undefined}>
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',

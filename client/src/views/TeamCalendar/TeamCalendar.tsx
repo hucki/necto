@@ -50,13 +50,14 @@ function TeamCalendar(): JSX.Element {
       css={{
         height: '100%',
         width: '100%',
+        overflow: 'scroll',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
       }}
     >
-      <Flex ml="3rem">
+      <Flex>
         <FilterBar hasTeamsFilter />
       </Flex>
       <CalendarContainer

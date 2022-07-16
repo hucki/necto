@@ -31,6 +31,7 @@ import { CalendarEventView } from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
 import de from 'date-fns/locale/de';
 import { checkOverlap } from '../../helpers/eventChecker';
+import { useViewport } from '../../hooks/useViewport';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -51,6 +52,7 @@ function CalendarEventEdit({
   onClose,
 }: CalendarEventEditProps): JSX.Element {
   const { t } = useTranslation();
+  const { isMobile } = useViewport();
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
   const { isLoading, isError, rawEvents } = useDaysEvents(event.startTime);
@@ -127,7 +129,7 @@ function CalendarEventEdit({
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size={isMobile ? 'full': undefined}>
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',

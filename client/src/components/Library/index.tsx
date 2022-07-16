@@ -1,5 +1,5 @@
 import {
-  App,
+  AppContainer,
   Sidebar,
   ContentContainer,
   Content,
@@ -29,7 +29,7 @@ import {
 import { EventModalContent, EventModalHeader, EventModalBody } from './Modal';
 
 export {
-  App,
+  AppContainer,
   Sidebar,
   ContentContainer,
   Content,

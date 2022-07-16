@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { useUser } from '../hooks/user';
 import { logIn } from '../actions/actions';
 import {
-  App,
+  AppContainer,
   Header,
   Content,
   Footer,
@@ -30,7 +30,7 @@ function AuthenticatedApp({
 
   return (
     <>
-      <App id="app">
+      <AppContainer id="app">
         <SidebarMenu />
         <ContentContainer>
           <Header>
@@ -56,7 +56,7 @@ function AuthenticatedApp({
             </p>
           </Footer>
         </ContentContainer>
-      </App>
+      </AppContainer>
     </>
   );
 }

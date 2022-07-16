@@ -1,9 +1,11 @@
 import { Box } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 
-const App = styled.div({
+const AppContainer = styled.div({
   width: '100vw',
+  maxWidth: '100vw',
   height: '100vh',
+  maxHeight: '100vh',
   display: 'flex',
   flexDirection: 'row',
 });
@@ -28,6 +30,7 @@ const ContentContainer = styled(Box)({
   width: '100%',
   height: '100%',
   display: 'flex',
+  overflow: 'scroll',
   flexDirection: 'column',
 });
 
@@ -53,4 +56,4 @@ const Footer = styled.div({
   boxShadow: '0 0 15px #3333',
 });
 
-export { App, Sidebar, Header, Content, ContentContainer, Footer };
+export { AppContainer, Sidebar, Header, Content, ContentContainer, Footer };
