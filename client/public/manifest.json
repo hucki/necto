@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "necto",
+  "name": "necto - schedule together!",
   "icons": [
     {
       "src": "favicon.ico",

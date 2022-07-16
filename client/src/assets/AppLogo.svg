@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" version="1.1" viewBox="0 0 142 142" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(-5.7732e-15 -82.901)">
+        <g transform="matrix(.074138 0 0 .22953 -2.9836 66.459)">
+            <rect x="40.244" y="71.633" width="1911.7" height="617.5" fill="none"/>
+            <g transform="translate(-123.8 -28.438)">
+                <g transform="matrix(13.488 0 0 4.3568 -1011.8 -1041.2)">
+                    <text x="106.228px" y="392.225px" fill="rgb(108,110,112)" font-family="'DINAlternate-Bold', 'DIN Alternate', sans-serif" font-size="211.7px" font-weight="700">n</text>
+                </g>
+                <g transform="matrix(13.488 0 0 4.3568 -1168 -1087.2)">
+                    <text x="106.228px" y="392.225px" fill="rgb(244,121,32)" font-family="'DINAlternate-Bold', 'DIN Alternate', sans-serif" font-size="211.7px" font-weight="700">n</text>
+                </g>
+                <g transform="matrix(13.488 0 0 4.3568 -1083.6 -1061)">
+                    <text x="106.228px" y="392.225px" font-family="'DINAlternate-Bold', 'DIN Alternate', sans-serif" font-size="211.7px" font-weight="700">n</text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
