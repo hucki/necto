@@ -36,7 +36,7 @@ function AuthenticatedApp({
           <Header>
             <NavBar />
           </Header>
-          <Content id="Content" bg="whitesmoke" pr={1}>
+          <Content id="Content" pr={1}>
             {isError ? (
               <div className="error">an error occured</div>
             ) : (

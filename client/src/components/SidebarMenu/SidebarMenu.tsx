@@ -34,6 +34,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
   const onClickHandler = (route: string) => {
     history.push(route);
     dispatch(switchView(route));
+    onClose();
   };
   const handleLogout = () => {
     logout({returnTo: window.location.toString()});

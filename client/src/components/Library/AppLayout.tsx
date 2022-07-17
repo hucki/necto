@@ -23,7 +23,7 @@ const Sidebar = styled.div(
     transition: 'all 0.1s ease-in',
   },
   ({ collapsed }: SidebarProps) =>
-    collapsed ? { width: '52px' } : { width: '200px' }
+    collapsed ? { width: '52px'} : { width: '200px', zIndex: '1', position: 'absolute'  }
 );
 
 const ContentContainer = styled(Box)({

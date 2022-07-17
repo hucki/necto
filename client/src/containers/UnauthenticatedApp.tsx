@@ -43,7 +43,7 @@ function UnauthenticatedApp(): JSX.Element {
           w={isMobile ? 'full': undefined}
           h={isMobile ? 'full': undefined}
         >
-          <Stack spacing="4">
+          <Stack spacing="4" alignItems="center">
             <LogoIcon />
             <Heading as="h1" size="lg">{t('auth.welcome')}</Heading>
 
