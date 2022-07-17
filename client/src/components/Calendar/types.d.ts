@@ -33,4 +33,6 @@ type RecurringInterval =
   | 19
   | 20;
 
-type CalendarColumnHeaderFormat = 'DD.MM.' | 'dd DD.MM.' | 'dddd' | 'dddd DD.MM.'
+type CalendarColumnHeaderFormat = 'DD.' | 'DD.MM.' | 'dd DD.MM.' | 'dddd' | 'dddd DD.MM.'
+
+type CalendarColumnSubHeaderContent = 'dd' | 'dddd' | 'ressource'

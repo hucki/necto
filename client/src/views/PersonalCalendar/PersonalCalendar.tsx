@@ -16,6 +16,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import { Flex } from '@chakra-ui/react';
 import { UserDateContext } from '../../providers/UserDate';
+import { useViewport } from '../../hooks/useViewport';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(LocalizedFormat);
@@ -28,6 +29,7 @@ interface PersonalCalendarInputProps {
 
 function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   const { t } = useTranslation();
+  const { isMobile } = useViewport();
   const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
@@ -95,7 +97,8 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
           events={daysEvents}
           ressources={ressources}
           daysRange={[calendarDate, calendarDate]}
-          columnHeaderFormat={'dddd DD.MM.'}
+          columnHeaderFormat={'DD.MM.'}
+          columnSubHeaderContent="dddd"
         />
       )}
       {currentView === 'week' && (
@@ -107,7 +110,8 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
             calendarDate.startOf('week'),
             calendarDate.startOf('week').add(6, 'day'),
           ]}
-          columnHeaderFormat={'DD.MM.'}
+          columnHeaderFormat={isMobile ? 'DD.' : 'DD.MM.'}
+          columnSubHeaderContent={isMobile ? 'dd' : 'dddd'}
         />
       )}
     </div>

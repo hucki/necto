@@ -21,6 +21,7 @@ interface CalendarInputProps {
   daysRange: [Dayjs, Dayjs];
   readOnly?: boolean;
   columnHeaderFormat?: CalendarColumnHeaderFormat;
+  columnSubHeaderContent?: CalendarColumnSubHeaderContent;
 }
 const currentDayjs = dayjs();
 
@@ -31,6 +32,7 @@ function CalendarContainer({
   daysRange = [currentDayjs, currentDayjs],
   readOnly = false,
   columnHeaderFormat = 'dddd DD.MM.',
+  columnSubHeaderContent = 'ressource',
 }: CalendarInputProps): JSX.Element {
   const {currentDate} = useContext(UserDateContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -82,10 +84,10 @@ function CalendarContainer({
           fontStyle: 'italic',
           fontSize: 'small',
           backgroundColor: `${colors.background}`,
-          borderTop: `1px solid ${colors.border}`,
+          borderTop: `1px solid ${colors.indigoDarken10}`,
         }}
       >
-        {i}:00
+        <b>{i}</b>
       </div>
     );
   }
@@ -112,6 +114,7 @@ function CalendarContainer({
         openModal={onOpen}
         readOnly={readOnly}
         columnHeaderFormat={columnHeaderFormat}
+        columnSubHeaderContent={columnSubHeaderContent}
       />
     );
     curCalendarDay = curCalendarDay.add(1, 'day');
@@ -147,7 +150,7 @@ function CalendarContainer({
         id="CalendarScale"
         key="CalendarScale"
         css={{
-          width: scaleWidth,
+          maxWidth: scaleWidth,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',

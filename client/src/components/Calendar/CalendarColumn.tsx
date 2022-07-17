@@ -26,7 +26,8 @@ interface CalendarColumnInputProps {
   setClickedDateTime: Dispatch<SetStateAction<Dayjs>>;
   openModal: () => void;
   readOnly?: boolean;
-  columnHeaderFormat?: string;
+  columnHeaderFormat?: CalendarColumnHeaderFormat;
+  columnSubHeaderContent?: CalendarColumnSubHeaderContent;
 }
 interface ItemStyle {
   top: string;
@@ -46,6 +47,7 @@ function CalendarColumn({
   openModal,
   readOnly = false,
   columnHeaderFormat = 'dddd',
+  columnSubHeaderContent = 'ressource',
 }: CalendarColumnInputProps): JSX.Element {
   const isToday = dayjs().isSame(dateInput, 'day');
   const isWeekend = dayjs(dateInput).day() === 0 || dayjs(dateInput).day() === 6;
@@ -121,7 +123,7 @@ function CalendarColumn({
       }}
       className={`${classes['bg_' + ressource.bgColor]} `}
     >
-      {ressource.displayName}
+      {columnSubHeaderContent === 'ressource' ? ressource.displayName : date.format(columnSubHeaderContent)}
     </div>
   ));
   const ressourceColsBody = ressources.map((ressource, index) => (
