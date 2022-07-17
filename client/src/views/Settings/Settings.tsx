@@ -15,35 +15,42 @@ import EventSettings from '../EventSettings/EventSettings';
 import { useContext } from 'react';
 import { AuthContext } from '../../providers/Auth';
 import { UserSettings } from '../UserSettings/UserSettings';
+import { useViewport } from '../../hooks/useViewport';
 
 type AllowedRoles = ('employee'|'planner'|'admin'|'user')[]
 
 const Settings = (): JSX.Element => {
   const { user } = useContext(AuthContext);
+  const { isMobile } = useViewport();
   const { t } = useTranslation();
   const tabData = [
     {
       allowedRoles: ['admin', 'planner', 'employee'],
+      name: 'teamSettings',
       label: <><RiUserSettingsFill /> {t('menu.teamSettings')}</>,
       content: <TeamSettings />
     },
     {
       allowedRoles: ['admin', 'planner'],
+      name: 'employeeSettings',
       label: <><RiUserSettingsLine />{t('menu.employeeSettings')}</>,
       content: <EmployeeSettings />
     },
     {
       allowedRoles: ['admin'],
+      name: 'userSettings',
       label: <><RiShieldUserLine />{t('menu.userSettings')}</>,
       content: <UserSettings />
     },
     {
       allowedRoles: ['admin', 'planner'],
+      name: 'eventSettings',
       label: <><RiCalendarEventLine />{t('menu.eventSettings')}</>,
       content: <EventSettings />
     },
     {
       allowedRoles: ['admin', 'planner','employee','user'],
+      name: 'userProfile',
       label: <><RiProfileLine />{t('menu.profile')}</>,
       content: <UserProfile id={user?.uuid || ''}/>
     },
@@ -62,18 +69,29 @@ const Settings = (): JSX.Element => {
     <Tabs>
       <TabList>
         {tabData.map((tab, index) => {
-          if (hasSufficientRole(tab.allowedRoles as AllowedRoles))
+          if (isMobile) {
+            if (tab.name === 'userProfile') return (
+              <Tab key={index}>{tab.label}</Tab>
+            );
+          } else if (hasSufficientRole(tab.allowedRoles as AllowedRoles)) {
             return (
               <Tab key={index}>{tab.label}</Tab>
-            );})
+            );
+          }
+        })
         }
       </TabList>
       <TabPanels>
         {tabData.map((tab, index) => {
-          if (hasSufficientRole(tab.allowedRoles as AllowedRoles))
+          if (isMobile) {
+            if (tab.name === 'userProfile') return (
+              <TabPanel key={index}>{tab.content}</TabPanel>
+            );
+          } else if (hasSufficientRole(tab.allowedRoles as AllowedRoles)) {
             return (
               <TabPanel key={index}>{tab.content}</TabPanel>
             );
+          }
         }
         )}
       </TabPanels>
