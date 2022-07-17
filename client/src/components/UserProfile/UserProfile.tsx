@@ -177,15 +177,14 @@ const UserProfile = ({
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          '> div, h2, h3, button': {
+          '> div, h2, button': {
             margin: '10px auto',
             width: '100%',
             maxWidth: '300px',
           },
         }}
       >
-        <Heading as='h2' size='lg'>{t('menu.profile')}</Heading>
-        <Heading as='h3' size='md'>{t('menu.personalData')}</Heading>
+        <Heading as='h2' size='md'>{t('menu.personalData')}</Heading>
         <FormGroup>
           <Label htmlFor="firstName">{t('label.firstName')}</Label>
           <Input
@@ -223,7 +222,7 @@ const UserProfile = ({
             ))}
           </Select>
         </FormGroup> */}
-        <Heading as='h3' size='md'>{t('auth.password')}</Heading>
+        <Heading as='h2' size='md'>{t('auth.password')}</Heading>
         <Input
           type="text"
           name="email"
@@ -265,7 +264,7 @@ const UserProfile = ({
               value={passwordState.newPasswordConfirmation}
               onChange={onPasswordChangeHandler}
             />
-            {!newPasswordConfirmed && <FormErrorMessage>Email is required.</FormErrorMessage>}
+            {!newPasswordConfirmed && <FormErrorMessage>new password is required.</FormErrorMessage>}
           </FormGroup>
         </FormControl>
         {state === 'view' ? (
