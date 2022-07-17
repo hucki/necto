@@ -3,6 +3,7 @@ import { useAllTeams } from '../../hooks/teams';
 import { Label, Select, FilterBarContainer } from '../Library';
 import { useAllCompanies } from '../../hooks/companies';
 import { useFilter } from '../../hooks/useFilter';
+import { useAllbuildings } from '../../hooks/buildings';
 
 interface FilterBarProps {
   hasTeamsFilter?: boolean;
@@ -32,6 +33,12 @@ const FilterBar = ({
     error: hasErrorCompanies,
     companies,
   } = useAllCompanies();
+
+  const {
+    isLoading: isLoadingBuildings,
+    error: errorBuildings,
+    buildings,
+  } = useAllbuildings();
 
   useEffect(() => {
     if (!isLoadingTeams && teams.length) {
@@ -79,13 +86,13 @@ const FilterBar = ({
       )}
       {hasBuildingFilter && (
         <>
-          <Label htmlFor="building">Building</Label>
+          <Label htmlFor="building">Ort</Label>
           <Select
             name="building"
             value={currentBuildingId}
             onChange={onBuildingChangeHandler}
           >
-            {teams.map((t, i) => (
+            {buildings.map((t, i) => (
               <option key={i} value={t.uuid}>
                 {t.displayName}
               </option>

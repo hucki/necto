@@ -12,9 +12,9 @@ import { bookingsPerPerson } from '../../assets/bookingsdata';
 import { useAllRooms } from '../../hooks/rooms';
 import { useAllbuildings } from '../../hooks/buildings';
 import { Building } from '../../types/Rooms';
-import { Label, Select } from '../../components/Library';
 import { Flex } from '@chakra-ui/react';
 import { useFilter } from '../../hooks/useFilter';
+import FilterBar from '../../components/FilterBar/FilterBar';
 
 function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
   const createBookings = () => {
@@ -94,10 +94,6 @@ function Rooms(): JSX.Element {
     currentBuildingId ? getRooms(currentBuildingId, rooms) : []
   );
 
-  const onBuildingChangeHandler = (event: any) => {
-    setCurrentBuildingId(event.target.value);
-  };
-
   useEffect(() => {
     if (buildings[0]?.uuid && !currentBuildingId)
       setCurrentBuildingId(buildings[0].uuid);
@@ -121,19 +117,8 @@ function Rooms(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <Flex w={300} ml="3rem">
-        <Label htmlFor="building">Ort</Label>
-        <Select
-          name="building"
-          value={currentBuildingId}
-          onChange={onBuildingChangeHandler}
-        >
-          {buildings.map((b) => (
-            <option key={b.uuid} value={b.uuid}>
-              {b.displayName}
-            </option>
-          ))}
-        </Select>
+      <Flex maxW={300}>
+        <FilterBar hasBuildingFilter />
       </Flex>
       <CalendarContainer
         readOnly={true}
