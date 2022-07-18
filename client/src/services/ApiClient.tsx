@@ -53,10 +53,11 @@ export async function client<T, P = T>(
         return data;
       } else {
         if (response.status === 401) {
+          window.localStorage.removeItem('necto_auth');
           logout({returnTo: window.location.toString()});
-          return Promise.reject({message: 'Please re-authenticate.'});
+          throw new Error('not authenticated');
         }
-        return Promise.reject(data);
+        throw new Error(`network Error ${response.status}`);
       }
     } catch (e) {
       return Promise.reject(e);

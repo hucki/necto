@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { Dispatch, useContext, useEffect } from 'react';
 import Dashboard from '../components/Dashboard/Dashboard';
 import { connect } from 'react-redux';
 import { useUser } from '../hooks/user';
@@ -12,6 +12,8 @@ import {
 } from '../components/Library/AppLayout';
 import SidebarMenu from '../components/SidebarMenu/SidebarMenu';
 import NavBar from '../components/NavBar/NavBar';
+import { logout } from '../services/Auth';
+import { AuthContext } from '../providers/Auth';
 
 interface AuthenticatedAppInputProps {
   id: string;
@@ -22,11 +24,16 @@ function AuthenticatedApp({
   id,
   dispatch,
 }: AuthenticatedAppInputProps): JSX.Element {
+  const { setIsAuthenticated, isLoading } = useContext(AuthContext);
   const { user, isError, error} = useUser(id);
   useEffect(() => {
+    if (isError && !isLoading) {
+      setIsAuthenticated(false);
+      logout({returnTo: window.location.toString()});
+    }
     if (!user) return;
     dispatch(logIn(user));
-  }, [user, dispatch]);
+  }, [user, dispatch, isError, isLoading]);
 
   return (
     <>

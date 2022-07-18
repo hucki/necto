@@ -49,7 +49,8 @@ export const logout = (options?:LogoutOptions): Promise<void> => {
   const returnTo = options?.returnTo;
   return authClient('logout/')
     .then(() => window.localStorage.removeItem(tokenKey))
-    .then(() => {if (returnTo) window.location.assign(window.location.toString());} );
+    .then(() => {if (returnTo) window.location.assign(window.location.toString());})
+    .catch(() => window.localStorage.removeItem(tokenKey));
 };
 
 export const me = async (): Promise<MinimalUser> => {

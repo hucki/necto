@@ -23,7 +23,6 @@ function AuthProvider({children}:{children: any}) {
   const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>(() => !!getToken());
   const [ user, setUser ] = useState<MinimalUser | undefined>(undefined);
   const value = { isAuthenticated, setIsAuthenticated, user, setUser, isLoading };
-
   useEffect(()=>{
     if (!userToken) {
       setIsAuthenticated(false);

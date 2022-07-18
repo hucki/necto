@@ -49,7 +49,10 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 12 * 60 * 60 * 1000 }, // Set to secure:false for demo purposes
+    cookie: {
+      secure: process.env.SESSION_COOKIE_SECURE === 'true',
+      maxAge: 60 * 1000 // maxAge: 12 * 60 * 60 * 1000
+    },
   })
 );
 app.use(passport.initialize());
