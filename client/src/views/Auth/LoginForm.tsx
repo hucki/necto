@@ -4,7 +4,7 @@ import { jsx } from '@emotion/react';
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormGroup, Input, Button, Label } from '../../components/Library';
-import { AuthContext } from '../../providers/Auth';
+import { AuthContext } from '../../providers/AuthProvider';
 
 const LoginForm = (): JSX.Element => {
   const { t } = useTranslation();
