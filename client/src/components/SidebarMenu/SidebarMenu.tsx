@@ -20,7 +20,7 @@ import { IconButton, NavigationButton, Sidebar } from '../Library';
 import { useTranslation } from 'react-i18next';
 import { FaHandHoldingMedical } from 'react-icons/fa';
 import { logout } from '../../services/Auth';
-import { AuthContext } from '../../providers/Auth';
+import { AuthContext } from '../../providers/AuthProvider';
 
 interface SidebarProps {
   dispatch: Dispatch<any>;

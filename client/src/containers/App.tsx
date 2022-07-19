@@ -5,7 +5,7 @@ import reducer from '../reducers/index';
 import { Provider } from 'react-redux';
 // import { ReactQueryDevtools } from 'react-query-devtools';
 import { ChakraProvider, Container } from '@chakra-ui/react';
-import { AuthProvider } from '../providers/Auth';
+import { AuthProvider } from '../providers/AuthProvider';
 import { AuthChecker } from './AuthChecker';
 
 declare global {
