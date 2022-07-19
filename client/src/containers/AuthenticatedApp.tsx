@@ -13,7 +13,8 @@ import {
 import SidebarMenu from '../components/SidebarMenu/SidebarMenu';
 import NavBar from '../components/NavBar/NavBar';
 import { logout } from '../services/Auth';
-import { AuthContext } from '../providers/Auth';
+import { AuthContext } from '../providers/AuthProvider';
+import ErrorBoundary from '../components/Error/ErrorBoundary';
 
 interface AuthenticatedAppInputProps {
   id: string;
@@ -39,30 +40,32 @@ function AuthenticatedApp({
     <>
       <AppContainer id="app">
         <SidebarMenu />
-        <ContentContainer>
-          <Header>
-            <NavBar />
-          </Header>
-          <Content id="Content" pr={1}>
-            {isError ? (
-              <div className="error">an error occured</div>
-            ) : (
-              <Dashboard id={id} style={{ height: '100%' }} />
-            )}
-          </Content>
-          <Footer>
-            <p>
-              made with{' '}
-              <span role="img" aria-label="pineapple">
-                🍍
-              </span>
-              <span role="img" aria-label="pizza">
-                🍕
-              </span>{' '}
-              by Hucki
-            </p>
-          </Footer>
-        </ContentContainer>
+        <ErrorBoundary>
+          <ContentContainer>
+            <Header>
+              <NavBar />
+            </Header>
+            <Content id="Content" pr={1}>
+              {isError ? (
+                <div className="error">an error occured</div>
+              ) : (
+                <Dashboard id={id} style={{ height: '100%' }} />
+              )}
+            </Content>
+            <Footer>
+              <p>
+                made with{' '}
+                <span role="img" aria-label="pineapple">
+                  🍍
+                </span>
+                <span role="img" aria-label="pizza">
+                  🍕
+                </span>{' '}
+                by Hucki
+              </p>
+            </Footer>
+          </ContentContainer>
+        </ErrorBoundary>
       </AppContainer>
     </>
   );
