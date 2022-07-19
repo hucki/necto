@@ -143,7 +143,6 @@ const EmployeeSettings = () => {
   };
   const onSubmitHandler = (e: FormEvent): void => {
     e.preventDefault();
-    console.log('submit');
     onUpdateEmployee();
     toggleEdit(e);
   };
