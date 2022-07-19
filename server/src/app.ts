@@ -51,7 +51,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: process.env.SESSION_COOKIE_SECURE === 'true',
-      maxAge: 60 * 1000 // maxAge: 12 * 60 * 60 * 1000
+      maxAge: 12 * 60 * 60 * 1000
     },
   })
 );
