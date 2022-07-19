@@ -1,6 +1,18 @@
 import { LoginData, LoginResponse, LogoutOptions, MinimalUser, RegisterResponse, ResetData, ResetResponse, UpdateData } from '../types/Auth';
 
-const tokenKey = 'necto_auth';
+export const tokenKey = 'necto_auth';
+
+interface UpdateTokenProps {
+  token: string | null
+}
+const updateToken = ({token}:UpdateTokenProps) => {
+  if (token) {
+    window.localStorage.setItem(tokenKey, token);
+  } else {
+    window.localStorage.removeItem(tokenKey);
+  }
+  window.dispatchEvent(new Event('storage'));
+};
 
 const serverApiUrl =
   process.env.NODE_ENV === 'production'
@@ -8,7 +20,7 @@ const serverApiUrl =
     : process.env.REACT_APP_API_URL;
 
 const handleResponse = ({token}: LoginResponse): LoginResponse => {
-  window.localStorage.setItem(tokenKey, token);
+  updateToken({token});
   return { token };
 };
 
@@ -48,9 +60,13 @@ export const getToken = () => {
 export const logout = (options?:LogoutOptions): Promise<void> => {
   const returnTo = options?.returnTo;
   return authClient('logout/')
-    .then(() => window.localStorage.removeItem(tokenKey))
+    .then(() => {
+      updateToken({token: null});
+    })
     .then(() => {if (returnTo) window.location.assign(window.location.toString());})
-    .catch(() => window.localStorage.removeItem(tokenKey));
+    .catch(() => {
+      updateToken({token: null});
+    });
 };
 
 export const me = async (): Promise<MinimalUser> => {
@@ -84,12 +100,13 @@ const authClient = async (
         return data;
       } else {
         if (response.status === 401 && endpoint !== 'logout/') {
-          logout();
+          updateToken({token: null});
         }
-        return Promise.reject(data);
+        throw new Error(data.message);
       }
     } catch (e) {
-      return Promise.reject(e);
+      const error = e as Error;
+      throw new Error(error.message);
     }
   });
 };
