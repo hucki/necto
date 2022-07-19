@@ -28,7 +28,7 @@ interface SidebarProps {
 
 const SidebarMenu = ({ dispatch }: SidebarProps) => {
   const { pathname: currentView } = useLocation();
-  const { user } = useContext(AuthContext);
+  const { user, logMeOut } = useContext(AuthContext);
   const history = useHistory();
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const onClickHandler = (route: string) => {
@@ -37,7 +37,7 @@ const SidebarMenu = ({ dispatch }: SidebarProps) => {
     onClose();
   };
   const handleLogout = () => {
-    logout({returnTo: window.location.toString()});
+    logMeOut();
   };
   const { t } = useTranslation();
   return (
