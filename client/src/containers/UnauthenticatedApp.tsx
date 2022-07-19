@@ -5,12 +5,13 @@ import {
   ContentContainer,
 } from '../components/Library';
 import { Box, Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import Login from '../views/Auth/Login';
+import LoginForm from '../views/Auth/LoginForm';
 import Register from '../views/Auth/Register';
 import ResetPassword from '../views/Auth/ResetPassword';
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '../components/Logo/LogoIcon';
 import { useViewport } from '../hooks/useViewport';
+import ErrorBoundary from '../components/Error/ErrorBoundary';
 
 function UnauthenticatedApp(): JSX.Element {
   const { t } = useTranslation();
@@ -64,7 +65,9 @@ function UnauthenticatedApp(): JSX.Element {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <Login />
+                  <ErrorBoundary>
+                    <LoginForm />
+                  </ErrorBoundary>
                   <Button w="100%" type='reset' onClick={handleResetPassword}>{t('auth.forgotPassword')}</Button>
                 </TabPanel>
                 <TabPanel>
