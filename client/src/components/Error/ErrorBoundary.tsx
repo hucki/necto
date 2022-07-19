@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode, useContext } from 'react';
+import LogoutButton from '../Auth/LogoutButton';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -23,9 +24,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
 
   public render() {
     if (this.state.hasError) {
+
       return (
         <>
           <pre>ERROR!!11!</pre>
+          <LogoutButton />
         </>
       );
     }
