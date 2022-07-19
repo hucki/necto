@@ -1,7 +1,9 @@
-import { Box, Checkbox, VStack } from '@chakra-ui/react';
+import { Box, Checkbox, Heading, IconButton, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { FaTrash } from 'react-icons/fa';
-import { IconButton } from '../Library';
+import Drag from '../DragDrop/Drag';
+import DropTarget from '../DragDrop/DropTarget';
+// import { IconButton } from '../Library';
 
 type Todo = {
   id: string
@@ -14,21 +16,26 @@ type Todo = {
 const todos: Todo[] = [
   {
     id: '1',
-    todo: 'do this',
+    todo: '1 do this',
     isCompleted: false,
     isDeleted: false,
     isDue: 'tomorrow'
   },
   {
     id: '2',
-    todo: 'do that',
+    todo: '2 do that',
     isCompleted: true,
     isDeleted: false,
     isDue: 'tomorrow'
+  },
+  {
+    id: '3',
+    todo: '3 do another thingy',
+    isCompleted: true,
+    isDeleted: true,
+    isDue: 'tomorrow'
   }
 ];
-
-
 
 type TodoItemProps = {
   todo: Todo
@@ -36,27 +43,45 @@ type TodoItemProps = {
 
 const TodoItem = ({todo}: TodoItemProps) => {
   return <>
-    <Box
-      textDecoration={todo.isDeleted ? 'line-through' : undefined}
-      alignItems="flex-start"
-      p="1"
-    >
-      <Checkbox isChecked={todo.isCompleted}>{todo.todo}</Checkbox>
-      <IconButton
-        size="sm"
-        aria-label="delete todo"
-        icon={<FaTrash />}
-      />
-    </Box>
+    <Drag dataItem={todo.id}>
+      <Box
+        textDecoration={todo.isDeleted ? 'line-through' : undefined}
+        display="grid"
+        gridTemplateColumns="auto 42px"
+        gridTemplateAreas="checkbox delete"
+        justifyItems="stretch"
+        p="1"
+        width="100%"
+        border="1px solid #3333"
+        borderRadius="0.5rem"
+        paddingLeft="0.5rem"
+      >
+        <Checkbox isChecked={todo.isCompleted}>{todo.todo}</Checkbox>
+        <IconButton
+          size="sm"
+          disabled={todo.isDeleted}
+          aria-label="delete todo"
+          colorScheme="orange"
+          icon={<FaTrash />}
+        />
+      </Box>
+    </Drag>
   </>;
 };
 
 const TodoList = () => {
   const todoItems = todos.map(t => <TodoItem todo={t} key={t.id} />);
   return <>
-    <VStack>
-      {todoItems}
-    </VStack>
+    <div className="todo-wrapper">
+      <Heading as="h2" size="md" mb="2">Was steht an?</Heading>
+      <DropTarget
+        onItemDropped={(item) => console.log(item)}
+        dropEffect="link">
+        <VStack>
+          {todoItems}
+        </VStack>
+      </DropTarget>
+    </div>
   </>;
 };
 
