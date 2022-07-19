@@ -13,7 +13,7 @@ import UserProfile from '../../components/UserProfile/UserProfile';
 import { useTranslation } from 'react-i18next';
 import EventSettings from '../EventSettings/EventSettings';
 import { useContext } from 'react';
-import { AuthContext } from '../../providers/Auth';
+import { AuthContext } from '../../providers/AuthProvider';
 import { UserSettings } from '../UserSettings/UserSettings';
 import { useViewport } from '../../hooks/useViewport';
 
