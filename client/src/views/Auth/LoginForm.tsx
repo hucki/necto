@@ -5,24 +5,11 @@ import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormGroup, Input, Button, Label } from '../../components/Library';
 import { AuthContext } from '../../providers/Auth';
-import { login } from '../../services/Auth';
-import { LoginResponse } from '../../types/Auth';
 
-interface LoginError {
-  location: string
-  msg: string
-  param: string
-  value: string
-}
-interface ErrorResponse {
-  errors: LoginError[]
-  message?: string
-}
-
-const Login = (): JSX.Element => {
+const LoginForm = (): JSX.Element => {
   const { t } = useTranslation();
   const [ message, setMessage] = useState<string| undefined>(undefined);
-  const { isAuthenticated, setIsAuthenticated, user, setUser } = useContext(AuthContext);
+  const { isAuthenticated, user, logMeIn, errorMessage } = useContext(AuthContext);
   const [ loginState, setLoginState] = useState({
     email: '',
     password: '',
@@ -39,23 +26,11 @@ const Login = (): JSX.Element => {
   const onSubmitHandler = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
-      const loginResponse: LoginResponse = await login({ email: loginState.email, password: loginState.password });
-      if (!loginResponse) {
-        setMessage('failed');
-      } else {
-        setIsAuthenticated(true);
-      }
-    } catch (error) {
-      const errorResponse = error as ErrorResponse;
-      let messages: Array<string> = [];
-
-      if (errorResponse && errorResponse.message) {
-        setMessage(errorResponse.message);
-      } else if (errorResponse && errorResponse.errors?.length) {
-        const msgs = errorResponse.errors.map(e => e.msg);
-        messages = [...msgs];
-        setMessage(messages.join());
-      };
+      await logMeIn({ email: loginState.email, password: loginState.password });
+    } catch (e) {
+      console.log('caught', {e});
+      const error = e as Error;
+      setMessage(error.message);
     }
   };
   // reset error message upon changes to loginState contents
@@ -110,4 +85,4 @@ const Login = (): JSX.Element => {
   );
 };
 
-export default Login;
+export default LoginForm;
