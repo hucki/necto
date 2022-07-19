@@ -35,7 +35,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     return next()
   }
   req.logout()
-  res.status(401).json({status: 401, msg: 'unauthorized'})
+  res.status(401).json({ message: 'unauthorized', status: 401 })
 };
 
 export const validateLogin = async (
@@ -43,11 +43,12 @@ export const validateLogin = async (
   res: Response,
   next: NextFunction,
 ) => {
-  await check('email', 'email is not valid').isEmail().run(req);
+  await check('email', 'eMail has to be an eMail').isEmail().run(req);
   await check('password', 'password must not be blank').isLength({min: 1}).run(req);
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json(errors);
+  const errors = validationResult(req).array();
+  if (errors.length) {
+    const errorMessage = errors.map(e => e.msg).join();
+    res.status(400).json({message: errorMessage, status: 400});
     return;
   }
   return next();
@@ -88,7 +89,7 @@ export const registerUser = async (
   try {
     const user = await prisma.user.findUnique({where: { email }})
     if (user) {
-      res.status(403).json({message: 'email already registered'});
+      res.status(403).json({ message: 'email already registered', status: 403 });
     } else {
       const hashedPassword = await bcrypt.hash(password,10);
       const createdUser = await prisma.user.create({
