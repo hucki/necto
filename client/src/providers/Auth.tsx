@@ -1,6 +1,21 @@
 import React, { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getToken, me } from '../services/Auth';
-import { MinimalUser } from '../types/Auth';
+import { getToken, login, logout, me } from '../services/Auth';
+import { LoginResponse, MinimalUser } from '../types/Auth';
+
+type LogMeInProps = {
+  email: string
+  password: string
+}
+interface LoginError {
+  location: string
+  message: string
+  param: string
+  value: string
+}
+interface ErrorResponse {
+  errors: LoginError[]
+  message?: string
+}
 
 type AuthContextType = {
   isAuthenticated: boolean,
@@ -8,6 +23,10 @@ type AuthContextType = {
   user: MinimalUser | undefined,
   setUser: Dispatch<SetStateAction<MinimalUser|undefined>>,
   isLoading: boolean,
+  isError: boolean,
+  errorMessage: string,
+  logMeIn: ({email, password}: LogMeInProps) => Promise<void>,
+  logMeOut: () => void,
 }
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
@@ -15,14 +34,20 @@ const AuthContext = createContext<AuthContextType>({
   user: undefined,
   setUser: () => undefined,
   isLoading: false,
+  logMeIn: ({email, password}: LogMeInProps) => new Promise(() => undefined),
+  logMeOut: () => undefined,
+  isError: false,
+  errorMessage: '',
 });
 
 function AuthProvider({children}:{children: any}) {
   const userToken = getToken();
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>(() => !!getToken());
+  const [ isError, setIsError ] = useState<boolean>(false);
+  const [ errorMessage, setErrorMessage ] = useState<string>('');
   const [ user, setUser ] = useState<MinimalUser | undefined>(undefined);
-  const value = { isAuthenticated, setIsAuthenticated, user, setUser, isLoading };
+
   useEffect(()=>{
     if (!userToken) {
       setIsAuthenticated(false);
@@ -56,6 +81,43 @@ function AuthProvider({children}:{children: any}) {
     return setUser(undefined);
   }, [isAuthenticated, userToken]);
 
+  const logMeIn = async ({email, password}: LogMeInProps) => {
+    try {
+      const loginResponse: LoginResponse = await login({ email, password });
+      if (!loginResponse) {
+        setErrorMessage('failed');
+      } else {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      const errorResponse = error as ErrorResponse;
+      let msg = '';
+      if (errorResponse && errorResponse.message) {
+        msg = errorResponse.message;
+      } else if (errorResponse && errorResponse.errors?.length) {
+        const msgs = errorResponse.errors.map(e => e.message);
+        msg = [...msgs].join();
+      };
+      setErrorMessage(msg);
+      throw new Error(msg);
+    }
+  };
+
+  const logMeOut = () => {
+    logout({returnTo: window.location.toString()});
+  };
+
+  const value = {
+    isAuthenticated,
+    setIsAuthenticated,
+    user,
+    setUser,
+    isLoading,
+    logMeIn,
+    logMeOut,
+    isError,
+    errorMessage
+  };
   return (
     <AuthContext.Provider value={value}>
       {children}
