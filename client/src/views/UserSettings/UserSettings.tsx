@@ -46,7 +46,6 @@ export const UserSettings = () => {
 
   useEffect(() => {
     if ( !isLoading && currentUser ) {
-      console.log({currentUser});
       setUserState((currentState) => ({
         ...currentState,
         ...currentUser,
@@ -79,7 +78,6 @@ export const UserSettings = () => {
         userId: currentUser.uuid,
         permission: currentPermission,
       });
-      console.log({updatedPermissions});
       updateUser({user: {...currentUser, permissions: updatedPermissions}});
       refetch();
     }
