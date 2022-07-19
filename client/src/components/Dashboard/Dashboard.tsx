@@ -11,7 +11,8 @@ import Patients from '../../views/Patients/Patients';
 import WaitingList from '../../views/Patients/WaitingList';
 import Settings from '../../views/Settings/Settings';
 import Doctors from '../../views/Doctors/Doctors';
-import { AuthContext } from '../../providers/Auth';
+import { AuthContext } from '../../providers/AuthProvider';
+import TodoList from '../Todo/TodoList';
 
 interface DashboardInputProps {
   id: string;
@@ -33,6 +34,7 @@ const Dashboard = ({ id }: DashboardInputProps): JSX.Element => {
       <Switch>
         <Route exact path="/">
           <h1>Welcome home</h1>
+          <TodoList />
         </Route>
         <Route path="/rooms" component={Rooms} />
         <Route path="/patients" component={user?.isPlanner || user?.isAdmin || user?.isEmployee ? Patients : RedirectHome} />
