@@ -5,7 +5,7 @@ export const tokenKey = 'necto_auth';
 interface UpdateTokenProps {
   token: string | null
 }
-const updateToken = ({token}:UpdateTokenProps) => {
+export const updateToken = ({token}:UpdateTokenProps) => {
   if (token) {
     window.localStorage.setItem(tokenKey, token);
   } else {

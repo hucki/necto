@@ -1,4 +1,4 @@
-import { logout } from './Auth';
+import { updateToken } from './Auth';
 
 const serverApiUrl =
   process.env.NODE_ENV === 'production'
@@ -53,8 +53,7 @@ export async function client<T, P = T>(
         return data;
       } else {
         if (response.status === 401) {
-          window.localStorage.removeItem('necto_auth');
-          logout({returnTo: window.location.toString()});
+          updateToken({token: null});
           throw new Error('not authenticated');
         }
         throw new Error(`network Error ${response.status}`);
