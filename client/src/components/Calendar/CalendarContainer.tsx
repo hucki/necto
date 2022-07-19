@@ -48,7 +48,7 @@ function CalendarContainer({
       ? 0
       : currentHoursInterval[1] - currentHoursInterval[0] + 1
   );
-  const scaleWidth = '3rem';
+  const scaleWidth = '1rem';
   const isToday = dayjs().isBetween(daysRange[0], daysRange[1], 'date', '[]');
 
   // calculate boundaries to fit all events
@@ -150,7 +150,7 @@ function CalendarContainer({
         id="CalendarScale"
         key="CalendarScale"
         css={{
-          maxWidth: scaleWidth,
+          width: scaleWidth,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
