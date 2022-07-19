@@ -1,5 +1,6 @@
 import React, { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getToken, login, logout, me } from '../services/Auth';
+import { useHistory } from 'react-router';
+import { getToken, login, logout, me, tokenKey } from '../services/Auth';
 import { LoginResponse, MinimalUser } from '../types/Auth';
 
 type LogMeInProps = {
@@ -41,19 +42,20 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 function AuthProvider({children}:{children: any}) {
-  const userToken = getToken();
+  const history = useHistory();
+  const [ userToken, setUserToken ] = useState<string | null>(() => getToken());
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
-  const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>(() => !!getToken());
+  const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>(() => !!userToken);
   const [ isError, setIsError ] = useState<boolean>(false);
   const [ errorMessage, setErrorMessage ] = useState<string>('');
   const [ user, setUser ] = useState<MinimalUser | undefined>(undefined);
 
+  window.addEventListener('storage', () => {
+    const newValue = window.localStorage.getItem(tokenKey);
+    setUserToken(newValue);
+  });
+
   useEffect(()=>{
-    if (!userToken) {
-      setIsAuthenticated(false);
-      setUser(undefined);
-      setIsLoading(false);
-    }
     const fetchMe = async () => {
       try {
         const thisIsMe = await me();
@@ -72,14 +74,25 @@ function AuthProvider({children}:{children: any}) {
         return setIsAuthenticated(false);
       }
     };
-    if (isAuthenticated && !user) {
-      setIsLoading(true);
-      fetchMe().finally(() => setIsLoading(false));
-    } else {
+
+    if (!userToken) {
+      setIsAuthenticated(false);
       setUser(undefined);
-    };
-    return setUser(undefined);
-  }, [isAuthenticated, userToken]);
+      setIsLoading(false);
+      if (window.location.pathname !== '/') {
+        window.location.assign('/');
+      }
+    } else {
+      setIsAuthenticated(true);
+      if (!user) {
+        setIsLoading(true);
+        fetchMe().finally(() => setIsLoading(false));
+      } else {
+        setUser(undefined);
+      };
+    }
+    return () => setUser(undefined);
+  }, [userToken]);
 
   const logMeIn = async ({email, password}: LogMeInProps) => {
     try {
