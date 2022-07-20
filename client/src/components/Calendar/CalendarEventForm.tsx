@@ -75,7 +75,9 @@ function CalendarEventForm({
 
   function onInputChange(event:React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
-    setCurrentEvent(cur => ({...cur, [`${event.currentTarget.name}`]: event.currentTarget.value}));
+    const key = event.currentTarget.name;
+    const value = event.currentTarget.value;
+    setCurrentEvent(cur => ({...cur, [`${key}`]: value}));
     setMessage(null);
   }
 
