@@ -80,7 +80,7 @@ export const initialState = {
   currentTeam: null,
   currentCompany: null,
   settings: {
-    hoursInterval: [7, 19],
+    hoursInterval: [6, 18],
     currentView: 'Appointments',
   },
   newAppointment: {
