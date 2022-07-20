@@ -7,6 +7,7 @@
       "month": "Monat"
     },
     "event": {
+      "noteTitle": "📝 Notiz",
       "newAppointmentTitle": "Neuer Termin",
       "editAppointmentTitle": "Termin",
       "title": "Title",

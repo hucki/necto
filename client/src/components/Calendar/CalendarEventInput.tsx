@@ -27,6 +27,7 @@ import CalendarEventForm from './CalendarEventForm';
 import { checkOverlap } from '../../helpers/eventChecker';
 import { rrulestr } from 'rrule';
 import { useViewport } from '../../hooks/useViewport';
+import { EventModalFooter } from '../Library/Modal';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -51,18 +52,23 @@ function CalendarEventInput({
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
   const { isMobile } = useViewport();
+  const getIsNote = (dateTime: Dayjs) => {
+    return dayjs(dateTime).hour() < 7 || dayjs(dateTime).day() === 0 || dayjs(dateTime).day() === 6;
+  };
+  const [isNote, setIsNote] = useState(() => getIsNote(dateTime));
+  const initialStartTime = getIsNote(dateTime) ? dayjs(dateTime).hour(6).minute(0) : dateTime;
   const defaultEvent: Event = {
     userId: uuid.toString(),
     ressourceId: uuid,
     title: t('calendar.event.newAppointmentTitle'),
-    startTime: dateTime,
-    endTime: dayjs(dateTime).add(45, 'minute'),
+    startTime: initialStartTime,
+    endTime: dayjs(initialStartTime).add(getIsNote(dateTime) ? 60 : 45, 'minute'),
     isRecurring: false,
     isHomeVisit: false,
     isDiagnostic: false,
     rrule: '',
     bgColor: ressource?.bgColor || 'green',
-    type: 'Appointment',
+    type: getIsNote(dateTime) ? 'note' : 'Appointment',
     isAllDay: false,
     isCancelled: false,
     isCancelledReason: '',
@@ -77,9 +83,10 @@ function CalendarEventInput({
 
   useEffect(() => {
     // reset event State if new incoming datetime or uuid
+    setIsNote(getIsNote(dateTime));
     setNewEvent(defaultEvent);
     setMessage(null);
-  }, [dateTime, uuid]);
+  }, [dateTime, uuid, isNote]);
 
   const handleChangedEvent = (changedEvent: Event) => {
     setNewEvent({
@@ -154,10 +161,10 @@ function CalendarEventInput({
           }}
         >
           <EventModalContent>
-            <EventModalHeader bgColor={newEvent?.bgColor || 'green'}>
+            <EventModalHeader bgColor={newEvent.type === 'note' ? 'yellow' : newEvent?.bgColor || 'green'}>
               <div>
                 <div className="modal-title">
-                  {t('calendar.event.newAppointmentTitle')}{' '}
+                  {t(`calendar.event.${newEvent.type === 'note' ? 'noteTitle' : 'newAppointmentTitle'}`)}{' '}
                   {ressource?.displayName
                     ? t('dict.for') + ' ' + ressource.displayName
                     : ''}
@@ -199,7 +206,7 @@ function CalendarEventInput({
                 onClick={onClose}
               />
             </EventModalHeader>
-            <EventModalBody>
+            <EventModalBody bgColor={newEvent.type === 'note' ? 'yellow' : undefined}>
               <CalendarEventForm
                 event={newEvent}
                 setMessage={setMessage}
@@ -207,13 +214,7 @@ function CalendarEventInput({
               />
               {message && <ErrorMessage error={{ message }} />}
             </EventModalBody>
-            <ModalFooter
-              css={{
-                padding: '0.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
+            <EventModalFooter bgColor={newEvent.type === 'note' ? 'yellow' : undefined}>
               <div
                 className="row"
                 css={{
@@ -244,7 +245,7 @@ function CalendarEventInput({
                   {t('button.save')}
                 </Button>
               </div>
-            </ModalFooter>
+            </EventModalFooter>
           </EventModalContent>
         </ModalOverlay>
       </Modal>

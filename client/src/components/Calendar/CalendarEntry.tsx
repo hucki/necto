@@ -45,13 +45,13 @@ export const CalendarEntry = ({
   const startTimeString = `${dayjs(event.startTime).format('HH:mm')}`;
 
   const entryTitle = event.patient ? event.patient.lastName + ', ' +  event.patient.firstName : event.title;
-
+  const isNote = event.type === 'note';
   return (
     <CalendarEntryContainer
       title={startTimeString + ' ' + event.title}
       key={event.uuid?.toString()}
       onClick={readOnly ? undefined : () => onClickHandler(event)}
-      className={`${classes.event} ${classes['bg_' + event.bgColor]} ${
+      className={`${classes.event} ${classes['bg_' + (isNote ? 'yellow' : event.bgColor)]} ${
         readOnly ? 'read-only' : ''
       }`}
       style={styles}

@@ -4,7 +4,7 @@ import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
 import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
-import { Event } from '../../types/Event';
+import { Event, EventType } from '../../types/Event';
 import dayjs from 'dayjs';
 import { Room } from '../../types/Ressource';
 import { useEffect, useState } from 'react';
@@ -42,7 +42,7 @@ function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
               ressourceId: bookings[j].roomId,
               title: person.name,
               bgColor: person.bgColor,
-              type: 'custom',
+              type: 'roomBooking' as EventType,
               isDiagnostic: false,
               isHomeVisit: false,
               isAllDay: false,

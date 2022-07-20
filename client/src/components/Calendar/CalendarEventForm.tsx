@@ -11,6 +11,7 @@ import {
   PopoverHeader,
   PopoverBody,
   Checkbox,
+  Switch,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
@@ -81,6 +82,12 @@ function CalendarEventForm({
   function onCheckboxChange(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
     setCurrentEvent(cur => ({...cur, [`${event.currentTarget.name}`]: event.currentTarget.checked}));
+    setMessage(null);
+  }
+
+  function onIsNoteChange(event: React.FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    setCurrentEvent(cur => ({...cur, type: event.currentTarget.checked ? 'note' : 'Appointment'}));
     setMessage(null);
   }
 
@@ -194,8 +201,20 @@ function CalendarEventForm({
     currentEvent.patientId,
   ]);
 
+  const isNote = currentEvent.type === 'note';
+
   return (
     <div>
+      <FormGroup>
+        <Label htmlFor="isNote">Notiz</Label>
+        <Switch
+          id="isNote"
+          name="isNote"
+          colorScheme="yellow"
+          isChecked={isNote}
+          onChange={onIsNoteChange}
+        />
+      </FormGroup>
       <FormGroup>
         <Label htmlFor="patientId">{t('calendar.event.patient')}</Label>
         <Select
@@ -223,28 +242,30 @@ function CalendarEventForm({
           onChange={onInputChange}
         />
       </FormGroup>
-      <FormGroup>
-        <Label htmlFor="isHomeVisit">{t('calendar.event.homeVisit')}</Label>
-        <Checkbox
-          id="isHomeVisit"
-          name="isHomeVisit"
-          size="lg"
-          my={2}
-          isChecked={currentEvent.isHomeVisit}
-          onChange={onCheckboxChange}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Label htmlFor="isDiagnostic">{t('calendar.event.diagnostic')}</Label>
-        <Checkbox
-          id="isDiagnostic"
-          name="isDiagnostic"
-          size="lg"
-          my={2}
-          isChecked={currentEvent.isDiagnostic}
-          onChange={onCheckboxChange}
-        />
-      </FormGroup>
+      {!isNote &&
+        <div>
+          <FormGroup>
+            <Checkbox
+              id="isHomeVisit"
+              name="isHomeVisit"
+              size="lg"
+              my={2}
+              isChecked={currentEvent.isHomeVisit}
+              onChange={onCheckboxChange}
+            >{t('calendar.event.homeVisit')}</Checkbox>
+          </FormGroup>
+          <FormGroup>
+            <Checkbox
+              id="isDiagnostic"
+              name="isDiagnostic"
+              size="lg"
+              my={2}
+              isChecked={currentEvent.isDiagnostic}
+              onChange={onCheckboxChange}
+            >{t('calendar.event.diagnostic')}</Checkbox>
+          </FormGroup>
+        </div>
+      }
       <FormGroup>
         <Label htmlFor="eventStartDatePicker">
           {t('calendar.event.start')}
@@ -291,82 +312,86 @@ function CalendarEventForm({
           }}
         />
       </FormGroup>
-      <hr></hr>
-      <FormGroup>
-        <Label htmlFor="isRecurring">
-          {t('calendar.event.recurringAppointment')}
-        </Label>
-        <Checkbox
-          id="isRecurring"
-          name="isRecurring"
-          size="lg"
-          my={2}
-          isChecked={currentEvent.isRecurring}
-          onChange={onCheckboxChange}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Label htmlFor="frequency">{t('calendar.event.frequency')}</Label>
-        <Select
-          id="frequency"
-          name="frequency"
-          disabled={!currentEvent.isRecurring}
-          onChange={onSelectChange}>
-          <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
-          <option value="BIWEEKLY">{t('calendar.event.frequencyBiWeekly')}</option>
-          <option value="MONTHLY" disabled>
-            {t('calendar.event.frequencyMonthly')}
-          </option>
-        </Select>
-        <Label htmlFor="interval">{t('calendar.event.interval')}</Label>
-        <Input
-          id="interval"
-          name="interval"
-          type="number"
-          min={1}
-          max={20}
-          disabled={!currentEvent.isRecurring}
-          defaultValue={recurringInterval}
-          onChange={handleRecurringIntervalChange}
-        />
-      </FormGroup>
-      <Popover>
-        <PopoverTrigger>
-          <Button
-            aria-label="preview recurring events"
-            type="button"
-            onClick={onBuildTimelineHandler}
-            disabled={!currentEvent.isRecurring}
-            css={{
-              alignSelf: 'flex-end',
-            }}
-          >
-            {t('button.preview')}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent
-          css={{
-            backgroundColor: 'white',
-            border: '1px solid #3333',
-            borderRadius: '1rem',
-            padding: '0.5rem',
-          }}
-        >
-          <PopoverArrow />
-          <PopoverCloseButton
-            css={{
-              border: 'none',
-              borderRadius: '50%',
-              width: '1.5rem',
-              height: '1.5rem',
-              alignSelf: 'flex-end',
-              cursor: 'pointer',
-            }}
-          />
-          <PopoverHeader></PopoverHeader>
-          <PopoverBody>{timeline}</PopoverBody>
-        </PopoverContent>
-      </Popover>
+      {!isNote &&
+        <div>
+          <hr></hr>
+          <FormGroup>
+            <Label htmlFor="isRecurring">
+              {t('calendar.event.recurringAppointment')}
+            </Label>
+            <Checkbox
+              id="isRecurring"
+              name="isRecurring"
+              size="lg"
+              my={2}
+              isChecked={currentEvent.isRecurring}
+              onChange={onCheckboxChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="frequency">{t('calendar.event.frequency')}</Label>
+            <Select
+              id="frequency"
+              name="frequency"
+              disabled={!currentEvent.isRecurring}
+              onChange={onSelectChange}>
+              <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
+              <option value="BIWEEKLY">{t('calendar.event.frequencyBiWeekly')}</option>
+              <option value="MONTHLY" disabled>
+                {t('calendar.event.frequencyMonthly')}
+              </option>
+            </Select>
+            <Label htmlFor="interval">{t('calendar.event.interval')}</Label>
+            <Input
+              id="interval"
+              name="interval"
+              type="number"
+              min={1}
+              max={20}
+              disabled={!currentEvent.isRecurring}
+              defaultValue={recurringInterval}
+              onChange={handleRecurringIntervalChange}
+            />
+          </FormGroup>
+          <Popover>
+            <PopoverTrigger>
+              <Button
+                aria-label="preview recurring events"
+                type="button"
+                onClick={onBuildTimelineHandler}
+                disabled={!currentEvent.isRecurring}
+                css={{
+                  alignSelf: 'flex-end',
+                }}
+              >
+                {t('button.preview')}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              css={{
+                backgroundColor: 'white',
+                border: '1px solid #3333',
+                borderRadius: '1rem',
+                padding: '0.5rem',
+              }}
+            >
+              <PopoverArrow />
+              <PopoverCloseButton
+                css={{
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '1.5rem',
+                  height: '1.5rem',
+                  alignSelf: 'flex-end',
+                  cursor: 'pointer',
+                }}
+              />
+              <PopoverHeader></PopoverHeader>
+              <PopoverBody>{timeline}</PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </div>
+      }
     </div>
   );
 }

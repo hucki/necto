@@ -3,18 +3,21 @@ import { BgColor } from './Colors';
 import { Employee } from './Employee';
 import { Patient } from './Patient';
 
+export type EventType = 'custom' | 'note' | 'Appointment' | 'leave' | 'roomBooking'
+
 export type Event = {
   uuid?: string;
   userId: string;
   ressourceId: string;
   title: string;
-  type: string;
+  type: EventType;
   isDiagnostic: boolean;
   isHomeVisit: boolean;
   isAllDay: boolean;
   isRecurring: boolean;
   isCancelled: boolean;
-  isCancelledReason: string; // deprecated
+  /** @deprecated */
+  isCancelledReason: string;
   cancellationReasonId?: string;
   cancellationReason?: CancellationReason;
   rrule: string;

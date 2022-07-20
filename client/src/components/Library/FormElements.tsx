@@ -37,7 +37,7 @@ const Input = styled(ChakraInput)(
   ({ disabled }: InputCallbackProps) =>
     disabled
       ? { background: '#f1f1f4', fontStyle: 'italic' }
-      : { background: 'white' }
+      : { background: 'transparent' }
 );
 
 const Textarea = styled.textarea(inputStyles);
@@ -76,6 +76,7 @@ const RadioGroup = styled.div({
 // https://styled-components.com/docs/basics#passed-props
 const DatePicker = styled(ReactDatePicker)(inputStyles, {
   padding: '0.4rem 0.2rem',
+  background: 'transparent',
 });
 
 export { Input, Textarea, FormGroup, Label, Select, DatePicker, RadioGroup, ModalFormGroup, TextDisplay };
