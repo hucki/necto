@@ -18,7 +18,7 @@ export const bookingsPerPerson: PersonBookings[] = [
           {
             roomId: 'e31dd220-f802-4b58-ac61-0a59bb178668',
             start: '11:30',
-            end: '19:00',
+            end: '18:59',
           },
         ],
       },
@@ -43,7 +43,7 @@ export const bookingsPerPerson: PersonBookings[] = [
           {
             roomId: 'e31dd220-f802-4b58-ac61-0a59bb178668',
             start: '11:30',
-            end: '19:00',
+            end: '18:59',
           },
         ],
       },
@@ -58,7 +58,7 @@ export const bookingsPerPerson: PersonBookings[] = [
           {
             roomId: 'e31dd220-f802-4b58-ac61-0a59bb178668',
             start: '11:30',
-            end: '19:00',
+            end: '18:59',
           },
         ],
       },
