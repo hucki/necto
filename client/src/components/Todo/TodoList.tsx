@@ -8,6 +8,7 @@ import DropTarget from '../DragDrop/DropTarget';
 type Todo = {
   id: string
   todo: string
+  sort: number
   isCompleted: boolean
   isDeleted: boolean
   isDue: string
@@ -16,6 +17,7 @@ type Todo = {
 const todos: Todo[] = [
   {
     id: '1',
+    sort: 0,
     todo: '1 do this',
     isCompleted: false,
     isDeleted: false,
@@ -23,6 +25,7 @@ const todos: Todo[] = [
   },
   {
     id: '2',
+    sort: 1,
     todo: '2 do that',
     isCompleted: true,
     isDeleted: false,
@@ -30,6 +33,7 @@ const todos: Todo[] = [
   },
   {
     id: '3',
+    sort: 2,
     todo: '3 do another thingy',
     isCompleted: true,
     isDeleted: true,
@@ -55,6 +59,7 @@ const TodoItem = ({todo}: TodoItemProps) => {
         border="1px solid #3333"
         borderRadius="0.5rem"
         paddingLeft="0.5rem"
+        onDrop={() => console.log('dropped on ', todo.id)}
       >
         <Checkbox isChecked={todo.isCompleted}>{todo.todo}</Checkbox>
         <IconButton
@@ -70,7 +75,7 @@ const TodoItem = ({todo}: TodoItemProps) => {
 };
 
 const TodoList = () => {
-  const todoItems = todos.map(t => <TodoItem todo={t} key={t.id} />);
+  const todoItems = todos.sort((a,b) => a.sort > b.sort ? 1 : -1).map(t => <TodoItem todo={t} key={t.id} />);
   return <>
     <div className="todo-wrapper">
       <Heading as="h2" size="md" mb="2">Was steht an?</Heading>

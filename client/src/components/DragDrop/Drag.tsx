@@ -10,7 +10,7 @@ const Drag = (props: DragProps) => {
 
   const startDrag = (event: DragEvent<HTMLDivElement>) => {
     // console.log('drag');
-    setIsDragging(true);
+    setTimeout(() => setIsDragging(true),0);
     event.dataTransfer.setData('drag-item', props.dataItem);
   };
 
@@ -24,7 +24,7 @@ const Drag = (props: DragProps) => {
       draggable={true}
       onDragStart={startDrag}
       onDragEnd={endDrag}
-      style={{width: '100%', ...(isDragging ? {color: 'red'} : {})}}
+      style={{width: '100%', ...(isDragging ? {display: 'none'} : {})}}
     >
       {props.children}
     </div>
