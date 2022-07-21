@@ -8,7 +8,8 @@
     },
     "event": {
       "newAppointmentTitle": "New Appointment",
-      "editAppointmentTitle": "Termin",
+      "editAppointmentTitle": "Appointment",
+      "text": "text",
       "title": "title",
       "patient": "patient",
       "duration": "duration",
