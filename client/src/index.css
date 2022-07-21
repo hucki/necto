@@ -47,6 +47,11 @@ code {
   --bgMintText: rgb(0, 100, 100);
   --bgMintBorder: rgba(0, 255, 255, 0.3);
   --bgMint: rgba(0, 255, 255, 0.2);
+
+  --bgNoteText: yellow;
+  --bgNoteBorder: darkkhaki;
+  --bgNote: khaki;
+  --bgNoteGradient: linear-gradient(135deg, khaki 90%, darkgrey);
 }
 
 .box {
