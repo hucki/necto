@@ -1,4 +1,5 @@
 type CalenderEventViewProps = {
+  isNote: boolean
   eventTitle: Event['title']
   isHomeVisit: Event['isHomeVisit']
   isRecurring: Event['isRecurring']
