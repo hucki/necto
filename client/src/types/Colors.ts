@@ -5,4 +5,5 @@ export type BgColor =
   | 'yellow'
   | 'blue'
   | 'purple'
-  | 'mint';
+  | 'mint'
+  | 'note';
