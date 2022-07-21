@@ -56,11 +56,11 @@ function CalendarEventInput({
     return dayjs(dateTime).hour() < 7 || dayjs(dateTime).day() === 0 || dayjs(dateTime).day() === 6;
   };
   const [isNote, setIsNote] = useState(() => getIsNote(dateTime));
-  const initialStartTime = getIsNote(dateTime) ? dayjs(dateTime).hour(6).minute(0) : dateTime;
+  const initialStartTime = getIsNote(dateTime) ? dayjs(dateTime).minute(0) : dateTime;
   const defaultEvent: Event = {
     userId: uuid.toString(),
     ressourceId: uuid,
-    title: t('calendar.event.newAppointmentTitle'),
+    title: '',
     startTime: initialStartTime,
     endTime: dayjs(initialStartTime).add(getIsNote(dateTime) ? 60 : 45, 'minute'),
     isRecurring: false,
