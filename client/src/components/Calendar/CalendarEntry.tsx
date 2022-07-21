@@ -1,17 +1,13 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
-import styled from '@emotion/styled/macro';
 import { useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
 import classes from './Calendar.module.css';
 import { FaCommentMedical, FaHouseUser, FaLink } from 'react-icons/fa';
 import dayjs from 'dayjs';
+import { CalendarEntryContainer } from '../Library/Event';
 
-const CalendarEntryContainer = styled.div({
-  // minHeight: 'min-content'
-  // backgroundColor: 'white',
-});
 
 interface CalendarEntryProps {
   event: Event;
@@ -48,16 +44,18 @@ export const CalendarEntry = ({
   const isNote = event.type === 'note';
   return (
     <CalendarEntryContainer
+      isNote={isNote}
+      bgColor={event.bgColor}
       title={startTimeString + ' ' + event.title}
       key={event.uuid?.toString()}
       onClick={readOnly ? undefined : () => onClickHandler(event)}
-      className={`${classes.event} ${classes['bg_' + (isNote ? 'yellow' : event.bgColor)]} ${
+      className={`${
         readOnly ? 'read-only' : ''
       }`}
       style={styles}
     >
       <div className={classes.icon_container}>
-        {showTime && <span className={classes.event_time}>{startTimeString}</span>}
+        {!isNote && showTime && <span className={classes.event_time}>{startTimeString}</span>}
         <span style={{display: 'flex', flexDirection: 'row'}}>{icons}</span>
       </div>
       <div className={classes.event_container}>

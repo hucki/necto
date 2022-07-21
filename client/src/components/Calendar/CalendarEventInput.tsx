@@ -161,7 +161,7 @@ function CalendarEventInput({
           }}
         >
           <EventModalContent>
-            <EventModalHeader bgColor={newEvent.type === 'note' ? 'yellow' : newEvent?.bgColor || 'green'}>
+            <EventModalHeader bgColor={newEvent.type === 'note' ? 'note' : newEvent?.bgColor || 'green'}>
               <div>
                 <div className="modal-title">
                   {t(`calendar.event.${newEvent.type === 'note' ? 'noteTitle' : 'newAppointmentTitle'}`)}{' '}
@@ -206,7 +206,7 @@ function CalendarEventInput({
                 onClick={onClose}
               />
             </EventModalHeader>
-            <EventModalBody bgColor={newEvent.type === 'note' ? 'yellow' : undefined}>
+            <EventModalBody bgColor={newEvent.type === 'note' ? 'note' : undefined}>
               <CalendarEventForm
                 event={newEvent}
                 setMessage={setMessage}
@@ -214,7 +214,7 @@ function CalendarEventInput({
               />
               {message && <ErrorMessage error={{ message }} />}
             </EventModalBody>
-            <EventModalFooter bgColor={newEvent.type === 'note' ? 'yellow' : undefined}>
+            <EventModalFooter bgColor={newEvent.type === 'note' ? 'note' : undefined}>
               <div
                 className="row"
                 css={{

@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalOverlay, ModalFooter, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { Modal, ModalOverlay, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { BaseSyntheticEvent, useState } from 'react';
 import {
   Button,
@@ -27,11 +27,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { CancellationReason, Event } from '../../types/Event';
 import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash, FaCommentMedical } from 'react-icons/fa';
 
-import { CalendarEventView } from './CalendarEventView';
+import CalendarEventView from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
 import de from 'date-fns/locale/de';
 import { checkOverlap } from '../../helpers/eventChecker';
 import { useViewport } from '../../hooks/useViewport';
+import { EventModalFooter } from '../Library/Modal';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -63,7 +64,7 @@ function CalendarEventEdit({
 
   const [message, setMessage] = useState<string | null>(null);
   const [changedEvent, setChangedEvent] = useState<Event>(event);
-
+  const isNote = changedEvent.type === 'note';
   const handleChangedEvent = (changedEvent: Event) => {
     setChangedEvent({
       uuid: event.uuid,
@@ -136,10 +137,10 @@ function CalendarEventEdit({
           }}
         >
           <EventModalContent>
-            <EventModalHeader bgColor={changedEvent?.bgColor || 'green'}>
+            <EventModalHeader bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}>
               <div>
                 <div className="modal-title">
-                  {t('calendar.event.editAppointmentTitle')}
+                  {t(`calendar.event.${isNote ? 'noteTitle' : 'editAppointmentTitle'}`)}
                 </div>
                 <div
                   className="modal-subtitle"
@@ -178,9 +179,10 @@ function CalendarEventEdit({
                 onClick={onClose}
               />
             </EventModalHeader>
-            <EventModalBody>
+            <EventModalBody bgColor={(isNote ? 'note' : undefined)}>
               {isReadOnly && (
                 <CalendarEventView
+                  isNote={isNote}
                   eventTitle={changedEvent.title}
                   isHomeVisit={changedEvent.isHomeVisit}
                   isRecurring={changedEvent.isRecurring}
@@ -200,13 +202,7 @@ function CalendarEventEdit({
               {message && <ErrorMessage error={{ message }} />}
             </EventModalBody>
 
-            <ModalFooter
-              css={{
-                padding: '0.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
+            <EventModalFooter bgColor={(isNote ? 'note' : undefined)}>
               <div
                 className="row"
                 css={{
@@ -267,7 +263,7 @@ function CalendarEventEdit({
                   )}
                 </ControlWrapper>
               </div>
-            </ModalFooter>
+            </EventModalFooter>
           </EventModalContent>
         </ModalOverlay>
       </Modal>

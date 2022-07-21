@@ -207,7 +207,7 @@ function CalendarEventForm({
 
   return (
     <div>
-      <FormGroup>
+      <FormGroup gridColsUnit="auto" gridCols={4}>
         <Label htmlFor="isNote">Notiz</Label>
         <Switch
           id="isNote"
@@ -217,7 +217,7 @@ function CalendarEventForm({
           onChange={onIsNoteChange}
         />
       </FormGroup>
-      <FormGroup>
+      {!isNote &&<FormGroup gridColsUnit="auto">
         <Label htmlFor="patientId">{t('calendar.event.patient')}</Label>
         <Select
           id="patient"
@@ -234,9 +234,9 @@ function CalendarEventForm({
             </option>
           ))}
         </Select>
-      </FormGroup>
-      <FormGroup>
-        <Label htmlFor="title">{t('calendar.event.title')}</Label>
+      </FormGroup>}
+      <FormGroup gridColsUnit="auto">
+        <Label htmlFor="title">{t(`calendar.event.${isNote ? 'text' : 'title'}`)}</Label>
         <Input
           id="eventTitleInput"
           name="title"
@@ -268,7 +268,7 @@ function CalendarEventForm({
           </FormGroup>
         </div>
       }
-      <FormGroup>
+      <FormGroup gridColsUnit="auto">
         <Label htmlFor="eventStartDatePicker">
           {t('calendar.event.start')}
         </Label>
@@ -286,7 +286,7 @@ function CalendarEventForm({
           }}
         />
       </FormGroup>
-      <FormGroup>
+      <FormGroup gridColsUnit="auto">
         <Label htmlFor="duration">{t('calendar.event.duration')}</Label>
         <Select
           id="duration"
@@ -298,7 +298,7 @@ function CalendarEventForm({
           <option value={30}>0:30</option>
         </Select>
       </FormGroup>
-      <FormGroup>
+      <FormGroup gridColsUnit="auto">
         <Label htmlFor="eventEndDatePicker">{t('calendar.event.end')}</Label>
         <DatePicker
           id="eventEndDatePicker"
