@@ -12,6 +12,7 @@ import {
   PopoverBody,
   Checkbox,
   Switch,
+  Textarea,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
@@ -74,6 +75,14 @@ function CalendarEventForm({
   const [timeline, setTimeline] = useState<ReactElement<any, any>>();
 
   function onInputChange(event:React.FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    const key = event.currentTarget.name;
+    const value = event.currentTarget.value;
+    setCurrentEvent(cur => ({...cur, [`${key}`]: value}));
+    setMessage(null);
+  }
+
+  function onTextareaChange(event:React.FormEvent<HTMLTextAreaElement>) {
     event.preventDefault();
     const key = event.currentTarget.name;
     const value = event.currentTarget.value;
@@ -237,12 +246,23 @@ function CalendarEventForm({
       </FormGroup>}
       <FormGroup gridColsUnit="auto">
         <Label htmlFor="title">{t(`calendar.event.${isNote ? 'text' : 'title'}`)}</Label>
-        <Input
-          id="eventTitleInput"
-          name="title"
-          value={currentEvent.title}
-          onChange={onInputChange}
-        />
+        {isNote
+          ? <Textarea
+            id="eventTitleInput"
+            name="title"
+            value={currentEvent.title}
+            onChange={onTextareaChange}
+            style={{background: 'lightyellow'}}
+            placeholder={t('calendar.event.noteTitle')}
+          />
+          :
+          <Input
+            id="eventTitleInput"
+            name="title"
+            value={currentEvent.title}
+            onChange={onInputChange}
+            placeholder={t('calendar.event.newAppointmentTitle')}
+          />}
       </FormGroup>
       {!isNote &&
         <div>
@@ -286,18 +306,20 @@ function CalendarEventForm({
           }}
         />
       </FormGroup>
-      <FormGroup gridColsUnit="auto">
-        <Label htmlFor="duration">{t('calendar.event.duration')}</Label>
-        <Select
-          id="duration"
-          name="duration"
-          value={eventDuration}
-          onChange={handleEventDurationChange}
-        >
-          <option value={45}>0:45</option>
-          <option value={30}>0:30</option>
-        </Select>
-      </FormGroup>
+      {!isNote &&
+        <FormGroup gridColsUnit="auto">
+          <Label htmlFor="duration">{t('calendar.event.duration')}</Label>
+          <Select
+            id="duration"
+            name="duration"
+            value={eventDuration}
+            onChange={handleEventDurationChange}
+          >
+            <option value={45}>0:45</option>
+            <option value={30}>0:30</option>
+          </Select>
+        </FormGroup>
+      }
       <FormGroup gridColsUnit="auto">
         <Label htmlFor="eventEndDatePicker">{t('calendar.event.end')}</Label>
         <DatePicker
