@@ -73,10 +73,11 @@ const CalendarColumnWrapper = styled.div({
 
 const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumnProps) => ({
   height: `calc((100% / ${numOfHours + 1}) / 2)`,
-  backgroundColor: isToday ? `${colors.indigoDarken10}` : `${colors.base}`,
-  color: isToday ? `${colors.indigoLighten80}` : `${colors.gray}`,
+  backgroundColor: `${colors.base}`,
+  color: `${colors.gray}`,
   fontWeight: isToday ? 'bold' : undefined,
-  borderRight: `1px solid ${colors.gray50}`
+  borderRight: `1px solid ${colors.gray50}`,
+  borderTop: isToday ? '0.2rem solid red' : undefined,
 }));
 
 const CalendarColumnRessourceWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
