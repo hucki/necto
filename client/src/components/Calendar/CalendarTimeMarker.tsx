@@ -26,7 +26,7 @@ function CalendarTimeMarker({
         }) + (100% / ${scaleHeightUnits}) * ${minutes / 60})`,
         left: offsetLeft,
         width: `calc(100% - ${offsetLeft})`,
-        borderTop: '1px solid red',
+        borderTop: '1px dashed red',
         fontSize: '0.8rem',
         color: 'red',
         paddingRight: '0.3rem',

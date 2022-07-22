@@ -28,7 +28,9 @@ function TeamCalendar(): JSX.Element {
       setCalendarDate(currentDate);
   }, [currentDate, calendarDate, setCalendarDate]);
 
-  const teamMembers = currentTeam?.employees;
+  const teamMembers = currentTeam?.employees?.filter(({ employee }: TeamMemberMapProps) => {
+    return employee.contract.length > 0;
+  });
 
   interface TeamMemberMapProps {
     employee: Employee;

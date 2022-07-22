@@ -12,6 +12,7 @@ import CalendarEventEdit from './CalendarEventEdit';
 import { useDisclosure } from '@chakra-ui/react';
 import * as colors from '../../styles/colors';
 import 'dayjs/locale/de';
+import { CalendarColumnDayHeader, CalendarColumnRessourceHeader, CalendarColumnRessourceWrapper, CalendarColumnWrapper } from '../Library';
 dayjs.locale('de');
 
 interface CalendarColumnInputProps {
@@ -110,21 +111,15 @@ function CalendarColumn({
     return itemStyle;
   }
   const ressourceColsHeader = ressources.map((ressource, index) => (
-    <div
+    <CalendarColumnRessourceHeader
       id={`rcolHeader_r${ressource.uuid}`}
       key={`rcolHeader_r${ressource.uuid}`}
-      css={{
-        width: `calc(100% / ${ressources.length})`,
-        textAlign: 'center',
-        borderRight:
-          index === ressources.length - 1
-            ? '2px solid gray'
-            : '1px dashed #3333',
-      }}
-      className={`${classes['bg_' + ressource.bgColor]} `}
+      numOfRessources={ressources.length}
+      bgColor={ressource.bgColor}
+      index={index}
     >
       {columnSubHeaderContent === 'ressource' ? ressource.displayName : date.format(columnSubHeaderContent)}
-    </div>
+    </CalendarColumnRessourceHeader>
   ));
   const ressourceColsBody = ressources.map((ressource, index) => (
     <div
@@ -135,9 +130,10 @@ function CalendarColumn({
         height: '100%',
         position: 'relative',
         backgroundColor: isWeekend ? '#3333' : undefined,
+        borderBottom: `1px solid ${colors.gray50}`,
         borderRight:
           index === ressources.length - 1
-            ? '2px solid gray'
+            ? `2px solid ${colors.gray50}`
             : '1px dashed #3333',
       }}
       onClick={readOnly ? () => null : getPosition}
@@ -150,37 +146,25 @@ function CalendarColumn({
 
   const columnHeader = date.format(columnHeaderFormat);
   return (
-    <div
+    <CalendarColumnWrapper
       id={`CalendarDay_d${date.format('YYYYMMDD')}`}
       key={`CalendarDay_d${date.format('YYYYMMDD')}`}
-      css={{
-        width: '100%',
-        textAlign: 'center',
-      }}
     >
-      <div
+      <CalendarColumnDayHeader
+        numOfHours={numOfHours}
+        isToday={isToday}
         id={`DayHeader_d${date.format('YYYYMMDD')}`}
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
-        css={{
-          height: `calc((100% / ${numOfHours + 1}) / 2)`,
-          backgroundColor: isToday ? `${colors.indigoDarken10}` : `${colors.gray20}`,
-          color: isToday ? `${colors.indigoLighten80}` : `${colors.gray}`,
-          fontWeight: 'bold',
-        }}
       >
         {columnHeader}
-      </div>
-      <div
+      </CalendarColumnDayHeader>
+      <CalendarColumnRessourceWrapper
         id={`RessourceHeader_d${date.format('YYYYMMDD')}`}
         key={`RessourceHeader_d${date.format('YYYYMMDD')}`}
-        css={{
-          display: 'flex',
-          height: `calc((100% / ${numOfHours + 1}) / 2)`,
-          flexDirection: 'row',
-        }}
+        numOfHours={numOfHours}
       >
         {ressourceColsHeader}
-      </div>
+      </CalendarColumnRessourceWrapper>
       <div
         id={`RessourceBody_d${date.format('YYYYMMDD')}`}
         key={`RessourceBody_d${date.format('YYYYMMDD')}`}
@@ -201,7 +185,7 @@ function CalendarColumn({
           onOpen={onOpen}
         />
       )}
-    </div>
+    </CalendarColumnWrapper>
   );
 }
 
