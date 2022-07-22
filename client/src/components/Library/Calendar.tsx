@@ -9,6 +9,16 @@ type CalendarScaleProps = {
   scaleWidth: string
 }
 
+type CalendarColumnProps = CalendarCommonProps & {
+  isToday: boolean
+}
+
+type CalendarRessourceProps = {
+  numOfRessources: number
+  index: number
+  bgColor: string
+}
+
 const CalendarWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
   position: 'relative',
   fontSize: '1rem',
@@ -31,6 +41,7 @@ const CalendarScale = styled.div(({scaleWidth}:CalendarScaleProps) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
+  borderRight: `1px solid ${colors.gray50}`
 }));
 const CalendarScaleHeader = styled.div(({numOfHours}:CalendarCommonProps) => ({
   height: `calc(100% / ${numOfHours + 1})`,
@@ -54,4 +65,49 @@ const CalendarScaleTime = styled.div({
   textAlign: 'left',
   fontSize: '0.7rem'
 });
-export {CalendarWrapper, CalendarScaleItem, CalendarScaleTime, CalendarScaleHeader, CalendarScale};
+
+const CalendarColumnWrapper = styled.div({
+  width: '100%',
+  textAlign: 'center',
+});
+
+const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumnProps) => ({
+  height: `calc((100% / ${numOfHours + 1}) / 2)`,
+  backgroundColor: isToday ? `${colors.indigoDarken10}` : `${colors.base}`,
+  color: isToday ? `${colors.indigoLighten80}` : `${colors.gray}`,
+  fontWeight: isToday ? 'bold' : undefined,
+  borderRight: `1px solid ${colors.gray50}`
+}));
+
+const CalendarColumnRessourceWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
+  display: 'flex',
+  height: `calc((100% / ${numOfHours + 1}) / 2)`,
+  flexDirection: 'row',
+  borderBottom: `2px solid ${colors.gray50}`
+}));
+
+const CalendarColumnRessourceHeader = styled.div(({numOfRessources, index, bgColor}:CalendarRessourceProps) => ({
+  width: `calc(100% / ${numOfRessources})`,
+  textAlign: 'center',
+  color: bgColor ? `var(--bg${bgColor[0].toUpperCase() + bgColor.substring(1)}Text)` : undefined,
+  fontWeight: 'bold',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'fade',
+  borderRight:
+    index === numOfRessources - 1
+      ? `2px solid ${colors.gray50}`
+      : '1px dashed #3333',
+}));
+
+export {
+  CalendarWrapper,
+  CalendarScaleItem,
+  CalendarScaleTime,
+  CalendarScaleHeader,
+  CalendarScale,
+  CalendarColumnWrapper,
+  CalendarColumnDayHeader,
+  CalendarColumnRessourceWrapper,
+  CalendarColumnRessourceHeader
+};

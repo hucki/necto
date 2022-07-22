@@ -11,7 +11,11 @@ import {
   CalendarScale,
   CalendarScaleHeader,
   CalendarScaleItem,
-  CalendarScaleTime
+  CalendarScaleTime,
+  CalendarColumnWrapper,
+  CalendarColumnDayHeader,
+  CalendarColumnRessourceWrapper,
+  CalendarColumnRessourceHeader
 } from './Calendar';
 import { FilterBarContainer } from './FilterBar';
 import { FullPageSpinner } from './LoadingSpinner';
@@ -42,6 +46,10 @@ export {
   CalendarScaleHeader,
   CalendarScaleItem,
   CalendarScaleTime,
+  CalendarColumnWrapper,
+  CalendarColumnDayHeader,
+  CalendarColumnRessourceWrapper,
+  CalendarColumnRessourceHeader,
   Sidebar,
   ContentContainer,
   Content,
