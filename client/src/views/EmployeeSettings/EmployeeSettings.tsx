@@ -254,7 +254,7 @@ const EmployeeSettings = () => {
             </Button>
           </div>
         )}
-        <EmployeeOverview employee={currentEmployee} />
+        {currentEmployee.contract.length ? <EmployeeOverview employee={currentEmployee} /> : <b>no Contract!</b>}
         <br />
         {currentTeam && (
           <FormGroup>
