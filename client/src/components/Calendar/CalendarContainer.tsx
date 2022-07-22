@@ -1,6 +1,4 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useContext, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
@@ -8,11 +6,11 @@ import { AppState } from '../../types/AppState';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
-import * as colors from '../../styles/colors';
 import { useDisclosure } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
 import CalendarTimeMarker from './CalendarTimeMarker';
 import { UserDateContext } from '../../providers/UserDate';
+import { CalendarScale, CalendarScaleHeader, CalendarScaleItem, CalendarScaleTime, CalendarWrapper } from '../Library';
 
 interface CalendarInputProps {
   events: Event[];
@@ -77,19 +75,13 @@ function CalendarContainer({
   const calendarScale = [];
   for (let i = currentHoursInterval[0]; i <= currentHoursInterval[1]; i++) {
     calendarScale.push(
-      <div
+      <CalendarScaleItem
+        numOfHours={numOfHours}
         id={`CalendarScale_${i}`}
         key={`CalendarScale_${i}`}
-        css={{
-          height: `calc(100% / ${numOfHours + 1})`,
-          fontStyle: 'italic',
-          fontSize: 'small',
-          backgroundColor: `${colors.background}`,
-          borderTop: `1px solid ${colors.indigoDarken10}`,
-        }}
       >
-        <b>{i}</b>
-      </div>
+        <CalendarScaleTime>{i}</CalendarScaleTime>
+      </CalendarScaleItem>
     );
   }
   const calendarDays = [];
@@ -121,24 +113,10 @@ function CalendarContainer({
     curCalendarDay = curCalendarDay.add(1, 'day');
   }
   return (
-    <div
+    <CalendarWrapper
+      numOfHours={numOfHours}
       id="containerDiv"
       key="containerDiv"
-      css={{
-        position: 'relative',
-        fontSize: '1rem',
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        overflow: 'scroll',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'stretch',
-        textAlign: 'right',
-        backgroundColor: '#fff',
-        backgroundImage: 'linear-gradient(#f0f2f5 50%, transparent 50%)',
-        backgroundSize: `1px calc(100% / ${numOfHours + 1} * 2)`,
-      }}
     >
       {isToday && (
         <CalendarTimeMarker
@@ -147,23 +125,18 @@ function CalendarContainer({
           firstHour={currentHoursInterval[0]}
         />
       )}
-      <div
+      <CalendarScale
+        scaleWidth={scaleWidth}
         id="CalendarScale"
         key="CalendarScale"
-        css={{
-          width: scaleWidth,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
       >
-        <div
+        <CalendarScaleHeader
+          numOfHours={numOfHours}
           id="CalendarScaleHeader"
           key="CalendarScaleHeader"
-          css={{ height: `calc(100% / ${numOfHours + 1})` }}
-        ></div>
+        ></CalendarScaleHeader>
         {calendarScale}
-      </div>
+      </CalendarScale>
       {calendarDays}
       {clickedId && (
         <CalendarEventInput
@@ -175,7 +148,7 @@ function CalendarContainer({
           onClose={onClose}
         />
       )}
-    </div>
+    </CalendarWrapper>
   );
 }
 const mapStateToProps = (state: AppState) => {

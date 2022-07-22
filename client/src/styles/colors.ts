@@ -6,6 +6,7 @@ export const text = '#3338';
 export const gray = '#34495e';
 export const gray10 = '#f1f1f4';
 export const gray20 = '#e4e5e9';
+export const gray50 = '#c3c3c3';
 export const gray80 = '#6f7077';
 export const indigo = '#3f51b5';
 export const indigoDarken10 = '#364495';
