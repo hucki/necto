@@ -11,27 +11,23 @@ export const getAllTeamMembers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const teamMembers = await prisma.employee.findMany();
-    // const [results, metadata] = await db.sequelize.query(
-    //   `SELECT
-    //       users.id AS id,
-    //       users."firstName" AS "firstName",
-    //       users."lastName" AS "lastName",
-    //       users."validUntil" AS "validUntil",
-    //       users."createdAt" AS "createdAt",
-    //       users."updatedAt" AS "updatedAt",
-    //       contracts."hoursPerWeek" AS "hoursPerWeek",
-    //       contracts."appointmentsPerWeek" AS "appointmentsPerWeek",
-    //       "userSettings"."bgColor" AS "bgColor"
-    //   FROM users
-    //   LEFT JOIN contracts
-    //     ON users.id=contracts."userId"
-    //     AND users."tenantId"=contracts."tenantId"
-    //   LEFT JOIN "userSettings"
-    //     ON users.id="userSettings"."userId"
-    //     AND users."tenantId"="userSettings"."tenantId"
-    //   WHERE users."tenantId" = '${tenantId}'`
-    // );
+    const teamMembers = await prisma.employee.findMany({
+      where: { tenantId },
+      include: {
+        contract: {
+          where: {
+            validUntil: null,
+          },
+        },
+        teams: {
+          select: {
+            team: true
+          }
+        },
+        user: true
+      },
+    });
+    console.log({teamMembers});
     res.json(teamMembers);
     res.status(200);
     return;

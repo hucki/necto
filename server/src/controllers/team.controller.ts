@@ -20,7 +20,11 @@ export const getAllTeams = async (
                 uuid: true,
                 firstName: true,
                 lastName: true,
-                contract: true,
+                contract: {
+                  where: {
+                    validUntil: null,
+                  },
+                },
               },
             },
           },
