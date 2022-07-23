@@ -74,7 +74,7 @@ const CalendarColumnWrapper = styled.div({
 });
 
 const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumnProps) => ({
-  height: `calc((100% / ${numOfHours + 1}) / 2)`,
+  height: `calc((100% / ${numOfHours}) / 2)`,
   backgroundColor: `${colors.base}`,
   color: `${colors.gray}`,
   fontWeight: isToday ? 'bold' : undefined,
@@ -83,7 +83,7 @@ const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumn
 
 const CalendarColumnRessourceWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
   display: 'flex',
-  height: `calc((100% / ${numOfHours + 1}) / 2)`,
+  height: `calc((100% / ${numOfHours}) / 2)`,
   flexDirection: 'row',
   borderBottom: calendarBorder
 }));
