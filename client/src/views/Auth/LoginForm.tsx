@@ -74,7 +74,9 @@ const LoginForm = (): JSX.Element => {
           />
         </FormGroup>
 
-        <Button aria-label="login" type="submit"
+        <Button
+          aria-label="login"
+          type="submit"
           disabled={!!message || isAuthenticated}
           colorScheme={!!message && 'red' || 'green'}
         >
