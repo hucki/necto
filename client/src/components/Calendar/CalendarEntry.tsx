@@ -44,8 +44,7 @@ export const CalendarEntry = ({
   const isNote = event.type === 'note';
   return (
     <CalendarEntryContainer
-      isNote={isNote}
-      bgColor={event.bgColor}
+      bgColor={isNote ? 'note' : event.bgColor}
       title={startTimeString + ' ' + event.title}
       key={event.uuid?.toString()}
       onClick={readOnly ? undefined : () => onClickHandler(event)}
