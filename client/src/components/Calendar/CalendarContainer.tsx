@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useContext, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
@@ -6,11 +6,13 @@ import { AppState } from '../../types/AppState';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
-import { useDisclosure } from '@chakra-ui/react';
+import { useDisclosure, useToast } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
 import CalendarTimeMarker from './CalendarTimeMarker';
-import { UserDateContext } from '../../providers/UserDate';
+import { GoToTarget, UserDateContext } from '../../providers/UserDate';
 import { CalendarScale, CalendarScaleHeader, CalendarScaleItem, CalendarScaleTime, CalendarWrapper } from '../Library';
+import { useSwipe } from '../../hooks/useSwipe';
+import { filterContext } from '../../providers/filter';
 
 interface CalendarInputProps {
   events: Event[];
@@ -32,11 +34,14 @@ function CalendarContainer({
   columnHeaderFormat = 'dddd DD.MM.',
   columnSubHeaderContent = 'ressource',
 }: CalendarInputProps): JSX.Element {
-  const {currentDate} = useContext(UserDateContext);
+  const { currentDate, goTo } = useContext(UserDateContext);
+  const { calendarView } = useContext(filterContext);
+  const toast = useToast();
+  const { setTouchStart, setTouchEnd, direction } = useSwipe();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [clickedId, setClickedId] = useState<string | undefined>(undefined);
-  const [clickedDateTime, setClickedDateTime] = useState(dayjs());
-  const [numOfDays] = useState(
+  const [ clickedId, setClickedId ] = useState<string | undefined>(undefined);
+  const [ clickedDateTime, setClickedDateTime ] = useState(dayjs());
+  const [ numOfDays ] = useState(
     dayjs(daysRange[1]).diff(daysRange[0], 'day') + 1
   );
   const [currentHoursInterval, setCurrentHoursInterval] =
@@ -48,7 +53,12 @@ function CalendarContainer({
   );
   const scaleWidth = '1rem';
   const isToday = dayjs().isBetween(daysRange[0], daysRange[1], 'date', '[]');
-
+  useEffect(() => {
+    if (direction) {
+      const target = `${direction === 'left' ? 'previous' : 'next'}${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
+      goTo(target as GoToTarget);
+    }
+  }, [direction]);
   // calculate boundaries to fit all events
   events.forEach((event) => {
     // FIXME: this resets only the scale but not the CalendarColumns
@@ -117,6 +127,8 @@ function CalendarContainer({
       numOfHours={numOfHours}
       id="containerDiv"
       key="containerDiv"
+      onTouchStart={e => setTouchStart(e)}
+      onTouchEnd={e => setTouchEnd(e)}
     >
       {isToday && (
         <CalendarTimeMarker
