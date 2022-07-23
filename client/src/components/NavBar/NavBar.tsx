@@ -17,7 +17,7 @@ registerLocale('de', de);
 
 
 const NavBar = () => {
-  const { currentDate, setCurrentDate } = useContext(UserDateContext);
+  const { currentDate, setCurrentDate, goTo } = useContext(UserDateContext);
   const { isMobile } = useViewport();
 
   function onChangeHandler(date: ReactDatePickerReturnType) {
@@ -27,18 +27,6 @@ const NavBar = () => {
   }
   function todayClickHandler() {
     setCurrentDate(dayjs());
-  }
-  function prevDayHandler() {
-    setCurrentDate(dayjs(currentDate).subtract(1, 'day'));
-  }
-  function nextDayHandler() {
-    setCurrentDate(dayjs(currentDate).add(1, 'day'));
-  }
-  function prevWeekHandler() {
-    setCurrentDate(dayjs(currentDate).subtract(1, 'week'));
-  }
-  function nextWeekHandler() {
-    setCurrentDate(dayjs(currentDate).add(1, 'week'));
   }
 
   return (
@@ -64,13 +52,13 @@ const NavBar = () => {
         marginLeft={2}
         aria-label="previous week"
         leftIcon={<FaBackward />}
-        onClick={prevWeekHandler}
+        onClick={() => goTo('previousWeek')}
       />
       <IconButton
         marginRight={2}
         aria-label="previous day"
         leftIcon={<FaCaretLeft />}
-        onClick={prevDayHandler}
+        onClick={() => goTo('previousDay')}
       />
       <DatePicker
         locale="de"
@@ -82,13 +70,13 @@ const NavBar = () => {
         marginLeft={2}
         aria-label="next day"
         icon={<FaCaretRight />}
-        onClick={nextDayHandler}
+        onClick={() => goTo('nextDay')}
       />
       <IconButton
         marginRight={2}
         aria-label="next week"
         icon={<FaForward />}
-        onClick={nextWeekHandler}
+        onClick={() => goTo('nextWeek')}
       />
     </Flex>
   );
