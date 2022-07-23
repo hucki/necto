@@ -29,6 +29,7 @@ export const addEvent = async (
         isAllDay: req.body.isAllDay,
         isRecurring: req.body.isRecurring,
         isCancelled: req.body.isCancelled,
+        isDone: req.body.isDone,
         isCancelledReason: req.body.isCancelledReason, // deprecated
         cancellationReasonId: req.body.cancellationReasonId,
         rrule: req.body.rrule,
@@ -75,6 +76,7 @@ export const updateEvent = async (
         isAllDay: req.body.isAllDay,
         isRecurring: req.body.isRecurring,
         isCancelled: req.body.isCancelled,
+        isDone: req.body.isDone,
         isCancelledReason: req.body.isCancelledReason, // deprecated
         cancellationReasonId: req.body.cancellationReasonId,
         rrule: req.body.rrule,
