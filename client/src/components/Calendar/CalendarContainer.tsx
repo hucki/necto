@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useContext, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
@@ -34,9 +34,11 @@ function CalendarContainer({
   columnHeaderFormat = 'dddd DD.MM.',
   columnSubHeaderContent = 'ressource',
 }: CalendarInputProps): JSX.Element {
-  const { currentDate, goTo } = useContext(UserDateContext);
-  const { calendarView } = useContext(filterContext);
   const toast = useToast();
+  const daysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
+  const prevDaysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
+  const { goTo } = useContext(UserDateContext);
+  const { calendarView } = useContext(filterContext);
   const { setTouchStart, setTouchEnd, direction } = useSwipe();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [ clickedId, setClickedId ] = useState<string | undefined>(undefined);
@@ -59,6 +61,18 @@ function CalendarContainer({
       goTo(target as GoToTarget);
     }
   }, [direction]);
+
+  useEffect(() => {
+    if (daysRange[0].isSame(daysRangeRef.current[0])) {
+      return;
+    } else {
+      prevDaysRangeRef.current = daysRangeRef.current;
+      daysRangeRef.current = daysRange;
+    }
+    // TODO: use Refs to determine if we skipped for- or backwards and give a visual hint to the user
+    // if (daysRange[0].isBefore(prevDaysRangeRef.current[0])) toast({title: 'yeah', description: 'hey we skipped BACKWARDs'});
+    // if (daysRange[0].isAfter(prevDaysRangeRef.current[0])) toast({title: 'yeah', description: 'hey we skipped FORWARD'});
+  }, [daysRange]);
   // calculate boundaries to fit all events
   events.forEach((event) => {
     // FIXME: this resets only the scale but not the CalendarColumns
