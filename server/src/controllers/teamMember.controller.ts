@@ -27,7 +27,6 @@ export const getAllTeamMembers = async (
         user: true
       },
     });
-    console.log({teamMembers});
     res.json(teamMembers);
     res.status(200);
     return;
