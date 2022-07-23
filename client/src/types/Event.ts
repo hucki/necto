@@ -16,6 +16,7 @@ export type Event = {
   isAllDay: boolean;
   isRecurring: boolean;
   isCancelled: boolean;
+  isDone: boolean;
   /** @deprecated */
   isCancelledReason: string;
   cancellationReasonId?: string;
