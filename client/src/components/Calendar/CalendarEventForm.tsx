@@ -24,7 +24,7 @@ import {
   Select,
   Button,
 } from '../Library';
-import RRule, { Options } from 'rrule';
+import { RRule, Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
 import dayjs, { Dayjs } from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
