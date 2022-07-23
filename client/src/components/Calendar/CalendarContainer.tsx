@@ -55,7 +55,7 @@ function CalendarContainer({
   const isToday = dayjs().isBetween(daysRange[0], daysRange[1], 'date', '[]');
   useEffect(() => {
     if (direction) {
-      const target = `${direction === 'left' ? 'previous' : 'next'}${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
+      const target = `${direction === 'left' ? 'next' : 'previous'}${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
       goTo(target as GoToTarget);
     }
   }, [direction]);
