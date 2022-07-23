@@ -48,6 +48,7 @@ function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
               isAllDay: false,
               isRecurring: false,
               isCancelled: false,
+              isDone: false,
               isCancelledReason: '',
               rrule: '',
               startTime: dayjs(

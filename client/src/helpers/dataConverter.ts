@@ -15,6 +15,7 @@ export function appointment2Event(
     isDiagnostic: false,
     isAllDay: false,
     isCancelled: false,
+    isDone: false,
     isCancelledReason: '',
     rrule: appointment.rrule,
     startTime: appointment.startTime,

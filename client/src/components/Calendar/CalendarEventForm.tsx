@@ -188,6 +188,7 @@ function CalendarEventForm({
       isHomeVisit: currentEvent.isHomeVisit,
       isAllDay: currentEvent.isAllDay,
       isRecurring: currentEvent.isRecurring,
+      isDone: currentEvent.isDone,
       isCancelled: currentEvent.isCancelled,
       isCancelledReason: currentEvent.isCancelledReason,
       rrule: currentEvent.rrule,
