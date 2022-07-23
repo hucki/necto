@@ -144,6 +144,7 @@ model Event {
   type                    String?                  @db.VarChar
   isDiagnostic            Boolean                  @default(false)
   isHomeVisit             Boolean?
+  isDone                  Boolean?                 @default(false)
   isAllDay                Boolean?
   isRecurring             Boolean?
   isCancelled             Boolean?
