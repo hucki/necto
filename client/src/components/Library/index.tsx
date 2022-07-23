@@ -15,7 +15,8 @@ import {
   CalendarColumnWrapper,
   CalendarColumnDayHeader,
   CalendarColumnRessourceWrapper,
-  CalendarColumnRessourceHeader
+  CalendarColumnRessourceHeader,
+  CalendarColumnRessourceBody
 } from './Calendar';
 import { FilterBarContainer } from './FilterBar';
 import { FullPageSpinner } from './LoadingSpinner';
@@ -50,6 +51,7 @@ export {
   CalendarColumnDayHeader,
   CalendarColumnRessourceWrapper,
   CalendarColumnRessourceHeader,
+  CalendarColumnRessourceBody,
   Sidebar,
   ContentContainer,
   Content,

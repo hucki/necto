@@ -1,18 +1,14 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../types/Event';
 import { EmployeeRessource, Room } from '../../types/Ressource';
 import { CalendarEntry } from './CalendarEntry';
-import classes from './Calendar.module.css';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import CalendarEventEdit from './CalendarEventEdit';
 import { useDisclosure } from '@chakra-ui/react';
-import * as colors from '../../styles/colors';
 import 'dayjs/locale/de';
-import { CalendarColumnDayHeader, CalendarColumnRessourceHeader, CalendarColumnRessourceWrapper, CalendarColumnWrapper } from '../Library';
+import { CalendarColumnDayHeader, CalendarColumnRessourceBody, CalendarColumnRessourceHeader, CalendarColumnRessourceWrapper, CalendarColumnWrapper } from '../Library';
 dayjs.locale('de');
 
 interface CalendarColumnInputProps {
@@ -122,26 +118,19 @@ function CalendarColumn({
     </CalendarColumnRessourceHeader>
   ));
   const ressourceColsBody = ressources.map((ressource, index) => (
-    <div
+    <CalendarColumnRessourceBody
       id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
       key={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
-      css={{
-        width: `calc(100% / ${ressources.length})`,
-        height: '100%',
-        position: 'relative',
-        backgroundColor: isWeekend ? '#3333' : undefined,
-        borderBottom: `1px solid ${colors.gray50}`,
-        borderRight:
-          index === ressources.length - 1
-            ? `2px solid ${colors.gray50}`
-            : '1px dashed #3333',
-      }}
+      numOfHours={numOfHours}
+      numOfRessources={ressources.length}
+      isWeekend={isWeekend}
+      index={index}
       onClick={readOnly ? () => null : getPosition}
     >
       {events
         .filter((event) => event.ressourceId === ressource.uuid)
         .map((event) => renderCustomEvent(event, getItemStyle(event)))}
-    </div>
+    </CalendarColumnRessourceBody>
   ));
 
   const columnHeader = date.format(columnHeaderFormat);
@@ -168,7 +157,7 @@ function CalendarColumn({
       <div
         id={`RessourceBody_d${date.format('YYYYMMDD')}`}
         key={`RessourceBody_d${date.format('YYYYMMDD')}`}
-        css={{
+        style={{
           display: 'flex',
           height: `calc(100% / ${numOfHours + 1} * ${numOfHours})`,
           flexDirection: 'row',

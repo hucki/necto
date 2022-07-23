@@ -1,6 +1,8 @@
 import styled from '@emotion/styled/macro';
 import * as colors from '../../styles/colors';
 
+const calendarBorder = `1px solid ${colors.gray50}`;
+
 type CalendarCommonProps = {
   numOfHours: number
 }
@@ -16,6 +18,10 @@ type CalendarColumnProps = CalendarCommonProps & {
 type CalendarRessourceProps = {
   numOfRessources: number
   index: number
+  isWeekend?: boolean
+}
+
+type CalendarRessourceHeaderProps = {
   bgColor: string
 }
 
@@ -30,10 +36,6 @@ const CalendarWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
   justifyContent: 'space-between',
   alignItems: 'stretch',
   textAlign: 'right',
-  backgroundColor: '#fff',
-  backgroundImage: `linear-gradient(${colors.gray20} 50%, transparent 50%)`,
-  // backgroundImage: 'linear-gradient(#f0f2f5 50%, transparent 50%)',
-  backgroundSize: `1px calc(100% / ${numOfHours + 1} * 2)`,
 }));
 
 const CalendarScale = styled.div(({scaleWidth}:CalendarScaleProps) => ({
@@ -41,8 +43,9 @@ const CalendarScale = styled.div(({scaleWidth}:CalendarScaleProps) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  borderRight: `1px solid ${colors.gray50}`
+  borderRight: calendarBorder
 }));
+
 const CalendarScaleHeader = styled.div(({numOfHours}:CalendarCommonProps) => ({
   height: `calc(100% / ${numOfHours + 1})`,
   backgroundColor: `${colors.base}`,
@@ -55,7 +58,6 @@ const CalendarScaleItem = styled.div(({numOfHours}:CalendarCommonProps) => ({
   backgroundColor: `${colors.base}`,
   borderTop: '1px solid',
   borderImageSlice: '1',
-  // borderImageSource: 'linear-gradient(to left, #743ad5, #d53a9d)',
   borderImageSource: `linear-gradient(to right, ${colors.base}, ${colors.gray50})`,
 }));
 
@@ -76,7 +78,6 @@ const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumn
   backgroundColor: `${colors.base}`,
   color: `${colors.gray}`,
   fontWeight: isToday ? 'bold' : undefined,
-  borderRight: `1px solid ${colors.gray50}`,
   borderTop: isToday ? '0.2rem solid red' : undefined,
 }));
 
@@ -84,10 +85,10 @@ const CalendarColumnRessourceWrapper = styled.div(({numOfHours}:CalendarCommonPr
   display: 'flex',
   height: `calc((100% / ${numOfHours + 1}) / 2)`,
   flexDirection: 'row',
-  borderBottom: `2px solid ${colors.gray50}`
+  borderBottom: calendarBorder
 }));
 
-const CalendarColumnRessourceHeader = styled.div(({numOfRessources, index, bgColor}:CalendarRessourceProps) => ({
+const CalendarColumnRessourceHeader = styled.div(({numOfRessources, index, bgColor}:CalendarRessourceProps & CalendarRessourceHeaderProps) => ({
   width: `calc(100% / ${numOfRessources})`,
   textAlign: 'center',
   color: bgColor ? `var(--bg${bgColor[0].toUpperCase() + bgColor.substring(1)}Text)` : undefined,
@@ -95,10 +96,17 @@ const CalendarColumnRessourceHeader = styled.div(({numOfRessources, index, bgCol
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'fade',
-  borderRight:
-    index === numOfRessources - 1
-      ? `2px solid ${colors.gray50}`
-      : '1px dashed #3333',
+  borderRight: calendarBorder,
+}));
+
+const CalendarColumnRessourceBody = styled.div(({numOfHours, isWeekend, numOfRessources, index}:CalendarCommonProps & CalendarRessourceProps) => ({
+  width: `calc(100% / ${numOfRessources})`,
+  height: '100%',
+  position: 'relative',
+  borderBottom: calendarBorder,
+  backgroundImage: isWeekend ? `linear-gradient(#3333 50%, ${colors.gray10} 50%)` : `linear-gradient(${colors.gray10} 50%, transparent 50%)`,
+  backgroundSize: `1px calc(100% / ${numOfHours} * 2)`,
+  borderRight: calendarBorder,
 }));
 
 export {
@@ -110,5 +118,6 @@ export {
   CalendarColumnWrapper,
   CalendarColumnDayHeader,
   CalendarColumnRessourceWrapper,
-  CalendarColumnRessourceHeader
+  CalendarColumnRessourceHeader,
+  CalendarColumnRessourceBody
 };
