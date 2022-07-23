@@ -4,26 +4,31 @@ import { Label, Select, FilterBarContainer } from '../Library';
 import { useAllCompanies } from '../../hooks/companies';
 import { useFilter } from '../../hooks/useFilter';
 import { useAllbuildings } from '../../hooks/buildings';
+import { useTranslation } from 'react-i18next';
 
 interface FilterBarProps {
   hasTeamsFilter?: boolean;
   hasCompanyFilter?: boolean;
   hasBuildingFilter?: boolean;
+  hasDayWeekOption?: boolean;
 }
 
 const FilterBar = ({
   hasTeamsFilter = false,
   hasBuildingFilter = false,
   hasCompanyFilter = false,
+  hasDayWeekOption = false,
 }: FilterBarProps) => {
-
+  const { t } = useTranslation();
   const {
     currentCompany,
     setCurrentCompany,
     currentTeam,
     setCurrentTeam,
     currentBuildingId,
-    setCurrentBuildingId
+    setCurrentBuildingId,
+    calendarView,
+    setCalendarView
   } = useFilter();
 
   const { isLoading: isLoadingTeams, error, teams } = useAllTeams();
@@ -64,6 +69,10 @@ const FilterBar = ({
 
   function onBuildingChangeHandler(event: any) {
     setCurrentBuildingId(event.target.value);
+  }
+
+  function onDayWeekChangeHandler(event: any) {
+    setCalendarView(event.target.value);
   }
 
   return (
@@ -113,6 +122,15 @@ const FilterBar = ({
                 {c.name}
               </option>
             ))}
+          </Select>
+        </>
+      )}
+      {hasDayWeekOption && (
+        <>
+          <Label htmlFor="DayWeek">{t('calendar.view.label')}</Label>
+          <Select name="DayWeek" value={calendarView} onChange={onDayWeekChangeHandler}>
+            <option value="day">{t('calendar.view.day')}</option>
+            <option value="week">{t('calendar.view.week')}</option>
           </Select>
         </>
       )}
