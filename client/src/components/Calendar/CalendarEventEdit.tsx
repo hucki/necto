@@ -33,6 +33,7 @@ import de from 'date-fns/locale/de';
 import { checkOverlap } from '../../helpers/eventChecker';
 import { useViewport } from '../../hooks/useViewport';
 import { EventModalFooter } from '../Library/Modal';
+import { RiCheckboxBlankLine, RiCheckboxLine } from 'react-icons/ri';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -77,6 +78,7 @@ function CalendarEventEdit({
       isAllDay: changedEvent.isAllDay,
       isRecurring: changedEvent.isRecurring,
       isCancelled: changedEvent.isCancelled,
+      isDone: changedEvent.isDone,
       isCancelledReason: changedEvent.isCancelledReason,
       rrule: changedEvent.rrule,
       startTime: changedEvent.startTime,
@@ -116,6 +118,16 @@ function CalendarEventEdit({
     onClose();
   }
 
+  function handleDone() {
+    updateEvent({
+      event: {
+        ...changedEvent,
+        isDone: true,
+      },
+    });
+    onClose();
+  }
+
   const CancelMenuItems = () => {
     if (isLoadingCR || !cancellationReasons.length)
       return (
@@ -138,6 +150,12 @@ function CalendarEventEdit({
         >
           <EventModalContent>
             <EventModalHeader bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}>
+              <IconButton
+                aria-label="close modal"
+                disabled={changedEvent.isDone}
+                icon={changedEvent.isDone ? <RiCheckboxLine /> : <RiCheckboxBlankLine />}
+                onClick={handleDone}
+              />
               <div>
                 <div className="modal-title">
                   {t(`calendar.event.${isNote ? 'noteTitle' : 'editAppointmentTitle'}`)}
@@ -154,23 +172,23 @@ function CalendarEventEdit({
               {changedEvent.isHomeVisit && (
                 <FaHouseUser
                   css={{
-                    width: '2rem',
-                    height: '2rem',
+                    width: '1rem',
+                    height: '1rem',
                   }}
                 />
               )}
               {changedEvent.isRecurring && (
                 <FaLink
                   css={{
-                    width: '2rem',
-                    height: '2rem',
+                    width: '1rem',
+                    height: '1rem',
                   }}
                 />
               )}
               {changedEvent.isDiagnostic && (
                 <FaCommentMedical css={{
-                  width: '2rem',
-                  height: '2rem',
+                  width: '1rem',
+                  height: '1rem',
                 }} />
               )}
               <IconButton
