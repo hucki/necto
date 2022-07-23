@@ -5,18 +5,18 @@ import { connect } from 'react-redux';
 import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents, useWeeksEvents } from '../../hooks/events';
-import { useTranslation } from 'react-i18next';
-import dayjs, { Dayjs } from 'dayjs';
-import { FullPageSpinner, Label, Select } from '../../components/Library';
+import dayjs from 'dayjs';
+import { FullPageSpinner } from '../../components/Library';
 import { useContext, useEffect, useState } from 'react';
 import { EmployeeRessource } from '../../types/Ressource';
 import { useUser } from '../../hooks/user';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
-import { Flex } from '@chakra-ui/react';
 import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
+import FilterBar from '../../components/FilterBar/FilterBar';
+import { filterContext } from '../../providers/filter';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(LocalizedFormat);
@@ -28,7 +28,7 @@ interface PersonalCalendarInputProps {
 }
 
 function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
-  const { t } = useTranslation();
+  const { calendarView } = useContext(filterContext);
   const { isMobile } = useViewport();
   const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
@@ -84,14 +84,15 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <Flex alignItems="center" maxW="100%">
+      <FilterBar hasDayWeekOption />
+      {/* <Flex alignItems="center" maxW="100%">
         <Label htmlFor="view">{t('calendar.view.label')}</Label>
         <Select name="view" value={currentView} onChange={onCurrentViewChange}>
           <option value="day">{t('calendar.view.day')}</option>
           <option value="week">{t('calendar.view.week')}</option>
         </Select>
-      </Flex>
-      {currentView === 'day' && (
+      </Flex> */}
+      {calendarView === 'day' && (
         <CalendarContainer
           readOnly={false}
           events={daysEvents}
@@ -101,7 +102,7 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
           columnSubHeaderContent="dddd"
         />
       )}
-      {currentView === 'week' && (
+      {calendarView === 'week' && (
         <CalendarContainer
           readOnly={false}
           events={weeksEvents}
