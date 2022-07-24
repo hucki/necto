@@ -1,12 +1,11 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
-import classes from './Calendar.module.css';
 import { FaCommentMedical, FaHouseUser, FaLink } from 'react-icons/fa';
 import dayjs from 'dayjs';
-import { CalendarEntryContainer } from '../Library/Event';
+import { CalendarEntryContainer, CalendarEntryContent, CalendarEntryIconContainer, CalendarEntryTime } from '../Library/Event';
+import { Icon } from '@chakra-ui/react';
+import { RiCheckFill } from 'react-icons/ri';
 
 
 interface CalendarEntryProps {
@@ -42,6 +41,7 @@ export const CalendarEntry = ({
 
   const entryTitle = event.patient ? event.patient.lastName + ', ' +  event.patient.firstName : event.title;
   const isNote = event.type === 'note';
+  const isDone = event.isDone;
   return (
     <CalendarEntryContainer
       bgColor={isNote ? 'note' : event.bgColor}
@@ -53,13 +53,18 @@ export const CalendarEntry = ({
       }`}
       style={styles}
     >
-      <div className={classes.icon_container}>
-        {!isNote && showTime && <span className={classes.event_time}>{startTimeString}</span>}
+      <CalendarEntryIconContainer>
+        {!isNote && showTime &&
+          <CalendarEntryTime>
+            {isDone && <Icon as={RiCheckFill} w={4} h={4} fill="green"/>}
+            {startTimeString}
+          </CalendarEntryTime>
+        }
         <span style={{display: 'flex', flexDirection: 'row'}}>{icons}</span>
-      </div>
-      <div className={classes.event_container}>
-        <span className={classes.event_info}>{entryTitle}</span>
-      </div>
+      </CalendarEntryIconContainer>
+      <CalendarEntryContent strikeThrough={isNote && isDone} >
+        {entryTitle}
+      </CalendarEntryContent>
     </CalendarEntryContainer>
   );
 };
