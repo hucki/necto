@@ -36,7 +36,7 @@ const CalendarWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
   alignItems: 'stretch',
   textAlign: 'right',
 }));
-
+// FIXME: alignment of scale with background pattern. Is connected to unset header heights (was calculated before)
 const CalendarScale = styled.div(({scaleWidth}:CalendarScaleProps) => ({
   width: scaleWidth,
   display: 'flex',
@@ -46,16 +46,16 @@ const CalendarScale = styled.div(({scaleWidth}:CalendarScaleProps) => ({
 }));
 
 const CalendarScaleHeader = styled.div(({numOfHours}:CalendarCommonProps) => ({
-  height: `calc(100% / ${numOfHours + 1})`,
+  height: `calc(100% / ${numOfHours})`,
   backgroundColor: `${colors.base}`,
 }));
 
 const CalendarScaleItem = styled.div(({numOfHours}:CalendarCommonProps) => ({
-  height: `calc(100% / ${numOfHours + 1})`,
+  height: `calc(100% / ${numOfHours})`,
   fontStyle: 'italic',
   fontSize: 'small',
   backgroundColor: `${colors.base}`,
-  borderTop: '1px solid',
+  borderTop: '2px solid',
   borderImageSlice: '1',
   borderImageSource: `linear-gradient(to right, ${colors.base}, ${colors.gray50})`,
 }));
@@ -73,7 +73,7 @@ const CalendarColumnWrapper = styled.div({
 });
 
 const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumnProps) => ({
-  // height: `calc((100% / ${numOfHours}) / 2)`,
+  height: `calc((100% / ${numOfHours}) / 2)`,
   backgroundColor: `${colors.base}`,
   color: `${colors.gray}`,
   fontWeight: isToday ? 'bold' : undefined,
@@ -82,8 +82,8 @@ const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumn
 }));
 
 const CalendarColumnRessourceWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
+  height: `calc((100% / ${numOfHours}) / 2)`,
   display: 'flex',
-  // height: `calc((100% / ${numOfHours}) / 2)`,
   flexDirection: 'row',
   borderBottom: calendarBorder
 }));
@@ -96,6 +96,7 @@ const CalendarColumnRessourceHeader = styled.div(({numOfRessources, index, bgCol
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'fade',
+  fontSize: 'smaller',
   borderRight: calendarBorder,
 }));
 
