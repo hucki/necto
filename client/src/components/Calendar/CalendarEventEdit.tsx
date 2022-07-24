@@ -231,19 +231,21 @@ function CalendarEventEdit({
                 }}
               >
                 <ControlWrapper>
-                  <Menu>
-                    <MenuButton
-                      leftIcon={<FaTimes />}
-                      aria-label="cancel event"
-                      colorScheme="orange"
-                      size="sm"
-                      type="button"
-                      as={Button}
-                    >
-                      {t('button.cancelEvent')}
-                    </MenuButton>
-                    {CancelMenuItems()}
-                  </Menu>
+                  {!isNote &&
+                    <Menu>
+                      <MenuButton
+                        leftIcon={<FaTimes />}
+                        aria-label="cancel event"
+                        colorScheme="orange"
+                        size="sm"
+                        type="button"
+                        as={Button}
+                      >
+                        {t('button.cancelEvent')}
+                      </MenuButton>
+                      {CancelMenuItems()}
+                    </Menu>
+                  }
                   <Button
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
