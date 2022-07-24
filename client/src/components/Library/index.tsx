@@ -1,6 +1,7 @@
 import {
   AppContainer,
   Sidebar,
+  SideNavContainer,
   ContentContainer,
   Content,
   Header,
@@ -53,6 +54,7 @@ export {
   CalendarColumnRessourceHeader,
   CalendarColumnRessourceBody,
   Sidebar,
+  SideNavContainer,
   ContentContainer,
   Content,
   Header,

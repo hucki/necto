@@ -4,6 +4,10 @@ interface CalendarEntryContainerProps {
   bgColor?: string
 }
 
+interface CalendarEntryContentProps {
+  strikeThrough?: boolean
+}
+
 const CalendarEntryContainer = styled.div({
   position: 'absolute',
   width: '98%',
@@ -32,4 +36,36 @@ const CalendarEntryContainer = styled.div({
 }
 );
 
-export {CalendarEntryContainer};
+const CalendarEntryIconContainer = styled.div({
+  display: 'flex',
+  flexDirection: 'row',
+  margin: '0',
+  padding: '2px',
+  fonSsize: '1em',
+  textShadow: '0 0 5px #3333',
+  color: '#3338',
+  justifyContent: 'space-between',
+});
+
+const CalendarEntryContent = styled.span(({strikeThrough}:CalendarEntryContentProps) => ({
+  color: 'var(--secondary)',
+  fontSize: '0.8rem',
+  lineHeight: 'initial',
+  textAlign: 'center',
+  textDecoration: strikeThrough ? 'line-through' : undefined,
+}));
+
+const CalendarEntryTime = styled.span({
+  color: 'black',
+  fontSize: '0.6rem',
+  lineHeight: 'initial',
+  textAlign: 'center',
+  fontWeight: 'bold',
+});
+
+export {
+  CalendarEntryContainer,
+  CalendarEntryIconContainer,
+  CalendarEntryContent,
+  CalendarEntryTime
+};
