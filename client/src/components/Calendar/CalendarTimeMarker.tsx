@@ -30,6 +30,7 @@ function CalendarTimeMarker({
         fontSize: '0.8rem',
         color: 'red',
         paddingRight: '0.3rem',
+        zIndex: '1'
       }}
     >
       {time}
