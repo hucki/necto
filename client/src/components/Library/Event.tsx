@@ -61,6 +61,9 @@ const CalendarEntryTime = styled.span({
   lineHeight: 'initial',
   textAlign: 'center',
   fontWeight: 'bold',
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
 });
 
 export {
