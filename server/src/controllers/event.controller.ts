@@ -29,6 +29,7 @@ export const addEvent = async (
         isAllDay: req.body.isAllDay,
         isRecurring: req.body.isRecurring,
         isCancelled: req.body.isCancelled,
+        isDeleted: req.body.isDeleted,
         isDone: req.body.isDone,
         isCancelledReason: req.body.isCancelledReason, // deprecated
         cancellationReasonId: req.body.cancellationReasonId,
@@ -76,6 +77,7 @@ export const updateEvent = async (
         isAllDay: req.body.isAllDay,
         isRecurring: req.body.isRecurring,
         isCancelled: req.body.isCancelled,
+        isDeleted: req.body.isDeleted,
         isDone: req.body.isDone,
         isCancelledReason: req.body.isCancelledReason, // deprecated
         cancellationReasonId: req.body.cancellationReasonId,
@@ -108,8 +110,9 @@ export const deleteEvent = async (
 ): Promise<void> => {
   try {
     const eventId = req.params.eventId;
-    const deletedEvent = await prisma.event.delete({
+    const deletedEvent = await prisma.event.update({
       where: { uuid: eventId },
+      data: { isDeleted: true },
     });
     res.json(deletedEvent);
     res.status(200);
@@ -151,6 +154,9 @@ export const getDaysEvents = async (
               lt: endDate.toISOString(),
             },
           },
+          {
+            isDeleted: false
+          }
         ],
       },
       include: {
@@ -185,6 +191,7 @@ export const getWeeksEvents = async (
         AND: [
           { startTime: { gte: firstOfWeek.toISOString() } },
           { startTime: { lte: lastOfWeek.toISOString() } },
+          { isDeleted: false },
         ],
       },
       include: {
@@ -208,7 +215,33 @@ export const getAllEvents = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const events = await prisma.event.findMany();
+    const events = await prisma.event.findMany({
+      where: {
+        isDeleted: false
+      }
+    });
+    res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * get all deleted Events
+ */
+export const getAllDeletedEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const events = await prisma.event.findMany({
+      where: {
+        isDeleted: true
+      }
+    });
     res.json(events);
     res.status(200);
     return;
