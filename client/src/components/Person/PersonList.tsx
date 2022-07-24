@@ -73,7 +73,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
   };
 
   // pagination Config
-  const rowsPerPage = isMobile ? 6 : 12;
+  const rowsPerPage = isMobile ? type === 'waitingPatients' ? 10 : 14 : 20;
   const numOfPages = Math.ceil(filteredPersons.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -192,7 +192,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
 
   return (
     <>
-      <Flex flexDirection={isMobile ? 'column' : 'row'} p="0.5rem">
+      <Flex flexDirection={'row'} p="0.5rem">
         <InputGroup>
           <InputLeftElement pointerEvents="none" >
             <RiSearchLine color={colors.indigoLighten80} />
@@ -205,7 +205,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
             pl="2rem"
           />
         </InputGroup>
-        <FilterBar hasCompanyFilter />
+        {/* <FilterBar hasCompanyFilter /> */}
         { type !== 'waitingPatients' && (
           <Button
             aria-label={`add${type === 'doctors' ? 'Doctor' : 'Patient'}`}
@@ -219,8 +219,22 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           </Button>
         )}
       </Flex>
-      <div className="tableContainer" style={{ height: '100%', minWidth: '100%' }}>
-        <Table variant="striped" size="sm" colorScheme="blue">
+      <div className="table-container" style={{
+        height: '100%',
+        width: '100%',
+      }}>
+        {/** had to add default prop values from https://chakra-ui.com/docs/components/table/usage#table-container
+        * to make horiz. scrolling working */}
+        <Table
+          variant="striped"
+          size="xs"
+          colorScheme="blue"
+          display="block"
+          overflowX="auto"
+          overflowY="hidden"
+          maxWidth="100%"
+          whiteSpace="nowrap"
+        >
           <Thead>
             <Tr>
               { type === 'waitingPatients' && <Th width={5}>Nr </Th>}
