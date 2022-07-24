@@ -31,7 +31,6 @@ const CalendarWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
   height: '100%',
   width: '100%',
   display: 'flex',
-  overflow: 'scroll',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'stretch',
@@ -74,16 +73,17 @@ const CalendarColumnWrapper = styled.div({
 });
 
 const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumnProps) => ({
-  height: `calc((100% / ${numOfHours}) / 2)`,
+  // height: `calc((100% / ${numOfHours}) / 2)`,
   backgroundColor: `${colors.base}`,
   color: `${colors.gray}`,
   fontWeight: isToday ? 'bold' : undefined,
-  borderTop: isToday ? '0.2rem solid red' : undefined,
+  boxSizing: 'border-box',
+  borderTop: isToday ? '0.2rem solid red' : '0.2rem solid transparent',
 }));
 
 const CalendarColumnRessourceWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
   display: 'flex',
-  height: `calc((100% / ${numOfHours}) / 2)`,
+  // height: `calc((100% / ${numOfHours}) / 2)`,
   flexDirection: 'row',
   borderBottom: calendarBorder
 }));
