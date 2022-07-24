@@ -214,6 +214,7 @@ function CalendarEventForm({
   ]);
 
   const isNote = currentEvent.type === 'note';
+  const isDone = currentEvent.isDone;
 
   return (
     <div>
@@ -222,6 +223,7 @@ function CalendarEventForm({
         <Switch
           id="isNote"
           name="isNote"
+          isDisabled={isDone}
           colorScheme="yellow"
           isChecked={isNote}
           onChange={onIsNoteChange}
@@ -358,6 +360,7 @@ function CalendarEventForm({
             <Select
               id="frequency"
               name="frequency"
+              value={undefined}
               disabled={!currentEvent.isRecurring}
               onChange={onSelectChange}>
               <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>

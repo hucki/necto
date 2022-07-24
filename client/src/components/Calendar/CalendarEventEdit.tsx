@@ -152,7 +152,7 @@ function CalendarEventEdit({
             <EventModalHeader bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}>
               <IconButton
                 aria-label="close modal"
-                disabled={changedEvent.isDone}
+                disabled={dayjs(changedEvent.endTime).isAfter(dayjs()) || changedEvent.isDone}
                 icon={changedEvent.isDone ? <RiCheckboxLine /> : <RiCheckboxBlankLine />}
                 onClick={handleDone}
               />
@@ -237,6 +237,7 @@ function CalendarEventEdit({
                         leftIcon={<FaTimes />}
                         aria-label="cancel event"
                         colorScheme="orange"
+                        disabled={changedEvent.isDone}
                         size="sm"
                         type="button"
                         as={Button}
@@ -249,6 +250,7 @@ function CalendarEventEdit({
                   <Button
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
+                    disabled={changedEvent.isDone}
                     colorScheme="red"
                     size="sm"
                     type="button"
