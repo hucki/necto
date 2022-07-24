@@ -29,9 +29,9 @@ const CalendarEventView = ({
       <div>{t('calendar.event.diagnostic') + ': '}</div><DataDisplay>{isDiagnostic && <FaCheck /> }</DataDisplay>
       <div>{t('calendar.event.homeVisit') + ': '}</div><DataDisplay>{isHomeVisit && <FaCheck /> }</DataDisplay>
       <div>{t('calendar.event.recurringAppointment') + ': '}</div><DataDisplay>{isRecurring && <FaCheck /> }</DataDisplay>
+      <div>{t('calendar.event.start') + ': ' }</div><DataDisplay>{ dayjs(eventStartTime).format('llll')}</DataDisplay>
+      <div>{t('calendar.event.end') + ': ' }</div><DataDisplay>{ dayjs(eventEndTime).format('llll')}</DataDisplay>
     </>}
-    <div>{t('calendar.event.start') + ': ' }</div><DataDisplay>{ dayjs(eventStartTime).format('llll')}</DataDisplay>
-    <div>{t('calendar.event.end') + ': ' }</div><DataDisplay>{ dayjs(eventEndTime).format('llll')}</DataDisplay>
   </DataWrapper>;
 };
 
