@@ -1,4 +1,4 @@
-import React, { Dispatch, useContext, useEffect } from 'react';
+import React, { Dispatch, useContext, useEffect, useState } from 'react';
 import Dashboard from '../components/Dashboard/Dashboard';
 import { connect } from 'react-redux';
 import { useUser } from '../hooks/user';
@@ -10,11 +10,11 @@ import {
   Footer,
   ContentContainer,
 } from '../components/Library/AppLayout';
-import SidebarMenu from '../components/SidebarMenu/SidebarMenu';
 import NavBar from '../components/NavBar/NavBar';
 import { logout } from '../services/Auth';
 import { AuthContext } from '../providers/AuthProvider';
 import ErrorBoundary from '../components/Error/ErrorBoundary';
+import SideNav from '../components/SideNav/SideNav';
 
 interface AuthenticatedAppInputProps {
   id: string;
@@ -25,6 +25,7 @@ function AuthenticatedApp({
   id,
   dispatch,
 }: AuthenticatedAppInputProps): JSX.Element {
+  const [isNavOpen, setIsNavOpen] = useState(true);
   const { setIsAuthenticated, isLoading } = useContext(AuthContext);
   const { user, isError, error} = useUser(id);
   useEffect(() => {
@@ -39,11 +40,11 @@ function AuthenticatedApp({
   return (
     <>
       <AppContainer id="app">
-        <SidebarMenu />
+        <SideNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)}/>
         <ErrorBoundary>
           <ContentContainer>
             <Header>
-              <NavBar />
+              <NavBar isSideNavOpen={isNavOpen} onSideNavOpen={() => setIsNavOpen(true)}/>
             </Header>
             <Content id="Content" pr={1}>
               {isError ? (
