@@ -89,21 +89,24 @@ function Rooms(): JSX.Element {
   const { currentBuildingId, setCurrentBuildingId } = useFilter();
 
   const [events, setEvents] = useState<Event[]>(
-    currentBuildingId ? getBookings(currentBuildingId, rooms, buildings) : []
+    () => currentBuildingId ? getBookings(currentBuildingId, rooms, buildings) : []
   );
   const [ressources, setRessources] = useState<Room[]>(
     currentBuildingId ? getRooms(currentBuildingId, rooms) : []
   );
 
   useEffect(() => {
-    if (buildings[0]?.uuid && !currentBuildingId)
+    if (buildings[0]?.uuid && !currentBuildingId) {
       setCurrentBuildingId(buildings[0].uuid);
+    }
 
-    if (currentBuildingId) {
+    if (!events.length && currentBuildingId) {
       setEvents(getBookings(currentBuildingId, rooms, buildings));
+    }
+    if (!ressources.length && currentBuildingId) {
       setRessources(getRooms(currentBuildingId, rooms));
     }
-  }, [buildings, currentBuildingId, setCurrentBuildingId]);
+  }, [buildings, currentBuildingId, setCurrentBuildingId, ressources, events]);
 
   return !currentBuildingId || isLoadingBuildings || isLoadingRooms ? (
     <div>pending</div>
