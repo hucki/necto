@@ -145,6 +145,7 @@ model Event {
   isDiagnostic            Boolean                  @default(false)
   isHomeVisit             Boolean?
   isDone                  Boolean?                 @default(false)
+  isDeleted               Boolean?                 @default(false)
   isAllDay                Boolean?
   isRecurring             Boolean?
   isCancelled             Boolean?
