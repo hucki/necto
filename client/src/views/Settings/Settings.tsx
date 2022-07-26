@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Tab, TabList, TabPanels, Tabs } from '@chakra-ui/react';
 import TeamSettings from '../TeamSettings/TeamSettings';
 import EmployeeSettings from '../EmployeeSettings/EmployeeSettings';
 import {
@@ -16,6 +16,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../providers/AuthProvider';
 import { UserSettings } from '../UserSettings/UserSettings';
 import { useViewport } from '../../hooks/useViewport';
+import { TabPanel } from '../../components/Library';
 
 type AllowedRoles = ('employee'|'planner'|'admin'|'user')[]
 
