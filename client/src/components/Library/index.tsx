@@ -40,6 +40,7 @@ import {
   ControlWrapper,
 } from './Buttons';
 import { EventModalContent, EventModalHeader, EventModalBody } from './Modal';
+import { TabPanel } from './Tabs';
 
 export {
   AppContainer,
@@ -78,4 +79,5 @@ export {
   EventModalHeader,
   EventModalContent,
   EventModalBody,
+  TabPanel,
 };
