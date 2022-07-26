@@ -55,12 +55,18 @@ function CalendarContainer({
   );
   const scaleWidth = '1rem';
   const isToday = dayjs().isBetween(daysRange[0], daysRange[1], 'date', '[]');
+  const handleCloseInput = () => {
+    setClickedId(undefined);
+    onClose();
+  };
   useEffect(() => {
     if (direction) {
-      const target = `${direction === 'left' ? 'next' : 'previous'}${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
-      goTo(target as GoToTarget);
+      if (!clickedId) {
+        const target = `${direction === 'left' ? 'next' : 'previous'}${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
+        goTo(target as GoToTarget);
+      }
     }
-  }, [direction]);
+  }, [direction, clickedId]);
 
   useEffect(() => {
     if (daysRange[0].isSame(daysRangeRef.current[0])) {
@@ -171,7 +177,7 @@ function CalendarContainer({
           dateTime={clickedDateTime}
           isOpen={isOpen}
           onOpen={onOpen}
-          onClose={onClose}
+          onClose={handleCloseInput}
         />
       )}
     </CalendarWrapper>
