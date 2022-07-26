@@ -14,14 +14,39 @@ necto provides teams with the ability to schedule appointments with patients/cli
 
 App to keep track of the appointments of a team of therapists, where each appointment has a defined frequency (i.e. weekly) and a number of recurrences (i.e. 10 times). The App provides an overview of appointments for the hole team, as well as personal views for each team member. Single appointments can be moved to different dates/times/therapists without necessarily affecting the rest of the recurring appointments.
 
-Additional features could include:
+## Features
+### personal calendar
 
-- User role "team leader"
-  - can add/remove team members
-  - can setup schedules for other team members
+Every User (if associated to an employee) has a personal calendar to view / edit their appointments.
+
+### team calendar
+
+The team calendar shows a daily overview of all appointment of the selected team.
+
+### occupied rooms
+
+individual implementation
+
+### person lists
+searchable Lists of distinct person groups with view / edit functionality
+- patients
+- patients waiting list (roughly spoken all patients without current appointments)
+- doctors
+
+### institutions
+
+### settings
+
+- employee settings
+- user settings
+- user roles
+  - employee
+  - planner
+  - admin
+
 - introduce clients / patients dataset + tie to appointments
   - waiting list for new clients / patients
-- time tracking and statistics for team members
+
 
 ## Getting started
 
@@ -74,11 +99,14 @@ to get started set `NODE_ENV=development` and use the .env Variables prefixed wi
 
 ## Authentication
 
-- [auth0](https://auth0.com/)
+- [express session]()
+- [redis]()
+- [passport local]()
 
 ## Future Plans
 
 - [ ] embed local holidays: [date-holidays](https://www.npmjs.com/package/date-holidays)
+- [ ] time tracking and statistics for team members
 
 ## Contributors
 
