@@ -43,7 +43,8 @@ Institution,
   };
   return useMutation(updateInstitution, {
     onSuccess: () => {
-      queryCache.invalidateQueries('institutions');
+      queryCache.invalidateQueries('institutions/all');
+      queryCache.invalidateQueries('institutions/archived');
     },
   });
 }
@@ -52,8 +53,24 @@ export function useAllInstitutions(): QueryResult<Institution[]> & {
   institutions: Institution[];
   } {
 
-  const institutionsQuery = useQuery('institutions', async () => {
-    return client<Institution[]>('institutions');
+  const institutionsQuery = useQuery('institutions/all', async () => {
+    return client<Institution[]>('institutions/all');
+  });
+
+  const institutions = institutionsQuery.data ?? [];
+
+  return {
+    institutions,
+    ...institutionsQuery,
+  };
+}
+
+export function useAllArchivedInstitutions(): QueryResult<Institution[]> & {
+  institutions: Institution[];
+  } {
+
+  const institutionsQuery = useQuery('institutions/archived', async () => {
+    return client<Institution[]>('institutions/archived');
   });
 
   const institutions = institutionsQuery.data ?? [];
