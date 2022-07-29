@@ -238,16 +238,14 @@ export const getWaitingPatients = async (
             archived: false,
             events: {
               every: {
-                isCancelled: true,
-              },
-            },
-          },
-          {
-            archived: false,
-            events: {
-              some: {
-                isDiagnostic: true,
-                isCancelled: false,
+                OR: [
+                  {
+                    isCancelled: true,
+                  },
+                  {
+                    isDiagnostic: true,
+                  }
+                ]
               },
             },
           },
