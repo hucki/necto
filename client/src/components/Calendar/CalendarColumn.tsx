@@ -9,6 +9,7 @@ import CalendarEventEdit from './CalendarEventEdit';
 import { useDisclosure } from '@chakra-ui/react';
 import 'dayjs/locale/de';
 import { CalendarColumnDayHeader, CalendarColumnRessourceBody, CalendarColumnRessourceHeader, CalendarColumnRessourceWrapper, CalendarColumnWrapper } from '../Library';
+import CalendarTimeMarker from './CalendarTimeMarker';
 dayjs.locale('de');
 
 interface CalendarColumnInputProps {
@@ -139,6 +140,12 @@ function CalendarColumn({
       id={`CalendarDay_d${date.format('YYYYMMDD')}`}
       key={`CalendarDay_d${date.format('YYYYMMDD')}`}
     >
+      {isToday && (
+        <CalendarTimeMarker
+          scaleHeightUnits={numOfHours + 1}
+          firstHour={6}
+        />
+      )}
       <CalendarColumnDayHeader
         numOfHours={numOfHours}
         isToday={isToday}

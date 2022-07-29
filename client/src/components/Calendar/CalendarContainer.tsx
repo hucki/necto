@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
-import CalendarTimeMarker from './CalendarTimeMarker';
 import { GoToTarget, UserDateContext } from '../../providers/UserDate';
 import { CalendarScale, CalendarScaleHeader, CalendarScaleItem, CalendarScaleTime, CalendarWrapper } from '../Library';
 import { useSwipe } from '../../hooks/useSwipe';
@@ -144,19 +143,11 @@ function CalendarContainer({
   }
   return (
     <CalendarWrapper
-      numOfHours={numOfHours}
       id="containerDiv"
       key="containerDiv"
       onTouchStart={e => setTouchStart(e)}
       onTouchEnd={e => setTouchEnd(e)}
     >
-      {isToday && (
-        <CalendarTimeMarker
-          scaleHeightUnits={numOfHours + 1}
-          offsetLeft={scaleWidth}
-          firstHour={currentHoursInterval[0]}
-        />
-      )}
       <CalendarScale
         scaleWidth={scaleWidth}
         id="CalendarScale"
