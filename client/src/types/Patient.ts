@@ -24,6 +24,7 @@ export type Patient = {
   archived?: Boolean;
   hasPrescritpion?: Boolean;
   isWaitingAgain?: Boolean;
+  hasContract?: Boolean;
   isAddpayFreed?: Boolean;
   addPayFreedFrom?: Date;
   addPayFreedUntil?: Date;
