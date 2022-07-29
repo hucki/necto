@@ -1,6 +1,5 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
+import styled from '@emotion/styled/macro';
 import { useCurrentTime } from '../../hooks/time';
 
 interface CalendarTimeMarkerProps {
@@ -9,32 +8,63 @@ interface CalendarTimeMarkerProps {
   firstHour?: number;
 }
 
+interface TimeMarkerLineProps {
+  offsetLeft?: string;
+  scaleHeightUnits?: number;
+  firstHour?: number;
+  hours?: number;
+  minutes?: number;
+}
+
+const TimeMarkerLine = styled.div(({scaleHeightUnits, firstHour = 6, hours = 9, minutes= 0 }: TimeMarkerLineProps) => {
+  return {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    top: `calc(((100% / ${scaleHeightUnits}) * ${
+      hours - firstHour + 1
+    }) + (100% / ${scaleHeightUnits}) * ${minutes / 60})`,
+    width: '100%',
+    borderTop: '1px solid #f00a',
+    paddingRight: '0.3rem',
+    zIndex: '1',
+    pointerEvents: 'none',
+    '::before': {
+      width: '0.3rem',
+      height: '0.3rem',
+      content: '""',
+      backgroundColor: '#f00a',
+      position: 'absolute',
+      top: '-0.15rem',
+      left: '-0.3rem',
+      borderRadius: '50%',
+    }
+  };
+});
+
+const TimeMarkerTime = styled.div({
+  fontSize: '0.7rem',
+  color: '#f00a',
+  alignSelf: 'flex-end'
+});
+
 function CalendarTimeMarker({
-  offsetLeft = '3rem',
   scaleHeightUnits = 14,
   firstHour = 7,
 }: CalendarTimeMarkerProps) {
-  const { date, time, hours, minutes } = useCurrentTime();
+  const { time, hours, minutes } = useCurrentTime();
   if (hours > (firstHour + scaleHeightUnits - 1)) return null;
   return (
-    <div
+    <TimeMarkerLine
       className="now"
-      css={{
-        position: 'absolute',
-        top: `calc(((100% / ${scaleHeightUnits}) * ${
-          hours - firstHour + 1
-        }) + (100% / ${scaleHeightUnits}) * ${minutes / 60})`,
-        left: offsetLeft,
-        width: `calc(100% - ${offsetLeft})`,
-        borderTop: '1px dashed red',
-        fontSize: '0.8rem',
-        color: 'red',
-        paddingRight: '0.3rem',
-        zIndex: '1'
-      }}
+      scaleHeightUnits={scaleHeightUnits}
+      hours={hours}
+      minutes={minutes}
     >
-      {time}
-    </div>
+      <TimeMarkerTime className="now-time">
+        {time}
+      </TimeMarkerTime>
+    </TimeMarkerLine>
   );
 }
 
