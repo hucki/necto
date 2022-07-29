@@ -10,6 +10,7 @@ import * as contractController from '../controllers/contract.controller';
 import * as eventController from '../controllers/event.controller';
 import * as patientController from '../controllers/patient.controller';
 import * as doctorController from '../controllers/doctor.controller';
+import * as institutionController from '../controllers/institution.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
 import * as appSettingsController from '../controllers/appSettings.controller';
 import * as userSettingsController from '../controllers/userSettings.controller';
@@ -122,10 +123,14 @@ router.patch('/patients/:patientId', patientController.updatePatient);
 // router.delete('/patients/:patientId', patientController.deletePatient);
 
 // doctor routes
-//router.get('/patients/:eventId', eventController.getPatients);
 router.post('/doctors', doctorController.addDoctor);
 router.get('/doctors', doctorController.getAllDoctors);
 router.patch('/doctors/:doctorId', doctorController.updateDoctor);
+
+// institution routes
+router.post('/institutions', institutionController.addInstitution);
+router.get('/institutions', institutionController.getAllInstitutions);
+router.patch('/institutions/:institutionId', institutionController.updateInstitution);
 
 // settings routes
 // app Settings
