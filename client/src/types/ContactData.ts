@@ -22,3 +22,7 @@ export type UserContactData = ContactData & {
 export type EmployeeContactData = ContactData & {
   employeeId?: string;
 };
+
+export type InstitutionContactData = ContactData & {
+  institutionId?: string;
+};
