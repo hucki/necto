@@ -4,21 +4,30 @@ import { Institution } from '../../types/Institution';
 
 interface InstitutionListProps {
   institutions: Institution[]
+  onClickRow: (event: React.MouseEvent<HTMLTableRowElement>) => void
+  showArchived: boolean
 }
-const InstitutionList = ({institutions}:InstitutionListProps) => {
+const InstitutionList = ({
+  institutions,
+  onClickRow,
+  showArchived
+}:InstitutionListProps) => {
 
-  const tableColumns = ['name', 'description', 'street', 'zip', 'city'];
-  const tableHead = tableColumns.map((column, index) => <Th key={index}>{column}</Th>);
-  const tableBody = institutions.map((institution, index) => <Tr key={index}>
-    {tableColumns.map((key, index) => <Td key={index}>{institution[key as keyof Institution]}</Td>)}
-  </Tr>);
+
+  const tableColumns: (keyof Institution)[] = ['name', 'description', 'street', 'zip', 'city'];
+  const tableHead = <Tr>{tableColumns.map((column, index) => <Th key={index}>{column}</Th>)}</Tr>;
+  const tableBody = institutions.map((institution, index) =>
+    <Tr key={index} id={institution.uuid} onClick={onClickRow}>
+      {tableColumns.map((key, index) => <Td key={index}>{institution[key]}</Td>)}
+    </Tr>
+  );
 
   return <>
-    <Table>
+    <Table size="sm" colorScheme={showArchived ? 'orange' : 'green'} variant="striped">
       <Thead>
         {tableHead}
       </Thead>
-      <Tbody>
+      <Tbody textDecoration={showArchived ? 'line-through' : undefined}>
         {tableBody}
       </Tbody>
     </Table>
