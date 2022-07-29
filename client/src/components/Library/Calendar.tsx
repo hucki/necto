@@ -25,7 +25,7 @@ type CalendarRessourceHeaderProps = {
   bgColor: string
 }
 
-const CalendarWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
+const CalendarWrapper = styled.div({
   position: 'relative',
   fontSize: '1rem',
   height: '100%',
@@ -35,7 +35,7 @@ const CalendarWrapper = styled.div(({numOfHours}:CalendarCommonProps) => ({
   justifyContent: 'space-between',
   alignItems: 'stretch',
   textAlign: 'right',
-}));
+});
 // FIXME: alignment of scale with background pattern. Is connected to unset header heights (was calculated before)
 const CalendarScale = styled.div(({scaleWidth}:CalendarScaleProps) => ({
   width: scaleWidth,
@@ -70,6 +70,7 @@ const CalendarScaleTime = styled.div({
 const CalendarColumnWrapper = styled.div({
   width: '100%',
   textAlign: 'center',
+  position: 'relative'
 });
 
 const CalendarColumnDayHeader = styled.div(({numOfHours, isToday}:CalendarColumnProps) => ({
@@ -88,7 +89,7 @@ const CalendarColumnRessourceWrapper = styled.div(({numOfHours}:CalendarCommonPr
   borderBottom: calendarBorder
 }));
 
-const CalendarColumnRessourceHeader = styled.div(({numOfRessources, index, bgColor}:CalendarRessourceProps & CalendarRessourceHeaderProps) => ({
+const CalendarColumnRessourceHeader = styled.div(({numOfRessources, bgColor}:CalendarRessourceProps & CalendarRessourceHeaderProps) => ({
   width: `calc(100% / ${numOfRessources})`,
   textAlign: 'center',
   color: bgColor ? `var(--bg${bgColor[0].toUpperCase() + bgColor.substring(1)}Text)` : undefined,
@@ -100,7 +101,7 @@ const CalendarColumnRessourceHeader = styled.div(({numOfRessources, index, bgCol
   borderRight: calendarBorder,
 }));
 
-const CalendarColumnRessourceBody = styled.div(({numOfHours, isWeekend, numOfRessources, index}:CalendarCommonProps & CalendarRessourceProps) => ({
+const CalendarColumnRessourceBody = styled.div(({numOfHours, isWeekend, numOfRessources}:CalendarCommonProps & CalendarRessourceProps) => ({
   width: `calc(100% / ${numOfRessources})`,
   height: '100%',
   position: 'relative',
