@@ -47,7 +47,7 @@ const SideNavContainer = styled.div(
     // transition: 'all 0.1s ease-in',
   },
   ({ isOpen }: SideNavContainerProps) =>
-    isOpen ? { width: '200px', zIndex: '1', position: 'absolute'  } : null
+    isOpen ? { width: '200px', zIndex: '10', position: 'absolute'  } : null
 );
 
 const ContentContainer = styled(Box)({
