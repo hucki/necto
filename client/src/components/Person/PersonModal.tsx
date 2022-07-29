@@ -1,8 +1,8 @@
 import { Icon, ModalFooter, ModalHeader, useToast, UseToastOptions } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CgSmile } from 'react-icons/cg';
 import { FaArchive, FaEdit, FaTimes } from 'react-icons/fa';
-import { RiUser5Line } from 'react-icons/ri';
 import { useCreateDoctor, useUpdateDoctor } from '../../hooks/doctor';
 import { useCreatePatient, useUpdatePatient } from '../../hooks/patient';
 import { Person } from '../../types/Person';
@@ -95,9 +95,9 @@ export const PersonModal = ({person, onClose, type = 'view', personType = 'patie
 
   return (
     <>
-      <ModalHeader alignItems="center" display="flex" justifyContent="space-between">
+      <ModalHeader alignItems="center" display="flex" justifyContent="space-between" fontSize="clamp(0.2rem, 0.5rem + 2vw, 24px)">
+        <Icon as={CgSmile} w={10} h={10} mr={2} />
         <div className="person-info">
-          <Icon as={RiUser5Line} w={10} h={10} mr={2} />
           {currentPerson.lastName + ', ' + currentPerson.firstName}
         </div>
         <IconButton

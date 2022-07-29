@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { getDisplayName } from '../../helpers/displayNames';
 import { useAllDoctors } from '../../hooks/doctor';
+import { useAllInstitutions } from '../../hooks/institution';
 import { useViewport } from '../../hooks/useViewport';
 import { Doctor } from '../../types/Doctor';
 import { Patient } from '../../types/Patient';
@@ -24,9 +25,10 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { isLoading, error, doctors } = useAllDoctors();
+  const { isLoading: isLoadingInstitutions, error: errorInstitutions, institutions } = useAllInstitutions();
   const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({...person}));
   const currentPatient = personType !== 'doctor' ? currentPerson as Patient : undefined;
-
+  console.log(currentPatient);
   const isWaitingPatient = (person: Person): person is Patient => {
     if ('firstContactedAt' in person) return true;
     return false;
@@ -45,7 +47,6 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
   const patientAutoFields: PersonKey[] = [
     'gender',
     'notices',
-    'careFacility',
     'isAddpayFreed',
     'careFacility',
     'medicalReport',
@@ -152,6 +153,29 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
                       {doctors.map((t, i) => (
                         <option key={i} value={t.uuid}>
                           {t.firstName + ' ' + t.lastName}
+                        </option>
+                      ))}
+                    </Select>
+                  </>
+                )}
+              </ModalFormGroup>
+              <ModalFormGroup>
+                <Label htmlFor="institutionId">{t('label.institution')}</Label>
+                {type === 'view' ? (
+                  <TextDisplay id="institutionId">
+                    {currentPatient.institution && currentPatient.institution.name + ' ' + (currentPatient.institution.description ? `(${currentPatient.institution.description})` : null)}
+                  </TextDisplay>
+                ) : (
+                  <>
+                    <Select
+                      name="employee"
+                      value={currentPatient['institutionId']}
+                      onChange={(e) => onSelectChange({event: e, key: 'institutionId'})}
+                    >
+                      <option value={'remove'}>No Institution</option>
+                      {institutions.map((t, i) => (
+                        <option key={i} value={t.uuid}>
+                          {t.name + ' ' + (t.description ? `(${t.description})` : null)}
                         </option>
                       ))}
                     </Select>
