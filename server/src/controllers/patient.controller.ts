@@ -39,6 +39,7 @@ export const addPatient = async (
     delete incomingPatient.events
     delete incomingPatient.availability
     delete incomingPatient.doctor
+    delete incomingPatient.institution
     delete incomingPatient.telephoneNumber
     delete incomingPatient.mailAddress
 
@@ -95,6 +96,7 @@ export const updatePatient = async (
     delete incomingPatient.events
     delete incomingPatient.availability
     delete incomingPatient.doctor
+    delete incomingPatient.institution
     delete incomingPatient.telephoneNumber
     delete incomingPatient.mailAddress
     delete incomingPatient.numberInLine
@@ -188,6 +190,7 @@ export const getAllPatients = async (
           },
         },
         doctor: true,
+        institution: true,
       },
       orderBy: {
         lastName: 'asc',
@@ -222,6 +225,7 @@ export const getWaitingPatients = async (
         },
         contactData: true,
         doctor: true,
+        institution: true,
       },
       where: {
         OR: [
