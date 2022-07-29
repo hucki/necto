@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Flex, FormControl, FormLabel, Modal, ModalBody, ModalContent, ModalOverlay, Spinner, Switch, useDisclosure } from '@chakra-ui/react';
 import { useAllArchivedInstitutions, useAllInstitutions } from '../../hooks/institution';
-import InstitutionList from '../../components/List/InstitutionList';
+import InstitutionList from '../../components/Institution/InstitutionList';
 import { Button } from '../../components/Library';
 import { CgAddR } from 'react-icons/cg';
 import { InstitutionInput } from '../../types/Institution';
