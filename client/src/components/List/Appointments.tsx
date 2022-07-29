@@ -2,7 +2,7 @@ import { ChakraProps, Flex, Icon, Table, Tbody, Td, Th, Thead, Tr } from '@chakr
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
+import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { Event } from '../../types/Event';
 import { Button, IconButton } from '../Library';
@@ -63,7 +63,7 @@ export const AppointmentList = ({events}: AppointmentListProps) => {
     <Flex m={2} alignSelf="flex-end">
       <IconButton
         aria-label="previous page"
-        leftIcon={<FaCaretLeft />}
+        leftIcon={<CgChevronLeft />}
         disabled={currentPage === 1}
         onClick={() => setCurrentPage(currentPage - 1)}
       />
@@ -78,7 +78,7 @@ export const AppointmentList = ({events}: AppointmentListProps) => {
       ))}
       <IconButton
         aria-label="next page"
-        icon={<FaCaretRight />}
+        icon={<CgChevronRight />}
         disabled={currentPage === numOfPages}
         onClick={() => setCurrentPage(currentPage + 1)}
       />
