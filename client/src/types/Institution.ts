@@ -10,6 +10,7 @@ export type Institution = {
   city?: string;
   contactData?: InstitutionContactData[];
   patients?: Patient[];
+  archived?: boolean;
 }
 
 export type InstitutionInput = Institution & {
