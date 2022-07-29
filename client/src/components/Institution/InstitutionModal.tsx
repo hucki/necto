@@ -120,11 +120,16 @@ export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) 
             </Button>
           </ControlWrapper>
           <ControlWrapper>
-            <Button aria-label="cancel changes" type="button" size="sm" onClick={onClose}>
+            <Button
+              aria-label="cancel changes"
+              type="button"
+              size="sm"
+              onClick={onClose}>
               {t('button.cancel')}
             </Button>
             <Button
               aria-label="save changes"
+              disabled={currentInstitution.archived}
               type="button"
               onClick={() => onSaveChanges('save')}
               size="sm"
