@@ -262,20 +262,22 @@ model PermissionLevel {
 }
 
 model ContactData {
-  uuid       String    @id @default(uuid()) @db.Uuid
-  userId     String?   @db.Uuid
-  employeeId String?   @db.Uuid
-  patientId  String?   @db.Uuid
-  doctorId   String?   @db.Uuid
-  type       String    @db.VarChar(64)
-  contact    String    @db.VarChar(255)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  tenantId   String    @db.Uuid
-  user       User?     @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
-  employee   Employee? @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
-  patient    Patient?  @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
-  doctor     Doctor?   @relation("contactData_referenceIdToDoctor", fields: [doctorId], references: [uuid])
+  uuid           String       @id @default(uuid()) @db.Uuid
+  userId         String?      @db.Uuid
+  employeeId     String?      @db.Uuid
+  patientId      String?      @db.Uuid
+  doctorId       String?      @db.Uuid
+  institutionId  String?      @db.Uuid
+  type           String       @db.VarChar(64)
+  contact        String       @db.VarChar(255)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  tenantId       String       @db.Uuid
+  user           User?        @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
+  employee       Employee?    @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
+  patient        Patient?     @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
+  doctor         Doctor?      @relation("contactData_referenceIdToDoctor", fields: [doctorId], references: [uuid])
+  institution    Institution? @relation("contactData_referenceIdToInstitution", fields: [institutionId], references: [uuid])
 
   @@map("contactData")
 }
@@ -310,13 +312,16 @@ model Patient {
   companyId           String        @db.Uuid
   tenantId            String        @db.Uuid
   doctorId            String?       @db.Uuid
+  institutionId       String?       @db.Uuid
   archived            Boolean       @default(false)
   hasPrescription     Boolean       @default(false)
+  hasContract         Boolean       @default(false)
   isWaitingAgain      Boolean       @default(false)
   contactData         ContactData[]  @relation("contactData_referenceIdTopatient")
   events              Event[]        @relation("event_referenceIdTopatient")
   availability        Availability[] @relation("availability_referenceIdToPatient")
   doctor              Doctor?        @relation("doctor_referenceIdToPatient", fields: [doctorId], references: [uuid])
+  institution         Institution?   @relation("institution_referenceIdToPatient", fields: [institutionId], references: [uuid])
   @@map("patients")
 }
 
@@ -338,4 +343,16 @@ model CancellationReason {
   description String  @db.VarChar(64)
   tenantId    String? @db.Uuid
   events      Event[] @relation("event_referenceIdToCancellationReason")
+}
+
+model Institution {
+  uuid                String        @id @default(uuid()) @db.Uuid
+  name                String?       @db.VarChar(64)
+  description         String?       @db.VarChar(64)
+  street              String?       @db.VarChar(64)
+  zip                 String?       @db.VarChar(10)
+  city                String?       @db.VarChar(64)
+  tenantId            String        @db.Uuid
+  patients            Patient[]     @relation("institution_referenceIdToPatient")
+  contactData         ContactData[] @relation("contactData_referenceIdToInstitution")
 }
