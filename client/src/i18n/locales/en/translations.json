@@ -34,7 +34,8 @@
     "preview": "preview",
     "edit": "edit",
     "delete": "delete",
-    "archive": "archive"
+    "archive": "archive",
+    "activate": "activate"
   },
   "dict": {
     "for": "for"
@@ -64,6 +65,8 @@
     "institutions": "Institutions"
   },
   "label": {
+    "name": "name",
+    "description": "description",
     "firstName": "first name",
     "lastName": "last name",
     "title": "title",
