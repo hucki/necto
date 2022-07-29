@@ -158,6 +158,14 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
                   color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
                 />
               </Td>
+              <Td>
+                <Icon
+                  as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
+                  w={5}
+                  h={5}
+                  color={p.hasContract ? 'indigo' : 'gray.400'}
+                />
+              </Td>
             </>
           )}
           { type === 'doctors' && (
@@ -228,7 +236,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         <Table
           variant="striped"
           size="xs"
-          colorScheme="blue"
+          colorScheme="green"
           display="block"
           overflowX="auto"
           overflowY="hidden"
@@ -249,6 +257,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
                   <Th>{t('label.doctor')} </Th>
                   <Th>{t('label.careFacility')} </Th>
                   <Th width={5}>{t('label.isAddpayFreed')}</Th>
+                  <Th width={5}>{t('label.hasContract')}</Th>
                 </>
               )}
               {type === 'doctors' && (
