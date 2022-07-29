@@ -13,6 +13,7 @@ import Settings from '../../views/Settings/Settings';
 import Doctors from '../../views/Doctors/Doctors';
 import { AuthContext } from '../../providers/AuthProvider';
 import Home from '../../views/Home/Home';
+import Institutions from '../../views/Institutions/Institutions';
 
 interface DashboardInputProps {
   id: string;
@@ -38,6 +39,7 @@ const Dashboard = ({ id }: DashboardInputProps): JSX.Element => {
         <Route path="/rooms" component={Rooms} />
         <Route path="/patients" component={user?.isPlanner || user?.isAdmin || user?.isEmployee ? Patients : RedirectHome} />
         <Route path="/doctors" component={user?.isPlanner || user?.isAdmin ? Doctors : RedirectHome} />
+        <Route path="/institutions" component={user?.isPlanner || user?.isAdmin ? Institutions : RedirectHome} />
         <Route path="/waiting" component={user?.isPlanner || user?.isAdmin ? WaitingList : RedirectHome} />
         <Route path="/teamcal" component={user?.isAdmin ? TeamCalendar : RedirectHome} />
         <Route path="/personalcal">

@@ -1,23 +1,19 @@
 import React, { useContext } from 'react';
 import { Divider } from '@chakra-ui/react';
 import {
-  RiCalendarEventFill,
-  RiHomeFill,
-  RiLogoutBoxFill,
-  RiMentalHealthFill,
-  RiMenuFoldFill,
-  RiMenuUnfoldFill,
+  RiLogoutBoxLine,
+  RiMentalHealthLine,
   RiSettingsLine,
-  RiTeamFill,
-  RiUserFill,
-  RiZzzFill,
+  RiTeamLine,
+  RiZzzLine,
 } from 'react-icons/ri';
 import { useHistory, useLocation } from 'react-router';
 import { AppState } from '../../types/AppState';
 import { IconButton, NavigationButton, SideNavContainer } from '../Library';
 import { useTranslation } from 'react-i18next';
-import { FaHandHoldingMedical, FaTimes } from 'react-icons/fa';
+import { FaClinicMedical, FaRegBuilding, FaTimes } from 'react-icons/fa';
 import { AuthContext } from '../../providers/AuthProvider';
+import { CgCalendarDates, CgHome, CgUser } from 'react-icons/cg';
 
 interface SideNavProps {
   isOpen: boolean
@@ -51,7 +47,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         variant={currentView === '/' ? 'solid' : 'ghost'}
         colorScheme="purple"
         aria-label="Home"
-        leftIcon={<RiHomeFill />}
+        leftIcon={<CgHome />}
         key="/"
         onClick={() => onClickHandler('/')}
       >
@@ -62,7 +58,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         variant={currentView === '/personalcal' ? 'solid' : 'ghost'}
         colorScheme="teal"
         aria-label="Personal Calendar"
-        leftIcon={<RiUserFill />}
+        leftIcon={<CgUser />}
         key="/personalcal"
         onClick={() => onClickHandler('/personalcal')}
       >
@@ -73,7 +69,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         variant={currentView === '/teamcal' ? 'solid' : 'ghost'}
         colorScheme="teal"
         aria-label="Team Calendar"
-        leftIcon={<RiTeamFill />}
+        leftIcon={<RiTeamLine />}
         key="/teamcal"
         onClick={() => onClickHandler('/teamcal')}
       >
@@ -83,7 +79,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         colorScheme="teal"
         variant={currentView === '/rooms' ? 'solid' : 'ghost'}
         aria-label="Rooms"
-        leftIcon={<RiCalendarEventFill />}
+        leftIcon={<CgCalendarDates />}
         key="/rooms"
         onClick={() => onClickHandler('/rooms')}
       >
@@ -94,7 +90,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         colorScheme="teal"
         variant={currentView === '/patients' ? 'solid' : 'ghost'}
         aria-label="Patients"
-        leftIcon={<RiMentalHealthFill />}
+        leftIcon={<RiMentalHealthLine />}
         key="/patients"
         onClick={() => onClickHandler('/patients')}
       >
@@ -105,7 +101,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         colorScheme="teal"
         variant={currentView === '/waiting' ? 'solid' : 'ghost'}
         aria-label="WaitingList"
-        leftIcon={<RiZzzFill />}
+        leftIcon={<RiZzzLine />}
         key="/waiting"
         onClick={() => onClickHandler('/waiting')}
       >
@@ -116,11 +112,22 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         colorScheme="teal"
         variant={currentView === '/doctors' ? 'solid' : 'ghost'}
         aria-label="Doctors"
-        leftIcon={<FaHandHoldingMedical />}
+        leftIcon={<FaClinicMedical />}
         key="/doctors"
         onClick={() => onClickHandler('/doctors')}
       >
         {isOpen ? t('menu.doctors') : null}
+      </NavigationButton>
+      <NavigationButton
+        hidden={!user?.isAdmin && !user?.isPlanner}
+        colorScheme="teal"
+        variant={currentView === '/institutions' ? 'solid' : 'ghost'}
+        aria-label="institutions"
+        leftIcon={<FaRegBuilding />}
+        key="/institutions"
+        onClick={() => onClickHandler('/institutions')}
+      >
+        {isOpen ? t('menu.institutions') : null}
       </NavigationButton>
       <Divider />
       {/* Settings */}
@@ -142,7 +149,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         onClick={handleLogout}
         variant="ghost"
         aria-label="Logout"
-        leftIcon={<RiLogoutBoxFill />}
+        leftIcon={<RiLogoutBoxLine />}
       >
         {isOpen ? t('menu.logout') : null}
       </NavigationButton>
