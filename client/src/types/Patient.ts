@@ -1,6 +1,7 @@
 import { PatientContactData } from './ContactData';
 import { Doctor } from './Doctor';
 import { Event } from './Event';
+import { Institution } from './Institution';
 
 export type Patient = {
   uuid?: string;
@@ -36,9 +37,11 @@ export type Patient = {
   companyId?: string;
   tenantId?: string;
   doctorId?: string;
+  institutionId?: string;
   contactData?: PatientContactData[];
   events?: Event[];
   doctor?: Doctor;
+  institution?: Institution;
 };
 
 export type WaitingPatient = { numberInLine: number } & Patient
