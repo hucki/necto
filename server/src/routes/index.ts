@@ -129,7 +129,8 @@ router.patch('/doctors/:doctorId', doctorController.updateDoctor);
 
 // institution routes
 router.post('/institutions', institutionController.addInstitution);
-router.get('/institutions', institutionController.getAllInstitutions);
+router.get('/institutions/all', institutionController.getAllInstitutions);
+router.get('/institutions/archived', institutionController.getAllArchivedInstitutions);
 router.patch('/institutions/:institutionId', institutionController.updateInstitution);
 
 // settings routes
