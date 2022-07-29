@@ -1,8 +1,8 @@
-import { Icon, ModalFooter, ModalHeader, useToast, UseToastOptions } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { Icon, ModalFooter, ModalHeader, useToast, UseToastOptions } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { FaArchive, FaEdit, FaTimes } from 'react-icons/fa';
-import { RiUser5Line } from 'react-icons/ri';
+import { CgOrganisation } from 'react-icons/cg';
+import { FaArchive, FaTimes } from 'react-icons/fa';
 import { useCreateInstitution, useUpdateInstitution } from '../../hooks/institution';
 import { Institution } from '../../types/Institution';
 import { Button, ControlWrapper, IconButton } from '../Library';
@@ -10,36 +10,36 @@ import { InstitutionForm } from './InstitutionForm';
 
 interface InstitutionModalProps {
   institution: Institution;
-  type?: 'create' | 'view';
   onClose: () => void;
 }
 
-export const InstitutionModal = ({institution, onClose, type = 'view'}: InstitutionModalProps) => {
+export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) => {
   const toast = useToast();
   const { t } = useTranslation();
 
   const  [updateInstitution, { error: updateInstitutionError }] = useUpdateInstitution();
   const  [createInstitution, { error: createInstitutionError }] = useCreateInstitution();
 
-  const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'view');
   const [currentInstitution, setCurrentInstitution] = useState<Institution>(() => ({...institution}));
 
   const handleCurrentInstitutionChange = (institution: Institution) => {
     setCurrentInstitution(cur => ({...cur, ...institution}));
   };
 
-  const onSaveChanges = () => {
-    if (currentInstitution?.name) {
-      if (type === 'view') {
-        setIsReadOnly(!isReadOnly);
+  type UpdateType = 'save' | 'archive' | 'activate'
+
+  const onSaveChanges = (type: UpdateType) => {
+    const institutionUpdate = type === 'archive' || type === 'activate' ? {...currentInstitution, archived: (type === 'activate' ? false : true)} : currentInstitution;
+    if (institutionUpdate?.name) {
+      if (institutionUpdate.uuid) {
         const updateSuccessToastOptions: UseToastOptions = {
-          title: 'Institution updated.',
-          description: `Institution ${currentInstitution.name} has been updated`,
-          status: 'success',
+          title: `Institution ${type}d.`,
+          description: `Institution ${institutionUpdate.name} has been ${type}d`,
+          status: type === 'archive' ? 'info' : 'success',
           duration: 5000,
           isClosable: true,
         };
-        updateInstitution({institution: currentInstitution}).then((res) => {
+        updateInstitution({institution: institutionUpdate}).then((res) => {
           if (res?.uuid) {
             toast(updateSuccessToastOptions);
             onClose();
@@ -49,12 +49,12 @@ export const InstitutionModal = ({institution, onClose, type = 'view'}: Institut
         const createSuccesToastOptions: UseToastOptions =
           {
             title: 'Institution created.',
-            description: `Institution ${institution.name} has been created`,
+            description: `Institution ${institutionUpdate.name} has been created`,
             status: 'success',
             duration: 5000,
             isClosable: true,
           };
-        createInstitution({ institution: currentInstitution }).then((res) => {
+        createInstitution({ institution: institutionUpdate }).then((res) => {
           if (res?.uuid) {
             toast(createSuccesToastOptions);
             onClose();
@@ -76,9 +76,12 @@ export const InstitutionModal = ({institution, onClose, type = 'view'}: Institut
   return (
     <>
       <ModalHeader alignItems="center" display="flex" justifyContent="space-between">
-        <div className="institution-info">
-          <Icon as={RiUser5Line} w={10} h={10} mr={2} />
-          {currentInstitution.name}
+        <div className="institution-info" style={{
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <Icon as={CgOrganisation} w={10} h={10} mr={2} />
+          {currentInstitution.name} {currentInstitution.description ? <em style={{fontSize: '1rem'}}>&nbsp;{`(${currentInstitution.description})`}</em> : null}
         </div>
         <IconButton
           aria-label="close modal"
@@ -86,7 +89,7 @@ export const InstitutionModal = ({institution, onClose, type = 'view'}: Institut
           onClick={onClose}
         />
       </ModalHeader>
-      <InstitutionForm type={isReadOnly ? 'view' : 'update'} institution={currentInstitution} onChange={handleCurrentInstitutionChange}/>
+      <InstitutionForm institution={currentInstitution} onChange={handleCurrentInstitutionChange}/>
       <ModalFooter
         css={{
           padding: '0.5rem',
@@ -108,42 +111,27 @@ export const InstitutionModal = ({institution, onClose, type = 'view'}: Institut
               leftIcon={<FaArchive />}
               aria-label="archive Institution"
               colorScheme="red"
+              disabled={!currentInstitution.uuid}
               size="sm"
               type="button"
-              onClick={() => console.log('archive Institution')}
+              onClick={() => onSaveChanges(currentInstitution.archived ? 'activate' : 'archive')}
             >
-              {t('button.archive')}
+              {t(`button.${currentInstitution.archived ? 'activate' : 'archive'}`)}
             </Button>
           </ControlWrapper>
           <ControlWrapper>
-            {isReadOnly ? (
-              <Button
-                leftIcon={<FaEdit />}
-                aria-label="edit Institution"
-                type="button"
-                onClick={() => setIsReadOnly(!isReadOnly)}
-                colorScheme="blue"
-                size="sm"
-              >
-                {t('button.edit')}
-              </Button>
-            ) : (
-              <>
-                <Button aria-label="cancel changes" type="button" size="sm" onClick={onClose}>
-                  {t('button.cancel')}
-                </Button>
-                <Button
-                  aria-label="save changes"
-                  type="button"
-                  disabled={isReadOnly}
-                  onClick={onSaveChanges}
-                  size="sm"
-                  colorScheme="blue"
-                >
-                  {t('button.save')}
-                </Button>
-              </>
-            )}
+            <Button aria-label="cancel changes" type="button" size="sm" onClick={onClose}>
+              {t('button.cancel')}
+            </Button>
+            <Button
+              aria-label="save changes"
+              type="button"
+              onClick={() => onSaveChanges('save')}
+              size="sm"
+              colorScheme="blue"
+            >
+              {t('button.save')}
+            </Button>
           </ControlWrapper>
         </div>
       </ModalFooter>
