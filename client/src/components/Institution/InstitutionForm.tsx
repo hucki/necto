@@ -1,23 +1,22 @@
-import { Checkbox, GridItem, Icon, SimpleGrid } from '@chakra-ui/react';
+import { Checkbox, GridItem, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { useViewport } from '../../hooks/useViewport';
 import { Institution, InstitutionInput } from '../../types/Institution';
-import { Input, Label, ModalFormGroup, TextDisplay } from '../Library';
+import { Input, Label, ModalFormGroup } from '../Library';
 
 interface InstitutionFormProps {
   institution: Institution
-  type: 'create' | 'update' | 'view'
   onChange: (institution: Institution) => void
 };
 
 
 
-export const InstitutionForm = ({institution, type = 'view', onChange}: InstitutionFormProps) => {
+export const InstitutionForm = ({institution, onChange}: InstitutionFormProps) => {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const [currentInstitution, setCurrentInstitution] = useState<InstitutionInput>(() => ({...institution}));
+  const isReadOnly = institution.archived;
 
   type InstitutionKey = keyof InstitutionInput;
 
@@ -72,35 +71,21 @@ export const InstitutionForm = ({institution, type = 'view', onChange}: Institut
             <ModalFormGroup key={key}>
               <Label htmlFor={key}>{t(`label.${key}`)}</Label>
               {typeof currentInstitution[key as keyof Institution] === 'boolean'
-                ? type === 'view'
-                  ? (<Icon
-                    id={key}
-                    as={
-                      currentInstitution[key as keyof Institution]
-                        ? RiCheckLine
-                        : RiCheckboxBlankLine
-                    }
-                    w={5}
-                    h={5}
-                    color={currentInstitution[key as keyof Institution] ? 'indigo' : 'gray.400'}
-                  />)
-                  : (<Checkbox
-                    id={key}
-                    name={key}
-                    size="lg"
-                    my={2}
-                    isChecked={currentInstitution[key as keyof Institution] ? true : false}
-                    onChange={(e) => onCheckboxChange({event: e, key: key as keyof Institution})}
-                  />)
-                : type === 'view'
-                  ? (<TextDisplay id={key}>
-                    {currentInstitution[key as keyof Institution]?.toString()}&nbsp;
-                  </TextDisplay>)
-                  : (<Input
-                    onChange={(e) => onInputChange({event: e, key: key as keyof Institution})}
-                    id={key}
-                    value={currentInstitution[key as keyof Institution]?.toString()}>
-                  </Input>)}
+                ? (<Checkbox
+                  id={key}
+                  name={key}
+                  size="lg"
+                  disabled={isReadOnly}
+                  my={2}
+                  isChecked={currentInstitution[key as keyof Institution] ? true : false}
+                  onChange={(e) => onCheckboxChange({event: e, key: key as keyof Institution})}
+                />)
+                : (<Input
+                  onChange={(e) => onInputChange({event: e, key: key as keyof Institution})}
+                  id={key}
+                  disabled={isReadOnly}
+                  value={currentInstitution[key as keyof Institution]?.toString()}>
+                </Input>)}
             </ModalFormGroup>
           ) : null
       );
