@@ -1,19 +1,12 @@
 import React, { useContext } from 'react';
 import dayjs from 'dayjs';
 import { Button, IconButton, DatePicker } from '../Library';
-import {
-  FaBackward,
-  FaCaretLeft,
-  FaCaretRight,
-  FaForward,
-  FaHamburger,
-} from 'react-icons/fa';
 import { Flex, Grid } from '@chakra-ui/react';
 import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
 import { registerLocale } from 'react-datepicker';
 import de from 'date-fns/locale/de';
-import { RiMenu2Fill, RiMenuFill } from 'react-icons/ri';
+import { CgChevronDoubleLeft, CgChevronDoubleRight, CgChevronLeft, CgChevronRight, CgMenuGridO } from 'react-icons/cg';
 registerLocale('de', de);
 
 interface NavBarProps {
@@ -39,7 +32,7 @@ const NavBar = ({isSideNavOpen, onSideNavOpen}: NavBarProps) => {
       <div className="menu-control">
         <IconButton
           aria-label="menu"
-          icon={<RiMenuFill />}
+          icon={<CgMenuGridO size="2rem"/>}
           onClick={onSideNavOpen}
         />
       </div>
@@ -64,13 +57,13 @@ const NavBar = ({isSideNavOpen, onSideNavOpen}: NavBarProps) => {
         <IconButton
           marginLeft={2}
           aria-label="previous week"
-          leftIcon={<FaBackward />}
+          leftIcon={<CgChevronDoubleLeft size="2rem" />}
           onClick={() => goTo('previousWeek')}
         />
         <IconButton
           marginRight={2}
           aria-label="previous day"
-          leftIcon={<FaCaretLeft />}
+          leftIcon={<CgChevronLeft size="2rem" />}
           onClick={() => goTo('previousDay')}
         />
         <div style={{maxWidth: '100px'}}>
@@ -84,13 +77,13 @@ const NavBar = ({isSideNavOpen, onSideNavOpen}: NavBarProps) => {
         <IconButton
           marginLeft={2}
           aria-label="next day"
-          icon={<FaCaretRight />}
+          icon={<CgChevronRight size="2rem" />}
           onClick={() => goTo('nextDay')}
         />
         <IconButton
           marginRight={2}
           aria-label="next week"
-          icon={<FaForward />}
+          icon={<CgChevronDoubleRight size="2rem" />}
           onClick={() => goTo('nextWeek')}
         />
       </Flex>
