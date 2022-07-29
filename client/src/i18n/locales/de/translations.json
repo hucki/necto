@@ -61,7 +61,8 @@
     "logout": "abmelden",
     "settings": "Einstellungen",
     "eventSettings": "Termine",
-    "doctors": "Ärzt:in"
+    "doctors": "Ärzt:in",
+    "institutions": "Einrichtungen"
   },
   "label": {
     "firstName": "Vorname",

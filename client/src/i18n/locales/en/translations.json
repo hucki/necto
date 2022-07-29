@@ -60,7 +60,8 @@
     "logout": "logout",
     "settings": "settings",
     "eventSettings": "events",
-    "doctors": "Doctors"
+    "doctors": "Doctors",
+    "institutions": "Institutions"
   },
   "label": {
     "firstName": "first name",
