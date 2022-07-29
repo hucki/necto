@@ -71,6 +71,7 @@
     "street": "street",
     "city": "City",
     "isAddpayFreed": "freed?",
+    "hasContract": "contract?",
     "notices": "notices",
     "firstContactAt": "Date of reception",
     "isWaitingSince": "waiting since",
