@@ -11,9 +11,9 @@ import { useHistory, useLocation } from 'react-router';
 import { AppState } from '../../types/AppState';
 import { IconButton, NavigationButton, SideNavContainer } from '../Library';
 import { useTranslation } from 'react-i18next';
-import { FaClinicMedical, FaRegBuilding, FaTimes } from 'react-icons/fa';
+import { FaClinicMedical, FaRegBuilding } from 'react-icons/fa';
 import { AuthContext } from '../../providers/AuthProvider';
-import { CgCalendarDates, CgHome, CgUser } from 'react-icons/cg';
+import { CgCalendarDates, CgClose, CgHome, CgUser } from 'react-icons/cg';
 
 interface SideNavProps {
   isOpen: boolean
@@ -38,7 +38,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
       {/* Menu Button */}
       <IconButton
         aria-label="Open Menu"
-        icon={<FaTimes />}
+        icon={<CgClose />}
         onClick={onClose}
         fontSize="2xl"
       />
