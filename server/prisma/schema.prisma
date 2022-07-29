@@ -353,6 +353,7 @@ model Institution {
   zip                 String?       @db.VarChar(10)
   city                String?       @db.VarChar(64)
   tenantId            String        @db.Uuid
+  archived            Boolean       @default(false)
   patients            Patient[]     @relation("institution_referenceIdToPatient")
   contactData         ContactData[] @relation("contactData_referenceIdToInstitution")
 }
