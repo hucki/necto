@@ -12,10 +12,44 @@ export const getAllInstitutions = async (
 ): Promise<void> => {
   try {
     const institutions = await prisma.institution.findMany({
-      where: { tenantId },
+      where: {
+        tenantId,
+        archived: false
+       },
       include: {
         patients: true,
         contactData: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    res.json(institutions);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+// get all archived institutions
+export const getAllArchivedInstitutions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const institutions = await prisma.institution.findMany({
+      where: {
+        tenantId,
+        archived: true
+       },
+      include: {
+        patients: true,
+        contactData: true,
+      },
+      orderBy: {
+        name: 'asc',
       },
     });
     res.json(institutions);
@@ -36,7 +70,7 @@ export const addInstitution = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { name, description, street, zip, city } = req.body
+    const { name, description, street, zip, city, archived } = req.body
     const createdInstitution = await prisma.institution.create({
       data: {
         name,
@@ -44,6 +78,7 @@ export const addInstitution = async (
         street,
         zip,
         city,
+        archived,
         tenantId: tenantId,
       },
       include: {
@@ -93,7 +128,7 @@ export const addInstitution = async (
 ): Promise<void> => {
   try {
     const institutionId = req.params.institutionId;
-    const { name, description, title, street, zip, city } = req.body
+    const { name, description, street, zip, city, archived } = req.body
     const updateInstitution = await prisma.institution.update({
       where: {
         uuid: institutionId,
@@ -103,7 +138,8 @@ export const addInstitution = async (
         description,
         street,
         zip,
-        city
+        city,
+        archived
       },
     });
     res.json(updateInstitution);
