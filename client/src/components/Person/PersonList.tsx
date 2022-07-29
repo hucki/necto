@@ -1,6 +1,6 @@
 import { Flex, Icon, InputGroup, InputLeftElement, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiCheckboxBlankLine, RiCheckLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri';
@@ -11,10 +11,9 @@ import { Doctor, DoctorInput } from '../../types/Doctor';
 import { Patient, PatientInput, WaitingPatient } from '../../types/Patient';
 import * as colors from '../../styles/colors';
 import { Button, IconButton, Input } from '../Library';
-import FilterBar from '../FilterBar/FilterBar';
-import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 import { PersonModal } from './PersonModal';
 import { Person } from '../../types/Person';
+import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 
 
 interface PersonListProps {
@@ -39,14 +38,18 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
 
   // search function
   const [search, setSearch] = useState('');
-
+  useEffect(() => {
+    if (search) {
+      setCurrentPage(1);
+    }
+  }, [search]);
   const allPatients = persons as Patient[] | WaitingPatient[];
   const filteredPatients = allPatients.filter((person: Patient | WaitingPatient) =>
     person.firstName.toLowerCase().includes(search.toLowerCase()) ||
     person.lastName.toLowerCase().includes(search.toLowerCase()) ||
     person.street?.toLowerCase().includes(search.toLowerCase()) ||
     person.city?.toLowerCase().includes(search.toLowerCase()) ||
-    person.careFacility?.toLowerCase().includes(search.toLowerCase()) ||
+    person.institution?.name?.toLowerCase().includes(search.toLowerCase()) ||
     person.notices?.toLowerCase().includes(search.toLowerCase()) ||
     person.contactData
       ?.filter((contact) => contact.type === 'telephone')
@@ -149,7 +152,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
             <>
               <Td>{p.notices}</Td>
               <Td>{p.doctor && getDisplayName(p.doctor)}</Td>
-              <Td>{p.careFacility}</Td>
+              <Td>{p.institution && p.institution.name + ' ' + (p.institution.description ? `(${p.institution.description})` : null)}</Td>
               <Td>
                 <Icon
                   as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
@@ -287,7 +290,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
       <Flex m={2} alignSelf="flex-end">
         <IconButton
           aria-label="previous page"
-          leftIcon={<FaCaretLeft />}
+          leftIcon={<CgChevronLeft />}
           disabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
         />
@@ -302,7 +305,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         ))}
         <IconButton
           aria-label="next page"
-          icon={<FaCaretRight />}
+          icon={<CgChevronRight />}
           disabled={currentPage === numOfPages}
           onClick={() => setCurrentPage(currentPage + 1)}
         />
