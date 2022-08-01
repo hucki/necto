@@ -89,7 +89,8 @@
     "therapist": "Behandler:in",
     "date": "Datum",
     "appointments": "Termine",
-    "no": "keine"
+    "no": "keine",
+    "institution": "Einrichtung"
   },
   "auth": {
     "login": "anmelden",
