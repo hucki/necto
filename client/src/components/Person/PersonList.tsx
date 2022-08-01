@@ -133,7 +133,6 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           { type === 'waitingPatients' && isWaitingPatient(p) && <Td><b>{p.numberInLine}</b></Td>}
           <Td>{p.firstName}</Td>
           <Td>{p.lastName}</Td>
-          { type !== 'doctors' && <Td>{p.gender}</Td> }
           <Td>
             {p.contactData
               ?.filter((c) => c.type === 'telephone')
@@ -141,6 +140,23 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
                 <div key={tel.uuid}>{tel.contact}</div>
               ))}
           </Td>
+          <Td>
+            <Icon
+              as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
+              w={5}
+              h={5}
+              color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
+            />
+          </Td>
+          <Td>
+            <Icon
+              as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
+              w={5}
+              h={5}
+              color={p.hasContract ? 'indigo' : 'gray.400'}
+            />
+          </Td>
+          { type !== 'doctors' && <Td>{p.gender}</Td> }
           <Td>
             {p.contactData
               ?.filter((c) => c.type === 'email')
@@ -153,22 +169,6 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
               <Td>{p.notices}</Td>
               <Td>{p.doctor && getDisplayName(p.doctor)}</Td>
               <Td>{p.institution && p.institution.name + ' ' + (p.institution.description ? `(${p.institution.description})` : null)}</Td>
-              <Td>
-                <Icon
-                  as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
-                  w={5}
-                  h={5}
-                  color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
-                />
-              </Td>
-              <Td>
-                <Icon
-                  as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
-                  w={5}
-                  h={5}
-                  color={p.hasContract ? 'indigo' : 'gray.400'}
-                />
-              </Td>
             </>
           )}
           { type === 'doctors' && (
@@ -251,16 +251,16 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
               { type === 'waitingPatients' && <Th width={5}>Nr </Th>}
               <Th>{t('label.firstName')}</Th>
               <Th>{t('label.lastName')}</Th>
-              {type !== 'doctors' && <Th width={2}>{t('label.gender')} </Th>}
               <Th>{t('label.telephoneNumber')} </Th>
+              <Th width={5}>{t('label.isAddpayFreed')}</Th>
+              <Th width={5}>{t('label.hasContract')}</Th>
+              {type !== 'doctors' && <Th width={2}>{t('label.gender')} </Th>}
               <Th>{t('label.mailAddress')} </Th>
               {type !== 'doctors' && (
                 <>
                   <Th>{t('label.notices')} </Th>
                   <Th>{t('label.doctor')} </Th>
                   <Th>{t('label.careFacility')} </Th>
-                  <Th width={5}>{t('label.isAddpayFreed')}</Th>
-                  <Th width={5}>{t('label.hasContract')}</Th>
                 </>
               )}
               {type === 'doctors' && (
