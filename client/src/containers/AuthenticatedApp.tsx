@@ -25,7 +25,7 @@ function AuthenticatedApp({
   id,
   dispatch,
 }: AuthenticatedAppInputProps): JSX.Element {
-  const [isNavOpen, setIsNavOpen] = useState(true);
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const { setIsAuthenticated, isLoading } = useContext(AuthContext);
   const { user, isError, error} = useUser(id);
   useEffect(() => {
