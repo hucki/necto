@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
+import { decryptContactData } from '../utils/crypto';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 
@@ -18,6 +19,11 @@ export const getAllDoctors = async (
         contactData: true,
       },
     });
+    for (let i = 0; i < doctors.length; i++) {
+      if (doctors[i].contactData) {
+        doctors[i].contactData = decryptContactData(doctors[i].contactData)
+      }
+    }
     res.json(doctors);
     res.status(200);
     return;
@@ -52,7 +58,9 @@ export const addDoctor = async (
         contactData: true,
       },
     });
-
+    if (createdDoctor.contactData) {
+      createdDoctor.contactData = decryptContactData(createdDoctor.contactData)
+    }
     res.json(createdDoctor);
     res.status(201);
     return;

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
+import { decryptContactData } from '../utils/crypto';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 
@@ -24,6 +25,11 @@ export const getAllInstitutions = async (
         name: 'asc',
       },
     });
+    for (let i = 0; i < institutions.length; i++) {
+      if (institutions[i].contactData) {
+        institutions[i].contactData = decryptContactData(institutions[i].contactData)
+      }
+    }
     res.json(institutions);
     res.status(200);
     return;
@@ -52,6 +58,11 @@ export const getAllArchivedInstitutions = async (
         name: 'asc',
       },
     });
+    for (let i = 0; i < institutions.length; i++) {
+      if (institutions[i].contactData) {
+        institutions[i].contactData = decryptContactData(institutions[i].contactData)
+      }
+    }
     res.json(institutions);
     res.status(200);
     return;
@@ -86,28 +97,6 @@ export const addInstitution = async (
         contactData: true,
       },
     });
-
-    const createdTelephone = req.body.telephoneNumber
-      ? await prisma.contactData.create({
-          data: {
-            institutionId: createdInstitution.uuid,
-            type: 'telephone',
-            contact: req.body.telephoneNumber,
-            tenantId: tenantId,
-          },
-        })
-      : {};
-
-    const createdMail = req.body.mailAddress
-      ? await prisma.contactData.create({
-          data: {
-            institutionId: createdInstitution.uuid,
-            type: 'email',
-            contact: req.body.mailAddress,
-            tenantId: tenantId,
-          },
-        })
-      : {};
 
     res.json(createdInstitution);
     res.status(201);

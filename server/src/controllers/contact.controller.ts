@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
+import { encryptData } from '../utils/crypto';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 
@@ -15,7 +16,7 @@ export const addPatientContact = async (
       data: {
         patientId,
         type: req.body.type,
-        contact: req.body.contact,
+        contact: req.body.contact?.length ? encryptData(req.body.contact) : req.body.contact,
         tenantId: tenantId,
       },
     });
@@ -37,7 +38,7 @@ export const addDoctorContact = async (
       data: {
         doctorId,
         type: req.body.type,
-        contact: req.body.contact,
+        contact: req.body.contact?.length ? encryptData(req.body.contact) : req.body.contact,
         tenantId: tenantId,
       },
     });
@@ -60,7 +61,7 @@ export const updateContact = async (
         uuid: contactId
       },
       data: {
-        contact: req.body.contact,
+        contact: req.body.contact?.length ? encryptData(req.body.contact) : req.body.contact,
       },
     });
     res.json(updatedContact);

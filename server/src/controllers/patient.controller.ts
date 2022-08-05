@@ -3,7 +3,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
-import { decryptData, encryptData } from '../utils/crypto';
+import { decryptData, encryptData, decryptContactData } from '../utils/crypto';
 import { Patient } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
@@ -20,7 +20,7 @@ const encryptPatient = (patient) => {
     ...patient,
   }
   for (let i = 0; i < encryptedPatientFields.length; i++) {
-    encryptedPatient[encryptedPatientFields[i]] = patient[encryptedPatientFields[i]]?.length ? encryptData(patient[encryptedPatientFields[i]]) : patient[encryptedPatientFields[i]]
+    encryptedPatient[encryptedPatientFields[i]] = encryptedPatient[encryptedPatientFields[i]]?.length ? encryptData(encryptedPatient[encryptedPatientFields[i]]) : encryptedPatient[encryptedPatientFields[i]]
   }
   return encryptedPatient
 }
@@ -184,6 +184,9 @@ export const getAllPatients = async (
     });
     for (let i = 0; i < patients.length; i++) {
       patients[i] = decryptPatient(patients[i]);
+      if (patients[i].contactData) {
+        patients[i].contactData = decryptContactData(patients[i].contactData)
+      }
     }
     res.json(patients);
     res.status(200);
@@ -247,6 +250,9 @@ export const getWaitingPatients = async (
     });
     for (let i = 0; i < waitingPatients.length; i++) {
       waitingPatients[i] = decryptPatient(waitingPatients[i]);
+      if (waitingPatients[i].contactData) {
+        waitingPatients[i].contactData = decryptContactData(waitingPatients[i].contactData)
+      }
     }
     res.json(waitingPatients);
     res.status(200);
