@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { getDisplayName } from '../../helpers/displayNames';
-import { useCreatePatientContact } from '../../hooks/contact';
+import { useCreateDoctorContact, useCreatePatientContact } from '../../hooks/contact';
 import { useAllDoctors } from '../../hooks/doctor';
 import { useAllInstitutions } from '../../hooks/institution';
 import { useViewport } from '../../hooks/useViewport';
@@ -29,12 +29,14 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
   const { t } = useTranslation();
   const { isLoading, error, doctors } = useAllDoctors();
   const [ createPatientContact ] = useCreatePatientContact();
+  const [ createDoctorContact ] = useCreateDoctorContact();
   const { isLoading: isLoadingInstitutions, error: errorInstitutions, institutions } = useAllInstitutions();
   const [ currentPerson, setCurrentPerson ] = useState<Doctor | Patient>(() => ({...person}));
   const [ currentContactDataCollection, setCurrentContactDataCollection ] = useState<ContactData[]>(() => {
     return person.contactData as ContactData[] || [];
   });
   const currentPatient = personType !== 'doctor' ? currentPerson as Patient : undefined;
+  const currentDoctor = personType === 'doctor' ? currentPerson as Doctor : undefined;
 
   const editType = currentPerson.uuid ? 'edit' : 'create';
 
@@ -113,6 +115,10 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
   const createContact = (type: 'telephone' | 'email') => {
     if (currentPatient) {
       createPatientContact({contactData: {patientId: currentPatient.uuid, type, contact: ''}})
+        .then(contact => setCurrentContactDataCollection(cur => contact ? [...cur, contact] : cur));
+    }
+    if (currentDoctor) {
+      createDoctorContact({contactData: {doctorId: currentDoctor.uuid, type, contact: ''}})
         .then(contact => setCurrentContactDataCollection(cur => contact ? [...cur, contact] : cur));
     }
   };
