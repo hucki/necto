@@ -226,7 +226,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
 
   return (
     <>
-      <SimpleGrid columns={[1, null, 2]} gap={6} py={2} height={'100%'} overflowY={'scroll'}>
+      <SimpleGrid columns={[1, null, 2]} gap={6} py={2} height="100%" overflowY="scroll" overflowX="hidden">
         <GridItem>
           {autoFormFields()}
           {telephone()}
