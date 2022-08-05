@@ -131,8 +131,8 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
       .map((p: Patient | WaitingPatient)=> (
         <Tr key={p.uuid} onClick={() => showPersonInfo(p)}>
           { type === 'waitingPatients' && isWaitingPatient(p) && <Td><b>{p.numberInLine}</b></Td>}
-          <Td>{p.firstName}</Td>
           <Td>{p.lastName}</Td>
+          <Td>{p.firstName}</Td>
           <Td>
             {p.contactData
               ?.filter((c) => c.type === 'telephone')
@@ -249,8 +249,8 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           <Thead>
             <Tr>
               { type === 'waitingPatients' && <Th width={5}>Nr </Th>}
-              <Th>{t('label.firstName')}</Th>
               <Th>{t('label.lastName')}</Th>
+              <Th>{t('label.firstName')}</Th>
               <Th>{t('label.telephoneNumber')} </Th>
               <Th width={5}>{t('label.isAddpayFreed')}</Th>
               <Th width={5}>{t('label.hasContract')}</Th>
