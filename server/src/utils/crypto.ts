@@ -5,6 +5,16 @@ dotenv.config();
 const ENCRYPTION_KEY: string = process.env.ENCRYPTION_KEY || ''; // Must be 256 bits (32 characters)
 const IV_LENGTH: number = 16; // For AES, this is always 16
 
+export const decryptContactData = (contactData) => {
+  let decryptedContactData = [
+    ...contactData,
+  ]
+  for (let i = 0; i < decryptedContactData.length; i++) {
+    decryptedContactData[i].contact = decryptedContactData[i].contact?.length ? decryptData(decryptedContactData[i].contact) : decryptedContactData[i].contact
+  }
+  return decryptedContactData
+}
+
 export const encryptData = (input: string) => {
 
   const iv = Buffer.from(crypto.randomBytes(IV_LENGTH)).toString('hex').slice(0, IV_LENGTH);
