@@ -73,7 +73,7 @@ export const addDoctor = async (
   try {
     const doctorId = req.params.doctorId;
     const { firstName, lastName, title, street, zip, city } = req.body
-    const updatedDoctor = await prisma.patient.update({
+    const updatedDoctor = await prisma.doctor.update({
       where: {
         uuid: doctorId,
       },
