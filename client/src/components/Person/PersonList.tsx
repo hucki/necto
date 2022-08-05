@@ -71,6 +71,8 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
 
   const filteredPersons = type === 'doctors' ? filteredDoctors : filteredPatients;
 
+  filteredPersons.sort((a: Person, b: Person) => a.lastName.toLowerCase() >= b.lastName.toLowerCase() ? 1 : -1);
+
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
