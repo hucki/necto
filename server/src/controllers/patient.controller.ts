@@ -4,14 +4,23 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import { decryptData, encryptData } from '../utils/crypto';
+import { Patient } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
 
+const encryptedPatientFields: (keyof Patient)[] = [
+  'notices',
+  'firstName',
+  'lastName',
+]
+
 const encryptPatient = (patient) => {
   let encryptedPatient = {
     ...patient,
-    notices: patient.notices ? encryptData(patient.notices) : undefined,
+  }
+  for (let i = 0; i < encryptedPatientFields.length; i++) {
+    encryptedPatient[encryptedPatientFields[i]] = patient[encryptedPatientFields[i]]?.length ? encryptData(patient[encryptedPatientFields[i]]) : patient[encryptedPatientFields[i]]
   }
   return encryptedPatient
 }
@@ -19,7 +28,9 @@ const encryptPatient = (patient) => {
 const decryptPatient = (patient) => {
   let decryptedPatient = {
     ...patient,
-    notices: patient.notices ? decryptData(patient.notices) : undefined,
+  }
+  for (let i = 0; i < encryptedPatientFields.length; i++) {
+    decryptedPatient[encryptedPatientFields[i]] = patient[encryptedPatientFields[i]]?.length ? decryptData(patient[encryptedPatientFields[i]]) : patient[encryptedPatientFields[i]]
   }
   return decryptedPatient
 }
