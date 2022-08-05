@@ -287,41 +287,36 @@ function CalendarEventForm({
           </FormGroup>
         </div>
       }
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between'
-      }}>
-        <FormControl id="eventStartDatePicker"  mb="0.75rem" maxWidth="50%">
-          <DatePicker
-            name="startDate"
-            showTimeSelect
-            locale="de"
-            timeFormat="p"
-            timeIntervals={15}
-            dateFormat="Pp"
-            selected={dayjs(currentEvent.startTime).toDate()}
-            onChange={(date: ReactDatePickerReturnType) => {
-              if (date) handleTimeChange({date, key: 'startTime'});
-            }}
-          />
-          <FormLabel>{t('calendar.event.start')}</FormLabel>
+      <FormControl id="eventStartDatePicker"  mb="0.75rem">
+        <DatePicker
+          name="startDate"
+          showTimeSelect
+          locale="de"
+          timeFormat="p"
+          timeIntervals={15}
+          dateFormat="Pp"
+          selected={dayjs(currentEvent.startTime).toDate()}
+          onChange={(date: ReactDatePickerReturnType) => {
+            if (date) handleTimeChange({date, key: 'startTime'});
+          }}
+        />
+        <FormLabel>{t('calendar.event.start')}</FormLabel>
+      </FormControl>
+      {!isNote &&
+        <FormControl id="duration" mb="0.75rem" maxWidth="25%">
+          <Select
+            id="duration"
+            name="duration"
+            value={eventDuration}
+            onChange={handleEventDurationChange}
+          >
+            <option value={45}>0:45</option>
+            <option value={30}>0:30</option>
+          </Select>
+          <FormLabel>{t('calendar.event.duration')}</FormLabel>
         </FormControl>
-        {!isNote &&
-          <FormControl id="duration" mb="0.75rem" maxWidth="25%">
-            <Select
-              id="duration"
-              name="duration"
-              value={eventDuration}
-              onChange={handleEventDurationChange}
-            >
-              <option value={45}>0:45</option>
-              <option value={30}>0:30</option>
-            </Select>
-            <FormLabel>{t('calendar.event.duration')}</FormLabel>
-          </FormControl>
-        }
-      </div>
-      <FormControl id="eventEndDatePicker" mb="0.75rem"  maxWidth="50%">
+      }
+      <FormControl id="eventEndDatePicker" mb="0.75rem">
         <DatePicker
           name="endDate"
           showTimeSelect
