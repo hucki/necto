@@ -3,13 +3,13 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
-import { decryptData, encryptData, decryptContactData } from '../utils/crypto';
+import { encrypt, decryptContactData, decryptPatient } from '../utils/crypto';
 import { Patient } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
 
-const encryptedPatientFields: (keyof Patient)[] = [
+export const encryptedPatientFields: (keyof Patient)[] = [
   'notices',
   'firstName',
   'lastName',
@@ -20,19 +20,9 @@ const encryptPatient = (patient) => {
     ...patient,
   }
   for (let i = 0; i < encryptedPatientFields.length; i++) {
-    encryptedPatient[encryptedPatientFields[i]] = encryptedPatient[encryptedPatientFields[i]]?.length ? encryptData(encryptedPatient[encryptedPatientFields[i]]) : encryptedPatient[encryptedPatientFields[i]]
+    encryptedPatient[encryptedPatientFields[i]] = encryptedPatient[encryptedPatientFields[i]]?.length ? encrypt(encryptedPatient[encryptedPatientFields[i]]) : encryptedPatient[encryptedPatientFields[i]]
   }
   return encryptedPatient
-}
-
-const decryptPatient = (patient) => {
-  let decryptedPatient = {
-    ...patient,
-  }
-  for (let i = 0; i < encryptedPatientFields.length; i++) {
-    decryptedPatient[encryptedPatientFields[i]] = patient[encryptedPatientFields[i]]?.length ? decryptData(patient[encryptedPatientFields[i]]) : patient[encryptedPatientFields[i]]
-  }
-  return decryptedPatient
 }
 
 /**
@@ -183,7 +173,10 @@ export const getAllPatients = async (
       },
     });
     for (let i = 0; i < patients.length; i++) {
-      patients[i] = decryptPatient(patients[i]);
+      patients[i] = {
+        ...patients[i],
+        ...decryptPatient({patient: patients[i], fields: encryptedPatientFields})
+      }
       if (patients[i].contactData) {
         patients[i].contactData = decryptContactData(patients[i].contactData)
       }
@@ -249,7 +242,10 @@ export const getWaitingPatients = async (
       },
     });
     for (let i = 0; i < waitingPatients.length; i++) {
-      waitingPatients[i] = decryptPatient(waitingPatients[i]);
+      waitingPatients[i] = {
+        ...waitingPatients[i],
+        ...decryptPatient({patient: waitingPatients[i], fields: encryptedPatientFields})
+      }
       if (waitingPatients[i].contactData) {
         waitingPatients[i].contactData = decryptContactData(waitingPatients[i].contactData)
       }
