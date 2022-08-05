@@ -1,4 +1,4 @@
-import { Input as ChakraInput, Select as ChakraSelect } from '@chakra-ui/react';
+import { Input as ChakraInput, Select as ChakraSelect, FormLabel as ChakraFormLabel } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import ReactDatePicker from 'react-datepicker';
 
@@ -13,6 +13,19 @@ const Label = styled.label(inputStyles, {
   border: '0px',
   marginLeft: '0.5rem',
   marginRight: '0.5rem',
+});
+
+const FormLabel = styled(ChakraFormLabel)({
+  transform: 'scale(0.85) translateY(-16px)',
+  top: 0,
+  left: '4px',
+  zIndex: 2,
+  position: 'absolute',
+  backgroundColor: 'white',
+  pointerEvents: 'none',
+  margin: '3px 2px',
+  padding: '1px 4px',
+  transformOrigin: 'left top'
 });
 
 const TextDisplay = styled.div(inputStyles, {
@@ -61,7 +74,7 @@ const ModalFormGroup = styled.div(
   {
     display: 'grid',
     alignItems: 'center',
-    gridTemplateColumns: '200px 1fr',
+    marginBottom: '0.75rem'
   }
 );
 
@@ -79,4 +92,4 @@ const DatePicker = styled(ReactDatePicker)(inputStyles, {
   background: 'transparent',
 });
 
-export { Input, Textarea, FormGroup, Label, Select, DatePicker, RadioGroup, ModalFormGroup, TextDisplay };
+export { Input, Textarea, FormGroup, FormLabel, Label, Select, DatePicker, RadioGroup, ModalFormGroup, TextDisplay };
