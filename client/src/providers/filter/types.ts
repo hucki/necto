@@ -8,7 +8,7 @@ export type FilterStateContextType = {
   calendarView: CalendarView,
   setCalendarView: Dispatch<SetStateAction<CalendarView>>,
   currentCompany: Company | undefined,
-  setCurrentCompany: Dispatch<SetStateAction<Company | undefined>>,
+  setCurrentCompany: Dispatch<SetStateAction<Company>>,
   currentTeam: Team | undefined,
   setCurrentTeam: Dispatch<SetStateAction<Team | undefined>>,
   currentBuildingId: string | undefined,
