@@ -45,8 +45,3 @@ export type Patient = {
 };
 
 export type WaitingPatient = { numberInLine: number } & Patient
-
-export interface PatientInput extends Patient {
-  telephoneNumber?: string;
-  mailAddress?: string;
-}
