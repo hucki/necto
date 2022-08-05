@@ -1,6 +1,6 @@
 export type ContactData = {
   uuid?: string;
-  type: string;
+  type: 'telephone' | 'email';
   contact: string;
   createdAt?: Date;
   updatedAt?: Date;
