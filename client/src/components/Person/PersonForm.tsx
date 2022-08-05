@@ -1,38 +1,42 @@
 import { Checkbox, Divider, GridItem, Icon, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { getDisplayName } from '../../helpers/displayNames';
+import { useCreatePatientContact } from '../../hooks/contact';
 import { useAllDoctors } from '../../hooks/doctor';
 import { useAllInstitutions } from '../../hooks/institution';
 import { useViewport } from '../../hooks/useViewport';
+import { ContactData } from '../../types/ContactData';
 import { Doctor } from '../../types/Doctor';
 import { Patient } from '../../types/Patient';
 import { Person } from '../../types/Person';
-import { Input, Label, ModalFormGroup, Select, TextDisplay } from '../Library';
+import { IconButton, Input, Label, ModalFormGroup, Select, TextDisplay } from '../Library';
 import { AppointmentList } from '../List/Appointments';
 
 interface PersonFormProps {
   person: Person
-  type: 'create' | 'update' | 'view'
+  isReadOnly: boolean
   personType: 'doctor' | 'patient'
-  onChange: (person: Person) => void
+  onChange: (person: Person, contactDataCollection: ContactData[]) => void
 };
 
 
 
-export const PersonForm = ({person, type = 'view', personType = 'patient', onChange}: PersonFormProps) => {
+export const PersonForm = ({person, isReadOnly = true, personType = 'patient', onChange}: PersonFormProps) => {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { isLoading, error, doctors } = useAllDoctors();
+  const [ createPatientContact ] = useCreatePatientContact();
   const { isLoading: isLoadingInstitutions, error: errorInstitutions, institutions } = useAllInstitutions();
-  const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({...person}));
+  const [ currentPerson, setCurrentPerson ] = useState<Doctor | Patient>(() => ({...person}));
+  const [ currentContactDataCollection, setCurrentContactDataCollection ] = useState<ContactData[]>(() => {
+    return person.contactData as ContactData[] || [];
+  });
   const currentPatient = personType !== 'doctor' ? currentPerson as Patient : undefined;
-  console.log(currentPatient);
-  const isWaitingPatient = (person: Person): person is Patient => {
-    if ('firstContactedAt' in person) return true;
-    return false;
-  };
+
+  const editType = currentPerson.uuid ? 'edit' : 'create';
 
   type PersonKey = keyof Patient;
 
@@ -59,13 +63,30 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
     key: PersonKey
   }
 
+  interface OnContactChangeProps {
+    event: React.FormEvent<HTMLInputElement>
+    id: string
+  }
+
   function onInputChange({event, key}: OnInputChangeProps) {
     event.preventDefault();
-    setCurrentPerson(person => ({...person, [`${key}`]: event.currentTarget.value}));
+    const currentValue = event.currentTarget.value;
+    setCurrentPerson(person => ({...person, [`${key}`]: currentValue}));
+  }
+
+  function onContactChange({event, id}: OnContactChangeProps) {
+    event.preventDefault();
+    const newContact = event.currentTarget.value;
+    setCurrentContactDataCollection(
+      contactData => contactData.map(
+        c => c.uuid === id ? {...c, contact: newContact} : c
+      )
+    );
   }
   function onCheckboxChange({event, key}: OnInputChangeProps) {
     event.preventDefault();
-    setCurrentPerson(person => ({...person, [`${key}`]: event.currentTarget.checked}));
+    const {checked} = event.currentTarget;
+    setCurrentPerson(person => ({...person, [`${key}`]: checked}));
   }
 
   interface OnSelectChangeProps {
@@ -75,14 +96,94 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
 
   function onSelectChange({event, key}: OnSelectChangeProps) {
     event.preventDefault();
-    const val = event.currentTarget.value === 'remove' ? null : event.currentTarget.value;
+    const val = event.currentTarget.value === 'remove' ? undefined : event.currentTarget.value;
     setCurrentPerson(person => ({...person, [`${key}`]: val}));
   }
 
   useEffect(() => {
-    onChange(currentPerson);
-  }, [currentPerson]);
+    onChange(currentPerson, currentContactDataCollection);
+  }, [currentPerson, currentContactDataCollection]);
 
+  useEffect(() => {
+    if (person.uuid !== currentPerson.uuid) {
+      setCurrentPerson(cur => ({...cur, uuid: person.uuid}));
+    }
+  }, [person.uuid]);
+
+  const createContact = (type: 'telephone' | 'email') => {
+    if (currentPatient) {
+      createPatientContact({contactData: {patientId: currentPatient.uuid, type, contact: ''}})
+        .then(contact => setCurrentContactDataCollection(cur => contact ? [...cur, contact] : cur));
+    }
+  };
+
+  const telephone = () => {
+    const currentPhones = currentContactDataCollection
+      .filter(c => c.type === 'telephone')
+      .map((phone: ContactData, index) =>
+        <ModalFormGroup key={index}>
+          <Label htmlFor={'telephone'+index}><CgPhone /></Label>
+          {isReadOnly
+            ? <TextDisplay id={'telephone'+index}>{phone.contact}</TextDisplay>
+            : <Input
+              isDisabled={isReadOnly}
+              onChange={(e) => onContactChange({event: e, id: phone.uuid || ''})}
+              id={phone.uuid}
+              value={phone.contact}>
+            </Input>
+          }
+        </ModalFormGroup>
+      );
+    return <>
+      {currentPhones}
+      {!currentPhones.length && !isReadOnly
+        ? <ModalFormGroup>
+          <Label htmlFor="addPhone"><CgPhone /></Label>
+          <IconButton
+            id="addPhone"
+            disabled={!currentPerson.uuid}
+            aria-label="add-phone"
+            icon={<CgAdd />}
+            onClick={() => createContact('telephone')}
+          />
+        </ModalFormGroup>
+        : null
+      }
+    </>;
+  };
+
+  const email = () => {
+    const currentEmails = currentContactDataCollection
+      .filter(c => c.type === 'email')
+      .map((email: ContactData, index) =>
+        <ModalFormGroup key={index}>
+          <Label htmlFor={'email'+index}><CgMail /></Label>
+          {isReadOnly
+            ? <TextDisplay id={'email'+index}>{email.contact}</TextDisplay>
+            : <Input
+              onChange={(e) => onContactChange({event: e, id: email.uuid || ''})}
+              id={email.uuid}
+              value={email.contact}>
+            </Input>
+          }
+        </ModalFormGroup>
+      );
+    return <>
+      {currentEmails}
+      {!currentEmails.length && !isReadOnly
+        ? <ModalFormGroup>
+          <Label htmlFor="addEmail"><CgMail /></Label>
+          <IconButton
+            id="addEmail"
+            disabled={!currentPerson.uuid}
+            aria-label="add-email"
+            icon={<CgAdd />}
+            onClick={() => createContact('email')}
+          />
+        </ModalFormGroup>
+        : null }
+    </>;
+  };
   const autoFormFields = () => {
     return Object.keys(currentPerson)
       .filter(
@@ -95,7 +196,7 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
             <ModalFormGroup key={key}>
               <Label htmlFor={key}>{t(`label.${key}`)}</Label>
               {typeof currentPerson[key as keyof Person] === 'boolean'
-                ? type === 'view'
+                ? isReadOnly
                   ? (<Icon
                     id={key}
                     as={
@@ -115,7 +216,7 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
                     isChecked={currentPerson[key as keyof Person] ? true : false}
                     onChange={(e) => onCheckboxChange({event: e, key: key as keyof Person})}
                   />)
-                : type === 'view'
+                : isReadOnly
                   ? (<TextDisplay id={key}>
                     {currentPerson[key as keyof Person]?.toString()}&nbsp;
                   </TextDisplay>)
@@ -132,13 +233,17 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
   return (
     <>
       <SimpleGrid columns={[1, null, 2]} gap={6}>
-        <GridItem>{autoFormFields()}</GridItem>
+        <GridItem>
+          {autoFormFields()}
+          {telephone()}
+          {email()}
+        </GridItem>
         <GridItem>
           {personType !== 'doctor' && currentPatient && (
             <>
               <ModalFormGroup>
                 <Label htmlFor="doctorId">{t('label.doctor')}</Label>
-                {type === 'view' ? (
+                {isReadOnly ? (
                   <TextDisplay id="doctorId">
                     {currentPatient['doctor'] && getDisplayName(currentPatient['doctor'])}
                   </TextDisplay>
@@ -161,7 +266,7 @@ export const PersonForm = ({person, type = 'view', personType = 'patient', onCha
               </ModalFormGroup>
               <ModalFormGroup>
                 <Label htmlFor="institutionId">{t('label.institution')}</Label>
-                {type === 'view' ? (
+                {isReadOnly? (
                   <TextDisplay id="institutionId">
                     {currentPatient.institution && currentPatient.institution.name + ' ' + (currentPatient.institution.description ? `(${currentPatient.institution.description})` : null)}
                   </TextDisplay>
