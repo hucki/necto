@@ -19,7 +19,6 @@ const FormLabel = styled(ChakraFormLabel)({
   transform: 'scale(0.85) translateY(-16px)',
   top: 0,
   left: '4px',
-  zIndex: 2,
   position: 'absolute',
   backgroundColor: 'white',
   pointerEvents: 'none',
