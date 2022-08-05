@@ -40,8 +40,6 @@ export const addPatient = async (
     delete incomingPatient.availability
     delete incomingPatient.doctor
     delete incomingPatient.institution
-    delete incomingPatient.telephoneNumber
-    delete incomingPatient.mailAddress
 
     const encryptedPatient = encryptPatient(incomingPatient);
     const createdPatient = await prisma.patient.create({
@@ -50,27 +48,6 @@ export const addPatient = async (
         tenantId: tenantId,
       },
     });
-    const createdTelephone = req.body.telephoneNumber
-      ? await prisma.contactData.create({
-          data: {
-            patientId: createdPatient.uuid,
-            type: 'telephone',
-            contact: req.body.telephoneNumber,
-            tenantId: tenantId,
-          },
-        })
-      : {};
-
-    const createdMail = req.body.mailAddress
-      ? await prisma.contactData.create({
-          data: {
-            patientId: createdPatient.uuid,
-            type: 'email',
-            contact: req.body.mailAddress,
-            tenantId: tenantId,
-          },
-        })
-      : {};
 
     res.json(createdPatient);
     res.status(201);
@@ -97,8 +74,6 @@ export const updatePatient = async (
     delete incomingPatient.availability
     delete incomingPatient.doctor
     delete incomingPatient.institution
-    delete incomingPatient.telephoneNumber
-    delete incomingPatient.mailAddress
     delete incomingPatient.numberInLine
 
     const encryptedPatient = encryptPatient(incomingPatient);
