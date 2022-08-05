@@ -129,6 +129,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
       .map((p: Patient | WaitingPatient)=> (
         <Tr key={p.uuid} onClick={() => showPersonInfo(p)}>
           { type === 'waitingPatients' && isWaitingPatient(p) && <Td><b>{p.numberInLine}</b></Td>}
+          <Td>{p.title}</Td>
           <Td>{p.lastName}</Td>
           <Td>{p.firstName}</Td>
           <Td>
@@ -247,6 +248,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           <Thead>
             <Tr>
               { type === 'waitingPatients' && <Th width={5}>Nr </Th>}
+              <Th>{t('label.title')}</Th>
               <Th>{t('label.lastName')}</Th>
               <Th>{t('label.firstName')}</Th>
               <Th>{t('label.telephoneNumber')} </Th>
@@ -316,7 +318,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           }}
         >
           <ModalContent minW="80vw">
-            <ModalBody>
+            <ModalBody display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
               {currentPerson ? <PersonModal onClose={onCloseInfo} person={currentPerson} personType={type !== 'doctors' ? 'patient': 'doctor'}/> : null}
             </ModalBody>
           </ModalContent>
