@@ -1,9 +1,7 @@
-import { Checkbox, Divider, GridItem, Icon, SimpleGrid } from '@chakra-ui/react';
+import { Checkbox, Divider, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
-import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
-import { getDisplayName } from '../../helpers/displayNames';
 import { useCreateDoctorContact, useCreatePatientContact } from '../../hooks/contact';
 import { useAllDoctors } from '../../hooks/doctor';
 import { useAllInstitutions } from '../../hooks/institution';
@@ -12,7 +10,7 @@ import { ContactData } from '../../types/ContactData';
 import { Doctor } from '../../types/Doctor';
 import { Patient } from '../../types/Patient';
 import { Person } from '../../types/Person';
-import { IconButton, Input, Label, ModalFormGroup, Select, TextDisplay } from '../Library';
+import { IconButton, Input, FormLabel, ModalFormGroup, Select } from '../Library';
 import { AppointmentList } from '../List/Appointments';
 
 interface PersonFormProps {
@@ -43,6 +41,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
   type PersonKey = keyof Patient;
 
   const sharedAutoFields: PersonKey[] = [
+    'title',
     'firstName',
     'lastName',
     'street',
@@ -51,10 +50,10 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
   ];
 
   const patientAutoFields: PersonKey[] = [
+    'hasContract',
+    'isAddpayFreed',
     'gender',
     'notices',
-    'isAddpayFreed',
-    'careFacility',
     'medicalReport',
   ];
 
@@ -98,7 +97,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
 
   function onSelectChange({event, key}: OnSelectChangeProps) {
     event.preventDefault();
-    const val = event.currentTarget.value === 'remove' ? undefined : event.currentTarget.value;
+    const val = !event.currentTarget.value || event.currentTarget.value === 'remove' ? undefined : event.currentTarget.value;
     setCurrentPerson(person => ({...person, [`${key}`]: val}));
   }
 
@@ -128,30 +127,30 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
       .filter(c => c.type === 'telephone')
       .map((phone: ContactData, index) =>
         <ModalFormGroup key={index}>
-          <Label htmlFor={'telephone'+index}><CgPhone /></Label>
-          {isReadOnly
-            ? <TextDisplay id={'telephone'+index}>{phone.contact}</TextDisplay>
-            : <Input
+          <FormControl id={'telephone'+index}>
+            <Input
               isDisabled={isReadOnly}
               onChange={(e) => onContactChange({event: e, id: phone.uuid || ''})}
               id={phone.uuid}
               value={phone.contact}>
             </Input>
-          }
+            <FormLabel><CgPhone /></FormLabel>
+          </FormControl>
         </ModalFormGroup>
       );
     return <>
       {currentPhones}
       {!currentPhones.length && !isReadOnly
         ? <ModalFormGroup>
-          <Label htmlFor="addPhone"><CgPhone /></Label>
-          <IconButton
-            id="addPhone"
-            disabled={!currentPerson.uuid}
-            aria-label="add-phone"
-            icon={<CgAdd />}
-            onClick={() => createContact('telephone')}
-          />
+          <FormControl id="addPhone">
+            <IconButton
+              disabled={!currentPerson.uuid}
+              aria-label="add-phone"
+              icon={<CgAdd />}
+              onClick={() => createContact('telephone')}
+            />
+            <FormLabel><CgPhone /></FormLabel>
+          </FormControl>
         </ModalFormGroup>
         : null
       }
@@ -163,29 +162,31 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
       .filter(c => c.type === 'email')
       .map((email: ContactData, index) =>
         <ModalFormGroup key={index}>
-          <Label htmlFor={'email'+index}><CgMail /></Label>
-          {isReadOnly
-            ? <TextDisplay id={'email'+index}>{email.contact}</TextDisplay>
-            : <Input
+          <FormControl id={'email'+index}>
+            <Input
+              isDisabled={isReadOnly}
               onChange={(e) => onContactChange({event: e, id: email.uuid || ''})}
               id={email.uuid}
               value={email.contact}>
             </Input>
-          }
+            <FormLabel><CgMail /></FormLabel>
+          </FormControl>
         </ModalFormGroup>
       );
     return <>
       {currentEmails}
       {!currentEmails.length && !isReadOnly
         ? <ModalFormGroup>
-          <Label htmlFor="addEmail"><CgMail /></Label>
-          <IconButton
-            id="addEmail"
-            disabled={!currentPerson.uuid}
-            aria-label="add-email"
-            icon={<CgAdd />}
-            onClick={() => createContact('email')}
-          />
+          <FormControl id="addEmail">
+            <IconButton
+              id="addEmailButton"
+              disabled={!currentPerson.uuid}
+              aria-label="add-email"
+              icon={<CgAdd />}
+              onClick={() => createContact('email')}
+            />
+            <FormLabel><CgMail /></FormLabel>
+          </FormControl>
         </ModalFormGroup>
         : null }
     </>;
@@ -200,37 +201,24 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
         typeof currentPerson[key as keyof Person] === 'string' ||
         typeof currentPerson[key as keyof Person] === 'boolean' ? (
             <ModalFormGroup key={key}>
-              <Label htmlFor={key}>{t(`label.${key}`)}</Label>
-              {typeof currentPerson[key as keyof Person] === 'boolean'
-                ? isReadOnly
-                  ? (<Icon
-                    id={key}
-                    as={
-                      currentPerson[key as keyof Person]
-                        ? RiCheckLine
-                        : RiCheckboxBlankLine
-                    }
-                    w={5}
-                    h={5}
-                    color={currentPerson[key as keyof Person] ? 'indigo' : 'gray.400'}
-                  />)
-                  : (<Checkbox
-                    id={key}
+              <FormControl id={key}>
+                {typeof currentPerson[key as keyof Person] === 'boolean'
+                  ? (<Checkbox
                     name={key}
+                    isDisabled={isReadOnly}
                     size="lg"
                     my={2}
                     isChecked={currentPerson[key as keyof Person] ? true : false}
                     onChange={(e) => onCheckboxChange({event: e, key: key as keyof Person})}
                   />)
-                : isReadOnly
-                  ? (<TextDisplay id={key}>
-                    {currentPerson[key as keyof Person]?.toString()}&nbsp;
-                  </TextDisplay>)
                   : (<Input
+                    isDisabled={isReadOnly}
                     onChange={(e) => onInputChange({event: e, key: key as keyof Person})}
                     id={key}
                     value={currentPerson[key as keyof Person]?.toString()}>
                   </Input>)}
+                <FormLabel>{t(`label.${key}`)}</FormLabel>
+              </FormControl>
             </ModalFormGroup>
           ) : null
       );
@@ -238,7 +226,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
 
   return (
     <>
-      <SimpleGrid columns={[1, null, 2]} gap={6}>
+      <SimpleGrid columns={[1, null, 2]} gap={6} py={2} height={'100%'} overflowY={'scroll'}>
         <GridItem>
           {autoFormFields()}
           {telephone()}
@@ -248,50 +236,41 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
           {personType !== 'doctor' && currentPatient && (
             <>
               <ModalFormGroup>
-                <Label htmlFor="doctorId">{t('label.doctor')}</Label>
-                {isReadOnly ? (
-                  <TextDisplay id="doctorId">
-                    {currentPatient['doctor'] && getDisplayName(currentPatient['doctor'])}
-                  </TextDisplay>
-                ) : (
-                  <>
-                    <Select
-                      name="employee"
-                      value={currentPatient['doctorId']}
-                      onChange={(e) => onSelectChange({event: e, key: 'doctorId'})}
-                    >
-                      <option value={'remove'}>No Doctor</option>
-                      {doctors.map((t, i) => (
-                        <option key={i} value={t.uuid}>
-                          {t.firstName + ' ' + t.lastName}
-                        </option>
-                      ))}
-                    </Select>
-                  </>
-                )}
+                <FormControl id="doctorId">
+                  <Select
+                    isDisabled={isReadOnly}
+                    name="employee"
+                    value={currentPatient['doctorId'] || undefined}
+                    onChange={(e) => onSelectChange({event: e, key: 'doctorId'})}
+                  >
+                    <option value={'remove'}>No Doctor</option>
+                    {doctors.map((t, i) => (
+                      <option key={i} value={t.uuid}>
+                        {t.firstName + ' ' + t.lastName}
+                      </option>
+                    ))}
+                  </Select>
+                  <FormLabel>{t('label.doctor')}</FormLabel>
+                </FormControl>
               </ModalFormGroup>
               <ModalFormGroup>
-                <Label htmlFor="institutionId">{t('label.institution')}</Label>
-                {isReadOnly? (
-                  <TextDisplay id="institutionId">
-                    {currentPatient.institution && currentPatient.institution.name + ' ' + (currentPatient.institution.description ? `(${currentPatient.institution.description})` : null)}
-                  </TextDisplay>
-                ) : (
-                  <>
-                    <Select
-                      name="employee"
-                      value={currentPatient['institutionId']}
-                      onChange={(e) => onSelectChange({event: e, key: 'institutionId'})}
-                    >
-                      <option value={'remove'}>No Institution</option>
-                      {institutions.map((t, i) => (
-                        <option key={i} value={t.uuid}>
-                          {t.name + ' ' + (t.description ? `(${t.description})` : null)}
-                        </option>
-                      ))}
-                    </Select>
-                  </>
-                )}
+                <FormControl id="institutionId">
+                  <Select
+                    isDisabled={isReadOnly}
+                    name="employee"
+                    value={currentPatient['institutionId'] || undefined}
+                    onChange={(e) => onSelectChange({event: e, key: 'institutionId'})}
+                  >
+                    <option value={'remove'}>No Institution</option>
+                    {institutions.map((t, i) => (
+                      <option key={i} value={t.uuid}>
+                        {t.name + ' ' + (t.description ? `(${t.description})` : undefined)}
+                      </option>
+                    ))}
+                  </Select>
+                  <FormLabel>{t('label.institution')}</FormLabel>
+                </FormControl>
+
               </ModalFormGroup>
               <Divider m="1" />
               {currentPatient.events?.length
