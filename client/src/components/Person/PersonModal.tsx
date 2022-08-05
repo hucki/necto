@@ -1,91 +1,119 @@
-import { Icon, ModalFooter, ModalHeader, useToast, UseToastOptions } from '@chakra-ui/react';
+import {
+  Icon,
+  ModalFooter,
+  ModalHeader,
+  useToast,
+  UseToastOptions,
+} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgSmile } from 'react-icons/cg';
 import { FaArchive, FaEdit, FaTimes } from 'react-icons/fa';
+import { useUpdateContact } from '../../hooks/contact';
 import { useCreateDoctor, useUpdateDoctor } from '../../hooks/doctor';
 import { useCreatePatient, useUpdatePatient } from '../../hooks/patient';
+import { ContactData } from '../../types/ContactData';
 import { Person } from '../../types/Person';
 import { Button, ControlWrapper, IconButton } from '../Library';
 import { PersonForm } from './PersonForm';
 
 interface PersonModalProps {
   person: Person;
-  type?: 'create' | 'view';
+  type?: 'create' | 'edit';
   personType?: 'doctor' | 'patient';
   onClose: () => void;
 }
 
-export const PersonModal = ({person, onClose, type = 'view', personType = 'patient'}: PersonModalProps) => {
+export const PersonModal = ({
+  person,
+  onClose,
+  type = 'edit',
+  personType = 'patient',
+}: PersonModalProps) => {
   const toast = useToast();
   const { t } = useTranslation();
 
-  const  [updatePatient, { error: updatePatientError }] = useUpdatePatient();
-  const  [createPatient, { error: createPatientError }] = useCreatePatient();
+  const [updatePatient] = useUpdatePatient();
+  const [createPatient] = useCreatePatient();
 
-  const  [updateDoctor, { error: updateDoctorError }] = useUpdateDoctor();
-  const  [createDoctor, { error: createDoctorError }] = useCreateDoctor();
+  const [updateDoctor] = useUpdateDoctor();
+  const [createDoctor] = useCreateDoctor();
 
-  const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'view');
-  const [currentPerson, setCurrentPerson] = useState<Person>(() => ({...person}));
+  const [updateContact] = useUpdateContact();
 
-  const handleCurrentPersonChange = (person: Person) => {
-    setCurrentPerson(cur => ({...cur, ...person}));
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'edit');
+  const [currentPerson, setCurrentPerson] = useState<Person>(() => ({
+    ...person,
+  }));
+
+  type ToastOptionsProps = {
+    type: 'created' | 'updated'
+    result: 'error' | 'success' | 'info' | 'warning' | undefined
+  }
+  const toastOptions = ({type, result}: ToastOptionsProps): UseToastOptions => {
+    return {
+      title: `${personType} ${type}.`,
+      description: `${personType} ${currentPerson.lastName}, ${currentPerson.firstName} has been ${type}`,
+      status: result,
+      duration: 5000,
+      isClosable: true,
+    };
+  };
+
+  const handleCurrentPersonChange = (
+    person: Person,
+    contactDataCollection: ContactData[]
+  ) => {
+    setCurrentPerson((cur) => ({ ...cur, ...person, contactData: contactDataCollection }));
+    if (!currentPerson.uuid && currentPerson?.firstName && currentPerson?.lastName) {
+      onSaveChanges();
+    }
   };
 
   const onSaveChanges = () => {
     if (currentPerson?.firstName && currentPerson?.lastName) {
-      if (type === 'view') {
-        setIsReadOnly(!isReadOnly);
-        const updateSuccessToastOptions: UseToastOptions = {
-          title: `${personType} updated.`,
-          description: `${personType} ${currentPerson.lastName}, ${currentPerson.firstName} has been updated`,
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        };
+      if (currentPerson.uuid) {
+        // update
         personType === 'patient'
-          ? updatePatient({patient: currentPerson}).then((res) => {
+          ? updatePatient({ patient: currentPerson }).then((res) => {
             if (res?.uuid) {
-              toast(updateSuccessToastOptions);
-              onClose();
+              setCurrentPerson(res);
+              toast(toastOptions({type: 'updated', result: 'success'}));
             }
           })
-          : updateDoctor({doctor: currentPerson}).then((res) => {
+          : updateDoctor({ doctor: currentPerson }).then((res) => {
             if (res?.uuid) {
-              toast(updateSuccessToastOptions);
-              onClose();
+              setCurrentPerson(res);
+              toast(toastOptions({type: 'updated', result: 'success'}));
             }
           });
-
+        if (currentPerson.contactData?.length) {
+          for (let i = 0; i < currentPerson.contactData.length; i++) {
+            if (currentPerson.contactData[i].uuid) {
+              updateContact({ contactData: currentPerson.contactData[i] });
+            }
+          }
+        }
       } else {
-        const createSuccesToastOptions: UseToastOptions =
-          {
-            title: `${personType} created.`,
-            description: `${personType} ${currentPerson.lastName}, ${currentPerson.firstName} has been created`,
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-          };
+        // create
         personType === 'patient'
           ? createPatient({ patient: currentPerson }).then((res) => {
             if (res?.uuid) {
-              toast(createSuccesToastOptions);
-              onClose();
+              setCurrentPerson(res);
+              toast(toastOptions({type: 'created', result: 'success'}));
             }
           })
           : createDoctor({ doctor: currentPerson }).then((res) => {
             if (res?.uuid) {
-              toast(createSuccesToastOptions);
-              onClose();
+              setCurrentPerson(res);
+              toast(toastOptions({type: 'created', result: 'success'}));
             }
           });
       }
     } else {
       toast({
         title: 'Missing Data!',
-        description:
-          `Be sure to provide at least the full first and last name of the ${personType}`,
+        description: `Be sure to provide at least the full first and last name of the ${personType}`,
         status: 'warning',
         duration: 5000,
         isClosable: true,
@@ -93,9 +121,19 @@ export const PersonModal = ({person, onClose, type = 'view', personType = 'patie
     }
   };
 
+  const onSaveChangesAndClose = () => {
+    onSaveChanges();
+    onClose();
+  };
+
   return (
     <>
-      <ModalHeader alignItems="center" display="flex" justifyContent="space-between" fontSize="clamp(0.2rem, 0.5rem + 2vw, 24px)">
+      <ModalHeader
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        fontSize="clamp(0.2rem, 0.5rem + 2vw, 24px)"
+      >
         <Icon as={CgSmile} w={10} h={10} mr={2} />
         <div className="person-info">
           {currentPerson.lastName + ', ' + currentPerson.firstName}
@@ -106,8 +144,13 @@ export const PersonModal = ({person, onClose, type = 'view', personType = 'patie
           onClick={onClose}
         />
       </ModalHeader>
-      <PersonForm type={isReadOnly ? 'view' : 'update'} person={currentPerson} onChange={handleCurrentPersonChange} personType={personType}/>
-      {/* <PatientForm type={isReadOnly ? 'view' : 'update'} patient={currentPerson} onChange={handleCurrentPatientChange}/> */}
+      <PersonForm
+        isReadOnly={isReadOnly}
+        person={currentPerson}
+        onChange={handleCurrentPersonChange}
+        personType={personType}
+      />
+      {/* <PatientForm type={isReadOnly ? 'edit' : 'update'} patient={currentPerson} onChange={handleCurrentPatientChange}/> */}
       <ModalFooter
         css={{
           padding: '0.5rem',
@@ -150,14 +193,19 @@ export const PersonModal = ({person, onClose, type = 'view', personType = 'patie
               </Button>
             ) : (
               <>
-                <Button aria-label="cancel changes" type="button" size="sm" onClick={onClose}>
+                <Button
+                  aria-label="cancel changes"
+                  type="button"
+                  size="sm"
+                  onClick={onClose}
+                >
                   {t('button.cancel')}
                 </Button>
                 <Button
                   aria-label="save changes"
                   type="button"
                   disabled={isReadOnly}
-                  onClick={onSaveChanges}
+                  onClick={onSaveChangesAndClose}
                   size="sm"
                   colorScheme="blue"
                 >
