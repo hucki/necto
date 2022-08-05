@@ -53,28 +53,6 @@ export const addDoctor = async (
       },
     });
 
-    const createdTelephone = req.body.telephoneNumber
-      ? await prisma.contactData.create({
-          data: {
-            doctorId: createdDoctor.uuid,
-            type: 'telephone',
-            contact: req.body.telephoneNumber,
-            tenantId: tenantId,
-          },
-        })
-      : {};
-
-    const createdMail = req.body.mailAddress
-      ? await prisma.contactData.create({
-          data: {
-            doctorId: createdDoctor.uuid,
-            type: 'email',
-            contact: req.body.mailAddress,
-            tenantId: tenantId,
-          },
-        })
-      : {};
-
     res.json(createdDoctor);
     res.status(201);
     return;
