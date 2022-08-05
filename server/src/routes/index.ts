@@ -7,6 +7,7 @@ import * as employeeToTeamController from '../controllers/employeeToTeam.control
 import * as roomController from '../controllers/room.controller';
 import * as buildingController from '../controllers/building.controller';
 import * as contractController from '../controllers/contract.controller';
+import * as contactController from '../controllers/contact.controller';
 import * as eventController from '../controllers/event.controller';
 import * as patientController from '../controllers/patient.controller';
 import * as doctorController from '../controllers/doctor.controller';
@@ -117,9 +118,11 @@ router.get('/patients', patientController.getAllPatients);
 router.patch('/patients/:patientId', patientController.updatePatient);
 router.get('/waiting', patientController.getWaitingPatients);
 router.get('/patients/:patientId', patientController.getPatientsEvents);
-
 router.post('/patients', patientController.addPatient);
-router.patch('/patients/:patientId', patientController.updatePatient);
+
+router.post('/patients/:patientId/contact', contactController.addPatientContact);
+router.post('/doctors/:doctorId/contact', contactController.addDoctorContact);
+router.patch('/contact/:contactId', contactController.updateContact);
 // router.delete('/patients/:patientId', patientController.deletePatient);
 
 // doctor routes
