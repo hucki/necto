@@ -50,8 +50,6 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
   ];
 
   const patientAutoFields: PersonKey[] = [
-    'hasContract',
-    'isAddpayFreed',
     'gender',
     'notices',
     'medicalReport',
@@ -122,6 +120,35 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
     }
   };
 
+  const patientCheckboxes = () => {
+    return <ModalFormGroup style={{
+      display: 'flex',
+      justifyContent: 'space-between'
+    }}>
+      <FormControl id="isAddpayFreed" maxWidth="50%">
+        <Checkbox
+          name="isAddpayFreed"
+          isDisabled={isReadOnly}
+          size="lg"
+          my={2}
+          isChecked={(currentPerson as Patient).isAddpayFreed ? true : false}
+          onChange={(e) => onCheckboxChange({event: e, key: 'isAddpayFreed'})}
+        />
+        <FormLabel>{t('label.isAddpayFreed')}</FormLabel>
+      </FormControl>
+      <FormControl id="hasContract">
+        <Checkbox
+          name="hasContract"
+          isDisabled={isReadOnly}
+          size="lg"
+          my={2}
+          isChecked={(currentPerson as Patient).hasContract ? true : false}
+          onChange={(e) => onCheckboxChange({event: e, key: 'hasContract'})}
+        />
+        <FormLabel>{t('label.hasContract')}</FormLabel>
+      </FormControl>
+    </ModalFormGroup>;
+  };
   const telephone = () => {
     const currentPhones = currentContactDataCollection
       .filter(c => c.type === 'telephone')
@@ -228,6 +255,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
     <>
       <SimpleGrid columns={[1, null, 2]} gap={6} py={2} height="100%" overflowY="scroll" overflowX="hidden">
         <GridItem>
+          {personType !== 'doctor' && patientCheckboxes()}
           {autoFormFields()}
           {telephone()}
           {email()}
