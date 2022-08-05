@@ -6,20 +6,20 @@ import {
   queryCache,
 } from 'react-query';
 import { client } from '../services/ApiClient';
-import { Doctor, DoctorInput } from '../types/Doctor';
+import { Doctor } from '../types/Doctor';
 
 export function useCreateDoctor(): MutationResultPair<
 Doctor,
   Error,
-  { doctor: DoctorInput },
+  { doctor: Doctor },
   string
   > {
   const createDoctor = async ({
     doctor,
   }: {
-    doctor: DoctorInput;
+    doctor: Doctor;
   }): Promise<Doctor> => {
-    return client<DoctorInput>('doctors', { data: doctor });
+    return client<Doctor>('doctors', { data: doctor });
   };
   return useMutation(createDoctor, {
     onSuccess: () => {
@@ -31,15 +31,15 @@ Doctor,
 export function useUpdateDoctor(): MutationResultPair<
 Doctor,
   Error,
-  { doctor: DoctorInput },
+  { doctor: Doctor },
   string
   > {
   const updateDoctor = async ({
     doctor,
   }: {
-    doctor: DoctorInput;
+    doctor: Doctor;
   }): Promise<Doctor> => {
-    return client<DoctorInput>(`doctors/${doctor.uuid}`, { data: doctor, method: 'PATCH' });
+    return client<Doctor>(`doctors/${doctor.uuid}`, { data: doctor, method: 'PATCH' });
   };
   return useMutation(updateDoctor, {
     onSuccess: () => {
