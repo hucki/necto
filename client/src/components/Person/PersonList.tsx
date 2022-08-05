@@ -7,8 +7,8 @@ import { RiCheckboxBlankLine, RiCheckLine, RiSearchLine, RiUserAddLine } from 'r
 import { getDisplayName } from '../../helpers/displayNames';
 import { useFilter } from '../../hooks/useFilter';
 import { useViewport } from '../../hooks/useViewport';
-import { Doctor, DoctorInput } from '../../types/Doctor';
-import { Patient, PatientInput, WaitingPatient } from '../../types/Patient';
+import { Doctor } from '../../types/Doctor';
+import { Patient, WaitingPatient } from '../../types/Patient';
 import * as colors from '../../styles/colors';
 import { Button, IconButton, Input } from '../Library';
 import { PersonModal } from './PersonModal';
@@ -86,7 +86,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
 
   // handle selected / new Person
   const [ currentPerson, setCurrentPerson] = useState<Person | WaitingPatient | undefined>(undefined);
-  const [ newPerson, setNewPerson] = useState<PatientInput | DoctorInput | undefined>(undefined);
+  const [ newPerson, setNewPerson] = useState<Patient | Doctor | undefined>(undefined);
   function showPersonInfo(person:Person) {
     setCurrentPerson(person);
     onOpenInfo();
@@ -101,8 +101,6 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
       zip: '',
       street: '',
       city: '',
-      telephoneNumber: '',
-      mailAddress: '',
     };
     const patientFields = {
       isAddpayFreed: false,
