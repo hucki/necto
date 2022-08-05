@@ -3,6 +3,8 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
+import { decryptPatient } from '../utils/crypto';
+import { encryptedPatientFields } from './patient.controller';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
@@ -17,7 +19,6 @@ export const addEvent = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log({ req: req.body });
     const createdEvent = await prisma.event.create({
       data: {
         userId: req.body.userId,
@@ -61,7 +62,6 @@ export const updateEvent = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log({ req: req.body, eId: req.params.eventId });
     const eventId = req.params.eventId;
     const updatedEvent = await prisma.event.update({
       where: {
@@ -163,6 +163,11 @@ export const getDaysEvents = async (
         patient: true,
       },
     });
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].patient) {
+        events[i].patient = decryptPatient({patient: events[i].patient, fields: encryptedPatientFields})
+      }
+    }
     res.json(events);
     res.status(200);
     return;
@@ -198,6 +203,11 @@ export const getWeeksEvents = async (
         patient: true,
       },
     });
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].patient) {
+        events[i].patient = decryptPatient({patient: events[i].patient, fields: encryptedPatientFields})
+      }
+    }
     res.json(events);
     res.status(200);
     return;
