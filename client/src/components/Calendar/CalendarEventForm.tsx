@@ -1,6 +1,4 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Popover,
@@ -13,6 +11,7 @@ import {
   Checkbox,
   Switch,
   Textarea,
+  FormControl,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
@@ -23,6 +22,7 @@ import {
   DatePicker,
   Select,
   Button,
+  FormLabel,
 } from '../Library';
 import { RRule, Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
@@ -229,10 +229,8 @@ function CalendarEventForm({
           onChange={onIsNoteChange}
         />
       </FormGroup>
-      {!isNote &&<FormGroup gridColsUnit="auto">
-        <Label htmlFor="patientId">{t('calendar.event.patient')}</Label>
+      {!isNote &&<FormControl id="patient" mb="0.75rem" mt="0.5rem">
         <Select
-          id="patient"
           name="patientId"
           value={currentEvent.patientId}
           onChange={onSelectChange}
@@ -246,12 +244,12 @@ function CalendarEventForm({
             </option>
           ))}
         </Select>
-      </FormGroup>}
-      <FormGroup gridColsUnit="auto">
-        <Label htmlFor="title">{t(`calendar.event.${isNote ? 'text' : 'title'}`)}</Label>
+        <FormLabel>{t('calendar.event.patient')}</FormLabel>
+      </FormControl>}
+      <FormControl id="eventTitleInput" mb="0.75rem" mt={isNote ? '0.5rem': undefined}>
         {isNote
           ? <Textarea
-            id="eventTitleInput"
+
             name="title"
             value={currentEvent.title}
             onChange={onTextareaChange}
@@ -260,13 +258,13 @@ function CalendarEventForm({
           />
           :
           <Input
-            id="eventTitleInput"
             name="title"
             value={currentEvent.title}
             onChange={onInputChange}
             placeholder={t('calendar.event.newAppointmentTitle')}
           />}
-      </FormGroup>
+        <FormLabel>{t(`calendar.event.${isNote ? 'text' : 'title'}`)}</FormLabel>
+      </FormControl>
       {!isNote &&
         <div>
           <FormGroup>
@@ -278,8 +276,6 @@ function CalendarEventForm({
               isChecked={currentEvent.isHomeVisit}
               onChange={onCheckboxChange}
             >{t('calendar.event.homeVisit')}</Checkbox>
-          </FormGroup>
-          <FormGroup>
             <Checkbox
               id="isDiagnostic"
               name="isDiagnostic"
@@ -291,42 +287,42 @@ function CalendarEventForm({
           </FormGroup>
         </div>
       }
-      <FormGroup gridColsUnit="auto">
-        <Label htmlFor="eventStartDatePicker">
-          {t('calendar.event.start')}
-        </Label>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}>
+        <FormControl id="eventStartDatePicker"  mb="0.75rem" maxWidth="50%">
+          <DatePicker
+            name="startDate"
+            showTimeSelect
+            locale="de"
+            timeFormat="p"
+            timeIntervals={15}
+            dateFormat="Pp"
+            selected={dayjs(currentEvent.startTime).toDate()}
+            onChange={(date: ReactDatePickerReturnType) => {
+              if (date) handleTimeChange({date, key: 'startTime'});
+            }}
+          />
+          <FormLabel>{t('calendar.event.start')}</FormLabel>
+        </FormControl>
+        {!isNote &&
+          <FormControl id="duration" mb="0.75rem" maxWidth="25%">
+            <Select
+              id="duration"
+              name="duration"
+              value={eventDuration}
+              onChange={handleEventDurationChange}
+            >
+              <option value={45}>0:45</option>
+              <option value={30}>0:30</option>
+            </Select>
+            <FormLabel>{t('calendar.event.duration')}</FormLabel>
+          </FormControl>
+        }
+      </div>
+      <FormControl id="eventEndDatePicker" mb="0.75rem"  maxWidth="50%">
         <DatePicker
-          id="eventStartDatePicker"
-          name="startDate"
-          showTimeSelect
-          locale="de"
-          timeFormat="p"
-          timeIntervals={15}
-          dateFormat="Pp"
-          selected={dayjs(currentEvent.startTime).toDate()}
-          onChange={(date: ReactDatePickerReturnType) => {
-            if (date) handleTimeChange({date, key: 'startTime'});
-          }}
-        />
-      </FormGroup>
-      {!isNote &&
-        <FormGroup gridColsUnit="auto">
-          <Label htmlFor="duration">{t('calendar.event.duration')}</Label>
-          <Select
-            id="duration"
-            name="duration"
-            value={eventDuration}
-            onChange={handleEventDurationChange}
-          >
-            <option value={45}>0:45</option>
-            <option value={30}>0:30</option>
-          </Select>
-        </FormGroup>
-      }
-      <FormGroup gridColsUnit="auto">
-        <Label htmlFor="eventEndDatePicker">{t('calendar.event.end')}</Label>
-        <DatePicker
-          id="eventEndDatePicker"
           name="endDate"
           showTimeSelect
           locale="de"
@@ -338,7 +334,8 @@ function CalendarEventForm({
             if (date) handleTimeChange({date, key: 'endTime'});
           }}
         />
-      </FormGroup>
+        <FormLabel>{t('calendar.event.end')}</FormLabel>
+      </FormControl>
       {!isNote &&
         <div>
           <hr></hr>
@@ -355,32 +352,37 @@ function CalendarEventForm({
               onChange={onCheckboxChange}
             />
           </FormGroup>
-          <FormGroup>
-            <Label htmlFor="frequency">{t('calendar.event.frequency')}</Label>
-            <Select
-              id="frequency"
-              name="frequency"
-              value={undefined}
-              disabled={!currentEvent.isRecurring}
-              onChange={onSelectChange}>
-              <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
-              <option value="BIWEEKLY">{t('calendar.event.frequencyBiWeekly')}</option>
-              <option value="MONTHLY" disabled>
-                {t('calendar.event.frequencyMonthly')}
-              </option>
-            </Select>
-            <Label htmlFor="interval">{t('calendar.event.interval')}</Label>
-            <Input
-              id="interval"
-              name="interval"
-              type="number"
-              min={1}
-              max={20}
-              disabled={!currentEvent.isRecurring}
-              defaultValue={recurringInterval}
-              onChange={handleRecurringIntervalChange}
-            />
-          </FormGroup>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}>
+            <FormControl id="frequency" mb="0.75rem" maxWidth="50%">
+              <Select
+                name="frequency"
+                value={undefined}
+                disabled={!currentEvent.isRecurring}
+                onChange={onSelectChange}>
+                <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
+                <option value="BIWEEKLY">{t('calendar.event.frequencyBiWeekly')}</option>
+                <option value="MONTHLY" disabled>
+                  {t('calendar.event.frequencyMonthly')}
+                </option>
+              </Select>
+              <FormLabel>{t('calendar.event.frequency')}</FormLabel>
+            </FormControl>
+            <FormControl id="interval" mb="0.75rem" maxWidth="25%">
+              <Input
+                name="interval"
+                type="number"
+                min={1}
+                max={20}
+                disabled={!currentEvent.isRecurring}
+                defaultValue={recurringInterval}
+                onChange={handleRecurringIntervalChange}
+              />
+              <FormLabel>{t('calendar.event.interval')}</FormLabel>
+            </FormControl>
+          </div>
           <Popover>
             <PopoverTrigger>
               <Button
@@ -388,7 +390,7 @@ function CalendarEventForm({
                 type="button"
                 onClick={onBuildTimelineHandler}
                 disabled={!currentEvent.isRecurring}
-                css={{
+                style={{
                   alignSelf: 'flex-end',
                 }}
               >
@@ -396,7 +398,7 @@ function CalendarEventForm({
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              css={{
+              style={{
                 backgroundColor: 'white',
                 border: '1px solid #3333',
                 borderRadius: '1rem',
@@ -405,7 +407,7 @@ function CalendarEventForm({
             >
               <PopoverArrow />
               <PopoverCloseButton
-                css={{
+                style={{
                   border: 'none',
                   borderRadius: '50%',
                   width: '1.5rem',
