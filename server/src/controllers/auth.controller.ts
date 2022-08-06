@@ -131,12 +131,15 @@ export const getMe = async (
 };
 
 export const logout = async (
-  req: Request,
+  req: Request & { logout: (err: any) => void },
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  req.logout();
-  res.status(200).json('logged out');
+  req.logout((err: any) => {
+    if (err) { return next(err); }
+    res.status(200).json('logged out');
+  });
+
   return;
 };
 
