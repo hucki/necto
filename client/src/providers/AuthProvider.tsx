@@ -20,6 +20,7 @@ interface ErrorResponse {
 
 type AuthContextType = {
   isAuthenticated: boolean,
+  isAuthorized: boolean,
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>,
   user: MinimalUser | undefined,
   setUser: Dispatch<SetStateAction<MinimalUser|undefined>>,
@@ -31,6 +32,7 @@ type AuthContextType = {
 }
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  isAuthorized: false,
   setIsAuthenticated: () => false,
   user: undefined,
   setUser: () => undefined,
@@ -49,12 +51,19 @@ function AuthProvider({children}:{children: any}) {
   const [ isError, setIsError ] = useState<boolean>(false);
   const [ errorMessage, setErrorMessage ] = useState<string>('');
   const [ user, setUser ] = useState<MinimalUser | undefined>(undefined);
-
+  const [ isAuthorized, setIsAuthorized ] = useState<boolean>(() => (user?.isAdmin || user?.isEmployee || user?.isPlanner) ? true : false);
   window.addEventListener('storage', () => {
     const newValue = window.localStorage.getItem(tokenKey);
     setUserToken(newValue);
   });
 
+  useEffect(() => {
+    if (user?.isAdmin || user?.isEmployee || user?.isPlanner) {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+    }
+  }, [user]);
   useEffect(()=>{
     const fetchMe = async () => {
       try {
@@ -122,6 +131,7 @@ function AuthProvider({children}:{children: any}) {
 
   const value = {
     isAuthenticated,
+    isAuthorized,
     setIsAuthenticated,
     user,
     setUser,
