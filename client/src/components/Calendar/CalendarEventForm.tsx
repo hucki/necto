@@ -60,7 +60,10 @@ function CalendarEventForm({
   const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
     freq: RRule.WEEKLY,
     interval: 1,
-    tzid: 'Europe/Amsterdam',
+    // FIXME: current version of rrule.all() yields invalid dates
+    // when tzid is used. Quickfix: comment out tzid
+    // https://github.com/jakubroztocil/rrule/issues/523
+    // tzid: 'Europe/Amsterdam',
     count: 10,
     dtstart: getNewUTCDate(currentEvent.startTime),
   });
