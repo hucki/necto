@@ -119,7 +119,7 @@ export const UserSettings = () => {
             type="text"
             name="firstName"
             autoComplete="given-name"
-            value={userState.firstName}
+            value={userState.firstName || ''}
             onChange={onChangeHandler}
           />
         </FormGroup>
@@ -129,7 +129,7 @@ export const UserSettings = () => {
             type="text"
             name="lastName"
             autoComplete="family-name"
-            value={userState.lastName}
+            value={userState.lastName || ''}
             onChange={onChangeHandler}
           />
         </FormGroup>
