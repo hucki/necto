@@ -1,9 +1,9 @@
-import { Checkbox, GridItem, SimpleGrid } from '@chakra-ui/react';
+import { Checkbox, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useViewport } from '../../hooks/useViewport';
 import { Institution, InstitutionInput } from '../../types/Institution';
-import { Input, Label, ModalFormGroup } from '../Library';
+import { FormLabel, Input } from '../Library';
 
 interface InstitutionFormProps {
   institution: Institution
@@ -68,11 +68,9 @@ export const InstitutionForm = ({institution, onChange}: InstitutionFormProps) =
       .map((key) =>
         typeof currentInstitution[key as keyof Institution] === 'string' ||
         typeof currentInstitution[key as keyof Institution] === 'boolean' ? (
-            <ModalFormGroup key={key}>
-              <Label htmlFor={key}>{t(`label.${key}`)}</Label>
+            <FormControl key={key} id={key} mb="0.75rem">
               {typeof currentInstitution[key as keyof Institution] === 'boolean'
                 ? (<Checkbox
-                  id={key}
                   name={key}
                   size="lg"
                   disabled={isReadOnly}
@@ -81,12 +79,13 @@ export const InstitutionForm = ({institution, onChange}: InstitutionFormProps) =
                   onChange={(e) => onCheckboxChange({event: e, key: key as keyof Institution})}
                 />)
                 : (<Input
+                  name={key}
                   onChange={(e) => onInputChange({event: e, key: key as keyof Institution})}
-                  id={key}
                   disabled={isReadOnly}
                   value={currentInstitution[key as keyof Institution]?.toString()}>
                 </Input>)}
-            </ModalFormGroup>
+              <FormLabel>{t(`label.${key}`)}</FormLabel>
+            </FormControl>
           ) : null
       );
   };
