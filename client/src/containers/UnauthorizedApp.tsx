@@ -26,7 +26,7 @@ function UnauthorizedApp(): JSX.Element {
           <Stack spacing="4" alignItems="center">
             <LogoIcon />
             <Heading as="h1" size="lg">{t('auth.welcome')}</Heading>
-            <div>Your account is not yet authorized.</div>
+            <div>{t('auth.notYetAuthorized')}</div>
             <LogoutButton />
           </Stack>
         </Box>
