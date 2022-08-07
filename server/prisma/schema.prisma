@@ -231,6 +231,7 @@ model User {
   lastName                                String?             @db.VarChar(64)
   a0Id                                    String?             @db.VarChar
   validUntil                              DateTime?           @db.Timestamptz(6)
+  isBlocked                               Boolean             @default(false)
   createdAt                               DateTime            @default(now())
   updatedAt                               DateTime            @updatedAt
   userSettings                            UserSettings[]      @relation("userSettings_userIdTousers")
