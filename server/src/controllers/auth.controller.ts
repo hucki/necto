@@ -81,7 +81,8 @@ export const registerUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {email, password} = req?.body;
+  const {email, password, firstName, lastName} = req?.body;
+  console.log({email, password, firstName, lastName});
   if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
     res.json('improper values');
     res.status(400);
@@ -96,7 +97,9 @@ export const registerUser = async (
         data: {
           tenantId,
           email,
-          password: hashedPassword
+          password: hashedPassword,
+          firstName,
+          lastName
         }
       })
       res.json({
