@@ -1,10 +1,10 @@
 import React from 'react';
-import TodoList from '../../components/Todo/TodoList';
+import NewUserPanel from '../../components/InfoPanel/NewUserPanel';
 
 const Home = () => {
   return <>
     <div className="home-wrapper" style={{padding: '0 0.25rem 0 0.25rem'}}>
-      <TodoList />
+      <NewUserPanel />
     </div>
   </>;
 };
