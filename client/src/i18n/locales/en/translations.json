@@ -104,6 +104,7 @@
     "confirmPassword": "confirm password",
     "forgotPassword": "Forgot password? Click here!",
     "resetPassword": "reset password",
-    "reset": "reset"
+    "reset": "reset",
+    "notYetAuthorized": "You have succesfully registered, but your account is not yet activated."
   }
 }
