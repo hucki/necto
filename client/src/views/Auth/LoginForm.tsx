@@ -1,9 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { FormControl } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormGroup, Input, Button, Label } from '../../components/Library';
+import { Input, Button, FormLabel } from '../../components/Library';
 import { AuthContext } from '../../providers/AuthProvider';
 
 const LoginForm = (): JSX.Element => {
@@ -46,6 +47,7 @@ const LoginForm = (): JSX.Element => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
+          marginTop: '10px',
           '> div': {
             margin: '10px auto',
             width: '100%',
@@ -53,8 +55,7 @@ const LoginForm = (): JSX.Element => {
           },
         }}
       >
-        <FormGroup>
-          <Label htmlFor="email">{t('auth.email')}</Label>
+        <FormControl id="email">
           <Input
             type="text"
             name="email"
@@ -62,9 +63,9 @@ const LoginForm = (): JSX.Element => {
             value={loginState.email}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="password">{t('auth.password')}</Label>
+          <FormLabel>{t('auth.email')}</FormLabel>
+        </FormControl>
+        <FormControl id="password">
           <Input
             type="password"
             name="password"
@@ -72,7 +73,8 @@ const LoginForm = (): JSX.Element => {
             value={loginState.password}
             onChange={onChangeHandler}
           />
-        </FormGroup>
+          <FormLabel>{t('auth.password')}</FormLabel>
+        </FormControl>
 
         <Button
           aria-label="login"
