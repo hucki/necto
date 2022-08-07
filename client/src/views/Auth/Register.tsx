@@ -1,9 +1,11 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { FormControl } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
+import styled from '@emotion/styled/macro';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormGroup, Input, Button, Label } from '../../components/Library';
+import { Input, Button, FormLabel } from '../../components/Library';
 import { register } from '../../services/Auth';
 import { RegisterResponse } from '../../types/Auth';
 
@@ -18,7 +20,19 @@ interface ErrorResponse {
   message?: string
 }
 
-const Register = (): JSX.Element => {
+type RegisterProps = {
+  onHasRegistered: () => void
+};
+const InputWrapper = styled.div({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '0.5rem',
+  margin: '10px auto',
+  width: '100%',
+  maxWidth: '400px',
+});
+
+const Register = ({onHasRegistered}: RegisterProps): JSX.Element => {
   const { t } = useTranslation();
   const [ message, setMessage] = useState<string| undefined>(undefined);
   const [ state, setState ] = useState<'error' | 'success'>('success');
@@ -27,6 +41,8 @@ const Register = (): JSX.Element => {
     emailConfirmation: '',
     password: '',
     passwordConfirmation: '',
+    firstName: '',
+    lastName: '',
   });
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -40,14 +56,23 @@ const Register = (): JSX.Element => {
   const onSubmitHandler = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     try {
-      const registerResponse: RegisterResponse = await register({ email: registerState.email, password: registerState.password });
+      const registerResponse: RegisterResponse = await register({
+        email: registerState.email,
+        password: registerState.password,
+        firstName: registerState.firstName,
+        lastName: registerState.lastName,
+      });
       if (!registerResponse) {
-        setTimeout(() => setMessage(undefined), 2500);
+        setTimeout(() => {
+          setMessage(undefined);
+          setState('success');
+        }, 2500);
         setMessage('Registration failed');
         setState('error');
       } else {
         setMessage('Registration successfull');
         setState('success');
+        setTimeout(() => onHasRegistered(), 2500);
       }
     } catch (error) {
       const errorResponse = error as ErrorResponse;
@@ -85,15 +110,33 @@ const Register = (): JSX.Element => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          '> div': {
-            margin: '10px auto',
-            width: '100%',
-            maxWidth: '300px',
-          },
+          marginTop: '10px',
         }}
       >
-        <FormGroup>
-          <Label htmlFor="email">{t('auth.email')}</Label>
+        <InputWrapper>
+          <FormControl id="firstName" isRequired>
+            <Input
+              type="text"
+              name="firstName"
+              autoComplete="given-name"
+              value={registerState.firstName}
+              onChange={onChangeHandler}
+            />
+            <FormLabel>{t('label.firstName')}</FormLabel>
+          </FormControl>
+          <FormControl id="lastName" isRequired>
+            <Input
+              type="text"
+              name="lastName"
+              autoComplete="family-name"
+              value={registerState.lastName}
+              onChange={onChangeHandler}
+            />
+            <FormLabel>{t('label.lastName')}</FormLabel>
+          </FormControl>
+        </InputWrapper>
+        {/* <InputWrapper> */}
+        <FormControl id="register-email" style={{margin: '10px auto'}} isRequired>
           <Input
             type="text"
             name="email"
@@ -101,9 +144,9 @@ const Register = (): JSX.Element => {
             value={registerState.email}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="emailConfirmation">{t('auth.confirmEmail')}</Label>
+          <FormLabel>{t('auth.email')}</FormLabel>
+        </FormControl>
+        <FormControl id="emailConfirmation"  style={{margin: '10px auto'}} isRequired>
           <Input
             type="text"
             name="emailConfirmation"
@@ -111,9 +154,11 @@ const Register = (): JSX.Element => {
             value={registerState.emailConfirmation}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="password">{t('auth.password')}</Label>
+          <FormLabel>{t('auth.confirmEmail')}</FormLabel>
+        </FormControl>
+        {/* </InputWrapper> */}
+        {/* <InputWrapper> */}
+        <FormControl id="register-password"  style={{margin: '10px auto'}} isRequired>
           <Input
             type="password"
             name="password"
@@ -121,9 +166,9 @@ const Register = (): JSX.Element => {
             value={registerState.password}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="passwordConfirmation">{t('auth.confirmPassword')}</Label>
+          <FormLabel>{t('auth.password')}</FormLabel>
+        </FormControl>
+        <FormControl id="passwordConfirmation"  style={{margin: '10px auto'}} isRequired>
           <Input
             type="password"
             name="passwordConfirmation"
@@ -131,8 +176,9 @@ const Register = (): JSX.Element => {
             value={registerState.passwordConfirmation}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-
+          <FormLabel>{t('auth.confirmPassword')}</FormLabel>
+        </FormControl>
+        {/* </InputWrapper> */}
         <Button aria-label="login" type="submit"
           disabled={!readyToRegister}
           colorScheme={state === 'error' ? 'red' : 'green'}
