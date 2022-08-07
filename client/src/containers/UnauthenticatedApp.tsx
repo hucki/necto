@@ -64,18 +64,18 @@ function UnauthenticatedApp(): JSX.Element {
                 }
               </TabList>
               <TabPanels>
-                <TabPanel>
+                <TabPanel p="0">
                   <ErrorBoundary>
                     <LoginForm />
                   </ErrorBoundary>
                   <Button w="100%" type='reset' onClick={handleResetPassword}>{t('auth.forgotPassword')}</Button>
                 </TabPanel>
-                <TabPanel>
-                  <Register />
+                <TabPanel p="0">
+                  <Register onHasRegistered={() => setTabIndex(0)}/>
                 </TabPanel>
                 {
                   resetActive &&
-                (<TabPanel>
+                (<TabPanel p="0">
                   <ResetPassword onSubmit={hasResetPassword}/>
                 </TabPanel>)
                 }
