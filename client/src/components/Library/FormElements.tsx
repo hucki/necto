@@ -24,7 +24,10 @@ const FormLabel = styled(ChakraFormLabel)({
   pointerEvents: 'none',
   margin: '3px 2px',
   padding: '1px 4px',
-  transformOrigin: 'left top'
+  transformOrigin: 'left top',
+  zIndex: '2',
+  borderTopRightRadius: '0.5rem',
+  borderTopLeftRadius: '0.5rem'
 });
 
 const TextDisplay = styled.div(inputStyles, {
