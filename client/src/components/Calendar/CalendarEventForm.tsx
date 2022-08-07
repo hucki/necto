@@ -252,7 +252,6 @@ function CalendarEventForm({
       <FormControl id="eventTitleInput" mb="0.75rem" mt={isNote ? '0.5rem': undefined}>
         {isNote
           ? <Textarea
-
             name="title"
             value={currentEvent.title}
             onChange={onTextareaChange}
@@ -266,7 +265,9 @@ function CalendarEventForm({
             onChange={onInputChange}
             placeholder={t('calendar.event.newAppointmentTitle')}
           />}
-        <FormLabel>{t(`calendar.event.${isNote ? 'text' : 'title'}`)}</FormLabel>
+        <FormLabel style={{
+          background: isNote ? 'lightyellow' : undefined,
+        }}>{t(`calendar.event.${isNote ? 'text' : 'title'}`)}</FormLabel>
       </FormControl>
       {!isNote &&
         <div>
@@ -303,7 +304,9 @@ function CalendarEventForm({
             if (date) handleTimeChange({date, key: 'startTime'});
           }}
         />
-        <FormLabel>{t('calendar.event.start')}</FormLabel>
+        <FormLabel style={{
+          background: isNote ? 'khaki' : undefined,
+        }}>{t('calendar.event.start')}</FormLabel>
       </FormControl>
       {!isNote &&
         <FormControl id="duration" mb="0.75rem" maxWidth="25%">
@@ -332,7 +335,9 @@ function CalendarEventForm({
             if (date) handleTimeChange({date, key: 'endTime'});
           }}
         />
-        <FormLabel>{t('calendar.event.end')}</FormLabel>
+        <FormLabel style={{
+          background: isNote ? 'khaki' : undefined,
+        }}>{t('calendar.event.end')}</FormLabel>
       </FormControl>
       {!isNote &&
         <div>
