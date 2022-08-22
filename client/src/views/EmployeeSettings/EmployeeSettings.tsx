@@ -2,53 +2,43 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import { useAllEmployees, useUpdateEmployee } from '../../hooks/employees';
-import { Employee, Employee2Team, Team } from '../../types/Employee';
+import { Contract, Employee, Employee2Team, Team } from '../../types/Employee';
 import { useAddEmployeeToTeam } from '../../hooks/teams';
 import { useAllTeams } from '../../hooks/teams';
-import { Button, FormGroup, Input, Label, Select } from '../../components/Library';
-import { Heading, List, ListIcon, ListItem } from '@chakra-ui/react';
+import { Button, FormLabel, Input, Select } from '../../components/Library';
+import { FormControl, Heading, List, ListIcon, ListItem } from '@chakra-ui/react';
 import { RiArrowDropRightLine, RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useAllUsers } from '../../hooks/user';
+import { colors } from '../../config/colors';
 dayjs.extend(isBetween);
 
-interface EmployeeOverviewProps {
-  employee: Employee;
+interface ContractOverviewProps {
+  contract: Contract;
 }
-const EmployeeOverview = ({ employee }: EmployeeOverviewProps) => {
+const ContractOverview = ({ contract }: ContractOverviewProps) => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <Heading as='h2' size='sm' mb="2">Contract Data</Heading>
-      <List mb="5">
-        <ListItem>
-          <ListIcon as={RiArrowDropRightLine}/>
-          AppointmentsPerWeek:{' '} <strong>{employee.contract[0].appointmentsPerWeek}</strong>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={RiArrowDropRightLine}/>
-          HoursPerWeek: <strong>{employee.contract[0].hoursPerWeek}</strong>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={RiArrowDropRightLine}/>
-          bgColor: <strong>{employee.contract[0].bgColor}</strong>
-        </ListItem>
-      </List>
-      <Heading as='h2' size='sm' mb="2">Teams</Heading>
-      {employee.teams?.length ? (
-        <>
-          <Heading as='h3' size='sm' mb="2">current teams</Heading>
-          <List>
-            {employee.teams.map((t, i) => (
-              <ListItem key={i}>
-                <ListIcon as={RiArrowDropRightLine}/>
-                {t.team.displayName}
-              </ListItem>
-            ))}
-          </List>
-        </>
-      ) : (
-        'no teams found. Please add the employee to at least one team!'
-      )}
+      <Heading as='h2' size='sm' mb="3">{t('label.contractData')}</Heading>
+      <FormControl id="appointmentsPerWeek" style={{margin: '8px auto'}}>
+        <Input value={contract.appointmentsPerWeek}/>
+        <FormLabel>AppointmentsPerWeek</FormLabel>
+      </FormControl>
+      <FormControl id="hoursPerWeek" style={{margin: '8px auto'}}>
+        <Input value={contract.hoursPerWeek}/>
+        <FormLabel>HoursPerWeek</FormLabel>
+      </FormControl>
+      <FormControl id="bgColor" style={{margin: '8px auto'}}>
+        <Select
+          value={contract.bgColor}
+          style={{backgroundColor: `var(--bg${contract.bgColor[0].toUpperCase() + contract.bgColor.substring(1)})`}}
+        >
+          {colors.map((color,i) => <option key={i} value={color}>{color}</option>)}
+        </Select>
+        <FormLabel>bgColor</FormLabel>
+      </FormControl>
     </>
   );
 };
@@ -79,7 +69,7 @@ const EmployeeSettings = () => {
   });
   const [currentTeam, setCurrentTeam] = useState<Team | undefined>();
   const [state, setState] = useState<'view' | 'edit'>('view');
-
+  const remainingTeams = teams.filter(t => !currentEmployee?.teams?.find(ct => ct.team.uuid === t.uuid));
 
   useEffect(() => {
     if (!isLoading && employees.length) {
@@ -173,9 +163,7 @@ const EmployeeSettings = () => {
           maxWidth: '500px',
         }}
       >
-        <Heading as='h1' size='md' mb="2">Employee Profile</Heading>
-        <FormGroup>
-          <Label htmlFor="employee">select employee</Label>
+        <FormControl id="employee" style={{margin: '5px auto'}}>
           <Select
             name="employee"
             value={currentEmployee.uuid}
@@ -187,10 +175,10 @@ const EmployeeSettings = () => {
               </option>
             ))}
           </Select>
-        </FormGroup>
-        <Heading as='h2' size='sm' mb="2">Personal Data</Heading>
-        <FormGroup>
-          <Label htmlFor="firstName">First Name</Label>
+          <FormLabel>{t('label.employeeSelect')}</FormLabel>
+        </FormControl>
+        <Heading as='h2' size='sm' mb="2">{t('menu.personalData')}</Heading>
+        <FormControl id="firstName" style={{margin: '5px auto'}}>
           <Input
             disabled={state === 'view'}
             type="text"
@@ -199,9 +187,9 @@ const EmployeeSettings = () => {
             value={employeeState.firstName}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="alias">alias</Label>
+          <FormLabel>{t('label.firstName')}</FormLabel>
+        </FormControl>
+        <FormControl id="alias" style={{margin: '5px auto'}}>
           <Input
             disabled={state === 'view'}
             type="text"
@@ -210,9 +198,9 @@ const EmployeeSettings = () => {
             value={employeeState.alias}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="lastName">Last Name</Label>
+          <FormLabel>alias</FormLabel>
+        </FormControl>
+        <FormControl id="lastName" style={{margin: '5px auto'}}>
           <Input
             disabled={state === 'view'}
             type="text"
@@ -221,9 +209,9 @@ const EmployeeSettings = () => {
             value={employeeState.lastName}
             onChange={onChangeHandler}
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="user">User</Label>
+          <FormLabel>{t('label.lastName')}</FormLabel>
+        </FormControl>
+        <FormControl id="user" style={{margin: '5px auto'}}>
           <Select
             disabled={state === 'view'}
             name="userId"
@@ -239,7 +227,8 @@ const EmployeeSettings = () => {
                 </option>
               ))}
           </Select>
-        </FormGroup>
+          <FormLabel>User</FormLabel>
+        </FormControl>
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
             <RiEditFill />
@@ -254,27 +243,44 @@ const EmployeeSettings = () => {
             </Button>
           </div>
         )}
-        {currentEmployee.contract.length ? <EmployeeOverview employee={currentEmployee} /> : <b>no Contract!</b>}
+        {currentEmployee.contract.length ? <ContractOverview contract={currentEmployee.contract[0]} /> : <b>no Contract!</b>}
         <br />
-        {currentTeam && (
-          <FormGroup>
-            <Label htmlFor="team">add to team:</Label>
-            <Select
-              name="team"
-              value={currentTeam.uuid}
-              onChange={onTeamChangeHandler}
-            >
-              {teams.map((t, i) => (
-                <option key={i} value={t.uuid}>
-                  {t.displayName}
-                </option>
+        {currentEmployee.teams?.length ? (
+          <>
+            <Heading as='h3' size='sm' mb="2">current teams</Heading>
+            <List style={{marginBottom: '10px'}}>
+              {currentEmployee.teams.map((t, i) => (
+                <ListItem key={i}>
+                  <ListIcon as={RiArrowDropRightLine}/>
+                  {t.team.displayName}
+                </ListItem>
               ))}
-            </Select>
-          </FormGroup>
+            </List>
+          </>
+        ) : (
+          'no teams found. Please add the employee to at least one team!'
         )}
-        <Button type="button" onClick={handleAddEmployeeToTeam}>
-          Add
-        </Button>
+        {currentTeam && remainingTeams.length > 0 && (
+          <>
+            <FormControl id="team">
+              <Select
+                name="team"
+                value={currentTeam.uuid}
+                onChange={onTeamChangeHandler}
+              >
+                {remainingTeams.map((t, i) => (
+                  <option key={i} value={t.uuid}>
+                    {t.displayName}
+                  </option>
+                ))}
+              </Select>
+              <FormLabel>add to team:</FormLabel>
+            </FormControl>
+            <Button type="button" onClick={handleAddEmployeeToTeam}>
+              Add
+            </Button>
+          </>
+        )}
       </form>
     </>
   );
