@@ -90,7 +90,10 @@
     "date": "Datum",
     "appointments": "Termine",
     "no": "keine",
-    "institution": "Einrichtung"
+    "institution": "Einrichtung",
+    "employeeProfile": "Mitarbeiterprofil",
+    "employeeSelect": "Mitarbeiter:in auswählen",
+    "contractData": "Vertragsdaten"
   },
   "auth": {
     "login": "anmelden",

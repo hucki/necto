@@ -89,7 +89,10 @@
     "date": "date",
     "appointments": "Appointments",
     "no": "no",
-    "institution": "Institution"
+    "institution": "Institution",
+    "employeeProfile": "Employee Profile",
+    "employeeSelect": "select employee",
+    "contractData": "contract data"
   },
   "auth": {
     "login": "login",
