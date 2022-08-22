@@ -15,23 +15,31 @@ dayjs.extend(isBetween);
 
 interface ContractOverviewProps {
   contract: Contract;
+  disabled: boolean;
 }
-const ContractOverview = ({ contract }: ContractOverviewProps) => {
+const ContractOverview = ({ contract, disabled = true }: ContractOverviewProps) => {
   const { t } = useTranslation();
 
   return (
     <>
       <Heading as='h2' size='sm' mb="3">{t('label.contractData')}</Heading>
       <FormControl id="appointmentsPerWeek" style={{margin: '8px auto'}}>
-        <Input value={contract.appointmentsPerWeek}/>
+        <Input
+          disabled={disabled}
+          value={contract.appointmentsPerWeek}
+        />
         <FormLabel>AppointmentsPerWeek</FormLabel>
       </FormControl>
       <FormControl id="hoursPerWeek" style={{margin: '8px auto'}}>
-        <Input value={contract.hoursPerWeek}/>
+        <Input
+          disabled={disabled}
+          value={contract.hoursPerWeek}
+        />
         <FormLabel>HoursPerWeek</FormLabel>
       </FormControl>
       <FormControl id="bgColor" style={{margin: '8px auto'}}>
         <Select
+          disabled={disabled}
           value={contract.bgColor}
           style={{backgroundColor: `var(--bg${contract.bgColor[0].toUpperCase() + contract.bgColor.substring(1)})`}}
         >
@@ -229,6 +237,7 @@ const EmployeeSettings = () => {
           </Select>
           <FormLabel>User</FormLabel>
         </FormControl>
+        {currentEmployee.contract.length ? <ContractOverview disabled={state === 'view'} contract={currentEmployee.contract[0]} /> : <b>no Contract!</b>}
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
             <RiEditFill />
@@ -243,8 +252,6 @@ const EmployeeSettings = () => {
             </Button>
           </div>
         )}
-        {currentEmployee.contract.length ? <ContractOverview contract={currentEmployee.contract[0]} /> : <b>no Contract!</b>}
-        <br />
         {currentEmployee.teams?.length ? (
           <>
             <Heading as='h3' size='sm' mb="2">current teams</Heading>
