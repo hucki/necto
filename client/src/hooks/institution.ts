@@ -24,6 +24,8 @@ Institution,
   return useMutation(createInstitution, {
     onSuccess: () => {
       queryCache.invalidateQueries('institutions');
+      queryCache.invalidateQueries('institutions/all');
+      queryCache.invalidateQueries('institutions/archived');
     },
   });
 }
