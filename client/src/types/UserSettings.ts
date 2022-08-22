@@ -1,3 +1,4 @@
+import { BgColor } from "./Colors";
 import { Employee } from "./Employee";
 import { User } from "./User";
 
@@ -18,6 +19,7 @@ export type Contract = {
   userId: string;
   hoursPerWeek: number;
   appointmentsPerWeek: number;
+  bgColor: BgColor;
   validUntil: Date;
   createdAt?: Date;
   updatedAt?: Date;
