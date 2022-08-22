@@ -10,7 +10,6 @@ export const addEmployeeToTeam = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log('incoming:',{request: req.body})
     const addedEmployeeToTeam = await prisma.employeeToTeam.create({
       data: {
         tenantId,
@@ -20,7 +19,6 @@ export const addEmployeeToTeam = async (
     });
 
     res.json(addedEmployeeToTeam);
-    // res.json('FAKE NEWS: addedEmployeeToTeam');
     res.status(201);
     return;
   } catch (e) {
