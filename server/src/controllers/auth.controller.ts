@@ -30,12 +30,18 @@ type UserRoles = {
 // TODO:
 // renew token regularly upon interaction
 
-export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+export const isAuthenticated = (
+  req: Request & { logout: (err: any) => void },
+  res: Response, next: NextFunction
+) => {
   if(req.isAuthenticated()) {
     return next()
   }
-  req.logout()
-  res.status(401).json({ message: 'unauthorized', status: 401 })
+  req.logout((err: any) => {
+    if (err) { return next(err); }
+    res.status(401).json({ message: 'unauthorized', status: 401 });
+  })
+
 };
 
 export const validateLogin = async (
