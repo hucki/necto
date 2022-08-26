@@ -5,7 +5,6 @@ import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
 import { useCreateDoctorContact, useCreatePatientContact } from '../../hooks/contact';
 import { useAllDoctors } from '../../hooks/doctor';
 import { useAllInstitutions } from '../../hooks/institution';
-import { useViewport } from '../../hooks/useViewport';
 import { ContactData } from '../../types/ContactData';
 import { Doctor } from '../../types/Doctor';
 import { Patient } from '../../types/Patient';
@@ -20,15 +19,12 @@ interface PersonFormProps {
   onChange: (person: Person, contactDataCollection: ContactData[]) => void
 };
 
-
-
 export const PersonForm = ({person, isReadOnly = true, personType = 'patient', onChange}: PersonFormProps) => {
-  const { isMobile } = useViewport();
   const { t } = useTranslation();
-  const { isLoading, error, doctors } = useAllDoctors();
+  const { doctors } = useAllDoctors();
   const [ createPatientContact ] = useCreatePatientContact();
   const [ createDoctorContact ] = useCreateDoctorContact();
-  const { isLoading: isLoadingInstitutions, error: errorInstitutions, institutions } = useAllInstitutions();
+  const { institutions } = useAllInstitutions();
   const [ currentPerson, setCurrentPerson ] = useState<Doctor | Patient>(() => ({...person}));
   const [ currentContactDataCollection, setCurrentContactDataCollection ] = useState<ContactData[]>(() => {
     return person.contactData as ContactData[] || [];
@@ -125,7 +121,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
       display: 'flex',
       justifyContent: 'space-between'
     }}>
-      <FormControl id="isAddpayFreed" maxWidth="50%">
+      <FormControl id="isAddpayFreed" maxWidth="50%" isRequired>
         <Checkbox
           name="isAddpayFreed"
           isDisabled={isReadOnly}
@@ -136,7 +132,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
         />
         <FormLabel>{t('label.isAddpayFreed')}</FormLabel>
       </FormControl>
-      <FormControl id="hasContract">
+      <FormControl id="hasContract" isRequired>
         <Checkbox
           name="hasContract"
           isDisabled={isReadOnly}
