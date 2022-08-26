@@ -15,24 +15,50 @@ import { PersonModal } from './PersonModal';
 import { Person } from '../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 
+type ListType = 'doctors' | 'patients' | 'waitingPatients'
 
 interface PersonListProps {
   persons: Doctor[] | Patient[] | WaitingPatient[]
-  type?: 'doctors' | 'patients' | 'waitingPatients'
 }
 
-function PersonList({persons, type = 'patients'}: PersonListProps) {
+function PersonList({persons}: PersonListProps) {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
+  const [ listType, setListType ] = useState<ListType>('patients');
 
-  const isWaitingPatient = (person: Person | WaitingPatient): person is WaitingPatient => {
+  const isWaitingPatientList = (persons: Person[] ): persons is WaitingPatient[] => {
+    if (persons[0] && 'numberInLine' in persons[0]) return true;
+    return false;
+  };
+
+  const isPatientList = (persons: Person[]): persons is Patient[] => {
+    if (persons[0] && 'firstContactAt' in persons[0]) return true;
+    return false;
+  };
+
+  const isDoctorList = (persons: Person[] ): persons is Doctor[] => {
+    if (listType !== 'waitingPatients' && listType !== 'patients') return true;
+    return false;
+  };
+
+  useEffect(() => {
+    const type: ListType = isWaitingPatientList(persons) ? 'waitingPatients' : isPatientList(persons) ? 'patients' : 'doctors';
+    if (type !== listType) setListType(type);
+  }, [persons]);
+
+  const isWaitingPatient = (person: Person ): person is WaitingPatient => {
     if ('numberInLine' in person) return true;
     return false;
   };
 
   const isPatient = (person: Person ): person is Patient => {
     if ('firstContactAt' in person) return true;
+    return false;
+  };
+
+  const isDoctor = (person: Person ): person is Doctor => {
+    if (!isWaitingPatient(person) && !isPatient(person)) return true;
     return false;
   };
 
@@ -43,21 +69,23 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
       setCurrentPage(1);
     }
   }, [search]);
-  const allPatients = persons as Patient[] | WaitingPatient[];
-  const filteredPatients = allPatients.filter((person: Patient | WaitingPatient) =>
-    person.firstName.toLowerCase().includes(search.toLowerCase()) ||
-    person.lastName.toLowerCase().includes(search.toLowerCase()) ||
-    person.street?.toLowerCase().includes(search.toLowerCase()) ||
-    person.city?.toLowerCase().includes(search.toLowerCase()) ||
-    person.institution?.name?.toLowerCase().includes(search.toLowerCase()) ||
-    person.notices?.toLowerCase().includes(search.toLowerCase()) ||
-    person.contactData
-      ?.filter((contact) => contact.type === 'telephone')
-      .findIndex(contact => contact.contact.toLowerCase()
-        .includes(search.toLowerCase())) !== -1
-  );
+  const filteredPatients: Patient[] | WaitingPatient[] =
+    (isWaitingPatientList(persons) || isPatientList(persons))
+      ? persons.filter((person: Patient | WaitingPatient) => (isPatient(person) || isWaitingPatient(person)) &&
+        person.firstName.toLowerCase().includes(search.toLowerCase()) ||
+        person.lastName.toLowerCase().includes(search.toLowerCase()) ||
+        person.street?.toLowerCase().includes(search.toLowerCase()) ||
+        person.city?.toLowerCase().includes(search.toLowerCase()) ||
+        person.institution?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        person.notices?.toLowerCase().includes(search.toLowerCase()) ||
+        person.contactData
+          ?.filter((contact) => contact.type === 'telephone')
+          .findIndex(contact => contact.contact.toLowerCase()
+            .includes(search.toLowerCase())) !== -1
+      ) as Patient[] | WaitingPatient[]
+      : [] as Patient[] | WaitingPatient[];
 
-  const allDoctors = persons as Doctor[];
+  const allDoctors = isDoctorList(persons) ? persons : [];
   const filteredDoctors = allDoctors.filter((person: Doctor) =>
     person.firstName.toLowerCase().includes(search.toLowerCase()) ||
     person.lastName.toLowerCase().includes(search.toLowerCase()) ||
@@ -69,16 +97,16 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         .includes(search.toLowerCase())) !== -1
   );
 
-  const filteredPersons = type === 'doctors' ? filteredDoctors : filteredPatients;
+  const filteredPersons: Person[] = listType === 'doctors' ? filteredDoctors : isWaitingPatientList(filteredPatients) ? filteredPatients : filteredPatients;
 
-  filteredPersons.sort((a: Person, b: Person) => a.lastName.toLowerCase() >= b.lastName.toLowerCase() ? 1 : -1);
+  filteredPersons.sort((a: Person, b: Person) => (isWaitingPatient(a) && isWaitingPatient(b)) ? a.numberInLine >= b.numberInLine ? 1 : -1 : a.lastName.toLowerCase() >= b.lastName.toLowerCase() ? 1 : -1);
 
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
 
   // pagination Config
-  const rowsPerPage = isMobile ? type === 'waitingPatients' ? 10 : 14 : 20;
+  const rowsPerPage = isMobile ? listType === 'waitingPatients'  ? 10 : 14 : 20;
   const numOfPages = Math.ceil(filteredPersons.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -90,7 +118,11 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
   const [ currentPerson, setCurrentPerson] = useState<Person | WaitingPatient | undefined>(undefined);
   const [ newPerson, setNewPerson] = useState<Patient | Doctor | undefined>(undefined);
   function showPersonInfo(person:Person) {
-    setCurrentPerson(person);
+    setCurrentPerson({
+      ...person,
+      notices: isPatient(person) ? person.notices || '' : undefined,
+      medicalReport: isPatient(person) ? person.medicalReport || '' : undefined
+    });
     onOpenInfo();
   }
 
@@ -108,11 +140,12 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
       isAddpayFreed: false,
       careFacility: '',
       notices: '',
+      medicalReport: '',
       firstContactAt: dayjs().toDate(),
       isWaitingSince: dayjs().toDate(),
       companyId: currentCompany?.uuid,
     };
-    const newPerson = Object.assign(sharedFields, (type === 'doctors' ? null : patientFields));
+    const newPerson = Object.assign(sharedFields, (listType === 'doctors' ? null : patientFields));
     setNewPerson({...newPerson });
   };
 
@@ -122,20 +155,20 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
   }
 
   const PersonRows = (): JSX.Element[] =>
-    filteredPatients
+    filteredPersons
       // pagination Filter
       .filter(
-        (p: Person | WaitingPatient, i) =>
+        (_p: Person, i: number) =>
           i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
       )
-      .map((p: Patient | WaitingPatient)=> (
+      .map((p: Person)=> (
         <Tr key={p.uuid} onClick={() => showPersonInfo(p)}>
-          { type === 'waitingPatients' && isWaitingPatient(p) && <Td><b>{p.numberInLine}</b></Td>}
+          { isWaitingPatient(p) && <Td><b>{p.numberInLine}</b></Td>}
           <Td>{p.title}</Td>
           <Td>{p.lastName}</Td>
           <Td>{p.firstName}</Td>
           <Td>
-            {p.contactData
+            {!isDoctor(p) && p.contactData
               ?.filter((c) => c.type === 'telephone')
               .map((tel) => (
                 <div key={tel.uuid}>{tel.contact}</div>
@@ -143,49 +176,49 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           </Td>
           <Td>
             <Icon
-              as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
+              as={!isDoctor(p) && p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
               w={5}
               h={5}
-              color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
+              color={!isDoctor(p) && p.isAddpayFreed ? 'indigo' : 'gray.400'}
             />
           </Td>
           <Td>
             <Icon
-              as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
+              as={!isDoctor(p) && p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
               w={5}
               h={5}
-              color={p.hasContract ? 'indigo' : 'gray.400'}
+              color={!isDoctor(p) && p.hasContract ? 'indigo' : 'gray.400'}
             />
           </Td>
-          { type !== 'doctors' && <Td>{p.gender}</Td> }
+          { !isDoctor(p) && <Td>{p.gender}</Td> }
           <Td>
-            {p.contactData
+            {!isDoctor(p) && p.contactData
               ?.filter((c) => c.type === 'email')
               .map((tel) => (
                 <div key={tel.uuid}>{tel.contact}</div>
               ))}
           </Td>
-          {type !== 'doctors' && (
+          {!isDoctor(p) && (
             <>
               <Td>{p.notices}</Td>
               <Td>{p.doctor && getDisplayName(p.doctor)}</Td>
               <Td>{p.institution && p.institution.name + ' ' + (p.institution.description ? `(${p.institution.description})` : null)}</Td>
             </>
           )}
-          { type === 'doctors' && (
+          { isDoctor(p)  && (
             <>
               <Td>{p.street}</Td>
               <Td>{p.zip}</Td>
               <Td>{p.city}</Td>
             </>
           )}
-          {type === 'waitingPatients'
+          {isWaitingPatient(p)
             ? <Td>{dayjs(p.isWaitingSince).format('ll')}</Td>
-            : type !== 'doctors'
+            : !isDoctor(p)
               ? <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
               : null
           }
-          {type === 'waitingPatients' && p.events?.length ? (
+          {isWaitingPatient(p) && p.events?.length ? (
             <Td>
               <b>
                 {
@@ -218,16 +251,16 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
           />
         </InputGroup>
         {/* <FilterBar hasCompanyFilter /> */}
-        { type !== 'waitingPatients' && (
+        { listType !== 'waitingPatients' && (
           <Button
-            aria-label={`add${type === 'doctors' ? 'Doctor' : 'Patient'}`}
+            aria-label={`add${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
             leftIcon={<RiUserAddLine />}
             onClick={() => showPersonCreate()}
             colorScheme={'green'}
             w='15rem'
             mx='0.5rem'
           >
-            {`add ${type === 'doctors' ? 'Doctor' : 'Patient'}`}
+            {`add ${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
           </Button>
         )}
       </Flex>
@@ -249,42 +282,40 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         >
           <Thead>
             <Tr>
-              { type === 'waitingPatients' && <Th width={5}>Nr </Th>}
+              { listType === 'waitingPatients' && <Th width={5}>Nr </Th>}
               <Th>{t('label.title')}</Th>
               <Th>{t('label.lastName')}</Th>
               <Th>{t('label.firstName')}</Th>
               <Th>{t('label.telephoneNumber')} </Th>
               <Th width={5}>{t('label.isAddpayFreed')}</Th>
               <Th width={5}>{t('label.hasContract')}</Th>
-              {type !== 'doctors' && <Th width={2}>{t('label.gender')} </Th>}
+              {listType !== 'doctors' && <Th width={2}>{t('label.gender')} </Th>}
               <Th>{t('label.mailAddress')} </Th>
-              {type !== 'doctors' && (
+              {listType !== 'doctors' && (
                 <>
                   <Th>{t('label.notices')} </Th>
                   <Th>{t('label.doctor')} </Th>
                   <Th>{t('label.careFacility')} </Th>
                 </>
               )}
-              {type === 'doctors' && (
+              {listType === 'doctors'  && (
                 <>
                   <Th>{t('label.street')}</Th>
                   <Th>{t('label.zip')}</Th>
                   <Th>{t('label.city')}</Th>
                 </>
               )}
-              {type === 'waitingPatients'
+              {listType === 'waitingPatients'
                 ? <Th width={7}>{t('label.isWaitingSince')}</Th>
-                : type !== 'doctors'
+                : listType !== 'doctors'
                   ? <Th width={7}>{t('label.firstContactAt')}</Th>
                   : null
               }
-              {/* {<Th width={5}>{t('label.actions')}</Th>} */}
-              {type === 'waitingPatients' && <Th width={5}>{t('label.diagnostic')}</Th>}
+              {listType === 'waitingPatients' && <Th width={5}>{t('label.diagnostic')}</Th>}
             </Tr>
           </Thead>
           <Tbody>
             {PersonRows()}
-            {/* {PatientAddRow(currentCompany)} */}
           </Tbody>
         </Table>
       </div>
@@ -321,7 +352,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         >
           <ModalContent minW="80vw">
             <ModalBody display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
-              {currentPerson ? <PersonModal onClose={onCloseInfo} person={currentPerson} personType={type !== 'doctors' ? 'patient': 'doctor'}/> : null}
+              {currentPerson ? <PersonModal onClose={onCloseInfo} person={currentPerson} personType={listType !== 'doctors' ? 'patient': 'doctor'}/> : null}
             </ModalBody>
           </ModalContent>
         </ModalOverlay>
@@ -334,7 +365,7 @@ function PersonList({persons, type = 'patients'}: PersonListProps) {
         >
           <ModalContent minW="80vw">
             <ModalBody>
-              {newPerson ? <PersonModal onClose={onCloseCreate} person={newPerson} personType={type !== 'doctors' ? 'patient': 'doctor'} type="create" /> : null}
+              {newPerson ? <PersonModal onClose={onCloseCreate} person={newPerson} personType={listType !== 'doctors' ? 'patient': 'doctor'} type="create" /> : null}
             </ModalBody>
           </ModalContent>
         </ModalOverlay>
