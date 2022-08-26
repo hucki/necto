@@ -1,4 +1,4 @@
 import { Doctor } from "./Doctor";
-import { Patient } from "./Patient";
+import { Patient, WaitingPatient } from "./Patient";
 
-export type Person = Doctor | Patient;
+export type Person = Doctor | Patient | WaitingPatient;
