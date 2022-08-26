@@ -24,7 +24,7 @@ function Patients(): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <PersonList persons={patients} type="patients" />
+      <PersonList persons={patients} />
     </div>
   );
 }
