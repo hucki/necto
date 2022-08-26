@@ -297,11 +297,11 @@ model Patient {
   insuranceNumber     String?       @db.VarChar(64)
   insuranceCardNumber String?       @db.VarChar(64)
   insuranceCardValid  String?       @db.VarChar(64)
-  notices             String?       @db.VarChar(255)
+  notices             String?       @db.VarChar(255) @default("")
   careFacility        String?       @db.VarChar(64)
   state               String?       @db.VarChar(64)
   appointmentRequest  String?       @db.VarChar(64)
-  medicalReport       String?       @db.VarChar(255)
+  medicalReport       String?       @db.VarChar(255) @default("")
   isAddpayFreed       Boolean
   addPayFreedFrom     DateTime?     @db.Date
   addPayFreedUntil    DateTime?     @db.Date
