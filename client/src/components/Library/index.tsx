@@ -32,6 +32,8 @@ import {
   Select,
   DatePicker,
   RadioGroup,
+  LabelledInput,
+  LabelledSelect
 } from './FormElements';
 import { ErrorMessage } from './Messages';
 import {
@@ -70,6 +72,8 @@ export {
   ModalFormGroup,
   Label,
   FormLabel,
+  LabelledInput,
+  LabelledSelect,
   Select,
   ErrorMessage,
   Button,

@@ -1,6 +1,8 @@
-import { Input as ChakraInput, Select as ChakraSelect, FormLabel as ChakraFormLabel } from '@chakra-ui/react';
+import React from 'react';
+import { Input as ChakraInput, Select as ChakraSelect, FormLabel as ChakraFormLabel, FormControl } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import ReactDatePicker from 'react-datepicker';
+import { User } from '../../types/User';
 
 const inputStyles = {
   border: '1px solid #ababab',
@@ -94,4 +96,87 @@ const DatePicker = styled(ReactDatePicker)(inputStyles, {
   background: 'transparent',
 });
 
-export { Input, Textarea, FormGroup, FormLabel, Label, Select, DatePicker, RadioGroup, ModalFormGroup, TextDisplay };
+type CommonLabelledFormElementProps = {
+  isRequired?: boolean
+  id: string
+  disabled: boolean
+  name: string
+  label: string
+  value: string
+}
+type LabelledSelectProps = CommonLabelledFormElementProps & {
+  hasOptionNoSelection?: boolean
+  noSelectionLabel?: string
+  options: User[]
+  onChangeHandler: (e: React.ChangeEvent<HTMLSelectElement>) => void
+}
+
+type LabelledInputProps = CommonLabelledFormElementProps & {
+  autoComplete: string
+  type: React.HTMLInputTypeAttribute | undefined
+  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+const LabelledSelect = ({
+  id,
+  isRequired = false,
+  disabled,
+  name,
+  label,
+  value,
+  onChangeHandler,
+  options,
+  hasOptionNoSelection = false,
+  noSelectionLabel = 'No Selection'
+}: LabelledSelectProps) => {
+  return <FormControl
+    id={id}
+    style={{margin: '5px auto'}}
+    isRequired={isRequired}
+  >
+    <Select
+      disabled={disabled}
+      name={name}
+      value={value}
+      onChange={onChangeHandler}
+    >
+      {hasOptionNoSelection && <option value={'remove'}>{noSelectionLabel}</option>}
+      {options
+        .map((u, i) => (
+          <option key={i} value={u.uuid}>
+            {u.email + ':' + u.lastName + ', ' + u.firstName}
+          </option>
+        ))}
+    </Select>
+    <FormLabel>{label}</FormLabel>
+  </FormControl>;
+};
+const LabelledInput = ({
+  id,
+  isRequired,
+  disabled,
+  name,
+  label,
+  value,
+  onChangeHandler,
+  autoComplete,
+  type
+}: LabelledInputProps) => {
+  return <FormControl
+    id={id}
+    style={{margin: '5px auto'}}
+    isRequired={isRequired}
+  >
+    <Input
+      disabled={disabled}
+      type={type}
+      name={name}
+      autoComplete={autoComplete}
+      value={value}
+      onChange={onChangeHandler}
+    />
+    <FormLabel>{label}</FormLabel>
+  </FormControl>;
+};
+
+export { Input, Textarea, FormGroup, FormLabel, Label, Select, DatePicker, RadioGroup, ModalFormGroup, TextDisplay, LabelledInput, LabelledSelect };
