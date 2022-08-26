@@ -84,6 +84,7 @@
     "mailAddress": "eMail",
     "actions": "Actions",
     "diagnostic": "Diagnostik",
+    "medicalReport": "Befund",
     "careFacility": "Einrichtung",
     "doctor": "Ärzt:in",
     "therapist": "Behandler:in",

@@ -83,6 +83,7 @@
     "mailAddress": "email",
     "actions": "Actions",
     "diagnostic": "diagnostic",
+    "medicalReport": "medical report",
     "careFacility": "care facility",
     "doctor": "doctor",
     "therapist": "therapist",
