@@ -35,8 +35,7 @@ export const CalendarEntry = ({
       // setIcons((icons) => [...icons, <span key="isDiagnostic" style={{color: 'red'}}>D</span>]);
   }, [event]);
 
-  const timeString = `${dayjs(event.startTime).format('HH:mm')} -
-  ${dayjs(event.endTime).format('HH:mm')}`;
+  const timeString = `${dayjs(event.startTime).format('HH:mm')} - ${dayjs(event.endTime).format('HH:mm')}`;
   const startTimeString = `${dayjs(event.startTime).format('HH:mm')}`;
 
   const entryTitle = event.patient ? event.patient.lastName + ', ' +  event.patient.firstName : event.title;
@@ -45,7 +44,7 @@ export const CalendarEntry = ({
   return (
     <CalendarEntryContainer
       bgColor={isNote ? 'note' : event.bgColor}
-      title={startTimeString + ' ' + event.title}
+      title={startTimeString + ' ' + entryTitle}
       key={event.uuid?.toString()}
       onClick={readOnly ? undefined : () => onClickHandler(event)}
       className={`${
