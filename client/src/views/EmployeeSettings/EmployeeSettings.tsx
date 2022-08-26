@@ -5,7 +5,7 @@ import { useAllEmployees, useUpdateEmployee } from '../../hooks/employees';
 import { Contract, Employee, Employee2Team, Team } from '../../types/Employee';
 import { useAddEmployeeToTeam } from '../../hooks/teams';
 import { useAllTeams } from '../../hooks/teams';
-import { Button, FormLabel, Input, Select } from '../../components/Library';
+import { Button, FormLabel, Input, LabelledInput, LabelledSelect, Select } from '../../components/Library';
 import { FormControl, Heading, List, ListIcon, ListItem } from '@chakra-ui/react';
 import { RiArrowDropRightLine, RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
@@ -71,7 +71,7 @@ const EmployeeSettings = () => {
     uuid: currentEmployee?.uuid ? currentEmployee?.uuid: '',
     firstName: currentEmployee ? currentEmployee.firstName : '',
     lastName: currentEmployee ? currentEmployee.lastName : '',
-    alias: currentEmployee ? currentEmployee.alias : '',
+    alias: currentEmployee?.alias ? currentEmployee.alias : '',
     userId: currentEmployee && currentEmployee?.user?.userId ? currentEmployee?.user?.userId : '',
     contract: currentEmployee && currentEmployee?.contract ? currentEmployee?.contract : [],
   });
@@ -140,6 +140,7 @@ const EmployeeSettings = () => {
     }));
   };
   const onSubmitHandler = (e: FormEvent): void => {
+    // TODO: handle user add and user remove
     e.preventDefault();
     onUpdateEmployee();
     toggleEdit(e);
@@ -186,57 +187,47 @@ const EmployeeSettings = () => {
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
         <Heading as='h2' size='sm' mb="2">{t('menu.personalData')}</Heading>
-        <FormControl id="firstName" style={{margin: '5px auto'}}>
-          <Input
-            disabled={state === 'view'}
-            type="text"
-            name="firstName"
-            autoComplete="given-name"
-            value={employeeState.firstName}
-            onChange={onChangeHandler}
-          />
-          <FormLabel>{t('label.firstName')}</FormLabel>
-        </FormControl>
-        <FormControl id="alias" style={{margin: '5px auto'}}>
-          <Input
-            disabled={state === 'view'}
-            type="text"
-            name="alias"
-            autoComplete="alias"
-            value={employeeState.alias}
-            onChange={onChangeHandler}
-          />
-          <FormLabel>alias</FormLabel>
-        </FormControl>
-        <FormControl id="lastName" style={{margin: '5px auto'}}>
-          <Input
-            disabled={state === 'view'}
-            type="text"
-            name="lastName"
-            autoComplete="family-name"
-            value={employeeState.lastName}
-            onChange={onChangeHandler}
-          />
-          <FormLabel>{t('label.lastName')}</FormLabel>
-        </FormControl>
-        <FormControl id="user" style={{margin: '5px auto'}}>
-          <Select
-            disabled={state === 'view'}
-            name="userId"
-            value={employeeState.userId}
-            onChange={onSelectHandler}
-          >
-            <option value={'remove'}>❌ No User</option>
-            {users
-              // .filter(u => u.userSettings && u.userSettings[0].userId !== currentEmployee.user?.userId)
-              .map((u, i) => (
-                <option key={i} value={u.uuid}>
-                  {u.email + ':' + u.lastName + ', ' + u.firstName}
-                </option>
-              ))}
-          </Select>
-          <FormLabel>User</FormLabel>
-        </FormControl>
+        <LabelledInput
+          id="firstName"
+          disabled={state === 'view'}
+          type="text"
+          name="firstName"
+          autoComplete="given-name"
+          value={employeeState.firstName}
+          onChangeHandler={onChangeHandler}
+          label={t('label.firstName')}
+        />
+        <LabelledInput
+          id="alias"
+          disabled={state === 'view'}
+          type="text"
+          name="alias"
+          autoComplete="alias"
+          value={employeeState.alias}
+          onChangeHandler={onChangeHandler}
+          label={t('label.alias')}
+        />
+        <LabelledInput
+          id="lastName"
+          disabled={state === 'view'}
+          type="text"
+          name="lastName"
+          autoComplete="family-name"
+          value={employeeState.lastName}
+          onChangeHandler={onChangeHandler}
+          label={t('label.lastName')}
+        />
+        <LabelledSelect
+          id="user"
+          disabled={state === 'view'}
+          name="userId"
+          value={employeeState.userId}
+          onChangeHandler={onSelectHandler}
+          hasOptionNoSelection={true}
+          noSelectionLabel="❌ No User"
+          label={t('label.user')}
+          options={users}
+        />
         {currentEmployee.contract.length ? <ContractOverview disabled={state === 'view'} contract={currentEmployee.contract[0]} /> : <b>no Contract!</b>}
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
