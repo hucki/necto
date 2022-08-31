@@ -9,7 +9,7 @@ import {
   useUser,
 } from '../../hooks/user';
 // import { useAllEmployees } from '../../hooks/employees';
-import { FormGroup, Input, Button, Label, Select } from '../Library';
+import { Input, Button, LabelledInput } from '../Library';
 import { RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { FormControl, FormErrorMessage, Heading, useToast, UseToastOptions } from '@chakra-ui/react';
@@ -185,28 +185,26 @@ const UserProfile = ({
         }}
       >
         <Heading as='h2' size='md'>{t('menu.personalData')}</Heading>
-        <FormGroup>
-          <Label htmlFor="firstName">{t('label.firstName')}</Label>
-          <Input
-            disabled={state === 'view'}
-            type="text"
-            name="firstName"
-            autoComplete="given-name"
-            value={userState.firstName}
-            onChange={onChangeHandler}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="lastName">{t('label.lastName')}</Label>
-          <Input
-            disabled={state === 'view'}
-            type="text"
-            name="lastName"
-            autoComplete="family-name"
-            value={userState.lastName}
-            onChange={onChangeHandler}
-          />
-        </FormGroup>
+        <LabelledInput
+          label={t('label.firstName')}
+          disabled={state === 'view'}
+          type="text"
+          name="firstName"
+          id="firstName"
+          autoComplete="given-name"
+          value={userState.firstName}
+          onChangeHandler={onChangeHandler}
+        />
+        <LabelledInput
+          label={t('label.lastName')}
+          disabled={state === 'view'}
+          type="text"
+          name="lastName"
+          id="lastName"
+          autoComplete="family-name"
+          value={userState.lastName}
+          onChangeHandler={onChangeHandler}
+        />
         {/* <FormGroup>
           <Label htmlFor="employee">Employee</Label>
           <Select
@@ -231,41 +229,40 @@ const UserProfile = ({
           autoComplete="username"
           value={userState.email}
         />
-        <FormGroup>
-          <Label htmlFor="oldPassword">{t('auth.oldPassword')}</Label>
-          <Input
-            disabled={state === 'view'}
-            type="password"
-            name="oldPassword"
-            autoComplete="old-password"
-            value={passwordState.oldPassword}
-            onChange={onPasswordChangeHandler}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
-          <Input
-            disabled={state === 'view'}
-            type="password"
-            name="newPassword"
-            autoComplete="new-password"
-            value={passwordState.newPassword}
-            onChange={onPasswordChangeHandler}
-          />
-        </FormGroup>
+        <LabelledInput
+          label={t('auth.oldPassword')}
+          disabled={state === 'view'}
+          type="password"
+          name="oldPassword"
+          id="oldPassword"
+          autoComplete="old-password"
+          value={passwordState.oldPassword}
+          onChangeHandler={onPasswordChangeHandler}
+        />
+        <LabelledInput
+          label={t('auth.newPassword')}
+          disabled={state === 'view'}
+          type="password"
+          name="newPassword"
+          id="newPassword"
+          autoComplete="new-password"
+          value={passwordState.newPassword}
+          onChangeHandler={onPasswordChangeHandler}
+        />
         <FormControl isInvalid={!newPasswordConfirmed}>
-          <FormGroup>
-            <Label htmlFor="newPasswordConfirmation">{t('auth.confirmPassword')}</Label>
-            <Input
-              disabled={state === 'view'}
-              type="password"
-              name="newPasswordConfirmation"
-              autoComplete="new-password"
-              value={passwordState.newPasswordConfirmation}
-              onChange={onPasswordChangeHandler}
-            />
-            {!newPasswordConfirmed && <FormErrorMessage>new password is required.</FormErrorMessage>}
-          </FormGroup>
+          <LabelledInput
+            label={t('auth.confirmPassword')}
+            disabled={state === 'view'}
+            type="password"
+            name="newPasswordConfirmation"
+            id="newPasswordConfirmation"
+            autoComplete="new-password"
+            value={passwordState.newPasswordConfirmation}
+            onChangeHandler={onPasswordChangeHandler}
+
+          />
+
+          {!newPasswordConfirmed && <FormErrorMessage>new password has to match</FormErrorMessage>}
         </FormControl>
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
