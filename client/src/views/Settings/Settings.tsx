@@ -67,7 +67,7 @@ const Settings = (): JSX.Element => {
   };
 
   return (
-    <Tabs>
+    <Tabs isLazy>
       <TabList>
         {tabData.map((tab, index) => {
           if (isMobile) {
