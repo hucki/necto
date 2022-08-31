@@ -66,6 +66,8 @@
     "institutions": "Einrichtungen"
   },
   "label": {
+    "user": "user",
+    "alias": "alias",
     "name": "Name",
     "description": "Beschreibung",
     "firstName": "Vorname",
@@ -94,7 +96,13 @@
     "institution": "Einrichtung",
     "employeeProfile": "Mitarbeiterprofil",
     "employeeSelect": "Mitarbeiter:in auswählen",
-    "contractData": "Vertragsdaten"
+    "contractData": "Vertragsdaten",
+    "newPermission": "neue Berechtigung",
+    "currentPermissions": "aktuelle Berechtigungen",
+    "validUntil": "gültig bis",
+    "bgColor": "Farbe",
+    "hoursPerWeek": "Std. pro Woche",
+    "appointmentsPerWeek": "Therapien pro Woche"
   },
   "auth": {
     "login": "anmelden",
