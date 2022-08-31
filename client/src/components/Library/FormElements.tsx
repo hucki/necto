@@ -99,7 +99,7 @@ const DatePicker = styled(ReactDatePicker)(inputStyles, {
 type CommonLabelledFormElementProps = {
   isRequired?: boolean
   id: string
-  disabled: boolean
+  disabled?: boolean
   name: string
   label: string
   value: string
@@ -112,7 +112,7 @@ type LabelledSelectProps = CommonLabelledFormElementProps & {
 }
 
 type LabelledInputProps = CommonLabelledFormElementProps & {
-  autoComplete: string
+  autoComplete?: string
   type: React.HTMLInputTypeAttribute | undefined
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -120,7 +120,7 @@ type LabelledInputProps = CommonLabelledFormElementProps & {
 const LabelledSelect = ({
   id,
   isRequired = false,
-  disabled,
+  disabled = false,
   name,
   label,
   value,
@@ -144,17 +144,18 @@ const LabelledSelect = ({
       {options
         .map((u, i) => (
           <option key={i} value={u.uuid}>
-            {u.email + ':' + u.lastName + ', ' + u.firstName}
+            {u.email + ': ' + u.lastName + ', ' + u.firstName}
           </option>
         ))}
     </Select>
     <FormLabel>{label}</FormLabel>
   </FormControl>;
 };
+
 const LabelledInput = ({
   id,
   isRequired,
-  disabled,
+  disabled = false,
   name,
   label,
   value,
