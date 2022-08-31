@@ -34,6 +34,38 @@ export const getAllEmployees = async (
     next(e);
   }
 };
+export const getAllActiveEmployees = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const employees = await prisma.employee.findMany({
+      where: {
+        tenantId,
+        validUntil: null,
+       },
+      include: {
+        contract: {
+          where: {
+            validUntil: null,
+          },
+        },
+        teams: {
+          select: {
+            team: true
+          }
+        },
+        user: true
+      },
+    });
+    res.json(employees);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
 
 /**
  * add one Employee
@@ -100,6 +132,7 @@ export const addEmployee = async (
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         alias: req.body.alias,
+        validUntil: req.body.validUntil,
         tenantId: tenantId,
       },
     });

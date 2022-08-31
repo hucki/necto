@@ -78,7 +78,8 @@ router.patch('/users', userController.updateUser);
 // router.delete('/users/:userId', userController.deleteOneUser);
 
 // employee routes
-router.get('/employees', employeeController.getAllEmployees);
+router.get('/employees/all', employeeController.getAllEmployees);
+router.get('/employees/active', employeeController.getAllActiveEmployees);
 router.post('/employees', employeeController.addEmployee);
 router.patch('/employees', employeeController.updateEmployee);
 
