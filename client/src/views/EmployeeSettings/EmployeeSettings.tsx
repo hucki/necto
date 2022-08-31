@@ -19,23 +19,22 @@ interface ContractOverviewProps {
 }
 const ContractOverview = ({ contract, disabled = true }: ContractOverviewProps) => {
   const { t } = useTranslation();
-
   return (
     <>
-      <Heading as='h2' size='sm' mb="3">{t('label.contractData')}</Heading>
+      <Heading as='h2' size='sm' mb="3" mt="5">{t('label.contractData')}</Heading>
       <FormControl id="appointmentsPerWeek" style={{margin: '8px auto'}}>
         <Input
           disabled={disabled}
-          value={contract.appointmentsPerWeek}
+          value={contract.appointmentsPerWeek || 0}
         />
-        <FormLabel>AppointmentsPerWeek</FormLabel>
+        <FormLabel>{t('label.appointmentsPerWeek')}</FormLabel>
       </FormControl>
       <FormControl id="hoursPerWeek" style={{margin: '8px auto'}}>
         <Input
           disabled={disabled}
-          value={contract.hoursPerWeek}
+          value={contract.hoursPerWeek || 0}
         />
-        <FormLabel>HoursPerWeek</FormLabel>
+        <FormLabel>{t('label.hoursPerWeek')}</FormLabel>
       </FormControl>
       <FormControl id="bgColor" style={{margin: '8px auto'}}>
         <Select
@@ -45,7 +44,7 @@ const ContractOverview = ({ contract, disabled = true }: ContractOverviewProps) 
         >
           {colors.map((color,i) => <option key={i} value={color}>{color}</option>)}
         </Select>
-        <FormLabel>bgColor</FormLabel>
+        <FormLabel>{t('label.bgColor')}</FormLabel>
       </FormControl>
     </>
   );
@@ -67,14 +66,24 @@ const EmployeeSettings = () => {
   const [currentEmployee, setCurrentemployee] = useState<
     Employee | undefined
   >();
+
   const [employeeState, setEmployeeState] = useState({
     uuid: currentEmployee?.uuid ? currentEmployee?.uuid: '',
     firstName: currentEmployee ? currentEmployee.firstName : '',
     lastName: currentEmployee ? currentEmployee.lastName : '',
     alias: currentEmployee?.alias ? currentEmployee.alias : '',
+    validUntil: currentEmployee?.validUntil ? currentEmployee.validUntil : undefined,
     userId: currentEmployee && currentEmployee?.user?.userId ? currentEmployee?.user?.userId : '',
     contract: currentEmployee && currentEmployee?.contract ? currentEmployee?.contract : [],
   });
+  const defaultContract: Contract = {
+    userId: currentEmployee?.uuid ? currentEmployee?.uuid: '',
+    hoursPerWeek: 0,
+    appointmentsPerWeek: 0,
+    bgColor: 'green',
+    validUntil: null
+  };
+  const [currentContract, setCurrentContract] = useState<Contract>(() => currentEmployee?.contract[0] || defaultContract);
   const [currentTeam, setCurrentTeam] = useState<Team | undefined>();
   const [state, setState] = useState<'view' | 'edit'>('view');
   const remainingTeams = teams.filter(t => !currentEmployee?.teams?.find(ct => ct.team.uuid === t.uuid));
@@ -126,10 +135,12 @@ const EmployeeSettings = () => {
   };
 
   const onUpdateEmployee = () => {
+    const validUntil = employeeState.validUntil ? new Date(employeeState.validUntil) : currentEmployee?.validUntil ? new Date(currentEmployee?.validUntil) : undefined;
     updateEmployee({
       employee: {
         ...currentEmployee,
-        ...employeeState
+        ...employeeState,
+        validUntil
       }
     });
   };
@@ -148,11 +159,13 @@ const EmployeeSettings = () => {
 
   useEffect(() => {
     if ( !isLoading && currentEmployee ) {
+      setState('view');
       setEmployeeState((currentState) => ({
         ...currentState,
         ...currentEmployee,
         userId: currentEmployee.user?.userId || ''
       }));
+      setCurrentContract({...defaultContract, ...currentEmployee.contract[0]});
     }
   }, [currentEmployee, isLoading]);
 
@@ -186,7 +199,7 @@ const EmployeeSettings = () => {
           </Select>
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
-        <Heading as='h2' size='sm' mb="2">{t('menu.personalData')}</Heading>
+        <Heading as='h2' size='sm' mb="2" mt="5">{t('menu.personalData')}</Heading>
         <LabelledInput
           id="firstName"
           disabled={state === 'view'}
@@ -217,6 +230,16 @@ const EmployeeSettings = () => {
           onChangeHandler={onChangeHandler}
           label={t('label.lastName')}
         />
+        <LabelledInput
+          id="validUntil"
+          disabled={state === 'view'}
+          type="date"
+          name="validUntil"
+          autoComplete="valid-until"
+          value={employeeState.validUntil ? dayjs(employeeState.validUntil).format('YYYY-MM-DD') : ''}
+          onChangeHandler={onChangeHandler}
+          label={t('label.validUntil')}
+        />
         <LabelledSelect
           id="user"
           disabled={state === 'view'}
@@ -228,7 +251,11 @@ const EmployeeSettings = () => {
           label={t('label.user')}
           options={users}
         />
-        {currentEmployee.contract.length ? <ContractOverview disabled={state === 'view'} contract={currentEmployee.contract[0]} /> : <b>no Contract!</b>}
+        {currentContract
+          ? <ContractOverview
+            disabled={state === 'view'}
+            contract={currentContract} />
+          : <b>no Contract!</b>}
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
             <RiEditFill />
@@ -245,7 +272,7 @@ const EmployeeSettings = () => {
         )}
         {currentEmployee.teams?.length ? (
           <>
-            <Heading as='h3' size='sm' mb="2">current teams</Heading>
+            <Heading as='h3' size='sm' mb="2" mt="5">current teams</Heading>
             <List style={{marginBottom: '10px'}}>
               {currentEmployee.teams.map((t, i) => (
                 <ListItem key={i}>

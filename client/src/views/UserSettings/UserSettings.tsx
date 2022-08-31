@@ -1,13 +1,15 @@
-import { Heading, Input, List, ListIcon, ListItem, Select } from '@chakra-ui/react';
+import { FormControl, Heading, List, ListIcon, ListItem, Select } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { Button, FormGroup, Label } from '../../components/Library';
+import { Button, FormLabel, LabelledInput, LabelledSelect } from '../../components/Library';
 import { useAllPermissions } from '../../hooks/permissions';
 import { useAllUsers, useUpdateUser } from '../../hooks/user';
 import { User } from '../../types/User';
 import { PermissionLevel } from '../../types/UserSettings';
 
 export const UserSettings = () => {
+  const { t } = useTranslation();
   const [updateUser] = useUpdateUser();
   const {
     isLoading,
@@ -83,57 +85,51 @@ export const UserSettings = () => {
     }
 
   };
-  return !currentUser
+  return !currentUser?.uuid
     ? <pre>pending</pre>
     : (
       <>
-        <FormGroup>
-          <Label htmlFor="user">User</Label>
-          <Select
-            name="userId"
-            value={currentUser.uuid}
-            onChange={onUserChangeHandler}
-          >
-            {users
-              .map((u, i) => (
-                <option key={i} value={u.uuid}>
-                  {u.lastName + ', ' + u.firstName}
-                </option>
-              ))}
-          </Select>
-        </FormGroup>
-        <Heading as='h2' size='sm' mb="2">Personal Data</Heading>
-        <FormGroup>
-          <Label htmlFor="email">email</Label>
-          <Input
-            type="text"
-            name="email"
-            autoComplete="email"
-            value={userState.email}
-            onChange={onChangeHandler}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="firstName">First Name</Label>
-          <Input
-            type="text"
-            name="firstName"
-            autoComplete="given-name"
-            value={userState.firstName || ''}
-            onChange={onChangeHandler}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="lastName">Last Name</Label>
-          <Input
-            type="text"
-            name="lastName"
-            autoComplete="family-name"
-            value={userState.lastName || ''}
-            onChange={onChangeHandler}
-          />
-        </FormGroup>
-        <Heading as='h2' size='sm' mb="2">current Permissions</Heading>
+        <LabelledSelect
+          label={t('label.user')}
+          disabled={false}
+          name="userId"
+          id="userId"
+          value={currentUser.uuid}
+          onChangeHandler={onUserChangeHandler}
+          options={users}
+        />
+        <Heading as='h2' size='sm' mb="2" mt="5">{t('menu.personalData')}</Heading>
+        <LabelledInput
+          label="email"
+          disabled={false}
+          type="text"
+          name="email"
+          id="email"
+          autoComplete="email"
+          value={userState.email || ''}
+          onChangeHandler={onChangeHandler}
+        />
+        <LabelledInput
+          label={t('label.firstName')}
+          disabled={false}
+          type="text"
+          name="firstName"
+          id="firstName"
+          autoComplete="given-name"
+          value={userState.firstName || ''}
+          onChangeHandler={onChangeHandler}
+        />
+        <LabelledInput
+          id="lastName"
+          disabled={false}
+          type="text"
+          name="lastName"
+          autoComplete="family-name"
+          value={userState.lastName}
+          onChangeHandler={onChangeHandler}
+          label={t('label.lastName')}
+        />
+        <Heading as='h2' size='sm' mb="2" mt="5">{t('label.currentPermissions')}</Heading>
         {
           userState?.permissions?.length
             ? <List>
@@ -147,24 +143,26 @@ export const UserSettings = () => {
             : <p>no permissions so far!</p>
         }
         {currentPermission && (
-          <FormGroup>
-            <Label htmlFor="team">new permission:</Label>
-            <Select
-              name="team"
-              value={currentPermission.uuid}
-              onChange={onPermissionChangeHandler}
-            >
-              {permissions.map((t, i) => (
-                <option key={i} value={t.uuid}>
-                  {t.displayName}
-                </option>
-              ))}
-            </Select>
-          </FormGroup>
+          <>
+            <FormControl style={{margin: '10px auto'}}>
+              <Select
+                name="team"
+                value={currentPermission.uuid}
+                onChange={onPermissionChangeHandler}
+              >
+                {permissions.map((t, i) => (
+                  <option key={i} value={t.uuid}>
+                    {t.displayName}
+                  </option>
+                ))}
+              </Select>
+              <FormLabel htmlFor="team">{t('label.newPermission')}:</FormLabel>
+            </FormControl>
+            <Button type="button" onClick={handleAddPermissionToUser}>
+              Add
+            </Button>
+          </>
         )}
-        <Button type="button" onClick={handleAddPermissionToUser}>
-          Add
-        </Button>
 
       </>
     );
