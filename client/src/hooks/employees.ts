@@ -35,8 +35,8 @@ export function useAllEmployees(): QueryResult<Employee[]> & {
   employees: Employee[];
   } {
 
-  const employeesQuery = useQuery('employees', async () => {
-    return client<Employee[]>('employees');
+  const employeesQuery = useQuery('employees/all', async () => {
+    return client<Employee[]>('employees/all');
   });
 
   const employees = employeesQuery.data ?? [];
