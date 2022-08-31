@@ -15,6 +15,7 @@ export type Employee = {
   firstName: string;
   lastName: string;
   alias?: string;
+  validUntil?: Date;
   contract: Contract[];
   teams?: [
     {team: Team}
@@ -26,11 +27,11 @@ export type Employee = {
 
 export type Contract = {
   id?: number;
-  userId: number;
+  userId: string;
   hoursPerWeek: number;
   appointmentsPerWeek: number;
   bgColor: BgColor;
-  validUntil: Date;
+  validUntil: null | Date;
   createdAt?: Date;
   updatedAt?: Date;
 };
