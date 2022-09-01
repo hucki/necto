@@ -1,4 +1,4 @@
-import { DoctorContactData } from "./ContactData";
+import { ContactData } from "./ContactData";
 import { Patient } from "./Patient";
 
 export type Doctor = {
@@ -9,6 +9,6 @@ export type Doctor = {
   street?: string;
   zip?: string;
   city?: string;
-  contactData?: DoctorContactData[];
+  contactData?: ContactData[];
   patients?: Patient[];
 }

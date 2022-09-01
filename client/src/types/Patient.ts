@@ -1,4 +1,4 @@
-import { PatientContactData } from './ContactData';
+import { ContactData } from './ContactData';
 import { Doctor } from './Doctor';
 import { Event } from './Event';
 import { Institution } from './Institution';
@@ -38,7 +38,7 @@ export type Patient = {
   tenantId?: string;
   doctorId?: string;
   institutionId?: string;
-  contactData?: PatientContactData[];
+  contactData?: ContactData[];
   events?: Event[];
   doctor?: Doctor;
   institution?: Institution;

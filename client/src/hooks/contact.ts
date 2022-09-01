@@ -4,20 +4,20 @@ import {
   MutationResultPair,
 } from 'react-query';
 import { client } from '../services/ApiClient';
-import { ContactData, DoctorContactData, PatientContactData } from '../types/ContactData';
+import { ContactData} from '../types/ContactData';
 
 export function useCreatePatientContact(): MutationResultPair<
-  PatientContactData,
+  ContactData,
   Error,
-  { contactData: PatientContactData },
+  { contactData: ContactData },
   string
   > {
   const createPatientContact = async ({
     contactData,
   }: {
-    contactData: PatientContactData;
-  }): Promise<PatientContactData> => {
-    return client<PatientContactData>(`patients/${contactData.patientId}/contact`, { data: contactData });
+    contactData: ContactData;
+  }): Promise<ContactData> => {
+    return client<ContactData>(`patients/${contactData.patientId}/contact`, { data: contactData });
   };
   return useMutation(createPatientContact, {
     onSuccess: () => {
@@ -26,17 +26,17 @@ export function useCreatePatientContact(): MutationResultPair<
   });
 }
 export function useCreateDoctorContact(): MutationResultPair<
-  DoctorContactData,
+  ContactData,
   Error,
-  { contactData: DoctorContactData },
+  { contactData: ContactData },
   string
   > {
   const createDoctorContact = async ({
     contactData,
   }: {
-    contactData: DoctorContactData;
-  }): Promise<DoctorContactData> => {
-    return client<DoctorContactData>(`doctors/${contactData.doctorId}/contact`, { data: contactData });
+    contactData: ContactData;
+  }): Promise<ContactData> => {
+    return client<ContactData>(`doctors/${contactData.doctorId}/contact`, { data: contactData });
   };
   return useMutation(createDoctorContact, {
     onSuccess: () => {

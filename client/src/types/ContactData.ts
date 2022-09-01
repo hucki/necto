@@ -5,13 +5,7 @@ export type ContactData = {
   createdAt?: Date;
   updatedAt?: Date;
   tenantId?: string;
-};
-
-export type PatientContactData = ContactData & {
   patientId?: string;
-};
-
-export type DoctorContactData = ContactData & {
   doctorId?: string;
 };
 
