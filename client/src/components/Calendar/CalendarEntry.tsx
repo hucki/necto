@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
-import { FaCommentMedical, FaHouseUser, FaLink } from 'react-icons/fa';
+import { FaCommentMedical, FaExclamation, FaHouseUser, FaLink } from 'react-icons/fa';
 import dayjs from 'dayjs';
 import { CalendarEntryContainer, CalendarEntryContent, CalendarEntryIconContainer, CalendarEntryTime } from '../Library/Event';
 import { Icon } from '@chakra-ui/react';
@@ -26,13 +26,19 @@ export const CalendarEntry = ({
   const [icons, setIcons] = useState<JSX.Element[] | []>([]);
   useEffect(() => {
     setIcons([]);
-    if (event.isHomeVisit)
+    if (event.patient && !event.patient.hasContract) {
+      setIcons((icons) => [...icons, <FaExclamation key="noContractIcon" color='red' />]);
+    }
+    if (event.isHomeVisit) {
       setIcons((icons) => [...icons, <FaHouseUser key="homeVisitIcon" />]);
-    if (event.rrule !== '')
+    }
+    if (event.rrule !== '') {
       setIcons((icons) => [...icons, <FaLink key="rruleIcon" />]);
-    if (event.isDiagnostic)
+    }
+    if (event.isDiagnostic) {
       setIcons((icons) => [...icons, <FaCommentMedical key="isDiagnostic" />]);
-      // setIcons((icons) => [...icons, <span key="isDiagnostic" style={{color: 'red'}}>D</span>]);
+    }
+    // setIcons((icons) => [...icons, <span key="isDiagnostic" style={{color: 'red'}}>D</span>]);
   }, [event]);
 
   const timeString = `${dayjs(event.startTime).format('HH:mm')} - ${dayjs(event.endTime).format('HH:mm')}`;
