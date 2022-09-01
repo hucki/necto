@@ -113,7 +113,7 @@ type LabelledSelectProps = CommonLabelledFormElementProps & {
 
 type LabelledInputProps = CommonLabelledFormElementProps & {
   autoComplete?: string
-  type: React.HTMLInputTypeAttribute | undefined
+  type?: React.HTMLInputTypeAttribute
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -161,7 +161,7 @@ const LabelledInput = ({
   value,
   onChangeHandler,
   autoComplete,
-  type
+  type = 'text'
 }: LabelledInputProps) => {
   return <FormControl
     id={id}
