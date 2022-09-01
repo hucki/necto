@@ -168,31 +168,35 @@ function PersonList({persons}: PersonListProps) {
           <Td>{p.lastName}</Td>
           <Td>{p.firstName}</Td>
           <Td>
-            {!isDoctor(p) && p.contactData
+            {p.contactData
               ?.filter((c) => c.type === 'telephone')
               .map((tel) => (
                 <div key={tel.uuid}>{tel.contact}</div>
               ))}
           </Td>
+          {!isDoctor(p) && (
+            <>
+              <Td>
+                <Icon
+                  as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
+                  w={5}
+                  h={5}
+                  color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
+                />
+              </Td>
+              <Td>
+                <Icon
+                  as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
+                  w={5}
+                  h={5}
+                  color={p.hasContract ? 'indigo' : 'red'}
+                />
+              </Td>
+              <Td>{p.gender}</Td>
+            </>
+          )}
           <Td>
-            <Icon
-              as={!isDoctor(p) && p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
-              w={5}
-              h={5}
-              color={!isDoctor(p) && p.isAddpayFreed ? 'indigo' : 'gray.400'}
-            />
-          </Td>
-          <Td>
-            <Icon
-              as={!isDoctor(p) && p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
-              w={5}
-              h={5}
-              color={!isDoctor(p) && p.hasContract ? 'indigo' : 'gray.400'}
-            />
-          </Td>
-          { !isDoctor(p) && <Td>{p.gender}</Td> }
-          <Td>
-            {!isDoctor(p) && p.contactData
+            {p.contactData
               ?.filter((c) => c.type === 'email')
               .map((tel) => (
                 <div key={tel.uuid}>{tel.contact}</div>
@@ -205,7 +209,7 @@ function PersonList({persons}: PersonListProps) {
               <Td>{p.institution && p.institution.name + ' ' + (p.institution.description ? `(${p.institution.description})` : null)}</Td>
             </>
           )}
-          { isDoctor(p)  && (
+          {isDoctor(p) && (
             <>
               <Td>{p.street}</Td>
               <Td>{p.zip}</Td>
@@ -287,9 +291,14 @@ function PersonList({persons}: PersonListProps) {
               <Th>{t('label.lastName')}</Th>
               <Th>{t('label.firstName')}</Th>
               <Th>{t('label.telephoneNumber')} </Th>
-              <Th width={5}>{t('label.isAddpayFreed')}</Th>
-              <Th width={5}>{t('label.hasContract')}</Th>
-              {listType !== 'doctors' && <Th width={2}>{t('label.gender')} </Th>}
+              {listType !== 'doctors' && (
+                <>
+                  <Th width={5}>{t('label.isAddpayFreed')}</Th>
+                  <Th width={5}>{t('label.hasContract')}</Th>
+                  <Th width={2}>{t('label.gender')} </Th>
+                </>
+              )
+              }
               <Th>{t('label.mailAddress')} </Th>
               {listType !== 'doctors' && (
                 <>
