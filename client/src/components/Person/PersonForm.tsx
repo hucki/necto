@@ -134,6 +134,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
       </FormControl>
       <FormControl id="hasContract" isRequired>
         <Checkbox
+          isInvalid={(currentPerson as Patient).hasContract ? undefined : true}
           name="hasContract"
           isDisabled={isReadOnly}
           size="lg"
