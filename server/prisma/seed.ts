@@ -2,22 +2,26 @@ import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
+const tenantName = process.env.TENANT_NAME || 'new Tenant';
+const companyName = process.env.COMPANY_NAME || 'new Company';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  if (!tenantId) throw new Error('tenantId env TENANT_UUID missing');
+
   const tenant = await prisma.tenant.upsert({
     where: { uuid: tenantId },
     update: {},
     create: {
       uuid: tenantId,
-      name: 'New Tenant',
+      name: tenantName,
     },
   });
 
   const company = await prisma.company.create({
     data: {
-      name: 'New Company',
+      name: companyName,
       tenantId: tenantId,
       validUntil: new Date(),
     },
@@ -117,8 +121,8 @@ async function main() {
         tenantId
       },
       {
-        displayName: 'planer',
-        description: 'planer role',
+        displayName: 'plannen',
+        description: 'planner role',
         tenantId
       },
     ]
