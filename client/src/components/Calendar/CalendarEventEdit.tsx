@@ -25,7 +25,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CancellationReason, Event } from '../../types/Event';
-import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash, FaCommentMedical } from 'react-icons/fa';
+import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash, FaCommentMedical, FaExclamation } from 'react-icons/fa';
 
 import CalendarEventView from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
@@ -169,6 +169,14 @@ function CalendarEventEdit({
                   {dayjs(event.startTime).format('llll')}
                 </div>
               </div>
+              {changedEvent.patient && !changedEvent.patient.hasContract &&
+                <FaExclamation
+                  color='red'
+                  css={{
+                    width: '1rem',
+                    height: '1rem',
+                  }}/>
+              }
               {changedEvent.isHomeVisit && (
                 <FaHouseUser
                   css={{

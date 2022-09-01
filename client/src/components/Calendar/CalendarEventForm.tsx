@@ -218,6 +218,7 @@ function CalendarEventForm({
 
   const isNote = currentEvent.type === 'note';
   const isDone = currentEvent.isDone;
+  const isNewEvent = !currentEvent.uuid;
 
   return (
     <div>
@@ -353,6 +354,7 @@ function CalendarEventForm({
               my={2}
               isChecked={currentEvent.isRecurring}
               onChange={onCheckboxChange}
+              isDisabled={!isNewEvent}
             />
           </FormGroup>
           <div style={{
@@ -363,7 +365,7 @@ function CalendarEventForm({
               <Select
                 name="frequency"
                 value={undefined}
-                disabled={!currentEvent.isRecurring}
+                disabled={!isNewEvent || !currentEvent.isRecurring}
                 onChange={onSelectChange}>
                 <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
                 <option value="BIWEEKLY">{t('calendar.event.frequencyBiWeekly')}</option>
@@ -379,50 +381,54 @@ function CalendarEventForm({
                 type="number"
                 min={1}
                 max={20}
-                disabled={!currentEvent.isRecurring}
+                disabled={!isNewEvent || !currentEvent.isRecurring}
                 defaultValue={recurringInterval}
                 onChange={handleRecurringIntervalChange}
               />
               <FormLabel>{t('calendar.event.interval')}</FormLabel>
             </FormControl>
           </div>
-          <Popover>
-            <PopoverTrigger>
-              <Button
-                aria-label="preview recurring events"
-                type="button"
-                onClick={onBuildTimelineHandler}
-                disabled={!currentEvent.isRecurring}
+          {isNewEvent &&
+          <>
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  aria-label="preview recurring events"
+                  type="button"
+                  onClick={onBuildTimelineHandler}
+                  disabled={!currentEvent.isRecurring}
+                  style={{
+                    alignSelf: 'flex-end',
+                  }}
+                >
+                  {t('button.preview')}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
                 style={{
-                  alignSelf: 'flex-end',
+                  backgroundColor: 'white',
+                  border: '1px solid #3333',
+                  borderRadius: '1rem',
+                  padding: '0.5rem',
                 }}
               >
-                {t('button.preview')}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              style={{
-                backgroundColor: 'white',
-                border: '1px solid #3333',
-                borderRadius: '1rem',
-                padding: '0.5rem',
-              }}
-            >
-              <PopoverArrow />
-              <PopoverCloseButton
-                style={{
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '1.5rem',
-                  height: '1.5rem',
-                  alignSelf: 'flex-end',
-                  cursor: 'pointer',
-                }}
-              />
-              <PopoverHeader></PopoverHeader>
-              <PopoverBody>{timeline}</PopoverBody>
-            </PopoverContent>
-          </Popover>
+                <PopoverArrow />
+                <PopoverCloseButton
+                  style={{
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '1.5rem',
+                    height: '1.5rem',
+                    alignSelf: 'flex-end',
+                    cursor: 'pointer',
+                  }}
+                />
+                <PopoverHeader></PopoverHeader>
+                <PopoverBody>{timeline}</PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </>}
+
         </div>
       }
     </div>
