@@ -11,12 +11,11 @@ import { useEffect, useState } from 'react';
 import { bookingsPerPerson } from '../../assets/bookingsdata';
 import { useAllRooms } from '../../hooks/rooms';
 import { useAllbuildings } from '../../hooks/buildings';
-import { Building } from '../../types/Rooms';
 import { Flex } from '@chakra-ui/react';
 import { useFilter } from '../../hooks/useFilter';
 import FilterBar from '../../components/FilterBar/FilterBar';
 
-function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
+function getBookings(buildingId: string, rooms: Room[]) {
   const createBookings = () => {
     const res = [];
     const day2date = {
@@ -69,7 +68,6 @@ function getBookings(buildingId: string, rooms: Room[], buildings: Building[]) {
   };
 
   const bookings: Event[] = createBookings();
-
   return bookings;
 }
 
@@ -84,12 +82,11 @@ function Rooms(): JSX.Element {
     error: errorBuildings,
     buildings,
   } = useAllbuildings();
-
   const [ calendarDate ] = useState(dayjs('2022-01-17'));
   const { currentBuildingId, setCurrentBuildingId } = useFilter();
 
   const [events, setEvents] = useState<Event[]>(
-    () => currentBuildingId ? getBookings(currentBuildingId, rooms, buildings) : []
+    () => currentBuildingId ? getBookings(currentBuildingId, rooms) : []
   );
   const [ressources, setRessources] = useState<Room[]>(
     currentBuildingId ? getRooms(currentBuildingId, rooms) : []
@@ -99,14 +96,16 @@ function Rooms(): JSX.Element {
     if (buildings[0]?.uuid && !currentBuildingId) {
       setCurrentBuildingId(buildings[0].uuid);
     }
+  }, [buildings, currentBuildingId, setCurrentBuildingId, events]);
 
-    if (!events.length && currentBuildingId) {
-      setEvents(getBookings(currentBuildingId, rooms, buildings));
+  useEffect(() => {
+    if (currentBuildingId) {
+      setEvents(getBookings(currentBuildingId, rooms));
     }
-    if (!ressources.length && currentBuildingId) {
+    if (currentBuildingId) {
       setRessources(getRooms(currentBuildingId, rooms));
     }
-  }, [buildings, currentBuildingId, setCurrentBuildingId, ressources, events]);
+  },[currentBuildingId, rooms, buildings]);
 
   return !currentBuildingId || isLoadingBuildings || isLoadingRooms ? (
     <div>pending</div>
