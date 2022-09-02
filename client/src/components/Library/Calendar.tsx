@@ -19,6 +19,7 @@ type CalendarRessourceProps = {
   numOfRessources: number
   index: number
   isWeekend?: boolean
+  isPublicHoliday?: boolean
 }
 
 type CalendarRessourceHeaderProps = {
@@ -101,17 +102,38 @@ const CalendarColumnRessourceHeader = styled.div(({numOfRessources, bgColor}:Cal
   borderRight: calendarBorder,
 }));
 
-const CalendarColumnRessourceBody = styled.div(({numOfHours, isWeekend, numOfRessources}:CalendarCommonProps & CalendarRessourceProps) => ({
+const CalendarColumnRessourceBody = styled.div(({
+  numOfHours,
+  isWeekend,
+  numOfRessources,
+  isPublicHoliday
+}:CalendarCommonProps & CalendarRessourceProps) => ({
   width: `calc(100% / ${numOfRessources})`,
   height: '100%',
   position: 'relative',
   borderBottom: calendarBorder,
-  backgroundImage: isWeekend ? `linear-gradient(#3333 50%, ${colors.gray10} 50%)` : `linear-gradient(${colors.gray10} 50%, transparent 50%)`,
+  backgroundImage: isPublicHoliday && !isWeekend
+    ? 'linear-gradient(#3393 50%, #3391 50%)'
+    : isWeekend
+      ? `linear-gradient(#3333 50%, ${colors.gray10} 50%)`
+      : `linear-gradient(${colors.gray10} 50%, transparent 50%)`,
   backgroundSize: `1px calc(100% / ${numOfHours} * 2)`,
   borderRight: calendarBorder,
 }));
 
+const HolidayLabel =styled.div({
+  pointerEvents: 'none',
+  color: colors.gray80,
+  fontWeight: 'bold',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'fade',
+  fontSize: 'small',
+  textTransform: 'capitalize',
+});
+
 export {
+  HolidayLabel,
   CalendarWrapper,
   CalendarScaleItem,
   CalendarScaleTime,

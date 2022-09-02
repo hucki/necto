@@ -28,6 +28,7 @@ import { checkOverlap } from '../../helpers/eventChecker';
 import { rrulestr } from 'rrule';
 import { useViewport } from '../../hooks/useViewport';
 import { EventModalFooter } from '../Library/Modal';
+import { useHolidays } from '../../hooks/useHolidays';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -51,9 +52,10 @@ function CalendarEventInput({
   onClose,
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
+  const { isWeekend, isPublicHoliday } = useHolidays();
   const { isMobile } = useViewport();
   const getIsNote = (dateTime: Dayjs) => {
-    return dayjs(dateTime).hour() < 7 || dayjs(dateTime).day() === 0 || dayjs(dateTime).day() === 6;
+    return dayjs(dateTime).hour() < 7 || isWeekend({date: dayjs(dateTime)}) || Boolean(isPublicHoliday({date: dayjs(dateTime)}));
   };
   const [isNote, setIsNote] = useState(() => getIsNote(dateTime));
   const initialStartTime = getIsNote(dateTime) ? dayjs(dateTime).minute(0) : dateTime;

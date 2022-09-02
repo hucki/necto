@@ -10,6 +10,8 @@ import { useDisclosure } from '@chakra-ui/react';
 import 'dayjs/locale/de';
 import { CalendarColumnDayHeader, CalendarColumnRessourceBody, CalendarColumnRessourceHeader, CalendarColumnRessourceWrapper, CalendarColumnWrapper } from '../Library';
 import CalendarTimeMarker from './CalendarTimeMarker';
+import { useHolidays } from '../../hooks/useHolidays';
+import { HolidayLabel } from '../Library/Calendar';
 dayjs.locale('de');
 
 interface CalendarColumnInputProps {
@@ -47,8 +49,15 @@ function CalendarColumn({
   columnHeaderFormat = 'dddd',
   columnSubHeaderContent = 'ressource',
 }: CalendarColumnInputProps): JSX.Element {
+  const {
+    isHoliday,
+    isPublicHoliday,
+    isWeekend
+  } = useHolidays();
+  const isHolidayToday = isHoliday({date: dateInput});
+  const isPublicHolidayToday = isPublicHoliday({date: dateInput});
   const isToday = dayjs().isSame(dateInput, 'day');
-  const isWeekend = dayjs(dateInput).day() === 0 || dayjs(dateInput).day() === 6;
+
   const date = dateInput.locale('de');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -124,10 +133,12 @@ function CalendarColumn({
       key={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
       numOfHours={numOfHours}
       numOfRessources={ressources.length}
-      isWeekend={isWeekend}
+      isPublicHoliday={Boolean(isPublicHolidayToday)}
+      isWeekend={isWeekend({date: dayjs(date)})}
       index={index}
       onClick={readOnly ? () => null : getPosition}
     >
+      {isHolidayToday && <HolidayLabel>{isHolidayToday.join()}</HolidayLabel>}
       {events
         .filter((event) => event.ressourceId === ressource.uuid)
         .map((event) => renderCustomEvent(event, getItemStyle(event)))}
