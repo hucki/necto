@@ -121,19 +121,32 @@ const CalendarColumnRessourceBody = styled.div(({
   borderRight: calendarBorder,
 }));
 
+const DayHeaderLabel =styled.div(({size}: {size: 'small' | undefined}) => ({
+  pointerEvents: 'none',
+  color: colors.gray80,
+  fontWeight: 'bold',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  fontSize: 'x-small',
+  textTransform: 'capitalize',
+  maxWidth: '100%'
+}));
 const HolidayLabel =styled.div({
   pointerEvents: 'none',
   color: colors.gray80,
   fontWeight: 'bold',
   overflow: 'hidden',
   whiteSpace: 'nowrap',
-  textOverflow: 'fade',
-  fontSize: 'small',
+  textOverflow: 'ellipsis',
+  fontSize: 'x-small',
   textTransform: 'capitalize',
+  maxWidth: '100%'
 });
 
 export {
   HolidayLabel,
+  DayHeaderLabel,
   CalendarWrapper,
   CalendarScaleItem,
   CalendarScaleTime,

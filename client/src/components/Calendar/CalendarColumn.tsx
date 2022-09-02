@@ -11,7 +11,7 @@ import 'dayjs/locale/de';
 import { CalendarColumnDayHeader, CalendarColumnRessourceBody, CalendarColumnRessourceHeader, CalendarColumnRessourceWrapper, CalendarColumnWrapper } from '../Library';
 import CalendarTimeMarker from './CalendarTimeMarker';
 import { useHolidays } from '../../hooks/useHolidays';
-import { HolidayLabel } from '../Library/Calendar';
+import { DayHeaderLabel, HolidayLabel } from '../Library/Calendar';
 dayjs.locale('de');
 
 interface CalendarColumnInputProps {
@@ -138,7 +138,7 @@ function CalendarColumn({
       index={index}
       onClick={readOnly ? () => null : getPosition}
     >
-      {isHolidayToday && <HolidayLabel>{isHolidayToday.join()}</HolidayLabel>}
+      {isPublicHolidayToday && <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>}
       {events
         .filter((event) => event.ressourceId === ressource.uuid)
         .map((event) => renderCustomEvent(event, getItemStyle(event)))}
@@ -163,7 +163,8 @@ function CalendarColumn({
         id={`DayHeader_d${date.format('YYYYMMDD')}`}
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
       >
-        {columnHeader}
+        <DayHeaderLabel size={isPublicHolidayToday ? 'small' : undefined}>{columnHeader}</DayHeaderLabel>
+        {isPublicHolidayToday && <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>}
       </CalendarColumnDayHeader>
       <CalendarColumnRessourceWrapper
         id={`RessourceHeader_d${date.format('YYYYMMDD')}`}
