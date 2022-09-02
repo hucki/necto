@@ -189,7 +189,7 @@ function PersonList({persons}: PersonListProps) {
                   as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
                   w={5}
                   h={5}
-                  color={p.hasContract ? 'indigo' : 'red'}
+                  color={p.hasContract ? 'green' : 'red'}
                 />
               </Td>
               <Td>{p.gender}</Td>
