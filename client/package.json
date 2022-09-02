@@ -11,6 +11,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^7.2.1",
     "date-fns": "^2.28.0",
+    "date-holidays": "^3.16.5",
     "dayjs": "^1.10.7",
     "framer-motion": "^4.1.17",
     "i18next": "^21.6.6",
