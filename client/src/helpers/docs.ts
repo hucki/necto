@@ -63,12 +63,12 @@ export const contract = (p: Patient) => {
   printParagraph(paragraphTwo);
   doc.addPage();
   currentLine = 30;
-  doc.text('3. Die Zuzahlung ist spätestens _____ Tage/Wochen nach Rechnungseingang auf das folgende',10,nextParagraph());
+  doc.text('3. Die Zuzahlung ist spätestens 4 Wochen nach Rechnungseingang auf das folgende',10,nextParagraph());
   doc.text('Konto zu zahlen:',10,nextLine());
   doc.setFont('courier', 'bold');
   doc.text('Kontoinhaber: Mundwerk Logopädische Praxis Wette & Huckschlag',10,nextParagraph());
-  doc.text('IBAN:         DE41 4665 0005 0001 0224 41',10,nextLine());
-  doc.text('SWIFT-BIC:    WELADED1ARN',10,nextLine());
+  doc.text('IBAN:         DEXX XXXX XXXX XXXX XXXX XX',10,nextLine());
+  doc.text('SWIFT-BIC:    XXXXXXXXXXX',10,nextLine());
   doc.setFont('helvetica', 'normal');
   doc.text('Der/die Patient:in erklärt ausdrücklich die Einwilligung, dass der/die Logopäd:in aus dem ', 10,nextParagraph());
   doc.text('geschlossenen Behandlungsvertrag entstehenden Honoraransprüche zum Zwecke der', 10,nextLine());
