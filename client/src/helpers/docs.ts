@@ -1,33 +1,39 @@
+import dayjs from 'dayjs';
 import jsPDF from 'jspdf';
 import { Patient } from '../types/Patient';
 
-
-export const contract = (p: Patient) => {
+/**
+ * creates a contract to be printed and signed by
+ * the patient before starting the therapy
+ * @param {Patient} p - patient to print the contract for
+ * @returns {jsPDF} jsPDF doc object
+ */
+export const contract = (p: Patient): jsPDF => {
   const topOffset = 80;
   const lineWidth = 98;
   const centerOffset = 105;
   let currentLine = topOffset;
   const lineHeight = 6;
   const paragraphDistance = 10;
-  const nextLine = () => {
-    return currentLine += lineHeight;
+  const nextLine = (offset: number = 0) => {
+    return currentLine += lineHeight + offset;
   };
   const nextParagraph = () => {
     return currentLine += paragraphDistance;
   };
   const doc = new jsPDF();
 
-  const printParagraph = (text: string) => {
+  const printParagraph = (text: string, offsetFirstLine: number = 10) => {
     const res = [];
     let remains = text;
     for (let i = 0; i < text.length; i += lineWidth ) {
       const lastEmptySpace = remains.lastIndexOf(' ',lineWidth);
       const current = remains.length < lineWidth ? remains : remains.substring(0, lastEmptySpace);
       remains = remains.substring(lastEmptySpace);
-      res.push(current);
+      res.push(current.trim());
     };
     res.forEach((value, key) => {
-      doc.text(value, key === 0 ? 10 : 13, key === 0 ? nextParagraph(): nextLine());
+      doc.text(value, key === 0 ? offsetFirstLine : 13, key === 0 ? nextParagraph(): nextLine());
     });
   };
 
@@ -45,7 +51,7 @@ export const contract = (p: Patient) => {
   doc.text('-im Folgenden Logopäd:in genannt-', centerOffset, nextLine(), {align: 'center'});
   doc.setFont('helvetica', 'normal');
   doc.text('und', 10, nextParagraph(),);
-  doc.text(p.lastName + ', ' + p.firstName, centerOffset, nextParagraph(), {align: 'center'});
+  doc.text(p.firstName + ', ' + p.firstName, centerOffset, nextParagraph(), {align: 'center'});
   doc.text('Name der Eltern/Erziehungsberechtigten    ___________________________________', centerOffset, nextLine(), {align: 'center'});
   doc.text('Adresse: ' + (p.street || '__________________________') + ', ' + (p.city ? p.zip + ' ' + p.city : '__________________________'), centerOffset, nextLine(), {align: 'center'});
   doc.text('Versicherung: ' + (p.insurance || '__________________________') + ', ' + 'befreit: ' + (p.isAddpayFreed ? 'ja' : 'nein') , centerOffset, nextLine(), {align: 'center'});
@@ -53,33 +59,37 @@ export const contract = (p: Patient) => {
   doc.text('-im Folgenden Patient:in genannt-', centerOffset, nextLine(), {align: 'center'});
   doc.setFont('helvetica', 'normal');
   doc.text('über die Erbringung logopädischer Leistungen.', 10, nextParagraph());
-  doc.text('1. Die Vertragsparteien schließen einen Vertrag über die Erbringung logopädischer Leistungen.', 10, nextParagraph());
-  doc.text('Das Behandlungsverhältnis beginnt mit der Durchführung der Verordnung von', 10, nextLine());
+  const paragraphOneA = '1 Die Vertragsparteien schließen einen Vertrag über die Erbringung logopädischer Leistungen. Das Behandlungsverhältnis beginnt mit der Durchführung der Verordnung von';
+  printParagraph(paragraphOneA);
   doc.text(p.doctor?.title + ' ' + p.doctor?.firstName + ' ' + p.doctor?.lastName + ' vom ' + '__________________________', centerOffset, nextParagraph(), {align: 'center'});
-  doc.text('Das Vertragsverhältnis wird auf unbestimmte Zeit geschlossen und umfasst alle folgenden', 10, nextParagraph());
-  doc.text('Verordnungen sowie Verordnungen aufgrund neuer Behandlungsfälle, egal von welcher Ärztin bzw.', 10, nextLine());
-  doc.text('welchem Arzt verordnet. ', 10, nextLine());
+  const paragraphOneB = 'Das Vertragsverhältnis wird auf unbestimmte Zeit geschlossen und umfasst alle folgenden Verordnungen sowie Verordnungen aufgrund neuer Behandlungsfälle, egal von welcher Ärztin bzw. welchem Arzt verordnet.';
+  printParagraph(paragraphOneB, 13);
   const paragraphTwo = '2. Der/die Logopäd:in weist den/die Patient:in auf die Zuzahlungspflicht gemäß § 32 Abs. 2 SGB V i.V.m. § 61 Satz 3 SGB V hin. Nach dieser gesetzlichen Regelung haben Patient:innen, die das 18. Lebensjahr vollendet haben, 10 Prozent der Kosten sowie 10 Euro je Verordnung selbst zu zahlen, soweit sie auf ihren Antrag nicht von der Zuzahlung befreit sind. Kinder und Jugendliche unter 18 Jahren sind immer von der Zuzahlung befreit.';
   printParagraph(paragraphTwo);
+  // Footer
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'italic');
+  doc.text('Behandlungsvetrag Mundwerk - Seite ' + doc.getCurrentPageInfo().pageNumber + '/' + doc.getNumberOfPages(), 13, 285, {});
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
   doc.addPage();
   currentLine = 30;
-  doc.text('3. Die Zuzahlung ist spätestens 4 Wochen nach Rechnungseingang auf das folgende',10,nextParagraph());
-  doc.text('Konto zu zahlen:',10,nextLine());
+  const paragraphThreeA = '3. Die Zuzahlung ist spätestens 4 Wochen nach Rechnungseingang auf das folgende Konto zu zahlen:';
+  printParagraph(paragraphThreeA);
+  // bank account data
   doc.setFont('courier', 'bold');
-  doc.text('Kontoinhaber: Mundwerk Logopädische Praxis Wette & Huckschlag',10,nextParagraph());
-  doc.text('IBAN:         DEXX XXXX XXXX XXXX XXXX XX',10,nextLine());
-  doc.text('SWIFT-BIC:    XXXXXXXXXXX',10,nextLine());
+  doc.text('Kontoinhaber: Mundwerk Logopädische Praxis Wette & Huckschlag',13,nextParagraph());
+  doc.text('IBAN:         DEXX XXXX XXXX XXXX XXXX XX',13,nextLine());
+  doc.text('SWIFT-BIC:    XXXXXXXXXXX',13,nextLine());
   doc.setFont('helvetica', 'normal');
-  doc.text('Der/die Patient:in erklärt ausdrücklich die Einwilligung, dass der/die Logopäd:in aus dem ', 10,nextParagraph());
-  doc.text('geschlossenen Behandlungsvertrag entstehenden Honoraransprüche zum Zwecke der', 10,nextLine());
-  doc.text('Rechnungsstellung und Einziehung der Forderung an _______ (Name und Anschrift der', 10,nextLine());
-  doc.text('Abrechnungsstelle) abtritt. ', 10,nextLine());
+  const paragraphThreeB = 'Der/die Patient:in erklärt ausdrücklich die Einwilligung, dass der/die Logopäd:in aus dem geschlossenen Behandlungsvertrag entstehenden Honoraransprüche zum Zwecke der Rechnungsstellung und Einziehung der Forderung an _______ (Name und Anschrift der Abrechnungsstelle) abtritt.';
+  printParagraph(paragraphThreeB, 13);
   doc.setFont('helvetica','bold');
-  doc.text('Im Falle des Zahlungsverzuges wird für Zahlungsaufforderungen/Mahnungen eine von', 10, nextParagraph());
-  doc.text('dem/der Patient:in zu zahlende Bearbeitungsgebühr i.H.v. 5,00 € vereinbart. ', 10, nextLine());
+  const paragraphThreeC = 'Im Falle des Zahlungsverzuges wird für Zahlungsaufforderungen/Mahnungen eine von dem/der Patient:in zu zahlende Bearbeitungsgebühr i.H.v. 5,00 € vereinbart.';
+  printParagraph(paragraphThreeC, 13);
   doc.setFont('helvetica','normal');
-  doc.text('Im Falle der Nichteinhaltung der o.g. Zahlungsfrist ist der Rechnungsbetrag nach den gesetzlichen', 10, nextLine());
-  doc.text('Vorschriften zu verzinsen.', 10, nextLine());
+  const paragraphThreeD = 'Im Falle der Nichteinhaltung der o.g. Zahlungsfrist ist der Rechnungsbetrag nach den gesetzlichen Vorschriften zu verzinsen.';
+  printParagraph(paragraphThreeD, 13);
   const paragraphFour = '4. Der Erfolg einer logopädischen Behandlung hängt wesentlich von der aktiven Teilnahme des/der Patient:in ab. Daher ist wichtig, die vereinbarten Termine zuverlässig wahrzunehmen. Die Terminabsprache dient zwar auch der Sicherung eines zeitgemäßen Behandlungsablaufs. Die logopädische Praxis ist jedoch eine reine Bestellpraxis, da die Behandlungssituation die persönliche Gegenwart des/der behandelnden Logopäd:in zwingend voraussetzt. Die vereinbarten Zeiten sind ausschließlich für die jeweiligen Patient:innen reserviert. Die Vertragsparteien vereinbaren für den Fall, dass der/die Patient:in einen vereinbarten Termin nicht wahrnehmen kann und den/die Logopäd:in nicht spätestens 24 Stunden vor dem vereinbarten Termin hierüber informiert, dass der übliche Kassensatz i.H.v. ____ € dem/der Patient:in als Ausfallgebühr privat in Rechnung gestellt wird. Hierbei wird der/die Logopäd:in mögliche Aufwendungen, die die Praxis in Folge des Therapieausfalls erspart hat, in Abzug bringen.';
   printParagraph(paragraphFour);
   const paragraphFive = '5. Die Patientin/der Patient verpflichtet sich, die Logopädin/den Logopäden umgehend über Änderungen der Kontaktdaten (Adresse/Telefonnummer/E-Mail Adresse) zu informieren.';
@@ -89,7 +99,20 @@ export const contract = (p: Patient) => {
   const paragraphSeven = '7. Durch die Unterschrift bestätigt die Patientin/ der Patient, eine Kopie des Vertrages erhalten zu haben.';
   printParagraph(paragraphSeven);
 
+  const today = dayjs.utc(new Date()).format('DD.MM.YYYY');
 
-
+  doc.text('Arnsberg, den ' + today, 13, nextLine(8));
+  doc.text('________________________', 70, currentLine);
+  doc.text('________________________', 135, currentLine);
+  doc.text('Praxisstempel', 70, nextLine());
+  doc.text('Unterschrift Patient:in ', 135, currentLine);
+  doc.text('Unterschrift Logopäd:in', 70, nextLine());
+  doc.text('Eltern / Betreuer:in    ', 135, currentLine);
+  // Footer
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'italic');
+  doc.text('Behandlungsvetrag Mundwerk - Seite ' + doc.getCurrentPageInfo().pageNumber + '/' + doc.getNumberOfPages(), 13, 285, {});
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
   return doc;
 };
