@@ -119,7 +119,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
   };
 
   const personContract = contract(person);
-
+  // const contractOutput = personContract.output('datauristring');
 
   const contractFileName = `contract_${(person.lastName+'_'+person.firstName).replace(' ','')}.pdf`;
   const downloadContract = () => {
@@ -308,6 +308,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
 
               </ModalFormGroup>
               <Divider m="1" />
+              {/* <iframe src={contractOutput} style={{width:'100%', height:'100%'}}/> */}
               {currentPatient.events?.length
                 ? <>
                   <b style={{marginLeft: '0.5rem'}}>{t('label.appointments')}:</b>
