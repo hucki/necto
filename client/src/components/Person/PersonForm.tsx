@@ -1,7 +1,9 @@
-import { Checkbox, Divider, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
+import { Button, Checkbox, Divider, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
+import jsPDF from 'jspdf';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
+import { contract } from '../../helpers/docs';
 import { useCreateDoctorContact, useCreatePatientContact } from '../../hooks/contact';
 import { useAllDoctors } from '../../hooks/doctor';
 import { useAllInstitutions } from '../../hooks/institution';
@@ -116,12 +118,19 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
     }
   };
 
+  const personContract = contract(person);
+
+
+  const contractFileName = `contract_${(person.lastName+'_'+person.firstName).replace(' ','')}.pdf`;
+  const downloadContract = () => {
+    personContract.save(contractFileName);
+  };
   const patientCheckboxes = () => {
     return <ModalFormGroup style={{
       display: 'flex',
       justifyContent: 'space-between'
     }}>
-      <FormControl id="isAddpayFreed" maxWidth="50%" isRequired>
+      <FormControl id="isAddpayFreed" maxWidth="30%" isRequired>
         <Checkbox
           name="isAddpayFreed"
           isDisabled={isReadOnly}
@@ -132,7 +141,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
         />
         <FormLabel>{t('label.isAddpayFreed')}</FormLabel>
       </FormControl>
-      <FormControl id="hasContract" isRequired>
+      <FormControl id="hasContract" maxWidth="30%" isRequired>
         <Checkbox
           isInvalid={(currentPerson as Patient).hasContract ? undefined : true}
           name="hasContract"
@@ -144,6 +153,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
         />
         <FormLabel>{t('label.hasContract')}</FormLabel>
       </FormControl>
+      <Button onClick={() => downloadContract()}>PDF</Button>
     </ModalFormGroup>;
   };
   const telephone = () => {

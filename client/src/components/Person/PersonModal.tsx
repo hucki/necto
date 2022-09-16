@@ -150,7 +150,6 @@ export const PersonModal = ({
         onChange={handleCurrentPersonChange}
         personType={personType}
       />
-      {/* <PatientForm type={isReadOnly ? 'edit' : 'update'} patient={currentPerson} onChange={handleCurrentPatientChange}/> */}
       <ModalFooter
         css={{
           padding: '0.5rem',
