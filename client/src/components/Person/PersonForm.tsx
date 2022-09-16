@@ -1,5 +1,5 @@
 import { Button, Checkbox, Divider, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
@@ -33,8 +33,6 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
   });
   const currentPatient = personType !== 'doctor' ? currentPerson as Patient : undefined;
   const currentDoctor = personType === 'doctor' ? currentPerson as Doctor : undefined;
-
-  const editType = currentPerson.uuid ? 'edit' : 'create';
 
   type PersonKey = keyof Patient;
 
