@@ -18,7 +18,6 @@ module.exports = {
     },
   },
   rules: {
-    indent: ['error', 2, { SwitchCase: 1}],
     'keyword-spacing': 'error',
     'linebreak-style': ['error', 'unix'],
     'no-undef': 0,
