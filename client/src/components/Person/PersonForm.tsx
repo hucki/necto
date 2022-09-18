@@ -7,6 +7,7 @@ import { contract } from '../../helpers/docs';
 import { useCreateDoctorContact, useCreatePatientContact } from '../../hooks/contact';
 import { useAllDoctors } from '../../hooks/doctor';
 import { useAllInstitutions } from '../../hooks/institution';
+import { useFilter } from '../../hooks/useFilter';
 import { ContactData } from '../../types/ContactData';
 import { Doctor } from '../../types/Doctor';
 import { Patient } from '../../types/Patient';
@@ -23,6 +24,7 @@ interface PersonFormProps {
 
 export const PersonForm = ({person, isReadOnly = true, personType = 'patient', onChange}: PersonFormProps) => {
   const { t } = useTranslation();
+  const { currentCompany } = useFilter();
   const { doctors } = useAllDoctors();
   const [ createPatientContact ] = useCreatePatientContact();
   const [ createDoctorContact ] = useCreateDoctorContact();
@@ -116,7 +118,7 @@ export const PersonForm = ({person, isReadOnly = true, personType = 'patient', o
     }
   };
 
-  const personContract = contract(person);
+  const personContract = contract(person, currentCompany);
   // const contractOutput = personContract.output('datauristring');
 
   const contractFileName = `contract_${(person.lastName+'_'+person.firstName).replace(' ','')}.pdf`;
