@@ -10,6 +10,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Icon,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, useState } from 'react';
 import {
@@ -49,7 +50,11 @@ import de from 'date-fns/locale/de';
 import { checkOverlap } from '../../helpers/eventChecker';
 import { useViewport } from '../../hooks/useViewport';
 import { EventModalFooter } from '../Library/Modal';
-import { RiCheckboxBlankLine, RiCheckboxLine } from 'react-icons/ri';
+import {
+  RiCheckboxBlankLine,
+  RiCheckboxLine,
+  RiCheckFill,
+} from 'react-icons/ri';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -186,21 +191,25 @@ function CalendarEventEdit({
             <EventModalHeader
               bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}
             >
-              <IconButton
-                aria-label="set isDone"
-                disabled={
-                  dayjs(changedEvent.endTime).isAfter(dayjs()) ||
-                  changedEvent.isDone
-                }
-                icon={
-                  changedEvent.isDone ? (
-                    <RiCheckboxLine />
-                  ) : (
-                    <RiCheckboxBlankLine />
-                  )
-                }
-                onClick={handleDone}
-              />
+              {changedEvent.isDone !== true ? (
+                <IconButton
+                  aria-label="set isDone"
+                  disabled={
+                    dayjs(changedEvent.endTime).isAfter(dayjs()) ||
+                    changedEvent.isDone
+                  }
+                  icon={
+                    changedEvent.isDone ? (
+                      <RiCheckboxLine />
+                    ) : (
+                      <RiCheckboxBlankLine />
+                    )
+                  }
+                  onClick={handleDone}
+                />
+              ) : (
+                <Icon as={RiCheckFill} w={8} h={8} fill="green" />
+              )}
               <div>
                 <div className="modal-title">
                   {t(
