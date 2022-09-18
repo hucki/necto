@@ -14,8 +14,6 @@ import {
   CalendarEntryIconContainer,
   CalendarEntryTime,
 } from '../Library/Event';
-import { Icon } from '@chakra-ui/react';
-import { RiCheckFill } from 'react-icons/ri';
 
 interface CalendarEntryProps {
   event: Event;
@@ -63,8 +61,10 @@ export const CalendarEntry = ({
     : event.title;
   const isNote = event.type === 'note';
   const isDone = event.isDone;
+  console.log(isDone);
   return (
     <CalendarEntryContainer
+      checked={isDone}
       bgColor={isNote ? 'note' : event.bgColor}
       title={startTimeString + ' ' + entryTitle}
       key={event.uuid?.toString()}
@@ -74,10 +74,7 @@ export const CalendarEntry = ({
     >
       <CalendarEntryIconContainer>
         {!isNote && showTime && (
-          <CalendarEntryTime>
-            {isDone && <Icon as={RiCheckFill} w={4} h={4} fill="green" />}
-            {startTimeString}
-          </CalendarEntryTime>
+          <CalendarEntryTime>{startTimeString}</CalendarEntryTime>
         )}
         <span style={{ display: 'flex', flexDirection: 'row' }}>{icons}</span>
       </CalendarEntryIconContainer>
