@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import jsPDF from 'jspdf';
+import { Company } from '../types/Company';
 import { Patient } from '../types/Patient';
 
 /**
@@ -8,18 +9,30 @@ import { Patient } from '../types/Patient';
  * @param {Patient} p - patient to print the contract for
  * @returns {jsPDF} jsPDF doc object
  */
-export const contract = (p: Patient): jsPDF => {
+export const contract = (p: Patient, c: Company | undefined): jsPDF => {
   const topOffset = 80;
   const lineWidth = 98;
   const centerOffset = 105;
   let currentLine = topOffset;
   const lineHeight = 6;
   const paragraphDistance = 10;
+
   const nextLine = (offset: number = 0) => {
     return currentLine += lineHeight + offset;
   };
-  const nextParagraph = () => {
-    return currentLine += paragraphDistance;
+
+  const printFooter = () => {
+    const currentFontSize = doc.getFontSize();
+    const currentFont = doc.getFont();
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.text('Behandlungsvetrag - Seite ' + doc.getCurrentPageInfo().pageNumber, 13, 285, {});
+    doc.setFontSize(currentFontSize);
+    doc.setFont(currentFont.fontName, currentFont.fontStyle);
+  };
+
+  const nextParagraph = (offset: number = 0) => {
+    return currentLine += paragraphDistance + offset;
   };
   const doc = new jsPDF();
 
@@ -43,15 +56,15 @@ export const contract = (p: Patient): jsPDF => {
   doc.setFontSize(12);
   doc.text('zwischen', 10, nextParagraph());
   doc.setFont('helvetica', 'bold');
-  doc.text('Mundwerk Logopädische Praxis', centerOffset, nextParagraph(), {align: 'center'});
-  doc.text('Anja Wette, Logopädin & Sabine Huckschlag, Logopädin (Partnerschaft)', centerOffset, nextLine(), {align: 'center'});
-  doc.text('Neumarkt 7', centerOffset, nextLine(), {align: 'center'});
-  doc.text('59821 Arnsberg', centerOffset, nextLine(), {align: 'center'});
+  doc.text((c?.name || '__________________________'), centerOffset, nextParagraph(), {align: 'center'});
+  doc.text((c?.name2 || '__________________________'), centerOffset, nextLine(), {align: 'center'});
+  doc.text((c?.street || '__________________________'), centerOffset, nextLine(), {align: 'center'});
+  doc.text(c?.city ? c.zip + ' ' + c?.city : '__________________________', centerOffset, nextLine(), {align: 'center'});
   doc.setFont('helvetica', 'italic');
   doc.text('-im Folgenden Logopäd:in genannt-', centerOffset, nextLine(), {align: 'center'});
   doc.setFont('helvetica', 'normal');
   doc.text('und', 10, nextParagraph(),);
-  doc.text(p.firstName + ', ' + p.firstName, centerOffset, nextParagraph(), {align: 'center'});
+  doc.text(p.lastName + ', ' + p.firstName, centerOffset, nextParagraph(), {align: 'center'});
   doc.text('Name der Eltern/Erziehungsberechtigten    ___________________________________', centerOffset, nextLine(), {align: 'center'});
   doc.text('Adresse: ' + (p.street || '__________________________') + ', ' + (p.city ? p.zip + ' ' + p.city : '__________________________'), centerOffset, nextLine(), {align: 'center'});
   doc.text('Versicherung: ' + (p.insurance || '__________________________') + ', ' + 'befreit: ' + (p.isAddpayFreed ? 'ja' : 'nein') , centerOffset, nextLine(), {align: 'center'});
@@ -59,6 +72,7 @@ export const contract = (p: Patient): jsPDF => {
   doc.text('-im Folgenden Patient:in genannt-', centerOffset, nextLine(), {align: 'center'});
   doc.setFont('helvetica', 'normal');
   doc.text('über die Erbringung logopädischer Leistungen.', 10, nextParagraph());
+  currentLine += 10;
   const paragraphOneA = '1 Die Vertragsparteien schließen einen Vertrag über die Erbringung logopädischer Leistungen. Das Behandlungsverhältnis beginnt mit der Durchführung der Verordnung von';
   printParagraph(paragraphOneA);
   doc.text(p.doctor?.title + ' ' + p.doctor?.firstName + ' ' + p.doctor?.lastName + ' vom ' + '__________________________', centerOffset, nextParagraph(), {align: 'center'});
@@ -66,19 +80,14 @@ export const contract = (p: Patient): jsPDF => {
   printParagraph(paragraphOneB, 13);
   const paragraphTwo = '2. Der/die Logopäd:in weist den/die Patient:in auf die Zuzahlungspflicht gemäß § 32 Abs. 2 SGB V i.V.m. § 61 Satz 3 SGB V hin. Nach dieser gesetzlichen Regelung haben Patient:innen, die das 18. Lebensjahr vollendet haben, 10 Prozent der Kosten sowie 10 Euro je Verordnung selbst zu zahlen, soweit sie auf ihren Antrag nicht von der Zuzahlung befreit sind. Kinder und Jugendliche unter 18 Jahren sind immer von der Zuzahlung befreit.';
   printParagraph(paragraphTwo);
-  // Footer
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'italic');
-  doc.text('Behandlungsvetrag Mundwerk - Seite ' + doc.getCurrentPageInfo().pageNumber + '/' + doc.getNumberOfPages(), 13, 285, {});
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
+  printFooter();
   doc.addPage();
   currentLine = 30;
   const paragraphThreeA = '3. Die Zuzahlung ist spätestens 4 Wochen nach Rechnungseingang auf das folgende Konto zu zahlen:';
   printParagraph(paragraphThreeA);
   // bank account data
   doc.setFont('courier', 'bold');
-  doc.text('Kontoinhaber: Mundwerk Logopädische Praxis Wette & Huckschlag',13,nextParagraph());
+  doc.text('Kontoinhaber: ' + (c?.name || '__________________________') ,13,nextParagraph());
   doc.text('IBAN:         DEXX XXXX XXXX XXXX XXXX XX',13,nextLine());
   doc.text('SWIFT-BIC:    XXXXXXXXXXX',13,nextLine());
   doc.setFont('helvetica', 'normal');
@@ -108,11 +117,6 @@ export const contract = (p: Patient): jsPDF => {
   doc.text('Unterschrift Patient:in ', 135, currentLine);
   doc.text('Unterschrift Logopäd:in', 70, nextLine());
   doc.text('Eltern / Betreuer:in    ', 135, currentLine);
-  // Footer
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'italic');
-  doc.text('Behandlungsvetrag Mundwerk - Seite ' + doc.getCurrentPageInfo().pageNumber + '/' + doc.getNumberOfPages(), 13, 285, {});
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
+  printFooter();
   return doc;
 };
