@@ -17,8 +17,7 @@ export function usebuilding(
 
 export function useAllbuildings(): QueryResult<Building[]> & {
   buildings: Building[];
-  } {
-
+} {
   const buildingsQuery = useQuery('buildings', async () => {
     return client<Building[]>('buildings');
   });

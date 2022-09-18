@@ -1,14 +1,20 @@
 import React, { DragEvent, useState } from 'react';
 
 type DropTargetProps = {
-  onItemDropped: (droppedItem: string) => void
-  dropEffect: 'link' | 'none' | 'copy' | 'move'
-  children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined
-}
+  onItemDropped: (droppedItem: string) => void;
+  dropEffect: 'link' | 'none' | 'copy' | 'move';
+  children:
+    | boolean
+    | React.ReactChild
+    | React.ReactFragment
+    | React.ReactPortal
+    | null
+    | undefined;
+};
 
 const insideStyle = {
   backgroundColor: '#cccccc',
-  opacity: 0.5
+  opacity: 0.5,
 };
 
 const DropTarget = (props: DropTargetProps) => {
@@ -35,18 +41,24 @@ const DropTarget = (props: DropTargetProps) => {
     setIsOver(false);
   };
 
-  return <>
-    <div
-      className="drop-target"
-      onDragOver={dragOver}
-      onDrop={drop}
-      onDragEnter={dragEnter}
-      onDragLeave={dragLeave}
-      style={{width: '100%', height: '100%', ...(isOver ? insideStyle : {})}}
-    >
-      {props.children}
-    </div>
-  </>;
+  return (
+    <>
+      <div
+        className="drop-target"
+        onDragOver={dragOver}
+        onDrop={drop}
+        onDragEnter={dragEnter}
+        onDragLeave={dragLeave}
+        style={{
+          width: '100%',
+          height: '100%',
+          ...(isOver ? insideStyle : {}),
+        }}
+      >
+        {props.children}
+      </div>
+    </>
+  );
 };
 
 export default DropTarget;

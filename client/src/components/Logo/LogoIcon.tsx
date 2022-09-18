@@ -15,11 +15,13 @@ const Icon = styled.img({
 });
 
 const LogoIcon = () => {
-  return <>
-    <IconWrapper>
-      <Icon src={AppLogo} />
-    </IconWrapper>
-  </>;
+  return (
+    <>
+      <IconWrapper>
+        <Icon src={AppLogo} />
+      </IconWrapper>
+    </>
+  );
 };
 
 export default LogoIcon;

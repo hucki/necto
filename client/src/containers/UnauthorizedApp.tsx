@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  AppContainer,
-  ContentContainer,
-} from '../components/Library';
+import { AppContainer, ContentContainer } from '../components/Library';
 import { Box, Heading, Stack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '../components/Logo/LogoIcon';
@@ -20,12 +17,14 @@ function UnauthorizedApp(): JSX.Element {
           rounded="lg"
           boxShadow="lg"
           p="8"
-          w={isMobile ? 'full': undefined}
-          h={isMobile ? 'full': undefined}
+          w={isMobile ? 'full' : undefined}
+          h={isMobile ? 'full' : undefined}
         >
           <Stack spacing="4" alignItems="center">
             <LogoIcon />
-            <Heading as="h1" size="lg">{t('auth.welcome')}</Heading>
+            <Heading as="h1" size="lg">
+              {t('auth.welcome')}
+            </Heading>
             <div>{t('auth.notYetAuthorized')}</div>
             <LogoutButton />
           </Stack>

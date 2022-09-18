@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const getError =  (
+export const getError = (
   req: Request,
   res: Response,
   next: NextFunction

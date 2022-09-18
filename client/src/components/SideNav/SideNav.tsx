@@ -16,8 +16,8 @@ import { AuthContext } from '../../providers/AuthProvider';
 import { CgCalendarDates, CgClose, CgHome, CgUser } from 'react-icons/cg';
 
 interface SideNavProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {

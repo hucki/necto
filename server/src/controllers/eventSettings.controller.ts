@@ -7,7 +7,7 @@ const tenantId = process.env.TENANT_UUID;
 /**
  * get all Cancellation Reasons
  */
-export const getAllCancellationReasons =async (
+export const getAllCancellationReasons = async (
   req: Request,
   res: Response,
   next: NextFunction

@@ -39,21 +39,24 @@ router.post(
     passport.authenticate('local', (err, user, info) => {
       if (err) return next(err);
       if (!user && info) {
-        return res.status(401).json({...info, status: 401});
+        return res.status(401).json({ ...info, status: 401 });
       }
-      req.logIn(user, function(err) {
-        if (err) { return next(err); }
+      req.logIn(user, function (err) {
+        if (err) {
+          return next(err);
+        }
         return next();
       });
     })(req, res, next);
   },
-  authController.issueToken);
+  authController.issueToken
+);
 
 router.post('/register', authController.registerUser);
 router.post('/pw/reset', authController.resetPassword);
 
 // authenticated routes
-router.use(authController.isAuthenticated)
+router.use(authController.isAuthenticated);
 // router.use(passport.authenticate('jwt' /*, {session: false}*/))
 // router.get('/me', passport.authenticate('jwt'/*, {session: false}*/), authController.getMe);
 router.patch('/pw/update', authController.updatePassword);
@@ -121,7 +124,10 @@ router.get('/waiting', patientController.getWaitingPatients);
 router.get('/patients/:patientId', patientController.getPatientsEvents);
 router.post('/patients', patientController.addPatient);
 
-router.post('/patients/:patientId/contact', contactController.addPatientContact);
+router.post(
+  '/patients/:patientId/contact',
+  contactController.addPatientContact
+);
 router.post('/doctors/:doctorId/contact', contactController.addDoctorContact);
 router.patch('/contact/:contactId', contactController.updateContact);
 // router.delete('/patients/:patientId', patientController.deletePatient);
@@ -134,8 +140,14 @@ router.patch('/doctors/:doctorId', doctorController.updateDoctor);
 // institution routes
 router.post('/institutions', institutionController.addInstitution);
 router.get('/institutions/all', institutionController.getAllInstitutions);
-router.get('/institutions/archived', institutionController.getAllArchivedInstitutions);
-router.patch('/institutions/:institutionId', institutionController.updateInstitution);
+router.get(
+  '/institutions/archived',
+  institutionController.getAllArchivedInstitutions
+);
+router.patch(
+  '/institutions/:institutionId',
+  institutionController.updateInstitution
+);
 
 // settings routes
 // app Settings
@@ -148,9 +160,18 @@ router.patch('/settings/user', userSettingsController.updateUserSettings);
 router.get('/settings/permissions', permissionsController.getAllPermissions);
 
 // event Settings
-router.get('/settings/event/cr', eventSettingsController.getAllCancellationReasons);
-router.post('/settings/event/cr', eventSettingsController.addCancellationReason);
-router.patch('/settings/event/cr', eventSettingsController.updateCancellationReason);
+router.get(
+  '/settings/event/cr',
+  eventSettingsController.getAllCancellationReasons
+);
+router.post(
+  '/settings/event/cr',
+  eventSettingsController.addCancellationReason
+);
+router.patch(
+  '/settings/event/cr',
+  eventSettingsController.updateCancellationReason
+);
 
 //router.get('/appsettings', settingsController.getAppSettings);
 //router.put('/appsettings', settingsController.updateAppSettings);

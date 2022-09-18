@@ -18,7 +18,7 @@ import { Flex } from '@chakra-ui/react';
 function TeamCalendar(): JSX.Element {
   const { currentTeam } = useFilter();
   const { currentDate } = useContext(UserDateContext);
-  const [ calendarDate, setCalendarDate ] = useState(
+  const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
   const { isLoading, rawEvents } = useDaysEvents(calendarDate);
@@ -28,21 +28,23 @@ function TeamCalendar(): JSX.Element {
       setCalendarDate(currentDate);
   }, [currentDate, calendarDate, setCalendarDate]);
 
-  const teamMembers = currentTeam?.employees?.filter(({ employee }: TeamMemberMapProps) => {
-    return employee.contract.length > 0;
-  });
+  const teamMembers = currentTeam?.employees?.filter(
+    ({ employee }: TeamMemberMapProps) => {
+      return employee.contract.length > 0;
+    }
+  );
 
   interface TeamMemberMapProps {
     employee: Employee;
   }
   const ressources: EmployeeRessource[] = teamMembers?.length
     ? teamMembers.map(({ employee }: TeamMemberMapProps) => ({
-      uuid: employee.uuid,
-      displayName: employee.firstName,
-      shortDescription: employee.firstName,
-      longDescription: employee.firstName + ' ' + employee.lastName,
-      bgColor: employee.contract[0].bgColor,
-    }))
+        uuid: employee.uuid,
+        displayName: employee.firstName,
+        shortDescription: employee.firstName,
+        longDescription: employee.firstName + ' ' + employee.lastName,
+        bgColor: employee.contract[0].bgColor,
+      }))
     : [];
 
   if (isLoading) return <FullPageSpinner />;

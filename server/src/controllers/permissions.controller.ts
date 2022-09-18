@@ -12,8 +12,8 @@ export const getAllPermissions = async (
   try {
     const permissions = await prisma.permissionLevel.findMany({
       where: {
-        tenantId
-      }
+        tenantId,
+      },
     });
     res.json(permissions);
     res.status(200);

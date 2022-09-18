@@ -2,7 +2,10 @@ import { LOG_IN } from '../actions/actions';
 import { LOG_OUT } from '../actions/actions';
 import { initialState } from '../assets/data';
 
-export default function userData (state = initialState.userData, {type, payload}) {
+export default function userData(
+  state = initialState.userData,
+  { type, payload }
+) {
   const newState = {};
   switch (type) {
     case LOG_IN:
@@ -17,4 +20,3 @@ export default function userData (state = initialState.userData, {type, payload}
       return state;
   }
 }
-

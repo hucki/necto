@@ -13,17 +13,21 @@ export const encryptedPatientFields: (keyof Patient)[] = [
   'notices',
   'firstName',
   'lastName',
-]
+];
 
 const encryptPatient = (patient) => {
   let encryptedPatient = {
     ...patient,
-  }
+  };
   for (let i = 0; i < encryptedPatientFields.length; i++) {
-    encryptedPatient[encryptedPatientFields[i]] = encryptedPatient[encryptedPatientFields[i]]?.length ? encrypt(encryptedPatient[encryptedPatientFields[i]]) : encryptedPatient[encryptedPatientFields[i]]
+    encryptedPatient[encryptedPatientFields[i]] = encryptedPatient[
+      encryptedPatientFields[i]
+    ]?.length
+      ? encrypt(encryptedPatient[encryptedPatientFields[i]])
+      : encryptedPatient[encryptedPatientFields[i]];
   }
-  return encryptedPatient
-}
+  return encryptedPatient;
+};
 
 /**
  * add one Patient
@@ -35,12 +39,12 @@ export const addPatient = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const incomingPatient = { ...req.body }
-    delete incomingPatient.contactData
-    delete incomingPatient.events
-    delete incomingPatient.availability
-    delete incomingPatient.doctor
-    delete incomingPatient.institution
+    const incomingPatient = { ...req.body };
+    delete incomingPatient.contactData;
+    delete incomingPatient.events;
+    delete incomingPatient.availability;
+    delete incomingPatient.doctor;
+    delete incomingPatient.institution;
 
     const encryptedPatient = encryptPatient(incomingPatient);
     const createdPatient = await prisma.patient.create({
@@ -69,13 +73,13 @@ export const updatePatient = async (
 ): Promise<void> => {
   try {
     const patientId = req.params.patientId;
-    const incomingPatient = { ...req.body }
-    delete incomingPatient.contactData
-    delete incomingPatient.events
-    delete incomingPatient.availability
-    delete incomingPatient.doctor
-    delete incomingPatient.institution
-    delete incomingPatient.numberInLine
+    const incomingPatient = { ...req.body };
+    delete incomingPatient.contactData;
+    delete incomingPatient.events;
+    delete incomingPatient.availability;
+    delete incomingPatient.doctor;
+    delete incomingPatient.institution;
+    delete incomingPatient.numberInLine;
 
     const encryptedPatient = encryptPatient(incomingPatient);
     const updatedPatient = await prisma.patient.update({
@@ -131,7 +135,7 @@ export const getPatientsEvents = async (
     const patientsEvents = await prisma.patient.findMany({
       where: {
         uuid: patientId,
-        archived: false
+        archived: false,
       },
       include: {
         events: true,
@@ -156,7 +160,7 @@ export const getAllPatients = async (
   try {
     const patients = await prisma.patient.findMany({
       where: {
-        archived: false
+        archived: false,
       },
       include: {
         contactData: true,
@@ -175,10 +179,13 @@ export const getAllPatients = async (
     for (let i = 0; i < patients.length; i++) {
       patients[i] = {
         ...patients[i],
-        ...decryptPatient({patient: patients[i], fields: encryptedPatientFields})
-      }
+        ...decryptPatient({
+          patient: patients[i],
+          fields: encryptedPatientFields,
+        }),
+      };
       if (patients[i].contactData) {
-        patients[i].contactData = decryptContactData(patients[i].contactData)
+        patients[i].contactData = decryptContactData(patients[i].contactData);
       }
     }
     res.json(patients);
@@ -230,8 +237,8 @@ export const getWaitingPatients = async (
                   },
                   {
                     isDiagnostic: true,
-                  }
-                ]
+                  },
+                ],
               },
             },
           },
@@ -244,10 +251,15 @@ export const getWaitingPatients = async (
     for (let i = 0; i < waitingPatients.length; i++) {
       waitingPatients[i] = {
         ...waitingPatients[i],
-        ...decryptPatient({patient: waitingPatients[i], fields: encryptedPatientFields})
-      }
+        ...decryptPatient({
+          patient: waitingPatients[i],
+          fields: encryptedPatientFields,
+        }),
+      };
       if (waitingPatients[i].contactData) {
-        waitingPatients[i].contactData = decryptContactData(waitingPatients[i].contactData)
+        waitingPatients[i].contactData = decryptContactData(
+          waitingPatients[i].contactData
+        );
       }
     }
     res.json(waitingPatients);

@@ -2,7 +2,15 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalOverlay, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import {
+  Modal,
+  ModalOverlay,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react';
 import { BaseSyntheticEvent, useState } from 'react';
 import {
   Button,
@@ -25,7 +33,15 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CancellationReason, Event } from '../../types/Event';
-import { FaHouseUser, FaLink, FaEdit, FaTimes, FaTrash, FaCommentMedical, FaExclamation } from 'react-icons/fa';
+import {
+  FaHouseUser,
+  FaLink,
+  FaEdit,
+  FaTimes,
+  FaTrash,
+  FaCommentMedical,
+  FaExclamation,
+} from 'react-icons/fa';
 
 import CalendarEventView from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
@@ -58,7 +74,11 @@ function CalendarEventEdit({
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
   const { isLoading, isError, rawEvents } = useDaysEvents(event.startTime);
-  const { isLoading: isLoadingCR, error: errorCR, cancellationReasons} = useAllCancellationReasons();
+  const {
+    isLoading: isLoadingCR,
+    error: errorCR,
+    cancellationReasons,
+  } = useAllCancellationReasons();
 
   const [updateEvent, { error: savingError }] = useUpdateEvent();
   const [deleteEvent] = useDeleteEvent();
@@ -107,12 +127,15 @@ function CalendarEventEdit({
     onClose();
   }
 
-  function handleCancelEvent(event: BaseSyntheticEvent, id: CancellationReason['id']) {
+  function handleCancelEvent(
+    event: BaseSyntheticEvent,
+    id: CancellationReason['id']
+  ) {
     updateEvent({
       event: {
         ...changedEvent,
         isCancelled: true,
-        cancellationReasonId: id
+        cancellationReasonId: id,
       },
     });
     onClose();
@@ -133,32 +156,58 @@ function CalendarEventEdit({
       return (
         <MenuList borderColor="orange.500">
           <MenuItem>{t('button.cancelEvent')}</MenuItem>
-        </MenuList>);
+        </MenuList>
+      );
     return (
       <MenuList borderColor="orange.500">
-        {cancellationReasons.map((cr: CancellationReason) => <MenuItem onClick={(e) => handleCancelEvent(e, cr.id)} key={cr.id}>{cr.id} | {cr.description}</MenuItem>)}
-      </MenuList>);
+        {cancellationReasons.map((cr: CancellationReason) => (
+          <MenuItem onClick={(e) => handleCancelEvent(e, cr.id)} key={cr.id}>
+            {cr.id} | {cr.description}
+          </MenuItem>
+        ))}
+      </MenuList>
+    );
   };
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size={isMobile ? 'full': undefined}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior="inside"
+        size={isMobile ? 'full' : undefined}
+      >
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
         >
           <EventModalContent>
-            <EventModalHeader bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}>
+            <EventModalHeader
+              bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}
+            >
               <IconButton
                 aria-label="set isDone"
-                disabled={dayjs(changedEvent.endTime).isAfter(dayjs()) || changedEvent.isDone}
-                icon={changedEvent.isDone ? <RiCheckboxLine /> : <RiCheckboxBlankLine />}
+                disabled={
+                  dayjs(changedEvent.endTime).isAfter(dayjs()) ||
+                  changedEvent.isDone
+                }
+                icon={
+                  changedEvent.isDone ? (
+                    <RiCheckboxLine />
+                  ) : (
+                    <RiCheckboxBlankLine />
+                  )
+                }
                 onClick={handleDone}
               />
               <div>
                 <div className="modal-title">
-                  {t(`calendar.event.${isNote ? 'noteTitle' : 'editAppointmentTitle'}`)}
+                  {t(
+                    `calendar.event.${
+                      isNote ? 'noteTitle' : 'editAppointmentTitle'
+                    }`
+                  )}
                 </div>
                 <div
                   className="modal-subtitle"
@@ -169,14 +218,15 @@ function CalendarEventEdit({
                   {dayjs(event.startTime).format('llll')}
                 </div>
               </div>
-              {changedEvent.patient && !changedEvent.patient.hasContract &&
+              {changedEvent.patient && !changedEvent.patient.hasContract && (
                 <FaExclamation
-                  color='red'
+                  color="red"
                   css={{
                     width: '1rem',
                     height: '1rem',
-                  }}/>
-              }
+                  }}
+                />
+              )}
               {changedEvent.isHomeVisit && (
                 <FaHouseUser
                   css={{
@@ -194,10 +244,12 @@ function CalendarEventEdit({
                 />
               )}
               {changedEvent.isDiagnostic && (
-                <FaCommentMedical css={{
-                  width: '1rem',
-                  height: '1rem',
-                }} />
+                <FaCommentMedical
+                  css={{
+                    width: '1rem',
+                    height: '1rem',
+                  }}
+                />
               )}
               <IconButton
                 aria-label="close modal"
@@ -205,7 +257,7 @@ function CalendarEventEdit({
                 onClick={onClose}
               />
             </EventModalHeader>
-            <EventModalBody bgColor={(isNote ? 'note' : undefined)}>
+            <EventModalBody bgColor={isNote ? 'note' : undefined}>
               {isReadOnly && (
                 <CalendarEventView
                   isNote={isNote}
@@ -228,7 +280,7 @@ function CalendarEventEdit({
               {message && <ErrorMessage error={{ message }} />}
             </EventModalBody>
 
-            <EventModalFooter bgColor={(isNote ? 'note' : undefined)}>
+            <EventModalFooter bgColor={isNote ? 'note' : undefined}>
               <div
                 className="row"
                 css={{
@@ -239,7 +291,7 @@ function CalendarEventEdit({
                 }}
               >
                 <ControlWrapper>
-                  {!isNote &&
+                  {!isNote && (
                     <Menu>
                       <MenuButton
                         leftIcon={<FaTimes />}
@@ -254,11 +306,14 @@ function CalendarEventEdit({
                       </MenuButton>
                       {CancelMenuItems()}
                     </Menu>
-                  }
+                  )}
                   <Button
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
-                    disabled={dayjs(changedEvent.endTime).isBefore(dayjs()) || changedEvent.isDone}
+                    disabled={
+                      dayjs(changedEvent.endTime).isBefore(dayjs()) ||
+                      changedEvent.isDone
+                    }
                     colorScheme="red"
                     size="sm"
                     type="button"

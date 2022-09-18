@@ -21,7 +21,7 @@ export const getAllDoctors = async (
     });
     for (let i = 0; i < doctors.length; i++) {
       if (doctors[i].contactData) {
-        doctors[i].contactData = decryptContactData(doctors[i].contactData)
+        doctors[i].contactData = decryptContactData(doctors[i].contactData);
       }
     }
     res.json(doctors);
@@ -42,7 +42,7 @@ export const addDoctor = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { firstName, lastName, title, street, zip, city } = req.body
+    const { firstName, lastName, title, street, zip, city } = req.body;
     const createdDoctor = await prisma.doctor.create({
       data: {
         firstName,
@@ -59,7 +59,7 @@ export const addDoctor = async (
       },
     });
     if (createdDoctor.contactData) {
-      createdDoctor.contactData = decryptContactData(createdDoctor.contactData)
+      createdDoctor.contactData = decryptContactData(createdDoctor.contactData);
     }
     res.json(createdDoctor);
     res.status(201);
@@ -73,14 +73,14 @@ export const addDoctor = async (
  * update one Doctor
  *  @param {Doctor} req.body
  */
- export const updateDoctor = async (
+export const updateDoctor = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
     const doctorId = req.params.doctorId;
-    const { firstName, lastName, title, street, zip, city } = req.body
+    const { firstName, lastName, title, street, zip, city } = req.body;
     const updatedDoctor = await prisma.doctor.update({
       where: {
         uuid: doctorId,
@@ -91,7 +91,7 @@ export const addDoctor = async (
         title,
         street,
         zip,
-        city
+        city,
       },
     });
     res.json(updatedDoctor);

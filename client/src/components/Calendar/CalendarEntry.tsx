@@ -1,12 +1,21 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
-import { FaCommentMedical, FaExclamation, FaHouseUser, FaLink } from 'react-icons/fa';
+import {
+  FaCommentMedical,
+  FaExclamation,
+  FaHouseUser,
+  FaLink,
+} from 'react-icons/fa';
 import dayjs from 'dayjs';
-import { CalendarEntryContainer, CalendarEntryContent, CalendarEntryIconContainer, CalendarEntryTime } from '../Library/Event';
+import {
+  CalendarEntryContainer,
+  CalendarEntryContent,
+  CalendarEntryIconContainer,
+  CalendarEntryTime,
+} from '../Library/Event';
 import { Icon } from '@chakra-ui/react';
 import { RiCheckFill } from 'react-icons/ri';
-
 
 interface CalendarEntryProps {
   event: Event;
@@ -27,7 +36,10 @@ export const CalendarEntry = ({
   useEffect(() => {
     setIcons([]);
     if (event.patient && !event.patient.hasContract) {
-      setIcons((icons) => [...icons, <FaExclamation key="noContractIcon" color='red' />]);
+      setIcons((icons) => [
+        ...icons,
+        <FaExclamation key="noContractIcon" color="red" />,
+      ]);
     }
     if (event.isHomeVisit) {
       setIcons((icons) => [...icons, <FaHouseUser key="homeVisitIcon" />]);
@@ -41,10 +53,14 @@ export const CalendarEntry = ({
     // setIcons((icons) => [...icons, <span key="isDiagnostic" style={{color: 'red'}}>D</span>]);
   }, [event]);
 
-  const timeString = `${dayjs(event.startTime).format('HH:mm')} - ${dayjs(event.endTime).format('HH:mm')}`;
+  const timeString = `${dayjs(event.startTime).format('HH:mm')} - ${dayjs(
+    event.endTime
+  ).format('HH:mm')}`;
   const startTimeString = `${dayjs(event.startTime).format('HH:mm')}`;
 
-  const entryTitle = event.patient ? event.patient.lastName + ', ' +  event.patient.firstName : event.title;
+  const entryTitle = event.patient
+    ? event.patient.lastName + ', ' + event.patient.firstName
+    : event.title;
   const isNote = event.type === 'note';
   const isDone = event.isDone;
   return (
@@ -53,21 +69,19 @@ export const CalendarEntry = ({
       title={startTimeString + ' ' + entryTitle}
       key={event.uuid?.toString()}
       onClick={readOnly ? undefined : () => onClickHandler(event)}
-      className={`${
-        readOnly ? 'read-only' : ''
-      }`}
+      className={`${readOnly ? 'read-only' : ''}`}
       style={styles}
     >
       <CalendarEntryIconContainer>
-        {!isNote && showTime &&
+        {!isNote && showTime && (
           <CalendarEntryTime>
-            {isDone && <Icon as={RiCheckFill} w={4} h={4} fill="green"/>}
+            {isDone && <Icon as={RiCheckFill} w={4} h={4} fill="green" />}
             {startTimeString}
           </CalendarEntryTime>
-        }
-        <span style={{display: 'flex', flexDirection: 'row'}}>{icons}</span>
+        )}
+        <span style={{ display: 'flex', flexDirection: 'row' }}>{icons}</span>
       </CalendarEntryIconContainer>
-      <CalendarEntryContent strikeThrough={isNote && isDone} >
+      <CalendarEntryContent strikeThrough={isNote && isDone}>
         {entryTitle}
       </CalendarEntryContent>
     </CalendarEntryContainer>

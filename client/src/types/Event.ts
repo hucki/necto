@@ -3,7 +3,12 @@ import { BgColor } from './Colors';
 import { Employee } from './Employee';
 import { Patient } from './Patient';
 
-export type EventType = 'custom' | 'note' | 'Appointment' | 'leave' | 'roomBooking'
+export type EventType =
+  | 'custom'
+  | 'note'
+  | 'Appointment'
+  | 'leave'
+  | 'roomBooking';
 
 export type Event = {
   uuid?: string;
@@ -56,4 +61,4 @@ export type CancellationReason = {
   id: string;
   description: string;
   tenantId?: string;
-}
+};

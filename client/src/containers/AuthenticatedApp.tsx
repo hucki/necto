@@ -27,11 +27,11 @@ function AuthenticatedApp({
 }: AuthenticatedAppInputProps): JSX.Element {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { setIsAuthenticated, isLoading } = useContext(AuthContext);
-  const { user, isError, error} = useUser(id);
+  const { user, isError, error } = useUser(id);
   useEffect(() => {
     if (isError && !isLoading) {
       setIsAuthenticated(false);
-      logout({returnTo: window.location.toString()});
+      logout({ returnTo: window.location.toString() });
     }
     if (!user) return;
     dispatch(logIn(user));
@@ -40,11 +40,14 @@ function AuthenticatedApp({
   return (
     <>
       <AppContainer id="app">
-        <SideNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)}/>
+        <SideNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
         <ErrorBoundary>
           <ContentContainer>
             <Header>
-              <NavBar isSideNavOpen={isNavOpen} onSideNavOpen={() => setIsNavOpen(true)}/>
+              <NavBar
+                isSideNavOpen={isNavOpen}
+                onSideNavOpen={() => setIsNavOpen(true)}
+              />
             </Header>
             <Content id="Content" pr={1}>
               {isError ? (

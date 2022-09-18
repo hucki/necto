@@ -8,28 +8,28 @@ import { resetPassword } from '../../services/Auth';
 import { ResetResponse } from '../../types/Auth';
 
 interface RegisterError {
-  location: string
-  msg: string
-  param: string
-  value: string
+  location: string;
+  msg: string;
+  param: string;
+  value: string;
 }
 interface ErrorResponse {
-  errors: RegisterError[]
-  message?: string
+  errors: RegisterError[];
+  message?: string;
 }
 
 interface ResetPasswordProps {
-  onSubmit: () => void
+  onSubmit: () => void;
 }
 
-const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
+const ResetPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
   const { t } = useTranslation();
-  const [ message, setMessage] = useState<string| undefined>(undefined);
+  const [message, setMessage] = useState<string | undefined>(undefined);
   const [pending, setPending] = useState(false);
-  const [ resetState, setResetState] = useState({
+  const [resetState, setResetState] = useState({
     email: '',
   });
-  const [ response, setResponse] = useState<ResetResponse | undefined>();
+  const [response, setResponse] = useState<ResetResponse | undefined>();
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
@@ -43,7 +43,7 @@ const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
     e.preventDefault();
     try {
       setPending(true);
-      const resetResponse = await resetPassword({ email: resetState.email});
+      const resetResponse = await resetPassword({ email: resetState.email });
       setTimeout(() => {
         setMessage(undefined);
         setResponse(undefined);
@@ -63,9 +63,9 @@ const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
       if (errorResponse && errorResponse.message) {
         messages = [errorResponse.message];
       } else if (errorResponse && errorResponse.errors?.length) {
-        const msgs = errorResponse.errors.map(e => e.msg);
+        const msgs = errorResponse.errors.map((e) => e.msg);
         messages = [...msgs];
-      };
+      }
       setTimeout(() => setMessage(undefined), 2500);
       setMessage(messages.join());
     }
@@ -97,7 +97,9 @@ const ResetPassword = ({onSubmit}: ResetPasswordProps): JSX.Element => {
             onChange={onChangeHandler}
           />
         </FormGroup>
-        <Button aria-label="resetPassword" type="submit"
+        <Button
+          aria-label="resetPassword"
+          type="submit"
           disabled={!readyToReset || !!response}
           colorScheme={message && response !== 'ok' ? 'red' : 'green'}
         >

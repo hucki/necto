@@ -44,4 +44,4 @@ export type Patient = {
   institution?: Institution;
 };
 
-export type WaitingPatient = { numberInLine: number } & Patient
+export type WaitingPatient = { numberInLine: number } & Patient;

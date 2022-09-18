@@ -113,20 +113,20 @@ async function main() {
       {
         displayName: 'admin',
         description: 'admin role',
-        tenantId
+        tenantId,
       },
       {
         displayName: 'employee',
         description: 'employee role',
-        tenantId
+        tenantId,
       },
       {
         displayName: 'plannen',
         description: 'planner role',
-        tenantId
+        tenantId,
       },
-    ]
-  })
+    ],
+  });
   // results
   console.log({
     tenant,
@@ -137,7 +137,7 @@ async function main() {
     employees,
     contracts,
     teams,
-    permissionLevels
+    permissionLevels,
   });
 }
 

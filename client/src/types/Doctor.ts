@@ -1,5 +1,5 @@
-import { ContactData } from "./ContactData";
-import { Patient } from "./Patient";
+import { ContactData } from './ContactData';
+import { Patient } from './Patient';
 
 export type Doctor = {
   uuid?: string;
@@ -11,4 +11,4 @@ export type Doctor = {
   city?: string;
   contactData?: ContactData[];
   patients?: Patient[];
-}
+};

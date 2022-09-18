@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Icon, ModalFooter, ModalHeader, useToast, UseToastOptions } from '@chakra-ui/react';
+import {
+  Icon,
+  ModalFooter,
+  ModalHeader,
+  useToast,
+  UseToastOptions,
+} from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { CgOrganisation } from 'react-icons/cg';
 import { FaArchive, FaTimes } from 'react-icons/fa';
-import { useCreateInstitution, useUpdateInstitution } from '../../hooks/institution';
+import {
+  useCreateInstitution,
+  useUpdateInstitution,
+} from '../../hooks/institution';
 import { Institution } from '../../types/Institution';
 import { Button, ControlWrapper, IconButton } from '../Library';
 import { InstitutionForm } from './InstitutionForm';
@@ -13,23 +22,36 @@ interface InstitutionModalProps {
   onClose: () => void;
 }
 
-export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) => {
+export const InstitutionModal = ({
+  institution,
+  onClose,
+}: InstitutionModalProps) => {
   const toast = useToast();
   const { t } = useTranslation();
 
-  const  [updateInstitution, { error: updateInstitutionError }] = useUpdateInstitution();
-  const  [createInstitution, { error: createInstitutionError }] = useCreateInstitution();
+  const [updateInstitution, { error: updateInstitutionError }] =
+    useUpdateInstitution();
+  const [createInstitution, { error: createInstitutionError }] =
+    useCreateInstitution();
 
-  const [currentInstitution, setCurrentInstitution] = useState<Institution>(() => ({...institution}));
+  const [currentInstitution, setCurrentInstitution] = useState<Institution>(
+    () => ({ ...institution })
+  );
 
   const handleCurrentInstitutionChange = (institution: Institution) => {
-    setCurrentInstitution(cur => ({...cur, ...institution}));
+    setCurrentInstitution((cur) => ({ ...cur, ...institution }));
   };
 
-  type UpdateType = 'save' | 'archive' | 'activate'
+  type UpdateType = 'save' | 'archive' | 'activate';
 
   const onSaveChanges = (type: UpdateType) => {
-    const institutionUpdate = type === 'archive' || type === 'activate' ? {...currentInstitution, archived: (type === 'activate' ? false : true)} : currentInstitution;
+    const institutionUpdate =
+      type === 'archive' || type === 'activate'
+        ? {
+            ...currentInstitution,
+            archived: type === 'activate' ? false : true,
+          }
+        : currentInstitution;
     if (institutionUpdate?.name) {
       if (institutionUpdate.uuid) {
         const updateSuccessToastOptions: UseToastOptions = {
@@ -39,21 +61,20 @@ export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) 
           duration: 5000,
           isClosable: true,
         };
-        updateInstitution({institution: institutionUpdate}).then((res) => {
+        updateInstitution({ institution: institutionUpdate }).then((res) => {
           if (res?.uuid) {
             toast(updateSuccessToastOptions);
             onClose();
           }
         });
       } else {
-        const createSuccesToastOptions: UseToastOptions =
-          {
-            title: 'Institution created.',
-            description: `Institution ${institutionUpdate.name} has been created`,
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-          };
+        const createSuccesToastOptions: UseToastOptions = {
+          title: 'Institution created.',
+          description: `Institution ${institutionUpdate.name} has been created`,
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        };
         createInstitution({ institution: institutionUpdate }).then((res) => {
           if (res?.uuid) {
             toast(createSuccesToastOptions);
@@ -75,13 +96,25 @@ export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) 
 
   return (
     <>
-      <ModalHeader alignItems="center" display="flex" justifyContent="space-between">
-        <div className="institution-info" style={{
-          display: 'flex',
-          alignItems: 'center'
-        }}>
+      <ModalHeader
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+      >
+        <div
+          className="institution-info"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <Icon as={CgOrganisation} w={10} h={10} mr={2} />
-          {currentInstitution.name} {currentInstitution.description ? <em style={{fontSize: '1rem'}}>&nbsp;{`(${currentInstitution.description})`}</em> : null}
+          {currentInstitution.name}{' '}
+          {currentInstitution.description ? (
+            <em style={{ fontSize: '1rem' }}>
+              &nbsp;{`(${currentInstitution.description})`}
+            </em>
+          ) : null}
         </div>
         <IconButton
           aria-label="close modal"
@@ -89,7 +122,10 @@ export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) 
           onClick={onClose}
         />
       </ModalHeader>
-      <InstitutionForm institution={currentInstitution} onChange={handleCurrentInstitutionChange}/>
+      <InstitutionForm
+        institution={currentInstitution}
+        onChange={handleCurrentInstitutionChange}
+      />
       <ModalFooter
         css={{
           padding: '0.5rem',
@@ -114,9 +150,15 @@ export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) 
               disabled={!currentInstitution.uuid}
               size="sm"
               type="button"
-              onClick={() => onSaveChanges(currentInstitution.archived ? 'activate' : 'archive')}
+              onClick={() =>
+                onSaveChanges(
+                  currentInstitution.archived ? 'activate' : 'archive'
+                )
+              }
             >
-              {t(`button.${currentInstitution.archived ? 'activate' : 'archive'}`)}
+              {t(
+                `button.${currentInstitution.archived ? 'activate' : 'archive'}`
+              )}
             </Button>
           </ControlWrapper>
           <ControlWrapper>
@@ -124,7 +166,8 @@ export const InstitutionModal = ({institution, onClose}: InstitutionModalProps) 
               aria-label="cancel changes"
               type="button"
               size="sm"
-              onClick={onClose}>
+              onClick={onClose}
+            >
               {t('button.cancel')}
             </Button>
             <Button

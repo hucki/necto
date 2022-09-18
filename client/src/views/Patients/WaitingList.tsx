@@ -8,7 +8,10 @@ import { useAllWaitingPatients } from '../../hooks/patient';
 
 function WaitingList(): JSX.Element {
   const { isLoading, error, patients } = useAllWaitingPatients();
-  const waitingPatients = patients.map((patient, index) => ({numberInLine: index + 1, ...patient}));
+  const waitingPatients = patients.map((patient, index) => ({
+    numberInLine: index + 1,
+    ...patient,
+  }));
 
   return isLoading ? (
     <Spinner />

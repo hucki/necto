@@ -1,9 +1,30 @@
-import { Flex, Icon, InputGroup, InputLeftElement, Modal, ModalBody, ModalContent, ModalOverlay, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from '@chakra-ui/react';
+import {
+  Flex,
+  Icon,
+  InputGroup,
+  InputLeftElement,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useDisclosure,
+} from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RiCheckboxBlankLine, RiCheckLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri';
+import {
+  RiCheckboxBlankLine,
+  RiCheckLine,
+  RiSearchLine,
+  RiUserAddLine,
+} from 'react-icons/ri';
 import { getDisplayName } from '../../helpers/displayNames';
 import { useFilter } from '../../hooks/useFilter';
 import { useViewport } from '../../hooks/useViewport';
@@ -15,19 +36,21 @@ import { PersonModal } from './PersonModal';
 import { Person } from '../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 
-type ListType = 'doctors' | 'patients' | 'waitingPatients'
+type ListType = 'doctors' | 'patients' | 'waitingPatients';
 
 interface PersonListProps {
-  persons: Doctor[] | Patient[] | WaitingPatient[]
+  persons: Doctor[] | Patient[] | WaitingPatient[];
 }
 
-function PersonList({persons}: PersonListProps) {
+function PersonList({ persons }: PersonListProps) {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
-  const [ listType, setListType ] = useState<ListType>('patients');
+  const [listType, setListType] = useState<ListType>('patients');
 
-  const isWaitingPatientList = (persons: Person[] ): persons is WaitingPatient[] => {
+  const isWaitingPatientList = (
+    persons: Person[]
+  ): persons is WaitingPatient[] => {
     if (persons[0] && 'numberInLine' in persons[0]) return true;
     return false;
   };
@@ -37,27 +60,31 @@ function PersonList({persons}: PersonListProps) {
     return false;
   };
 
-  const isDoctorList = (persons: Person[] ): persons is Doctor[] => {
+  const isDoctorList = (persons: Person[]): persons is Doctor[] => {
     if (listType !== 'waitingPatients' && listType !== 'patients') return true;
     return false;
   };
 
   useEffect(() => {
-    const type: ListType = isWaitingPatientList(persons) ? 'waitingPatients' : isPatientList(persons) ? 'patients' : 'doctors';
+    const type: ListType = isWaitingPatientList(persons)
+      ? 'waitingPatients'
+      : isPatientList(persons)
+      ? 'patients'
+      : 'doctors';
     if (type !== listType) setListType(type);
   }, [persons]);
 
-  const isWaitingPatient = (person: Person ): person is WaitingPatient => {
+  const isWaitingPatient = (person: Person): person is WaitingPatient => {
     if ('numberInLine' in person) return true;
     return false;
   };
 
-  const isPatient = (person: Person ): person is Patient => {
+  const isPatient = (person: Person): person is Patient => {
     if ('firstContactAt' in person) return true;
     return false;
   };
 
-  const isDoctor = (person: Person ): person is Doctor => {
+  const isDoctor = (person: Person): person is Doctor => {
     if (!isWaitingPatient(person) && !isPatient(person)) return true;
     return false;
   };
@@ -70,58 +97,94 @@ function PersonList({persons}: PersonListProps) {
     }
   }, [search]);
   const filteredPatients: Patient[] | WaitingPatient[] =
-    (isWaitingPatientList(persons) || isPatientList(persons))
-      ? persons.filter((person: Patient | WaitingPatient) => (isPatient(person) || isWaitingPatient(person)) &&
-        person.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        person.lastName.toLowerCase().includes(search.toLowerCase()) ||
-        person.street?.toLowerCase().includes(search.toLowerCase()) ||
-        person.city?.toLowerCase().includes(search.toLowerCase()) ||
-        person.institution?.name?.toLowerCase().includes(search.toLowerCase()) ||
-        person.notices?.toLowerCase().includes(search.toLowerCase()) ||
-        person.contactData
-          ?.filter((contact) => contact.type === 'telephone')
-          .findIndex(contact => contact.contact.toLowerCase()
-            .includes(search.toLowerCase())) !== -1
-      ) as Patient[] | WaitingPatient[]
-      : [] as Patient[] | WaitingPatient[];
+    isWaitingPatientList(persons) || isPatientList(persons)
+      ? (persons.filter(
+          (person: Patient | WaitingPatient) =>
+            ((isPatient(person) || isWaitingPatient(person)) &&
+              person.firstName.toLowerCase().includes(search.toLowerCase())) ||
+            person.lastName.toLowerCase().includes(search.toLowerCase()) ||
+            person.street?.toLowerCase().includes(search.toLowerCase()) ||
+            person.city?.toLowerCase().includes(search.toLowerCase()) ||
+            person.institution?.name
+              ?.toLowerCase()
+              .includes(search.toLowerCase()) ||
+            person.notices?.toLowerCase().includes(search.toLowerCase()) ||
+            person.contactData
+              ?.filter((contact) => contact.type === 'telephone')
+              .findIndex((contact) =>
+                contact.contact.toLowerCase().includes(search.toLowerCase())
+              ) !== -1
+        ) as Patient[] | WaitingPatient[])
+      : ([] as Patient[] | WaitingPatient[]);
 
   const allDoctors = isDoctorList(persons) ? persons : [];
-  const filteredDoctors = allDoctors.filter((person: Doctor) =>
-    person.firstName.toLowerCase().includes(search.toLowerCase()) ||
-    person.lastName.toLowerCase().includes(search.toLowerCase()) ||
-    person.street?.toLowerCase().includes(search.toLowerCase()) ||
-    person.city?.toLowerCase().includes(search.toLowerCase()) ||
-    person.contactData
-      ?.filter((contact) => contact.type === 'telephone')
-      .findIndex(contact => contact.contact.toLowerCase()
-        .includes(search.toLowerCase())) !== -1
+  const filteredDoctors = allDoctors.filter(
+    (person: Doctor) =>
+      person.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      person.lastName.toLowerCase().includes(search.toLowerCase()) ||
+      person.street?.toLowerCase().includes(search.toLowerCase()) ||
+      person.city?.toLowerCase().includes(search.toLowerCase()) ||
+      person.contactData
+        ?.filter((contact) => contact.type === 'telephone')
+        .findIndex((contact) =>
+          contact.contact.toLowerCase().includes(search.toLowerCase())
+        ) !== -1
   );
 
-  const filteredPersons: Person[] = listType === 'doctors' ? filteredDoctors : isWaitingPatientList(filteredPatients) ? filteredPatients : filteredPatients;
+  const filteredPersons: Person[] =
+    listType === 'doctors'
+      ? filteredDoctors
+      : isWaitingPatientList(filteredPatients)
+      ? filteredPatients
+      : filteredPatients;
 
-  filteredPersons.sort((a: Person, b: Person) => (isWaitingPatient(a) && isWaitingPatient(b)) ? a.numberInLine >= b.numberInLine ? 1 : -1 : a.lastName.toLowerCase() >= b.lastName.toLowerCase() ? 1 : -1);
+  filteredPersons.sort((a: Person, b: Person) =>
+    isWaitingPatient(a) && isWaitingPatient(b)
+      ? a.numberInLine >= b.numberInLine
+        ? 1
+        : -1
+      : a.lastName.toLowerCase() >= b.lastName.toLowerCase()
+      ? 1
+      : -1
+  );
 
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
 
   // pagination Config
-  const rowsPerPage = isMobile ? listType === 'waitingPatients'  ? 10 : 14 : 20;
+  const rowsPerPage = isMobile
+    ? listType === 'waitingPatients'
+      ? 10
+      : 14
+    : 20;
   const numOfPages = Math.ceil(filteredPersons.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
 
   // modal control
-  const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
-  const { isOpen: isOpenCreate, onOpen: onOpenCreate, onClose: onCloseCreate } = useDisclosure();
+  const {
+    isOpen: isOpenInfo,
+    onOpen: onOpenInfo,
+    onClose: onCloseInfo,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenCreate,
+    onOpen: onOpenCreate,
+    onClose: onCloseCreate,
+  } = useDisclosure();
 
   // handle selected / new Person
-  const [ currentPerson, setCurrentPerson] = useState<Person | WaitingPatient | undefined>(undefined);
-  const [ newPerson, setNewPerson] = useState<Patient | Doctor | undefined>(undefined);
-  function showPersonInfo(person:Person) {
+  const [currentPerson, setCurrentPerson] = useState<
+    Person | WaitingPatient | undefined
+  >(undefined);
+  const [newPerson, setNewPerson] = useState<Patient | Doctor | undefined>(
+    undefined
+  );
+  function showPersonInfo(person: Person) {
     setCurrentPerson({
       ...person,
       notices: isPatient(person) ? person.notices || '' : undefined,
-      medicalReport: isPatient(person) ? person.medicalReport || '' : undefined
+      medicalReport: isPatient(person) ? person.medicalReport || '' : undefined,
     });
     onOpenInfo();
   }
@@ -145,8 +208,11 @@ function PersonList({persons}: PersonListProps) {
       isWaitingSince: dayjs().toDate(),
       companyId: currentCompany?.uuid,
     };
-    const newPerson = Object.assign(sharedFields, (listType === 'doctors' ? null : patientFields));
-    setNewPerson({...newPerson });
+    const newPerson = Object.assign(
+      sharedFields,
+      listType === 'doctors' ? null : patientFields
+    );
+    setNewPerson({ ...newPerson });
   };
 
   function showPersonCreate() {
@@ -161,9 +227,13 @@ function PersonList({persons}: PersonListProps) {
         (_p: Person, i: number) =>
           i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
       )
-      .map((p: Person)=> (
+      .map((p: Person) => (
         <Tr key={p.uuid} onClick={() => showPersonInfo(p)}>
-          { isWaitingPatient(p) && <Td><b>{p.numberInLine}</b></Td>}
+          {isWaitingPatient(p) && (
+            <Td>
+              <b>{p.numberInLine}</b>
+            </Td>
+          )}
           <Td>{p.title}</Td>
           <Td>{p.lastName}</Td>
           <Td>{p.firstName}</Td>
@@ -206,7 +276,14 @@ function PersonList({persons}: PersonListProps) {
             <>
               <Td>{p.notices}</Td>
               <Td>{p.doctor && getDisplayName(p.doctor)}</Td>
-              <Td>{p.institution && p.institution.name + ' ' + (p.institution.description ? `(${p.institution.description})` : null)}</Td>
+              <Td>
+                {p.institution &&
+                  p.institution.name +
+                    ' ' +
+                    (p.institution.description
+                      ? `(${p.institution.description})`
+                      : null)}
+              </Td>
             </>
           )}
           {isDoctor(p) && (
@@ -216,12 +293,11 @@ function PersonList({persons}: PersonListProps) {
               <Td>{p.city}</Td>
             </>
           )}
-          {isWaitingPatient(p)
-            ? <Td>{dayjs(p.isWaitingSince).format('ll')}</Td>
-            : !isDoctor(p)
-              ? <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
-              : null
-          }
+          {isWaitingPatient(p) ? (
+            <Td>{dayjs(p.isWaitingSince).format('ll')}</Td>
+          ) : !isDoctor(p) ? (
+            <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
+          ) : null}
           {isWaitingPatient(p) && p.events?.length ? (
             <Td>
               <b>
@@ -243,7 +319,7 @@ function PersonList({persons}: PersonListProps) {
     <>
       <Flex flexDirection={'row'} p="0.5rem">
         <InputGroup>
-          <InputLeftElement pointerEvents="none" >
+          <InputLeftElement pointerEvents="none">
             <RiSearchLine color={colors.indigoLighten80} />
           </InputLeftElement>
           <Input
@@ -255,25 +331,28 @@ function PersonList({persons}: PersonListProps) {
           />
         </InputGroup>
         {/* <FilterBar hasCompanyFilter /> */}
-        { listType !== 'waitingPatients' && (
+        {listType !== 'waitingPatients' && (
           <Button
             aria-label={`add${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
             leftIcon={<RiUserAddLine />}
             onClick={() => showPersonCreate()}
             colorScheme={'green'}
-            w='15rem'
-            mx='0.5rem'
+            w="15rem"
+            mx="0.5rem"
           >
             {`add ${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
           </Button>
         )}
       </Flex>
-      <div className="table-container" style={{
-        height: '100%',
-        width: '100%',
-      }}>
+      <div
+        className="table-container"
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
+      >
         {/** had to add default prop values from https://chakra-ui.com/docs/components/table/usage#table-container
-        * to make horiz. scrolling working */}
+         * to make horiz. scrolling working */}
         <Table
           variant="striped"
           size="xs"
@@ -286,7 +365,7 @@ function PersonList({persons}: PersonListProps) {
         >
           <Thead>
             <Tr>
-              { listType === 'waitingPatients' && <Th width={5}>Nr </Th>}
+              {listType === 'waitingPatients' && <Th width={5}>Nr </Th>}
               <Th>{t('label.title')}</Th>
               <Th>{t('label.lastName')}</Th>
               <Th>{t('label.firstName')}</Th>
@@ -297,8 +376,7 @@ function PersonList({persons}: PersonListProps) {
                   <Th width={5}>{t('label.hasContract')}</Th>
                   <Th width={2}>{t('label.gender')} </Th>
                 </>
-              )
-              }
+              )}
               <Th>{t('label.mailAddress')} </Th>
               {listType !== 'doctors' && (
                 <>
@@ -307,25 +385,24 @@ function PersonList({persons}: PersonListProps) {
                   <Th>{t('label.careFacility')} </Th>
                 </>
               )}
-              {listType === 'doctors'  && (
+              {listType === 'doctors' && (
                 <>
                   <Th>{t('label.street')}</Th>
                   <Th>{t('label.zip')}</Th>
                   <Th>{t('label.city')}</Th>
                 </>
               )}
-              {listType === 'waitingPatients'
-                ? <Th width={7}>{t('label.isWaitingSince')}</Th>
-                : listType !== 'doctors'
-                  ? <Th width={7}>{t('label.firstContactAt')}</Th>
-                  : null
-              }
-              {listType === 'waitingPatients' && <Th width={5}>{t('label.diagnostic')}</Th>}
+              {listType === 'waitingPatients' ? (
+                <Th width={7}>{t('label.isWaitingSince')}</Th>
+              ) : listType !== 'doctors' ? (
+                <Th width={7}>{t('label.firstContactAt')}</Th>
+              ) : null}
+              {listType === 'waitingPatients' && (
+                <Th width={5}>{t('label.diagnostic')}</Th>
+              )}
             </Tr>
           </Thead>
-          <Tbody>
-            {PersonRows()}
-          </Tbody>
+          <Tbody>{PersonRows()}</Tbody>
         </Table>
       </div>
       {/* pagination controls START */}
@@ -353,20 +430,40 @@ function PersonList({persons}: PersonListProps) {
         />
       </Flex>
       {/* pagination controls END */}
-      <Modal isOpen={isOpenInfo} onClose={onCloseInfo} scrollBehavior="inside" size={isMobile ? 'full' : undefined}>
+      <Modal
+        isOpen={isOpenInfo}
+        onClose={onCloseInfo}
+        scrollBehavior="inside"
+        size={isMobile ? 'full' : undefined}
+      >
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
         >
           <ModalContent minW="80vw">
-            <ModalBody display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
-              {currentPerson ? <PersonModal onClose={onCloseInfo} person={currentPerson} personType={listType !== 'doctors' ? 'patient': 'doctor'}/> : null}
+            <ModalBody
+              display={'flex'}
+              flexDirection={'column'}
+              justifyContent={'space-between'}
+            >
+              {currentPerson ? (
+                <PersonModal
+                  onClose={onCloseInfo}
+                  person={currentPerson}
+                  personType={listType !== 'doctors' ? 'patient' : 'doctor'}
+                />
+              ) : null}
             </ModalBody>
           </ModalContent>
         </ModalOverlay>
       </Modal>
-      <Modal isOpen={isOpenCreate} onClose={onCloseCreate} scrollBehavior="inside" size={isMobile ? 'full' : undefined}>
+      <Modal
+        isOpen={isOpenCreate}
+        onClose={onCloseCreate}
+        scrollBehavior="inside"
+        size={isMobile ? 'full' : undefined}
+      >
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',
@@ -374,13 +471,20 @@ function PersonList({persons}: PersonListProps) {
         >
           <ModalContent minW="80vw">
             <ModalBody>
-              {newPerson ? <PersonModal onClose={onCloseCreate} person={newPerson} personType={listType !== 'doctors' ? 'patient': 'doctor'} type="create" /> : null}
+              {newPerson ? (
+                <PersonModal
+                  onClose={onCloseCreate}
+                  person={newPerson}
+                  personType={listType !== 'doctors' ? 'patient' : 'doctor'}
+                  type="create"
+                />
+              ) : null}
             </ModalBody>
           </ModalContent>
         </ModalOverlay>
       </Modal>
     </>
   );
-};
+}
 
 export default PersonList;

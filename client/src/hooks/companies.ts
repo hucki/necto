@@ -4,8 +4,7 @@ import { Company } from '../types/Company';
 
 export function useAllCompanies(): QueryResult<Company[]> & {
   companies: Company[];
-  } {
-
+} {
   const companiesQuery = useQuery('companies', async () => {
     return client<Company[]>('companies');
   });

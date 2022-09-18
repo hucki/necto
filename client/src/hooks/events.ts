@@ -27,7 +27,7 @@ export function useDeleteEvent(): MutationResultPair<
   Error,
   { uuid: string },
   string
-  > {
+> {
   const deleteEvent = async ({
     uuid,
   }: {
@@ -93,7 +93,7 @@ export function useCreateEvent(): MutationResultPair<
   Error,
   { event: Event },
   string
-  > {
+> {
   const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client<Event>('events', { data: event });
   };
@@ -109,9 +109,12 @@ export function useUpdateEvent(): MutationResultPair<
   Error,
   { event: Event },
   string
-  > {
+> {
   const updateEvent = async ({ event }: { event: Event }): Promise<Event> => {
-    return client<Event>(`events/${event.uuid}`, { data: event, method: 'PATCH' });
+    return client<Event>(`events/${event.uuid}`, {
+      data: event,
+      method: 'PATCH',
+    });
   };
   return useMutation(updateEvent, {
     onSuccess: () => {
@@ -127,8 +130,12 @@ export function useCreateCancellationReason(): MutationResultPair<
   Error,
   { cr: CancellationReason },
   string
-  > {
-  const createCancellationReason = async ({ cr }: { cr: CancellationReason }): Promise<CancellationReason> => {
+> {
+  const createCancellationReason = async ({
+    cr,
+  }: {
+    cr: CancellationReason;
+  }): Promise<CancellationReason> => {
     return client<CancellationReason>(cancellationReasonsRoute, { data: cr });
   };
   return useMutation(createCancellationReason, {
@@ -139,13 +146,20 @@ export function useCreateCancellationReason(): MutationResultPair<
 }
 
 export function useUpdateCancellationReason(): MutationResultPair<
-CancellationReason,
+  CancellationReason,
   Error,
   { cr: CancellationReason },
   string
-  > {
-  const updateCancellationReason = async ({ cr }: { cr: CancellationReason }): Promise<CancellationReason> => {
-    return client<CancellationReason>(cancellationReasonsRoute, { data: cr, method: 'PATCH' });
+> {
+  const updateCancellationReason = async ({
+    cr,
+  }: {
+    cr: CancellationReason;
+  }): Promise<CancellationReason> => {
+    return client<CancellationReason>(cancellationReasonsRoute, {
+      data: cr,
+      method: 'PATCH',
+    });
   };
   return useMutation(updateCancellationReason, {
     onSuccess: () => {
@@ -154,7 +168,9 @@ CancellationReason,
   });
 }
 
-export function useAllCancellationReasons(): QueryResult<CancellationReason[]> & { cancellationReasons: CancellationReason[] } {
+export function useAllCancellationReasons(): QueryResult<
+  CancellationReason[]
+> & { cancellationReasons: CancellationReason[] } {
   const usersQuery = useQuery(cancellationReasonsRoute, async () => {
     return client<CancellationReason[]>(cancellationReasonsRoute);
   });

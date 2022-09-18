@@ -7,7 +7,7 @@ const tenantId = process.env.TENANT_UUID;
 /**
  * seed permissionLevels
  */
- export const permissionLevels = async (
+export const permissionLevels = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,20 +18,20 @@ const tenantId = process.env.TENANT_UUID;
         {
           displayName: 'admin',
           description: 'admin role',
-          tenantId
+          tenantId,
         },
         {
           displayName: 'employee',
           description: 'employee role',
-          tenantId
+          tenantId,
         },
         {
           displayName: 'planner',
           description: 'planner role',
-          tenantId
+          tenantId,
         },
-      ]
-    })
+      ],
+    });
     res.json(permissionLevels);
     res.status(201);
     return;
@@ -39,5 +39,3 @@ const tenantId = process.env.TENANT_UUID;
     next(e);
   }
 };
-
-

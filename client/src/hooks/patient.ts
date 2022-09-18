@@ -13,7 +13,7 @@ export function useCreatePatient(): MutationResultPair<
   Error,
   { patient: Patient },
   string
-  > {
+> {
   const createPatient = async ({
     patient,
   }: {
@@ -33,13 +33,16 @@ export function useUpdatePatient(): MutationResultPair<
   Error,
   { patient: Patient },
   string
-  > {
+> {
   const updatePatient = async ({
     patient,
   }: {
     patient: Patient;
   }): Promise<Patient> => {
-    return client<Patient>(`patients/${patient.uuid}`, { data: patient, method: 'PATCH' });
+    return client<Patient>(`patients/${patient.uuid}`, {
+      data: patient,
+      method: 'PATCH',
+    });
   };
   return useMutation(updatePatient, {
     onSuccess: () => {
@@ -51,7 +54,7 @@ export function useUpdatePatient(): MutationResultPair<
 
 export function useAllPatients(): QueryResult<Patient[]> & {
   patients: Patient[];
-  } {
+} {
   const patientsQuery = useQuery('patients', async () => {
     return client<Patient[]>('patients');
   });
@@ -66,7 +69,7 @@ export function useAllPatients(): QueryResult<Patient[]> & {
 
 export function useAllWaitingPatients(): QueryResult<Patient[]> & {
   patients: Patient[];
-  } {
+} {
   const patientsQuery = useQuery('waiting', async () => {
     return client<Patient[]>('waiting');
   });

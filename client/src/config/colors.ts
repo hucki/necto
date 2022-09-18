@@ -6,5 +6,5 @@ export const colors = [
   'purple',
   'mint',
   'grey',
-  'note'
+  'note',
 ];

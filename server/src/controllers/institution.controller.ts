@@ -15,8 +15,8 @@ export const getAllInstitutions = async (
     const institutions = await prisma.institution.findMany({
       where: {
         tenantId,
-        archived: false
-       },
+        archived: false,
+      },
       include: {
         patients: true,
         contactData: true,
@@ -27,7 +27,9 @@ export const getAllInstitutions = async (
     });
     for (let i = 0; i < institutions.length; i++) {
       if (institutions[i].contactData) {
-        institutions[i].contactData = decryptContactData(institutions[i].contactData)
+        institutions[i].contactData = decryptContactData(
+          institutions[i].contactData
+        );
       }
     }
     res.json(institutions);
@@ -48,8 +50,8 @@ export const getAllArchivedInstitutions = async (
     const institutions = await prisma.institution.findMany({
       where: {
         tenantId,
-        archived: true
-       },
+        archived: true,
+      },
       include: {
         patients: true,
         contactData: true,
@@ -60,7 +62,9 @@ export const getAllArchivedInstitutions = async (
     });
     for (let i = 0; i < institutions.length; i++) {
       if (institutions[i].contactData) {
-        institutions[i].contactData = decryptContactData(institutions[i].contactData)
+        institutions[i].contactData = decryptContactData(
+          institutions[i].contactData
+        );
       }
     }
     res.json(institutions);
@@ -81,7 +85,7 @@ export const addInstitution = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { name, description, street, zip, city, archived } = req.body
+    const { name, description, street, zip, city, archived } = req.body;
     const createdInstitution = await prisma.institution.create({
       data: {
         name,
@@ -110,14 +114,14 @@ export const addInstitution = async (
  * update one Institution
  *  @param {Institution} req.body
  */
- export const updateInstitution = async (
+export const updateInstitution = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
     const institutionId = req.params.institutionId;
-    const { name, description, street, zip, city, archived } = req.body
+    const { name, description, street, zip, city, archived } = req.body;
     const updateInstitution = await prisma.institution.update({
       where: {
         uuid: institutionId,
@@ -128,7 +132,7 @@ export const addInstitution = async (
         street,
         zip,
         city,
-        archived
+        archived,
       },
     });
     res.json(updateInstitution);

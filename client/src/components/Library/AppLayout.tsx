@@ -23,7 +23,9 @@ const Sidebar = styled.div(
     transition: 'all 0.1s ease-in',
   },
   ({ collapsed }: SidebarProps) =>
-    collapsed ? { width: '52px'} : { width: '200px', zIndex: '1', position: 'absolute'  }
+    collapsed
+      ? { width: '52px' }
+      : { width: '200px', zIndex: '1', position: 'absolute' }
 );
 
 interface SideNavContainerProps {
@@ -32,22 +34,23 @@ interface SideNavContainerProps {
 const SideNavContainer = styled.div(
   {
     paddingTop: '0.5rem',
-    height: '100%', /* 100% Full-height */
-    width: '0', /* 0 width - change this with JavaScript */
-    position: 'fixed', /* Stay in place */
-    zIndex: '1', /* Stay on top */
-    top: '0', /* Stay at the top */
+    height: '100%' /* 100% Full-height */,
+    width: '0' /* 0 width - change this with JavaScript */,
+    position: 'fixed' /* Stay in place */,
+    zIndex: '1' /* Stay on top */,
+    top: '0' /* Stay at the top */,
     left: '0',
     backgroundColor: '#fff',
-    overflowX: 'hidden', /* Disable horizontal scroll */
-    transition: '0.5s', /* 0.5 second transition effect to slide in the sidenav */
+    overflowX: 'hidden' /* Disable horizontal scroll */,
+    transition:
+      '0.5s' /* 0.5 second transition effect to slide in the sidenav */,
     display: 'flex',
     flexDirection: 'column',
     rowGap: '0.5rem',
     // transition: 'all 0.1s ease-in',
   },
   ({ isOpen }: SideNavContainerProps) =>
-    isOpen ? { width: '200px', zIndex: '10', position: 'absolute'  } : null
+    isOpen ? { width: '200px', zIndex: '10', position: 'absolute' } : null
 );
 
 const ContentContainer = styled(Box)({
@@ -69,7 +72,7 @@ const Header = styled(Box)({
 const Content = styled(Box)({
   width: '100%',
   height: '100%',
-  padding: '0 0.25rem 0 0.25rem'
+  padding: '0 0.25rem 0 0.25rem',
 });
 
 const Footer = styled.div({
@@ -80,4 +83,12 @@ const Footer = styled.div({
   boxShadow: '0 0 15px #3333',
 });
 
-export { AppContainer, Sidebar, SideNavContainer, Header, Content, ContentContainer, Footer };
+export {
+  AppContainer,
+  Sidebar,
+  SideNavContainer,
+  Header,
+  Content,
+  ContentContainer,
+  Footer,
+};

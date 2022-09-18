@@ -27,7 +27,7 @@ export function useAddUser(): MutationResultPair<
   Error,
   { user: User },
   string
-  > {
+> {
   const createUser = async ({ user }: { user: User }): Promise<User> => {
     return client<User>('users', { data: user });
   };
@@ -53,7 +53,7 @@ export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
 
 export function useAllTeamMembers(): QueryResult<TeamMember[]> & {
   teamMembers: TeamMember[];
-  } {
+} {
   const teamMembersQuery = useQuery('teamMembers', async () => {
     return client<TeamMember[]>('teamMembers');
   });
@@ -71,7 +71,7 @@ export function useCreateUserSettings(): MutationResultPair<
   Error,
   { userSettings: UserSettings },
   string
-  > {
+> {
   const createUserSettings = async ({
     userSettings,
   }: {
@@ -91,13 +91,16 @@ export function useUpdateUserSettings(): MutationResultPair<
   Error,
   { userSettings: UserSettings },
   string
-  > {
+> {
   const updateUserSettings = async ({
     userSettings,
   }: {
     userSettings: UserSettings;
   }): Promise<UserSettings> => {
-    return client<UserSettings>('settings/user', { data: userSettings, method: 'PATCH' });
+    return client<UserSettings>('settings/user', {
+      data: userSettings,
+      method: 'PATCH',
+    });
   };
   return useMutation(updateUserSettings, {
     onSuccess: () => {
@@ -111,7 +114,7 @@ export function useUpdateUser(): MutationResultPair<
   Error,
   { user: User },
   string
-  > {
+> {
   const updateUser = async ({ user }: { user: User }): Promise<User> => {
     return client<User>('users', { data: user, method: 'PATCH' });
   };

@@ -21,10 +21,10 @@ export const getAllTeamMembers = async (
         },
         teams: {
           select: {
-            team: true
-          }
+            team: true,
+          },
         },
-        user: true
+        user: true,
       },
     });
     res.json(teamMembers);

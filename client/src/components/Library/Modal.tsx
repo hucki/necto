@@ -39,32 +39,41 @@ const EventModalHeader = styled(ModalHeader)(
   }
 );
 
-const EventModalBody = styled(ModalBody)({
-  padding: '0.5rem',
-  display: 'flex',
-  flexDirection: 'column',
-},
-({ bgColor }: EventModalHeaderProps) => {
-  if (bgColor) {
-    return {
-      backgroundColor: `var(--bg${
-        bgColor[0].toUpperCase() + bgColor.substring(1)
-      })`,
-    };
+const EventModalBody = styled(ModalBody)(
+  {
+    padding: '0.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  ({ bgColor }: EventModalHeaderProps) => {
+    if (bgColor) {
+      return {
+        backgroundColor: `var(--bg${
+          bgColor[0].toUpperCase() + bgColor.substring(1)
+        })`,
+      };
+    }
   }
-});
-const EventModalFooter = styled(ModalBody)({
-  padding: '0.5rem',
-  display: 'flex',
-  flexDirection: 'column',
-},
-({ bgColor }: EventModalHeaderProps) => {
-  if (bgColor) {
-    return {
-      backgroundColor: `var(--bg${
-        bgColor[0].toUpperCase() + bgColor.substring(1)
-      })`,
-    };
+);
+const EventModalFooter = styled(ModalBody)(
+  {
+    padding: '0.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  ({ bgColor }: EventModalHeaderProps) => {
+    if (bgColor) {
+      return {
+        backgroundColor: `var(--bg${
+          bgColor[0].toUpperCase() + bgColor.substring(1)
+        })`,
+      };
+    }
   }
-});
-export { EventModalContent, EventModalHeader, EventModalBody, EventModalFooter };
+);
+export {
+  EventModalContent,
+  EventModalHeader,
+  EventModalBody,
+  EventModalFooter,
+};

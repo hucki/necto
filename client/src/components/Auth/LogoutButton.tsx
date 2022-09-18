@@ -7,16 +7,18 @@ const LogoutButton = () => {
   const { t } = useTranslation();
   const { user, logMeOut } = useContext(AuthContext);
 
-  return <>
-    <Button
-      aria-label="logout"
-      type="button"
-      colorScheme="red"
-      onClick={logMeOut}
-    >
-      {t('menu.logout')}
-    </Button>
-  </>;
+  return (
+    <>
+      <Button
+        aria-label="logout"
+        type="button"
+        colorScheme="red"
+        onClick={logMeOut}
+      >
+        {t('menu.logout')}
+      </Button>
+    </>
+  );
 };
 
 export default LogoutButton;

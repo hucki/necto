@@ -1,13 +1,13 @@
 type CalenderEventViewProps = {
-  isNote: boolean
-  eventTitle: Event['title']
-  isHomeVisit: Event['isHomeVisit']
-  isRecurring: Event['isRecurring']
-  isDiagnostic: Event['isDiagnostic']
-  eventStartTime: Event['startTime']
-  eventEndTime: Event['endTime']
-  eventPatient: Event['patient']
-}
+  isNote: boolean;
+  eventTitle: Event['title'];
+  isHomeVisit: Event['isHomeVisit'];
+  isRecurring: Event['isRecurring'];
+  isDiagnostic: Event['isDiagnostic'];
+  eventStartTime: Event['startTime'];
+  eventEndTime: Event['endTime'];
+  eventPatient: Event['patient'];
+};
 
 type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
 
@@ -34,6 +34,11 @@ type RecurringInterval =
   | 19
   | 20;
 
-type CalendarColumnHeaderFormat = 'DD.' | 'DD.MM.' | 'dd DD.MM.' | 'dddd' | 'dddd DD.MM.'
+type CalendarColumnHeaderFormat =
+  | 'DD.'
+  | 'DD.MM.'
+  | 'dd DD.MM.'
+  | 'dddd'
+  | 'dddd DD.MM.';
 
-type CalendarColumnSubHeaderContent = 'dd' | 'dddd' | 'ressource'
+type CalendarColumnSubHeaderContent = 'dd' | 'dddd' | 'ressource';

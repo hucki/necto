@@ -6,16 +6,18 @@ import { Institution, InstitutionInput } from '../../types/Institution';
 import { FormLabel, Input } from '../Library';
 
 interface InstitutionFormProps {
-  institution: Institution
-  onChange: (institution: Institution) => void
-};
+  institution: Institution;
+  onChange: (institution: Institution) => void;
+}
 
-
-
-export const InstitutionForm = ({institution, onChange}: InstitutionFormProps) => {
+export const InstitutionForm = ({
+  institution,
+  onChange,
+}: InstitutionFormProps) => {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
-  const [currentInstitution, setCurrentInstitution] = useState<InstitutionInput>(() => ({...institution}));
+  const [currentInstitution, setCurrentInstitution] =
+    useState<InstitutionInput>(() => ({ ...institution }));
   const isReadOnly = institution.archived;
 
   type InstitutionKey = keyof InstitutionInput;
@@ -31,28 +33,38 @@ export const InstitutionForm = ({institution, onChange}: InstitutionFormProps) =
   const autoFormFieldKeys = autoFields;
 
   interface OnInputChangeProps {
-    event: React.FormEvent<HTMLInputElement>
-    key: InstitutionKey
+    event: React.FormEvent<HTMLInputElement>;
+    key: InstitutionKey;
   }
 
-  function onInputChange({event, key}: OnInputChangeProps) {
+  function onInputChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
-    setCurrentInstitution(institution => ({...institution, [`${key}`]: event.currentTarget.value}));
+    setCurrentInstitution((institution) => ({
+      ...institution,
+      [`${key}`]: event.currentTarget.value,
+    }));
   }
-  function onCheckboxChange({event, key}: OnInputChangeProps) {
+  function onCheckboxChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
-    setCurrentInstitution(institution => ({...institution, [`${key}`]: event.currentTarget.checked}));
+    setCurrentInstitution((institution) => ({
+      ...institution,
+      [`${key}`]: event.currentTarget.checked,
+    }));
   }
 
   interface OnSelectChangeProps {
-    event: React.FormEvent<HTMLSelectElement>
-    key: InstitutionKey
+    event: React.FormEvent<HTMLSelectElement>;
+    key: InstitutionKey;
   }
 
-  function onSelectChange({event, key}: OnSelectChangeProps) {
+  function onSelectChange({ event, key }: OnSelectChangeProps) {
     event.preventDefault();
-    const val = event.currentTarget.value === 'remove' ? null : event.currentTarget.value;
-    setCurrentInstitution(institution => ({...institution, [`${key}`]: val}));
+    const val =
+      event.currentTarget.value === 'remove' ? null : event.currentTarget.value;
+    setCurrentInstitution((institution) => ({
+      ...institution,
+      [`${key}`]: val,
+    }));
   }
 
   useEffect(() => {
@@ -68,25 +80,34 @@ export const InstitutionForm = ({institution, onChange}: InstitutionFormProps) =
       .map((key) =>
         typeof currentInstitution[key as keyof Institution] === 'string' ||
         typeof currentInstitution[key as keyof Institution] === 'boolean' ? (
-            <FormControl key={key} id={key} mb="0.75rem">
-              {typeof currentInstitution[key as keyof Institution] === 'boolean'
-                ? (<Checkbox
-                  name={key}
-                  size="lg"
-                  disabled={isReadOnly}
-                  my={2}
-                  isChecked={currentInstitution[key as keyof Institution] ? true : false}
-                  onChange={(e) => onCheckboxChange({event: e, key: key as keyof Institution})}
-                />)
-                : (<Input
-                  name={key}
-                  onChange={(e) => onInputChange({event: e, key: key as keyof Institution})}
-                  disabled={isReadOnly}
-                  value={currentInstitution[key as keyof Institution]?.toString()}>
-                </Input>)}
-              <FormLabel>{t(`label.${key}`)}</FormLabel>
-            </FormControl>
-          ) : null
+          <FormControl key={key} id={key} mb="0.75rem">
+            {typeof currentInstitution[key as keyof Institution] ===
+            'boolean' ? (
+              <Checkbox
+                name={key}
+                size="lg"
+                disabled={isReadOnly}
+                my={2}
+                isChecked={
+                  currentInstitution[key as keyof Institution] ? true : false
+                }
+                onChange={(e) =>
+                  onCheckboxChange({ event: e, key: key as keyof Institution })
+                }
+              />
+            ) : (
+              <Input
+                name={key}
+                onChange={(e) =>
+                  onInputChange({ event: e, key: key as keyof Institution })
+                }
+                disabled={isReadOnly}
+                value={currentInstitution[key as keyof Institution]?.toString()}
+              ></Input>
+            )}
+            <FormLabel>{t(`label.${key}`)}</FormLabel>
+          </FormControl>
+        ) : null
       );
   };
 

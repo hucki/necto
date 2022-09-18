@@ -6,15 +6,21 @@ import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
 import { registerLocale } from 'react-datepicker';
 import de from 'date-fns/locale/de';
-import { CgChevronDoubleLeft, CgChevronDoubleRight, CgChevronLeft, CgChevronRight, CgMenuGridO } from 'react-icons/cg';
+import {
+  CgChevronDoubleLeft,
+  CgChevronDoubleRight,
+  CgChevronLeft,
+  CgChevronRight,
+  CgMenuGridO,
+} from 'react-icons/cg';
 registerLocale('de', de);
 
 interface NavBarProps {
-  isSideNavOpen: boolean
-  onSideNavOpen: () => void
+  isSideNavOpen: boolean;
+  onSideNavOpen: () => void;
 }
 
-const NavBar = ({isSideNavOpen, onSideNavOpen}: NavBarProps) => {
+const NavBar = ({ isSideNavOpen, onSideNavOpen }: NavBarProps) => {
   const { currentDate, setCurrentDate, goTo } = useContext(UserDateContext);
   const { isMobile } = useViewport();
 
@@ -32,7 +38,7 @@ const NavBar = ({isSideNavOpen, onSideNavOpen}: NavBarProps) => {
       <div className="menu-control">
         <IconButton
           aria-label="menu"
-          icon={<CgMenuGridO size="2rem"/>}
+          icon={<CgMenuGridO size="2rem" />}
           onClick={onSideNavOpen}
         />
       </div>
@@ -66,7 +72,7 @@ const NavBar = ({isSideNavOpen, onSideNavOpen}: NavBarProps) => {
           leftIcon={<CgChevronLeft size="2rem" />}
           onClick={() => goTo('previousDay')}
         />
-        <div style={{maxWidth: '100px'}}>
+        <div style={{ maxWidth: '100px' }}>
           <DatePicker
             locale="de"
             onChange={onChangeHandler}

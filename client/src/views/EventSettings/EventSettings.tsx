@@ -1,30 +1,45 @@
 import { Heading, List, ListIcon, ListItem } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import { Button, FormGroup, Input, Label, LabelledInput } from '../../components/Library';
-import { useAllCancellationReasons, useCreateCancellationReason } from '../../hooks/events';
+import {
+  Button,
+  FormGroup,
+  Input,
+  Label,
+  LabelledInput,
+} from '../../components/Library';
+import {
+  useAllCancellationReasons,
+  useCreateCancellationReason,
+} from '../../hooks/events';
 
 const EventSettings = () => {
-
-  const {isLoading, error, cancellationReasons} = useAllCancellationReasons();
-  const [createCancellationReason] =  useCreateCancellationReason();
-  const [newCancellationReason, setNewCancellationReason] = useState({id: '', description: '' });
+  const { isLoading, error, cancellationReasons } = useAllCancellationReasons();
+  const [createCancellationReason] = useCreateCancellationReason();
+  const [newCancellationReason, setNewCancellationReason] = useState({
+    id: '',
+    description: '',
+  });
 
   const handleSubmit = () => {
-    if (cancellationReasons.findIndex(cr => cr.id === newCancellationReason.id) !== -1) {
+    if (
+      cancellationReasons.findIndex(
+        (cr) => cr.id === newCancellationReason.id
+      ) !== -1
+    ) {
       return;
     }
-    if (
-      newCancellationReason.id &&
-      newCancellationReason.description
-    ) {
-      createCancellationReason({cr: newCancellationReason});
+    if (newCancellationReason.id && newCancellationReason.description) {
+      createCancellationReason({ cr: newCancellationReason });
     }
   };
 
-  const handleChange = (event: React.FormEvent<HTMLInputElement>, id: 'id' | 'description') => {
+  const handleChange = (
+    event: React.FormEvent<HTMLInputElement>,
+    id: 'id' | 'description'
+  ) => {
     event.preventDefault();
-    const newCR = {...newCancellationReason};
+    const newCR = { ...newCancellationReason };
     newCR[id] = event.currentTarget.value;
     setNewCancellationReason(newCR);
   };
@@ -33,20 +48,33 @@ const EventSettings = () => {
     if (!cancellationReasons.length) return null;
     return (
       <List>
-        {cancellationReasons.map(cr =>
+        {cancellationReasons.map((cr) => (
           <ListItem key={cr.id}>
-            <ListIcon as={RiArrowDropRightLine}/>
+            <ListIcon as={RiArrowDropRightLine} />
             <b>{cr.id}</b> | <span>{cr.description}</span>
-          </ListItem>)}
+          </ListItem>
+        ))}
       </List>
     );
   };
   return (
     <>
-      <Heading as='h2' size='lg'>Event Settings</Heading>
-      <Heading as='h3' size='md' mb="2" mt="5">Cancellation Reasons</Heading>
-      {isLoading ? 'pending' : cancellationReasons.length ? <CurrentCRs /> : 'no cancellationReasons'}
-      <Heading as='h3' size='md' mb="2" mt="5">new Reason</Heading>
+      <Heading as="h2" size="lg">
+        Event Settings
+      </Heading>
+      <Heading as="h3" size="md" mb="2" mt="5">
+        Cancellation Reasons
+      </Heading>
+      {isLoading ? (
+        'pending'
+      ) : cancellationReasons.length ? (
+        <CurrentCRs />
+      ) : (
+        'no cancellationReasons'
+      )}
+      <Heading as="h3" size="md" mb="2" mt="5">
+        new Reason
+      </Heading>
       <LabelledInput
         label="Id"
         id="cancellationReasonId"
@@ -66,7 +94,6 @@ const EventSettings = () => {
       <FormGroup>
         <Button onClick={handleSubmit}>Save</Button>
       </FormGroup>
-
     </>
   );
 };

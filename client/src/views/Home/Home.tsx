@@ -5,11 +5,13 @@ import { AuthContext } from '../../providers/AuthProvider';
 const Home = () => {
   const { user } = useContext(AuthContext);
 
-  return <>
-    <div className="home-wrapper" style={{padding: '0 0.25rem 0 0.25rem'}}>
-      {(user?.isAdmin || user?.isPlanner) && <NewUserPanel />}
-    </div>
-  </>;
+  return (
+    <>
+      <div className="home-wrapper" style={{ padding: '0 0.25rem 0 0.25rem' }}>
+        {(user?.isAdmin || user?.isPlanner) && <NewUserPanel />}
+      </div>
+    </>
+  );
 };
 
 export default Home;

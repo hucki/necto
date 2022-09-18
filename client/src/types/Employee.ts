@@ -5,9 +5,7 @@ export type Team = {
   uuid: string;
   displayName: string;
   description: string;
-  employees?: [
-    {employee: Employee}
-  ];
+  employees?: [{ employee: Employee }];
 };
 
 export type Employee = {
@@ -17,9 +15,7 @@ export type Employee = {
   alias?: string;
   validUntil?: Date;
   contract: Contract[];
-  teams?: [
-    {team: Team}
-  ];
+  teams?: [{ team: Team }];
   createdAt?: Date;
   updatedAt?: Date;
   user?: UserSettings;
@@ -37,6 +33,6 @@ export type Contract = {
 };
 
 export type Employee2Team = {
-  employee: Employee
-  team: Team
-}
+  employee: Employee;
+  team: Team;
+};

@@ -1,6 +1,6 @@
-import { BgColor } from "./Colors";
-import { Employee } from "./Employee";
-import { User } from "./User";
+import { BgColor } from './Colors';
+import { Employee } from './Employee';
+import { User } from './User';
 
 export type UserSettings = {
   id?: number;
@@ -30,10 +30,10 @@ export type UserToPermissions = {
   permissionId: string;
   tenantId?: string;
   permission?: PermissionLevel;
-}
+};
 
 export type PermissionLevel = {
   uuid: string;
   displayName: string;
   description: string;
-}
+};

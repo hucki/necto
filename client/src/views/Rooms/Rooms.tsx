@@ -82,11 +82,11 @@ function Rooms(): JSX.Element {
     error: errorBuildings,
     buildings,
   } = useAllbuildings();
-  const [ calendarDate ] = useState(dayjs('2022-01-17'));
+  const [calendarDate] = useState(dayjs('2022-01-17'));
   const { currentBuildingId, setCurrentBuildingId } = useFilter();
 
-  const [events, setEvents] = useState<Event[]>(
-    () => currentBuildingId ? getBookings(currentBuildingId, rooms) : []
+  const [events, setEvents] = useState<Event[]>(() =>
+    currentBuildingId ? getBookings(currentBuildingId, rooms) : []
   );
   const [ressources, setRessources] = useState<Room[]>(
     currentBuildingId ? getRooms(currentBuildingId, rooms) : []
@@ -105,7 +105,7 @@ function Rooms(): JSX.Element {
     if (currentBuildingId) {
       setRessources(getRooms(currentBuildingId, rooms));
     }
-  },[currentBuildingId, rooms, buildings]);
+  }, [currentBuildingId, rooms, buildings]);
 
   return !currentBuildingId || isLoadingBuildings || isLoadingRooms ? (
     <div>pending</div>

@@ -1,34 +1,38 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import {jsx} from '@emotion/react';
+import { jsx } from '@emotion/react';
 import { t } from 'i18next';
 import * as colors from '../../styles/colors';
 
 interface ErrorMessageVariants {
-  [key: string]: {display: string}
+  [key: string]: { display: string };
 }
-const errorMessageVariants: ErrorMessageVariants= {
-  stack: {display: 'block'},
-  inline: {display: 'inline-block'},
+const errorMessageVariants: ErrorMessageVariants = {
+  stack: { display: 'block' },
+  inline: { display: 'inline-block' },
 };
 
 interface ErrorInputProps {
   error: {
-    message: string
+    message: string;
   };
   variant?: string;
 }
-function ErrorMessage ({error, variant = 'stacked', ...props}: ErrorInputProps): JSX.Element {
+function ErrorMessage({
+  error,
+  variant = 'stacked',
+  ...props
+}: ErrorInputProps): JSX.Element {
   return (
     <div
       role="alert"
-      css={[{color: colors.danger}, errorMessageVariants[variant]]}
+      css={[{ color: colors.danger }, errorMessageVariants[variant]]}
       {...props}
     >
       <span>{t('error.prefix')}</span>
       <pre
         css={[
-          {whiteSpace: 'break-spaces', margin: '0', marginBottom: -5},
+          { whiteSpace: 'break-spaces', margin: '0', marginBottom: -5 },
           errorMessageVariants[variant],
         ]}
       >
@@ -38,4 +42,4 @@ function ErrorMessage ({error, variant = 'stacked', ...props}: ErrorInputProps):
   );
 }
 
-export {ErrorMessage};
+export { ErrorMessage };

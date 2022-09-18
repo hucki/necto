@@ -55,16 +55,25 @@ function CalendarEventInput({
   const { isWeekend, isPublicHoliday } = useHolidays();
   const { isMobile } = useViewport();
   const getIsNote = (dateTime: Dayjs) => {
-    return dayjs(dateTime).hour() < 7 || isWeekend({date: dayjs(dateTime)}) || Boolean(isPublicHoliday({date: dayjs(dateTime)}));
+    return (
+      dayjs(dateTime).hour() < 7 ||
+      isWeekend({ date: dayjs(dateTime) }) ||
+      Boolean(isPublicHoliday({ date: dayjs(dateTime) }))
+    );
   };
   const [isNote, setIsNote] = useState(() => getIsNote(dateTime));
-  const initialStartTime = getIsNote(dateTime) ? dayjs(dateTime).minute(0) : dateTime;
+  const initialStartTime = getIsNote(dateTime)
+    ? dayjs(dateTime).minute(0)
+    : dateTime;
   const defaultEvent: Event = {
     userId: uuid.toString(),
     ressourceId: uuid,
     title: '',
     startTime: initialStartTime,
-    endTime: dayjs(initialStartTime).add(getIsNote(dateTime) ? 60 : 45, 'minute'),
+    endTime: dayjs(initialStartTime).add(
+      getIsNote(dateTime) ? 60 : 45,
+      'minute'
+    ),
     isRecurring: false,
     isHomeVisit: false,
     isDiagnostic: false,
@@ -158,17 +167,32 @@ function CalendarEventInput({
 
   return (
     <div>
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size={isMobile ? 'full': undefined}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior="inside"
+        size={isMobile ? 'full' : undefined}
+      >
         <ModalOverlay
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
         >
           <EventModalContent>
-            <EventModalHeader bgColor={newEvent.type === 'note' ? 'note' : newEvent?.bgColor || 'green'}>
+            <EventModalHeader
+              bgColor={
+                newEvent.type === 'note' ? 'note' : newEvent?.bgColor || 'green'
+              }
+            >
               <div>
                 <div className="modal-title">
-                  {t(`calendar.event.${newEvent.type === 'note' ? 'noteTitle' : 'newAppointmentTitle'}`)}{' '}
+                  {t(
+                    `calendar.event.${
+                      newEvent.type === 'note'
+                        ? 'noteTitle'
+                        : 'newAppointmentTitle'
+                    }`
+                  )}{' '}
                   {ressource?.displayName
                     ? t('dict.for') + ' ' + ressource.displayName
                     : ''}
@@ -199,10 +223,12 @@ function CalendarEventInput({
                 />
               )}
               {newEvent.isDiagnostic && (
-                <FaCommentMedical css={{
-                  width: '2rem',
-                  height: '2rem',
-                }} />
+                <FaCommentMedical
+                  css={{
+                    width: '2rem',
+                    height: '2rem',
+                  }}
+                />
               )}
               <IconButton
                 aria-label="close modal"
@@ -210,7 +236,9 @@ function CalendarEventInput({
                 onClick={onClose}
               />
             </EventModalHeader>
-            <EventModalBody bgColor={newEvent.type === 'note' ? 'note' : undefined}>
+            <EventModalBody
+              bgColor={newEvent.type === 'note' ? 'note' : undefined}
+            >
               <CalendarEventForm
                 event={newEvent}
                 setMessage={setMessage}
@@ -218,7 +246,9 @@ function CalendarEventInput({
               />
               {message && <ErrorMessage error={{ message }} />}
             </EventModalBody>
-            <EventModalFooter bgColor={newEvent.type === 'note' ? 'note' : undefined}>
+            <EventModalFooter
+              bgColor={newEvent.type === 'note' ? 'note' : undefined}
+            >
               <div
                 className="row"
                 css={{

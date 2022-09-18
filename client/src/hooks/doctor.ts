@@ -9,11 +9,11 @@ import { client } from '../services/ApiClient';
 import { Doctor } from '../types/Doctor';
 
 export function useCreateDoctor(): MutationResultPair<
-Doctor,
+  Doctor,
   Error,
   { doctor: Doctor },
   string
-  > {
+> {
   const createDoctor = async ({
     doctor,
   }: {
@@ -29,17 +29,20 @@ Doctor,
 }
 
 export function useUpdateDoctor(): MutationResultPair<
-Doctor,
+  Doctor,
   Error,
   { doctor: Doctor },
   string
-  > {
+> {
   const updateDoctor = async ({
     doctor,
   }: {
     doctor: Doctor;
   }): Promise<Doctor> => {
-    return client<Doctor>(`doctors/${doctor.uuid}`, { data: doctor, method: 'PATCH' });
+    return client<Doctor>(`doctors/${doctor.uuid}`, {
+      data: doctor,
+      method: 'PATCH',
+    });
   };
   return useMutation(updateDoctor, {
     onSuccess: () => {
@@ -50,8 +53,7 @@ Doctor,
 
 export function useAllDoctors(): QueryResult<Doctor[]> & {
   doctors: Doctor[];
-  } {
-
+} {
   const doctorsQuery = useQuery('doctors', async () => {
     return client<Doctor[]>('doctors');
   });
@@ -63,4 +65,3 @@ export function useAllDoctors(): QueryResult<Doctor[]> & {
     ...doctorsQuery,
   };
 }
-

@@ -9,9 +9,9 @@ import { Patient } from '../../types/Patient';
 import { Input, Label, ModalFormGroup, Select, TextDisplay } from '../Library';
 
 interface PatientFormProps {
-  patient: Patient
-  type: 'create' | 'update' | 'view'
-  onChange: (patient: Patient) => void
+  patient: Patient;
+  type: 'create' | 'update' | 'view';
+  onChange: (patient: Patient) => void;
 }
 
 type PatientKey = keyof Patient;
@@ -30,31 +30,41 @@ const autoFormFieldKeys: PatientKey[] = [
   'medicalReport',
 ];
 
-export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormProps) => {
+export const PatientForm = ({
+  patient,
+  type = 'view',
+  onChange,
+}: PatientFormProps) => {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { isLoading, error, doctors } = useAllDoctors();
-  const [currentPatient, setCurrentPatient] = useState<Patient>(() => ({...patient}));
+  const [currentPatient, setCurrentPatient] = useState<Patient>(() => ({
+    ...patient,
+  }));
 
   interface OnInputChangeProps {
-    event: React.FormEvent<HTMLInputElement>
-    key: PatientKey
+    event: React.FormEvent<HTMLInputElement>;
+    key: PatientKey;
   }
 
-  function onInputChange({event, key}: OnInputChangeProps) {
+  function onInputChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
-    setCurrentPatient(patient => ({...patient, [`${key}`]: event.currentTarget.value}));
+    setCurrentPatient((patient) => ({
+      ...patient,
+      [`${key}`]: event.currentTarget.value,
+    }));
   }
 
   interface OnSelectChangeProps {
-    event: React.FormEvent<HTMLSelectElement>
-    key: PatientKey
+    event: React.FormEvent<HTMLSelectElement>;
+    key: PatientKey;
   }
 
-  function onSelectChange({event, key}: OnSelectChangeProps) {
+  function onSelectChange({ event, key }: OnSelectChangeProps) {
     event.preventDefault();
-    const val = event.currentTarget.value === 'remove' ? null : event.currentTarget.value;
-    setCurrentPatient(patient => ({...patient, [`${key}`]: val}));
+    const val =
+      event.currentTarget.value === 'remove' ? null : event.currentTarget.value;
+    setCurrentPatient((patient) => ({ ...patient, [`${key}`]: val }));
   }
 
   useEffect(() => {
@@ -70,30 +80,37 @@ export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormPro
       .map((key) =>
         typeof currentPatient[key as keyof Patient] === 'string' ||
         typeof currentPatient[key as keyof Patient] === 'boolean' ? (
-            <ModalFormGroup key={key}>
-              <Label htmlFor={key}>{t(`label.${key}`)}</Label>
-              {typeof currentPatient[key as PatientKey] === 'boolean' ? (
-                <Icon
-                  id={key}
-                  as={
-                    currentPatient[key as PatientKey]
-                      ? RiCheckLine
-                      : RiCheckboxBlankLine
-                  }
-                  w={5}
-                  h={5}
-                  color={currentPatient[key as PatientKey] ? 'indigo' : 'gray.400'}
-                />
-              ) :
-                type === 'view' ? (
-                  <TextDisplay id={key}>
-                    {currentPatient[key as PatientKey]?.toString()}&nbsp;
-                  </TextDisplay>
-                ) : (
-                  <Input onChange={(e) => onInputChange({event: e, key: key as PatientKey})} id={key} value={currentPatient[key as PatientKey]?.toString()}></Input>
-                )}
-            </ModalFormGroup>
-          ) : null
+          <ModalFormGroup key={key}>
+            <Label htmlFor={key}>{t(`label.${key}`)}</Label>
+            {typeof currentPatient[key as PatientKey] === 'boolean' ? (
+              <Icon
+                id={key}
+                as={
+                  currentPatient[key as PatientKey]
+                    ? RiCheckLine
+                    : RiCheckboxBlankLine
+                }
+                w={5}
+                h={5}
+                color={
+                  currentPatient[key as PatientKey] ? 'indigo' : 'gray.400'
+                }
+              />
+            ) : type === 'view' ? (
+              <TextDisplay id={key}>
+                {currentPatient[key as PatientKey]?.toString()}&nbsp;
+              </TextDisplay>
+            ) : (
+              <Input
+                onChange={(e) =>
+                  onInputChange({ event: e, key: key as PatientKey })
+                }
+                id={key}
+                value={currentPatient[key as PatientKey]?.toString()}
+              ></Input>
+            )}
+          </ModalFormGroup>
+        ) : null
       );
   };
   return (
@@ -105,14 +122,17 @@ export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormPro
             <Label htmlFor="doctorId">{t('label.doctor')}</Label>
             {type === 'view' ? (
               <TextDisplay id="doctorId">
-                {currentPatient['doctor'] && getDisplayName(currentPatient['doctor'])}
+                {currentPatient['doctor'] &&
+                  getDisplayName(currentPatient['doctor'])}
               </TextDisplay>
             ) : (
               <>
                 <Select
                   name="employee"
                   value={currentPatient['doctorId']}
-                  onChange={(e) => onSelectChange({event: e, key: 'doctorId'})}
+                  onChange={(e) =>
+                    onSelectChange({ event: e, key: 'doctorId' })
+                  }
                 >
                   <option value={'remove'}>No Doctor</option>
                   {doctors.map((t, i) => (
@@ -126,7 +146,11 @@ export const PatientForm = ({ patient, type = 'view', onChange }: PatientFormPro
           </ModalFormGroup>
         </GridItem>
       </SimpleGrid>
-      <b>Termine:</b>{currentPatient.events && currentPatient.events.map(event => <div key={event.uuid}>{event.startTime}</div>)}
+      <b>Termine:</b>
+      {currentPatient.events &&
+        currentPatient.events.map((event) => (
+          <div key={event.uuid}>{event.startTime}</div>
+        ))}
     </>
   );
 };

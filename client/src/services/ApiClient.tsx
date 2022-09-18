@@ -53,7 +53,7 @@ export async function client<T, P = T>(
         return data;
       } else {
         if (response.status === 401) {
-          updateToken({token: null});
+          updateToken({ token: null });
           throw new Error('not authenticated');
         }
         throw new Error(`network Error ${response.status}`);

@@ -8,22 +8,23 @@ import UnauthenticatedApp from './UnauthenticatedApp';
 import UnauthorizedApp from './UnauthorizedApp';
 
 export const AuthChecker = () => {
-  const { isAuthenticated, isAuthorized, user, isLoading } = useContext(AuthContext);
+  const { isAuthenticated, isAuthorized, user, isLoading } =
+    useContext(AuthContext);
   return (
     <>
-      { isLoading
-        ? <FullPageSpinner />
-        : isAuthenticated && isAuthorized && user?.uuid? (
-          <UserDateProvider>
-            <FilterProvider>
-              <AuthenticatedApp id={user?.uuid} />
-            </FilterProvider>
-          </UserDateProvider>
-        ) : isAuthenticated ? (
-          <UnauthorizedApp />
-        ) :(
-          <UnauthenticatedApp />
-        )}
+      {isLoading ? (
+        <FullPageSpinner />
+      ) : isAuthenticated && isAuthorized && user?.uuid ? (
+        <UserDateProvider>
+          <FilterProvider>
+            <AuthenticatedApp id={user?.uuid} />
+          </FilterProvider>
+        </UserDateProvider>
+      ) : isAuthenticated ? (
+        <UnauthorizedApp />
+      ) : (
+        <UnauthenticatedApp />
+      )}
     </>
   );
 };

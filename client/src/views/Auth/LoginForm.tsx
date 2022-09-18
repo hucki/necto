@@ -9,9 +9,10 @@ import { AuthContext } from '../../providers/AuthProvider';
 
 const LoginForm = (): JSX.Element => {
   const { t } = useTranslation();
-  const [ message, setMessage] = useState<string| undefined>(undefined);
-  const { isAuthenticated, user, logMeIn, errorMessage } = useContext(AuthContext);
-  const [ loginState, setLoginState] = useState({
+  const [message, setMessage] = useState<string | undefined>(undefined);
+  const { isAuthenticated, user, logMeIn, errorMessage } =
+    useContext(AuthContext);
+  const [loginState, setLoginState] = useState({
     email: '',
     password: '',
   });
@@ -29,7 +30,7 @@ const LoginForm = (): JSX.Element => {
     try {
       await logMeIn({ email: loginState.email, password: loginState.password });
     } catch (e) {
-      console.log('caught', {e});
+      console.log('caught', { e });
       const error = e as Error;
       setMessage(error.message);
     }
@@ -80,7 +81,7 @@ const LoginForm = (): JSX.Element => {
           aria-label="login"
           type="submit"
           disabled={!!message || isAuthenticated}
-          colorScheme={!!message && 'red' || 'green'}
+          colorScheme={(!!message && 'red') || 'green'}
         >
           {message || t('auth.login')}
         </Button>

@@ -8,7 +8,13 @@ import { v4 as uuid } from 'uuid';
 import CalendarEventEdit from './CalendarEventEdit';
 import { useDisclosure } from '@chakra-ui/react';
 import 'dayjs/locale/de';
-import { CalendarColumnDayHeader, CalendarColumnRessourceBody, CalendarColumnRessourceHeader, CalendarColumnRessourceWrapper, CalendarColumnWrapper } from '../Library';
+import {
+  CalendarColumnDayHeader,
+  CalendarColumnRessourceBody,
+  CalendarColumnRessourceHeader,
+  CalendarColumnRessourceWrapper,
+  CalendarColumnWrapper,
+} from '../Library';
 import CalendarTimeMarker from './CalendarTimeMarker';
 import { useHolidays } from '../../hooks/useHolidays';
 import { DayHeaderLabel, HolidayLabel } from '../Library/Calendar';
@@ -49,13 +55,9 @@ function CalendarColumn({
   columnHeaderFormat = 'dddd',
   columnSubHeaderContent = 'ressource',
 }: CalendarColumnInputProps): JSX.Element {
-  const {
-    isHoliday,
-    isPublicHoliday,
-    isWeekend
-  } = useHolidays();
-  const isHolidayToday = isHoliday({date: dateInput});
-  const isPublicHolidayToday = isPublicHoliday({date: dateInput});
+  const { isHoliday, isPublicHoliday, isWeekend } = useHolidays();
+  const isHolidayToday = isHoliday({ date: dateInput });
+  const isPublicHolidayToday = isPublicHoliday({ date: dateInput });
   const isToday = dayjs().isSame(dateInput, 'day');
 
   const date = dateInput.locale('de');
@@ -124,7 +126,9 @@ function CalendarColumn({
       bgColor={ressource.bgColor}
       index={index}
     >
-      {columnSubHeaderContent === 'ressource' ? ressource.displayName : date.format(columnSubHeaderContent)}
+      {columnSubHeaderContent === 'ressource'
+        ? ressource.displayName
+        : date.format(columnSubHeaderContent)}
     </CalendarColumnRessourceHeader>
   ));
   const ressourceColsBody = ressources.map((ressource, index) => (
@@ -134,11 +138,13 @@ function CalendarColumn({
       numOfHours={numOfHours}
       numOfRessources={ressources.length}
       isPublicHoliday={Boolean(isPublicHolidayToday)}
-      isWeekend={isWeekend({date: dayjs(date)})}
+      isWeekend={isWeekend({ date: dayjs(date) })}
       index={index}
       onClick={readOnly ? () => null : getPosition}
     >
-      {isPublicHolidayToday && <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>}
+      {isPublicHolidayToday && (
+        <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
+      )}
       {events
         .filter((event) => event.ressourceId === ressource.uuid)
         .map((event) => renderCustomEvent(event, getItemStyle(event)))}
@@ -152,10 +158,7 @@ function CalendarColumn({
       key={`CalendarDay_d${date.format('YYYYMMDD')}`}
     >
       {isToday && (
-        <CalendarTimeMarker
-          scaleHeightUnits={numOfHours + 1}
-          firstHour={6}
-        />
+        <CalendarTimeMarker scaleHeightUnits={numOfHours + 1} firstHour={6} />
       )}
       <CalendarColumnDayHeader
         numOfHours={numOfHours}
@@ -163,8 +166,12 @@ function CalendarColumn({
         id={`DayHeader_d${date.format('YYYYMMDD')}`}
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
       >
-        <DayHeaderLabel size={isPublicHolidayToday ? 'small' : undefined}>{columnHeader}</DayHeaderLabel>
-        {isPublicHolidayToday && <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>}
+        <DayHeaderLabel size={isPublicHolidayToday ? 'small' : undefined}>
+          {columnHeader}
+        </DayHeaderLabel>
+        {isPublicHolidayToday && (
+          <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
+        )}
       </CalendarColumnDayHeader>
       <CalendarColumnRessourceWrapper
         id={`RessourceHeader_d${date.format('YYYYMMDD')}`}

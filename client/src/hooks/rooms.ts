@@ -16,7 +16,6 @@ export function useRoom(
 }
 
 export function useAllRooms(): QueryResult<Room[]> & { rooms: Room[] } {
-
   const roomsQuery = useQuery('rooms', async () => {
     return client<Room[]>('rooms');
   });

@@ -1,11 +1,21 @@
-import { LoginData, LoginResponse, LogoutOptions, MinimalUser, RegisterData, RegisterResponse, ResetData, ResetResponse, UpdateData } from '../types/Auth';
+import {
+  LoginData,
+  LoginResponse,
+  LogoutOptions,
+  MinimalUser,
+  RegisterData,
+  RegisterResponse,
+  ResetData,
+  ResetResponse,
+  UpdateData,
+} from '../types/Auth';
 
 export const tokenKey = 'necto_auth';
 
 interface UpdateTokenProps {
-  token: string | null
+  token: string | null;
 }
-export const updateToken = ({token}:UpdateTokenProps) => {
+export const updateToken = ({ token }: UpdateTokenProps) => {
   if (token) {
     window.localStorage.setItem(tokenKey, token);
   } else {
@@ -19,8 +29,8 @@ const serverApiUrl =
     ? process.env.REACT_APP_API_URL_PROD
     : process.env.REACT_APP_API_URL;
 
-const handleResponse = ({token}: LoginResponse): LoginResponse => {
-  updateToken({token});
+const handleResponse = ({ token }: LoginResponse): LoginResponse => {
+  updateToken({ token });
   return { token };
 };
 
@@ -28,29 +38,30 @@ export const login = async ({
   email,
   password,
 }: LoginData): Promise<LoginResponse> => {
-  return authClient('login/', { email, password })
-    .then((res) => handleResponse(res));
+  return authClient('login/', { email, password }).then((res) =>
+    handleResponse(res)
+  );
 };
 
 export const register = async ({
   email,
   password,
   firstName,
-  lastName
+  lastName,
 }: RegisterData): Promise<RegisterResponse> => {
   console.log({ email, password, firstName, lastName });
   return authClient('register/', { email, password, firstName, lastName });
 };
 
 export const resetPassword = async ({
-  email
+  email,
 }: ResetData): Promise<ResetResponse> => {
   return authClient('pw/reset/', { email });
 };
 
 export const updatePassword = async ({
   oldPassword,
-  newPassword
+  newPassword,
 }: UpdateData): Promise<ResetResponse> => {
   const method = 'PATCH';
   return authClient('pw/update/', { oldPassword, newPassword }, method);
@@ -60,15 +71,17 @@ export const getToken = () => {
   return window.localStorage.getItem(tokenKey);
 };
 
-export const logout = (options?:LogoutOptions): Promise<void> => {
+export const logout = (options?: LogoutOptions): Promise<void> => {
   const returnTo = options?.returnTo;
   return authClient('logout/')
     .then(() => {
-      updateToken({token: null});
+      updateToken({ token: null });
     })
-    .then(() => {if (returnTo) window.location.assign(window.location.toString());})
+    .then(() => {
+      if (returnTo) window.location.assign(window.location.toString());
+    })
     .catch(() => {
-      updateToken({token: null});
+      updateToken({ token: null });
     });
 };
 
@@ -85,16 +98,13 @@ const authClient = async (
   if (data) headers.append('Content-Type', 'application/json');
 
   const config: RequestInit = {
-    method: method ? method : endpoint === 'me/' ? 'GET': 'POST',
+    method: method ? method : endpoint === 'me/' ? 'GET' : 'POST',
     body: data ? JSON.stringify(data) : undefined,
     headers,
     credentials: 'include',
   };
 
-  const request = new Request(
-    encodeURI(`${serverApiUrl}/${endpoint}`),
-    config
-  );
+  const request = new Request(encodeURI(`${serverApiUrl}/${endpoint}`), config);
 
   return window.fetch(request).then(async (response) => {
     try {
@@ -103,7 +113,7 @@ const authClient = async (
         return data;
       } else {
         if (response.status === 401 && endpoint !== 'logout/') {
-          updateToken({token: null});
+          updateToken({ token: null });
         }
         throw new Error(data.message);
       }
@@ -113,4 +123,3 @@ const authClient = async (
     }
   });
 };
-

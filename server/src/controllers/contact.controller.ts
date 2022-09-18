@@ -16,7 +16,9 @@ export const addPatientContact = async (
       data: {
         patientId,
         type: req.body.type,
-        contact: req.body.contact?.length ? encrypt(req.body.contact) : req.body.contact,
+        contact: req.body.contact?.length
+          ? encrypt(req.body.contact)
+          : req.body.contact,
         tenantId: tenantId,
       },
     });
@@ -38,7 +40,9 @@ export const addDoctorContact = async (
       data: {
         doctorId,
         type: req.body.type,
-        contact: req.body.contact?.length ? encrypt(req.body.contact) : req.body.contact,
+        contact: req.body.contact?.length
+          ? encrypt(req.body.contact)
+          : req.body.contact,
         tenantId: tenantId,
       },
     });
@@ -58,10 +62,12 @@ export const updateContact = async (
   try {
     const updatedContact = await prisma.contactData.update({
       where: {
-        uuid: contactId
+        uuid: contactId,
       },
       data: {
-        contact: req.body.contact?.length ? encrypt(req.body.contact) : req.body.contact,
+        contact: req.body.contact?.length
+          ? encrypt(req.body.contact)
+          : req.body.contact,
       },
     });
     res.json(updatedContact);

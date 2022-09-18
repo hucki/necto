@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { AppContainer, Button, ContentContainer } from '../components/Library';
 import {
-  AppContainer,
-  Button,
-  ContentContainer,
-} from '../components/Library';
-import { Box, Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+  Box,
+  Heading,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@chakra-ui/react';
 import LoginForm from '../views/Auth/LoginForm';
 import Register from '../views/Auth/Register';
 import ResetPassword from '../views/Auth/ResetPassword';
@@ -16,9 +21,9 @@ import ErrorBoundary from '../components/Error/ErrorBoundary';
 function UnauthenticatedApp(): JSX.Element {
   const { t } = useTranslation();
   const { isMobile } = useViewport();
-  const [ registrationActive, setRegistrationActive ] = useState(false);
-  const [ tabIndex, setTabIndex ] = useState(0);
-  const [ resetActive, setResetActive ] = useState(false);
+  const [registrationActive, setRegistrationActive] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [resetActive, setResetActive] = useState(false);
   const resetTabIndex = 2;
 
   const handleResetPassword = () => {
@@ -41,44 +46,38 @@ function UnauthenticatedApp(): JSX.Element {
           rounded="lg"
           boxShadow="lg"
           p="8"
-          w={isMobile ? 'full': undefined}
-          h={isMobile ? 'full': undefined}
+          w={isMobile ? 'full' : undefined}
+          h={isMobile ? 'full' : undefined}
         >
           <Stack spacing="4" alignItems="center">
             <LogoIcon />
-            <Heading as="h1" size="lg">{t('auth.welcome')}</Heading>
+            <Heading as="h1" size="lg">
+              {t('auth.welcome')}
+            </Heading>
 
             <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)}>
               <TabList>
-                <Tab>
-                  {t('auth.login')}
-                </Tab>
-                <Tab>
-                  {t('auth.register')}
-                </Tab>
-                {
-                  resetActive &&
-                (<Tab>
-                  {t('auth.resetPassword')}
-                </Tab>)
-                }
+                <Tab>{t('auth.login')}</Tab>
+                <Tab>{t('auth.register')}</Tab>
+                {resetActive && <Tab>{t('auth.resetPassword')}</Tab>}
               </TabList>
               <TabPanels>
                 <TabPanel p="0">
                   <ErrorBoundary>
                     <LoginForm />
                   </ErrorBoundary>
-                  <Button w="100%" type='reset' onClick={handleResetPassword}>{t('auth.forgotPassword')}</Button>
+                  <Button w="100%" type="reset" onClick={handleResetPassword}>
+                    {t('auth.forgotPassword')}
+                  </Button>
                 </TabPanel>
                 <TabPanel p="0">
-                  <Register onHasRegistered={() => setTabIndex(0)}/>
+                  <Register onHasRegistered={() => setTabIndex(0)} />
                 </TabPanel>
-                {
-                  resetActive &&
-                (<TabPanel p="0">
-                  <ResetPassword onSubmit={hasResetPassword}/>
-                </TabPanel>)
-                }
+                {resetActive && (
+                  <TabPanel p="0">
+                    <ResetPassword onSubmit={hasResetPassword} />
+                  </TabPanel>
+                )}
               </TabPanels>
             </Tabs>
           </Stack>

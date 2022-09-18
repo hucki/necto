@@ -28,7 +28,7 @@ const FilterBar = ({
     currentBuildingId,
     setCurrentBuildingId,
     calendarView,
-    setCalendarView
+    setCalendarView,
   } = useFilter();
 
   const { isLoading: isLoadingTeams, error, teams } = useAllTeams();
@@ -128,7 +128,11 @@ const FilterBar = ({
       {hasDayWeekOption && (
         <>
           <Label htmlFor="DayWeek">{t('calendar.view.label')}</Label>
-          <Select name="DayWeek" value={calendarView} onChange={onDayWeekChangeHandler}>
+          <Select
+            name="DayWeek"
+            value={calendarView}
+            onChange={onDayWeekChangeHandler}
+          >
             <option value="day">{t('calendar.view.day')}</option>
             <option value="week">{t('calendar.view.week')}</option>
           </Select>

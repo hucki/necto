@@ -37,13 +37,12 @@ export function useAllTeams(): QueryResult<Team[]> & { teams: Team[] } {
   };
 }
 
-
 export function useAddEmployeeToTeam(): MutationResultPair<
   Employee2Team,
   Error,
   { employee2Team: Employee2Team },
   string
-  > {
+> {
   const addEmployeeToTeam = async ({
     employee2Team,
   }: {

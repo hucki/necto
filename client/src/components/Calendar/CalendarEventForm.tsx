@@ -52,11 +52,13 @@ function CalendarEventForm({
 
   const getNewUTCDate = (dateTime: Dayjs) => {
     const dt = dayjs.utc(dateTime);
-    return new Date(Date.UTC(dt.year(),dt.month(),dt.date(),dt.hour(),dt.minute(),0));
+    return new Date(
+      Date.UTC(dt.year(), dt.month(), dt.date(), dt.hour(), dt.minute(), 0)
+    );
   };
 
   // Form state
-  const [currentEvent, setCurrentEvent] = useState<Event>(() => ({...event}));
+  const [currentEvent, setCurrentEvent] = useState<Event>(() => ({ ...event }));
   const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
     freq: RRule.WEEKLY,
     interval: 1,
@@ -77,43 +79,56 @@ function CalendarEventForm({
     useState<RecurringInterval>(10);
   const [timeline, setTimeline] = useState<ReactElement<any, any>>();
 
-  function onInputChange(event:React.FormEvent<HTMLInputElement>) {
+  function onInputChange(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
     const key = event.currentTarget.name;
     const value = event.currentTarget.value;
-    setCurrentEvent(cur => ({...cur, [`${key}`]: value}));
+    setCurrentEvent((cur) => ({ ...cur, [`${key}`]: value }));
     setMessage(null);
   }
 
-  function onTextareaChange(event:React.FormEvent<HTMLTextAreaElement>) {
+  function onTextareaChange(event: React.FormEvent<HTMLTextAreaElement>) {
     event.preventDefault();
     const key = event.currentTarget.name;
     const value = event.currentTarget.value;
-    setCurrentEvent(cur => ({...cur, [`${key}`]: value}));
+    setCurrentEvent((cur) => ({ ...cur, [`${key}`]: value }));
     setMessage(null);
   }
 
   function onCheckboxChange(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
-    setCurrentEvent(cur => ({...cur, [`${event.currentTarget.name}`]: event.currentTarget.checked}));
+    setCurrentEvent((cur) => ({
+      ...cur,
+      [`${event.currentTarget.name}`]: event.currentTarget.checked,
+    }));
     setMessage(null);
   }
 
   function onIsNoteChange(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
-    setCurrentEvent(cur => ({...cur, type: event.currentTarget.checked ? 'note' : 'Appointment'}));
+    setCurrentEvent((cur) => ({
+      ...cur,
+      type: event.currentTarget.checked ? 'note' : 'Appointment',
+    }));
     setMessage(null);
   }
 
   type TimeChangeProps = {
-    date: ReactDatePickerReturnType
-    key: 'startTime' | 'endTime'
-  }
+    date: ReactDatePickerReturnType;
+    key: 'startTime' | 'endTime';
+  };
 
-  function handleTimeChange({date, key}: TimeChangeProps) {
+  function handleTimeChange({ date, key }: TimeChangeProps) {
     if (date) {
-      setCurrentEvent(cur => ({...cur, [`${key}`]: dayjs(date.toString())}));
-      if (key === 'startTime') setCurrentEvent(cur => ({...cur, endTime: dayjs(date.toString()).add(eventDuration, 'm')}));
+      setCurrentEvent((cur) => ({
+        ...cur,
+        [`${key}`]: dayjs(date.toString()),
+      }));
+      if (key === 'startTime')
+        setCurrentEvent((cur) => ({
+          ...cur,
+          endTime: dayjs(date.toString()).add(eventDuration, 'm'),
+        }));
     }
     setMessage(null);
   }
@@ -123,13 +138,19 @@ function CalendarEventForm({
     if (event.currentTarget.name === 'frequency') {
       setRecurringFrequency(event.currentTarget.value as RecurringFrequency);
     } else {
-      setCurrentEvent(cur => ({...cur, [`${event.currentTarget.name}`]: event.currentTarget.value}));
+      setCurrentEvent((cur) => ({
+        ...cur,
+        [`${event.currentTarget.name}`]: event.currentTarget.value,
+      }));
     }
   }
 
   function handleEventDurationChange(event: BaseSyntheticEvent) {
     setEventDuration(event.target.value);
-    setCurrentEvent(cur => ({...cur, endTime: dayjs(cur.startTime.toString()).add(event.target.value, 'm')}));
+    setCurrentEvent((cur) => ({
+      ...cur,
+      endTime: dayjs(cur.startTime.toString()).add(event.target.value, 'm'),
+    }));
     setMessage(null);
   }
 
@@ -138,30 +159,38 @@ function CalendarEventForm({
       event.target.value < 1
         ? 1
         : event.target.value > 20
-          ? 20
-          : event.target.value;
+        ? 20
+        : event.target.value;
     setRecurringInterval(interval);
     setMessage(null);
   }
 
   useEffect(() => {
     if (currentEvent.isRecurring) {
-      setRruleOptions(cur => ({
+      setRruleOptions((cur) => ({
         ...cur,
-        freq: recurringFrequency === 'WEEKLY' || recurringFrequency === 'BIWEEKLY' ? RRule.WEEKLY : RRule.MONTHLY,
+        freq:
+          recurringFrequency === 'WEEKLY' || recurringFrequency === 'BIWEEKLY'
+            ? RRule.WEEKLY
+            : RRule.MONTHLY,
         interval: recurringFrequency === 'BIWEEKLY' ? 2 : 1,
         count: recurringInterval,
         dtstart: getNewUTCDate(currentEvent.startTime),
       }));
     } else {
-      setCurrentEvent(cur => ({...cur, rrule: ''}));
+      setCurrentEvent((cur) => ({ ...cur, rrule: '' }));
     }
-  }, [currentEvent.isRecurring, recurringFrequency, recurringInterval, currentEvent.startTime]);
+  }, [
+    currentEvent.isRecurring,
+    recurringFrequency,
+    recurringInterval,
+    currentEvent.startTime,
+  ]);
 
   useEffect(() => {
     const rrule = new RRule(rruleOptions);
     if (currentEvent.isRecurring) {
-      setCurrentEvent(cur => ({...cur, rrule: rrule.toString()}));
+      setCurrentEvent((cur) => ({ ...cur, rrule: rrule.toString() }));
     }
   }, [rruleOptions]);
 
@@ -170,12 +199,16 @@ function CalendarEventForm({
     const dt = dayjs.utc(currentEvent.startTime);
     setTimeline(
       <ul>
-        {rrule.all().map((date) =>  {
+        {rrule.all().map((date) => {
           return (
             <li key={date.toString()}>
-              {dayjs.utc(date).hour(dt.local().hour()).format('ddd DD.MM.YYYY HH:mm')}
+              {dayjs
+                .utc(date)
+                .hour(dt.local().hour())
+                .format('ddd DD.MM.YYYY HH:mm')}
             </li>
-          );})}
+          );
+        })}
       </ul>
     );
   }
@@ -233,44 +266,55 @@ function CalendarEventForm({
           onChange={onIsNoteChange}
         />
       </FormGroup>
-      {!isNote &&<FormControl id="patient" mb="0.75rem" mt="0.5rem">
-        <Select
-          name="patientId"
-          value={currentEvent.patientId}
-          onChange={onSelectChange}
-        >
-          <option key="noPatient" value="">
-            No {t('calendar.event.patient')}
-          </option>
-          {patients.map((p) => (
-            <option key={p.uuid} value={p.uuid}>
-              {p.lastName + ', ' + p.firstName}
+      {!isNote && (
+        <FormControl id="patient" mb="0.75rem" mt="0.5rem">
+          <Select
+            name="patientId"
+            value={currentEvent.patientId}
+            onChange={onSelectChange}
+          >
+            <option key="noPatient" value="">
+              No {t('calendar.event.patient')}
             </option>
-          ))}
-        </Select>
-        <FormLabel>{t('calendar.event.patient')}</FormLabel>
-      </FormControl>}
-      <FormControl id="eventTitleInput" mb="0.75rem" mt={isNote ? '0.5rem': undefined}>
-        {isNote
-          ? <Textarea
+            {patients.map((p) => (
+              <option key={p.uuid} value={p.uuid}>
+                {p.lastName + ', ' + p.firstName}
+              </option>
+            ))}
+          </Select>
+          <FormLabel>{t('calendar.event.patient')}</FormLabel>
+        </FormControl>
+      )}
+      <FormControl
+        id="eventTitleInput"
+        mb="0.75rem"
+        mt={isNote ? '0.5rem' : undefined}
+      >
+        {isNote ? (
+          <Textarea
             name="title"
             value={currentEvent.title}
             onChange={onTextareaChange}
-            style={{background: 'lightyellow'}}
+            style={{ background: 'lightyellow' }}
             placeholder={t('calendar.event.noteTitle')}
           />
-          :
+        ) : (
           <Input
             name="title"
             value={currentEvent.title}
             onChange={onInputChange}
             placeholder={t('calendar.event.newAppointmentTitle')}
-          />}
-        <FormLabel style={{
-          background: isNote ? 'lightyellow' : undefined,
-        }}>{t(`calendar.event.${isNote ? 'text' : 'title'}`)}</FormLabel>
+          />
+        )}
+        <FormLabel
+          style={{
+            background: isNote ? 'lightyellow' : undefined,
+          }}
+        >
+          {t(`calendar.event.${isNote ? 'text' : 'title'}`)}
+        </FormLabel>
       </FormControl>
-      {!isNote &&
+      {!isNote && (
         <div>
           <FormGroup>
             <Checkbox
@@ -280,7 +324,9 @@ function CalendarEventForm({
               my={2}
               isChecked={currentEvent.isHomeVisit}
               onChange={onCheckboxChange}
-            >{t('calendar.event.homeVisit')}</Checkbox>
+            >
+              {t('calendar.event.homeVisit')}
+            </Checkbox>
             <Checkbox
               id="isDiagnostic"
               name="isDiagnostic"
@@ -288,11 +334,13 @@ function CalendarEventForm({
               my={2}
               isChecked={currentEvent.isDiagnostic}
               onChange={onCheckboxChange}
-            >{t('calendar.event.diagnostic')}</Checkbox>
+            >
+              {t('calendar.event.diagnostic')}
+            </Checkbox>
           </FormGroup>
         </div>
-      }
-      <FormControl id="eventStartDatePicker"  mb="0.75rem">
+      )}
+      <FormControl id="eventStartDatePicker" mb="0.75rem">
         <DatePicker
           name="startDate"
           showTimeSelect
@@ -302,14 +350,18 @@ function CalendarEventForm({
           dateFormat="Pp"
           selected={dayjs(currentEvent.startTime).toDate()}
           onChange={(date: ReactDatePickerReturnType) => {
-            if (date) handleTimeChange({date, key: 'startTime'});
+            if (date) handleTimeChange({ date, key: 'startTime' });
           }}
         />
-        <FormLabel style={{
-          background: isNote ? 'khaki' : undefined,
-        }}>{t('calendar.event.start')}</FormLabel>
+        <FormLabel
+          style={{
+            background: isNote ? 'khaki' : undefined,
+          }}
+        >
+          {t('calendar.event.start')}
+        </FormLabel>
       </FormControl>
-      {!isNote &&
+      {!isNote && (
         <FormControl id="duration" mb="0.75rem" maxWidth="25%">
           <Select
             id="duration"
@@ -322,7 +374,7 @@ function CalendarEventForm({
           </Select>
           <FormLabel>{t('calendar.event.duration')}</FormLabel>
         </FormControl>
-      }
+      )}
       <FormControl id="eventEndDatePicker" mb="0.75rem">
         <DatePicker
           name="endDate"
@@ -333,14 +385,18 @@ function CalendarEventForm({
           dateFormat="Pp"
           selected={dayjs(currentEvent.endTime).toDate()}
           onChange={(date: ReactDatePickerReturnType) => {
-            if (date) handleTimeChange({date, key: 'endTime'});
+            if (date) handleTimeChange({ date, key: 'endTime' });
           }}
         />
-        <FormLabel style={{
-          background: isNote ? 'khaki' : undefined,
-        }}>{t('calendar.event.end')}</FormLabel>
+        <FormLabel
+          style={{
+            background: isNote ? 'khaki' : undefined,
+          }}
+        >
+          {t('calendar.event.end')}
+        </FormLabel>
       </FormControl>
-      {!isNote &&
+      {!isNote && (
         <div>
           <hr></hr>
           <FormGroup>
@@ -357,18 +413,25 @@ function CalendarEventForm({
               isDisabled={!isNewEvent}
             />
           </FormGroup>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
             <FormControl id="frequency" mb="0.75rem" maxWidth="50%">
               <Select
                 name="frequency"
                 value={undefined}
                 disabled={!isNewEvent || !currentEvent.isRecurring}
-                onChange={onSelectChange}>
-                <option value="WEEKLY">{t('calendar.event.frequencyWeekly')}</option>
-                <option value="BIWEEKLY">{t('calendar.event.frequencyBiWeekly')}</option>
+                onChange={onSelectChange}
+              >
+                <option value="WEEKLY">
+                  {t('calendar.event.frequencyWeekly')}
+                </option>
+                <option value="BIWEEKLY">
+                  {t('calendar.event.frequencyBiWeekly')}
+                </option>
                 <option value="MONTHLY" disabled>
                   {t('calendar.event.frequencyMonthly')}
                 </option>
@@ -388,49 +451,49 @@ function CalendarEventForm({
               <FormLabel>{t('calendar.event.interval')}</FormLabel>
             </FormControl>
           </div>
-          {isNewEvent &&
-          <>
-            <Popover>
-              <PopoverTrigger>
-                <Button
-                  aria-label="preview recurring events"
-                  type="button"
-                  onClick={onBuildTimelineHandler}
-                  disabled={!currentEvent.isRecurring}
+          {isNewEvent && (
+            <>
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    aria-label="preview recurring events"
+                    type="button"
+                    onClick={onBuildTimelineHandler}
+                    disabled={!currentEvent.isRecurring}
+                    style={{
+                      alignSelf: 'flex-end',
+                    }}
+                  >
+                    {t('button.preview')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
                   style={{
-                    alignSelf: 'flex-end',
+                    backgroundColor: 'white',
+                    border: '1px solid #3333',
+                    borderRadius: '1rem',
+                    padding: '0.5rem',
                   }}
                 >
-                  {t('button.preview')}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                style={{
-                  backgroundColor: 'white',
-                  border: '1px solid #3333',
-                  borderRadius: '1rem',
-                  padding: '0.5rem',
-                }}
-              >
-                <PopoverArrow />
-                <PopoverCloseButton
-                  style={{
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '1.5rem',
-                    height: '1.5rem',
-                    alignSelf: 'flex-end',
-                    cursor: 'pointer',
-                  }}
-                />
-                <PopoverHeader></PopoverHeader>
-                <PopoverBody>{timeline}</PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </>}
-
+                  <PopoverArrow />
+                  <PopoverCloseButton
+                    style={{
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '1.5rem',
+                      height: '1.5rem',
+                      alignSelf: 'flex-end',
+                      cursor: 'pointer',
+                    }}
+                  />
+                  <PopoverHeader></PopoverHeader>
+                  <PopoverBody>{timeline}</PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </>
+          )}
         </div>
-      }
+      )}
     </div>
   );
 }

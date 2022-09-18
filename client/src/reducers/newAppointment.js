@@ -1,7 +1,16 @@
-import { TOGGLE_VISIBLE, CLICK_ROW, SET_END, SET_START, SET_RRULE } from '../actions/actions';
+import {
+  TOGGLE_VISIBLE,
+  CLICK_ROW,
+  SET_END,
+  SET_START,
+  SET_RRULE,
+} from '../actions/actions';
 import { initialState } from '../assets/data';
 
-export default function newAppointment (state = initialState.newAppointment, {type, payload}) {
+export default function newAppointment(
+  state = initialState.newAppointment,
+  { type, payload }
+) {
   const newState = {};
   switch (type) {
     case TOGGLE_VISIBLE:
@@ -43,4 +52,3 @@ export default function newAppointment (state = initialState.newAppointment, {ty
       return state;
   }
 }
-

@@ -14,10 +14,10 @@ export const getAllUsers = async (
       include: {
         permissions: {
           include: {
-            permission: true
-          }
-        }
-      }
+            permission: true,
+          },
+        },
+      },
     });
     res.json(users);
     res.status(200);
@@ -58,9 +58,9 @@ export const getOneUserByAuth0Id = async (
         },
         permissions: {
           include: {
-            permission: true
+            permission: true,
           },
-        }
+        },
       },
     });
     res.json(user);
@@ -103,7 +103,7 @@ export const getUser = async (
         },
         permissions: {
           include: {
-            permission: true
+            permission: true,
           },
         },
       },
@@ -145,7 +145,7 @@ export const addUser = async (
       data: {
         tenantId: tenantId,
         email: req.body.email,
-        password: '',// bcrypt.hash(req.body.email),
+        password: '', // bcrypt.hash(req.body.email),
         a0Id: req.body.a0Id,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -211,8 +211,8 @@ export const updateUser = async (
           where: {
             userId_permissionId: {
               userId: req.body.uuid,
-              permissionId: req.body.permissions[i].permissionId
-            }
+              permissionId: req.body.permissions[i].permissionId,
+            },
           },
           update: {},
           create: {

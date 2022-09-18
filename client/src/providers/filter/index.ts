@@ -12,6 +12,8 @@ export const defaultFilterContextProps: FilterContext = {
   setCurrentBuildingId: () => undefined,
 };
 
-export const filterContext = createContext<FilterContext>(defaultFilterContextProps);
+export const filterContext = createContext<FilterContext>(
+  defaultFilterContextProps
+);
 
 export const FilterContextConsumer = filterContext.Consumer;

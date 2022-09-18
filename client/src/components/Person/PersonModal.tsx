@@ -47,10 +47,13 @@ export const PersonModal = ({
   }));
 
   type ToastOptionsProps = {
-    type: 'created' | 'updated'
-    result: 'error' | 'success' | 'info' | 'warning' | undefined
-  }
-  const toastOptions = ({type, result}: ToastOptionsProps): UseToastOptions => {
+    type: 'created' | 'updated';
+    result: 'error' | 'success' | 'info' | 'warning' | undefined;
+  };
+  const toastOptions = ({
+    type,
+    result,
+  }: ToastOptionsProps): UseToastOptions => {
     return {
       title: `${personType} ${type}.`,
       description: `${personType} ${currentPerson.lastName}, ${currentPerson.firstName} has been ${type}`,
@@ -64,8 +67,16 @@ export const PersonModal = ({
     person: Person,
     contactDataCollection: ContactData[]
   ) => {
-    setCurrentPerson((cur) => ({ ...cur, ...person, contactData: contactDataCollection }));
-    if (!currentPerson.uuid && currentPerson?.firstName && currentPerson?.lastName) {
+    setCurrentPerson((cur) => ({
+      ...cur,
+      ...person,
+      contactData: contactDataCollection,
+    }));
+    if (
+      !currentPerson.uuid &&
+      currentPerson?.firstName &&
+      currentPerson?.lastName
+    ) {
       onSaveChanges();
     }
   };
@@ -76,17 +87,17 @@ export const PersonModal = ({
         // update
         personType === 'patient'
           ? updatePatient({ patient: currentPerson }).then((res) => {
-            if (res?.uuid) {
-              setCurrentPerson(res);
-              toast(toastOptions({type: 'updated', result: 'success'}));
-            }
-          })
+              if (res?.uuid) {
+                setCurrentPerson(res);
+                toast(toastOptions({ type: 'updated', result: 'success' }));
+              }
+            })
           : updateDoctor({ doctor: currentPerson }).then((res) => {
-            if (res?.uuid) {
-              setCurrentPerson(res);
-              toast(toastOptions({type: 'updated', result: 'success'}));
-            }
-          });
+              if (res?.uuid) {
+                setCurrentPerson(res);
+                toast(toastOptions({ type: 'updated', result: 'success' }));
+              }
+            });
         if (currentPerson.contactData?.length) {
           for (let i = 0; i < currentPerson.contactData.length; i++) {
             if (currentPerson.contactData[i].uuid) {
@@ -98,17 +109,17 @@ export const PersonModal = ({
         // create
         personType === 'patient'
           ? createPatient({ patient: currentPerson }).then((res) => {
-            if (res?.uuid) {
-              setCurrentPerson(res);
-              toast(toastOptions({type: 'created', result: 'success'}));
-            }
-          })
+              if (res?.uuid) {
+                setCurrentPerson(res);
+                toast(toastOptions({ type: 'created', result: 'success' }));
+              }
+            })
           : createDoctor({ doctor: currentPerson }).then((res) => {
-            if (res?.uuid) {
-              setCurrentPerson(res);
-              toast(toastOptions({type: 'created', result: 'success'}));
-            }
-          });
+              if (res?.uuid) {
+                setCurrentPerson(res);
+                toast(toastOptions({ type: 'created', result: 'success' }));
+              }
+            });
       }
     } else {
       toast({

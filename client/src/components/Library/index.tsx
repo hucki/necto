@@ -17,7 +17,7 @@ import {
   CalendarColumnDayHeader,
   CalendarColumnRessourceWrapper,
   CalendarColumnRessourceHeader,
-  CalendarColumnRessourceBody
+  CalendarColumnRessourceBody,
 } from './Calendar';
 import { FilterBarContainer } from './FilterBar';
 import { FullPageSpinner } from './LoadingSpinner';
@@ -33,7 +33,7 @@ import {
   DatePicker,
   RadioGroup,
   LabelledInput,
-  LabelledSelect
+  LabelledSelect,
 } from './FormElements';
 import { ErrorMessage } from './Messages';
 import {

@@ -37,13 +37,36 @@ const Dashboard = ({ id }: DashboardInputProps): JSX.Element => {
           <Home />
         </Route>
         <Route path="/rooms" component={Rooms} />
-        <Route path="/patients" component={user?.isPlanner || user?.isAdmin || user?.isEmployee ? Patients : RedirectHome} />
-        <Route path="/doctors" component={user?.isPlanner || user?.isAdmin ? Doctors : RedirectHome} />
-        <Route path="/institutions" component={user?.isPlanner || user?.isAdmin ? Institutions : RedirectHome} />
-        <Route path="/waiting" component={user?.isPlanner || user?.isAdmin ? WaitingList : RedirectHome} />
-        <Route path="/teamcal" component={user?.isAdmin ? TeamCalendar : RedirectHome} />
+        <Route
+          path="/patients"
+          component={
+            user?.isPlanner || user?.isAdmin || user?.isEmployee
+              ? Patients
+              : RedirectHome
+          }
+        />
+        <Route
+          path="/doctors"
+          component={user?.isPlanner || user?.isAdmin ? Doctors : RedirectHome}
+        />
+        <Route
+          path="/institutions"
+          component={
+            user?.isPlanner || user?.isAdmin ? Institutions : RedirectHome
+          }
+        />
+        <Route
+          path="/waiting"
+          component={
+            user?.isPlanner || user?.isAdmin ? WaitingList : RedirectHome
+          }
+        />
+        <Route
+          path="/teamcal"
+          component={user?.isAdmin ? TeamCalendar : RedirectHome}
+        />
         <Route path="/personalcal">
-          <PersonalCalendar id={id}/>
+          <PersonalCalendar id={id} />
         </Route>
         <Route path="/settings" component={Settings} />
         <Route path="*">

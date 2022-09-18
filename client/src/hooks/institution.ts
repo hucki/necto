@@ -9,11 +9,11 @@ import { client } from '../services/ApiClient';
 import { Institution, InstitutionInput } from '../types/Institution';
 
 export function useCreateInstitution(): MutationResultPair<
-Institution,
+  Institution,
   Error,
   { institution: InstitutionInput },
   string
-  > {
+> {
   const createInstitution = async ({
     institution,
   }: {
@@ -31,17 +31,20 @@ Institution,
 }
 
 export function useUpdateInstitution(): MutationResultPair<
-Institution,
+  Institution,
   Error,
   { institution: InstitutionInput },
   string
-  > {
+> {
   const updateInstitution = async ({
     institution,
   }: {
     institution: InstitutionInput;
   }): Promise<Institution> => {
-    return client<InstitutionInput>(`institutions/${institution.uuid}`, { data: institution, method: 'PATCH' });
+    return client<InstitutionInput>(`institutions/${institution.uuid}`, {
+      data: institution,
+      method: 'PATCH',
+    });
   };
   return useMutation(updateInstitution, {
     onSuccess: () => {
@@ -53,8 +56,7 @@ Institution,
 
 export function useAllInstitutions(): QueryResult<Institution[]> & {
   institutions: Institution[];
-  } {
-
+} {
   const institutionsQuery = useQuery('institutions/all', async () => {
     return client<Institution[]>('institutions/all');
   });
@@ -69,8 +71,7 @@ export function useAllInstitutions(): QueryResult<Institution[]> & {
 
 export function useAllArchivedInstitutions(): QueryResult<Institution[]> & {
   institutions: Institution[];
-  } {
-
+} {
   const institutionsQuery = useQuery('institutions/archived', async () => {
     return client<Institution[]>('institutions/archived');
   });
@@ -82,4 +83,3 @@ export function useAllArchivedInstitutions(): QueryResult<Institution[]> & {
     ...institutionsQuery,
   };
 }
-

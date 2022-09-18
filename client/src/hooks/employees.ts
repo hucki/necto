@@ -1,4 +1,10 @@
-import { useQuery, QueryResult, queryCache, useMutation, MutationResultPair } from 'react-query';
+import {
+  useQuery,
+  QueryResult,
+  queryCache,
+  useMutation,
+  MutationResultPair,
+} from 'react-query';
 import { client } from '../services/ApiClient';
 import { Employee } from '../types/Employee';
 
@@ -20,8 +26,12 @@ export function useUpdateEmployee(): MutationResultPair<
   Error,
   { employee: Employee },
   string
-  > {
-  const updateEmployee = async ({ employee }: { employee: Employee }): Promise<Employee> => {
+> {
+  const updateEmployee = async ({
+    employee,
+  }: {
+    employee: Employee;
+  }): Promise<Employee> => {
     return client<Employee>('employees', { data: employee, method: 'PATCH' });
   };
   return useMutation(updateEmployee, {
@@ -33,8 +43,7 @@ export function useUpdateEmployee(): MutationResultPair<
 
 export function useAllEmployees(): QueryResult<Employee[]> & {
   employees: Employee[];
-  } {
-
+} {
   const employeesQuery = useQuery('employees/all', async () => {
     return client<Employee[]>('employees/all');
   });

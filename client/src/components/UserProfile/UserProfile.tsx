@@ -12,7 +12,13 @@ import {
 import { Input, Button, LabelledInput } from '../Library';
 import { RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
-import { FormControl, FormErrorMessage, Heading, useToast, UseToastOptions } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormErrorMessage,
+  Heading,
+  useToast,
+  UseToastOptions,
+} from '@chakra-ui/react';
 import { updatePassword } from '../../services/Auth';
 import { UpdateResponse } from '../../types/Auth';
 
@@ -20,13 +26,11 @@ interface UserProfileProps {
   id: string;
 }
 
-const UserProfile = ({
-  id
-}: UserProfileProps): JSX.Element => {
+const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
   const { t } = useTranslation();
   const { isLoading, user } = useUser(id);
   const [updateUser] = useUpdateUser();
-  const [ response, setResponse] = useState<UpdateResponse | undefined>();
+  const [response, setResponse] = useState<UpdateResponse | undefined>();
   const [createUserSettings] = useCreateUserSettings();
   // const {
   //   isLoading: isLoadingEmployees,
@@ -48,7 +52,9 @@ const UserProfile = ({
     newPassword: '',
     newPasswordConfirmation: '',
   });
-  const [passwordUpdateResponse, setPasswordUpdateResponse] = useState<string | undefined>();
+  const [passwordUpdateResponse, setPasswordUpdateResponse] = useState<
+    string | undefined
+  >();
   const toast = useToast();
   const updatePasswordErrorOptions: UseToastOptions = {
     title: 'Password not updated.',
@@ -64,9 +70,17 @@ const UserProfile = ({
     duration: 4000,
     isClosable: true,
   };
-  const isChangingPassword = passwordState.oldPassword || passwordState.newPassword || passwordState.newPasswordConfirmation;
-  const newPasswordConfirmed = passwordState.newPassword === passwordState.newPasswordConfirmation;
-  const isReadyToSubmit = !isChangingPassword || passwordState.oldPassword && passwordState.newPassword && newPasswordConfirmed;
+  const isChangingPassword =
+    passwordState.oldPassword ||
+    passwordState.newPassword ||
+    passwordState.newPasswordConfirmation;
+  const newPasswordConfirmed =
+    passwordState.newPassword === passwordState.newPasswordConfirmation;
+  const isReadyToSubmit =
+    !isChangingPassword ||
+    (passwordState.oldPassword &&
+      passwordState.newPassword &&
+      newPasswordConfirmed);
 
   useEffect(() => {
     if (!isLoading && user?.uuid && !user.userSettings?.length) {
@@ -76,7 +90,7 @@ const UserProfile = ({
         },
       });
     }
-    if ( !isLoading && user ) {
+    if (!isLoading && user) {
       setUserState((currentState) => ({
         ...currentState,
         uuid: user.uuid,
@@ -94,7 +108,9 @@ const UserProfile = ({
       [e.target.name]: e.target.value,
     }));
   };
-  const onPasswordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const onPasswordChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     e.preventDefault();
     setPasswordState((currentState) => ({
       ...currentState,
@@ -145,7 +161,7 @@ const UserProfile = ({
     try {
       const response = await updatePassword({
         oldPassword: passwordState.oldPassword,
-        newPassword: passwordState.newPassword
+        newPassword: passwordState.newPassword,
       });
       setPasswordUpdateResponse(response);
       toast(updatePasswordSuccessOptions);
@@ -184,7 +200,9 @@ const UserProfile = ({
           },
         }}
       >
-        <Heading as='h2' size='md'>{t('menu.personalData')}</Heading>
+        <Heading as="h2" size="md">
+          {t('menu.personalData')}
+        </Heading>
         <LabelledInput
           label={t('label.firstName')}
           disabled={state === 'view'}
@@ -220,7 +238,9 @@ const UserProfile = ({
             ))}
           </Select>
         </FormGroup> */}
-        <Heading as='h2' size='md'>{t('auth.password')}</Heading>
+        <Heading as="h2" size="md">
+          {t('auth.password')}
+        </Heading>
         <Input
           type="text"
           name="email"
@@ -259,10 +279,11 @@ const UserProfile = ({
             autoComplete="new-password"
             value={passwordState.newPasswordConfirmation}
             onChangeHandler={onPasswordChangeHandler}
-
           />
 
-          {!newPasswordConfirmed && <FormErrorMessage>new password has to match</FormErrorMessage>}
+          {!newPasswordConfirmed && (
+            <FormErrorMessage>new password has to match</FormErrorMessage>
+          )}
         </FormControl>
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
@@ -270,10 +291,18 @@ const UserProfile = ({
           </Button>
         ) : (
           <div>
-            <Button aria-label="save changes" type="submit" disabled={!isReadyToSubmit}>
+            <Button
+              aria-label="save changes"
+              type="submit"
+              disabled={!isReadyToSubmit}
+            >
               {t('button.save')}
             </Button>
-            <Button aria-label="cancel changes" type="button" onClick={cancelEdit}>
+            <Button
+              aria-label="cancel changes"
+              type="button"
+              onClick={cancelEdit}
+            >
               {t('button.cancel')}
             </Button>
           </div>

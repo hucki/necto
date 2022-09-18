@@ -9,7 +9,13 @@ import { CalendarColumn } from './CalendarColumn';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
 import { GoToTarget, UserDateContext } from '../../providers/UserDate';
-import { CalendarScale, CalendarScaleHeader, CalendarScaleItem, CalendarScaleTime, CalendarWrapper } from '../Library';
+import {
+  CalendarScale,
+  CalendarScaleHeader,
+  CalendarScaleItem,
+  CalendarScaleTime,
+  CalendarWrapper,
+} from '../Library';
 import { useSwipe } from '../../hooks/useSwipe';
 import { filterContext } from '../../providers/filter';
 
@@ -40,9 +46,9 @@ function CalendarContainer({
   const { calendarView } = useContext(filterContext);
   const { setTouchStart, setTouchEnd, direction } = useSwipe();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [ clickedId, setClickedId ] = useState<string | undefined>(undefined);
-  const [ clickedDateTime, setClickedDateTime ] = useState(dayjs());
-  const [ numOfDays ] = useState(
+  const [clickedId, setClickedId] = useState<string | undefined>(undefined);
+  const [clickedDateTime, setClickedDateTime] = useState(dayjs());
+  const [numOfDays] = useState(
     dayjs(daysRange[1]).diff(daysRange[0], 'day') + 1
   );
   const [currentHoursInterval, setCurrentHoursInterval] =
@@ -61,7 +67,9 @@ function CalendarContainer({
   useEffect(() => {
     if (direction) {
       if (!clickedId) {
-        const target = `${direction === 'left' ? 'next' : 'previous'}${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
+        const target = `${direction === 'left' ? 'next' : 'previous'}${
+          calendarView[0].toUpperCase() + calendarView.substring(1)
+        }`;
         goTo(target as GoToTarget);
       }
     }
@@ -116,10 +124,11 @@ function CalendarContainer({
   const calendarDays = [];
   let curCalendarDay = daysRange[0];
   for (let i = 0; i < numOfDays; i++) {
-    const daysEvents = events.filter((event) => !event.isCancelled &&
+    const daysEvents = events.filter((event) =>
+      !event.isCancelled &&
       dayjs(event.startTime).isSame(dayjs(curCalendarDay), 'date')
-      ? event
-      : undefined
+        ? event
+        : undefined
     );
     calendarDays.push(
       <CalendarColumn
@@ -145,8 +154,8 @@ function CalendarContainer({
     <CalendarWrapper
       id="containerDiv"
       key="containerDiv"
-      onTouchStart={e => setTouchStart(e)}
-      onTouchEnd={e => setTouchEnd(e)}
+      onTouchStart={(e) => setTouchStart(e)}
+      onTouchEnd={(e) => setTouchEnd(e)}
     >
       <CalendarScale
         scaleWidth={scaleWidth}

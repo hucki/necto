@@ -21,10 +21,10 @@ export const getAllEmployees = async (
         },
         teams: {
           select: {
-            team: true
-          }
+            team: true,
+          },
         },
-        user: true
+        user: true,
       },
     });
     res.json(employees);
@@ -44,7 +44,7 @@ export const getAllActiveEmployees = async (
       where: {
         tenantId,
         validUntil: null,
-       },
+      },
       include: {
         contract: {
           where: {
@@ -53,10 +53,10 @@ export const getAllActiveEmployees = async (
         },
         teams: {
           select: {
-            team: true
-          }
+            team: true,
+          },
         },
-        user: true
+        user: true,
       },
     });
     res.json(employees);
@@ -85,7 +85,7 @@ export const addEmployee = async (
           create: {
             tenantId: tenantId,
           },
-        }
+        },
       },
       include: {
         contract: {
@@ -118,7 +118,7 @@ export const addEmployee = async (
  * update one Employee
  *  @param {Employee} req.body
  */
- export const updateEmployee = async (
+export const updateEmployee = async (
   req: Request,
   res: Response,
   next: NextFunction

@@ -1,5 +1,5 @@
-import { InstitutionContactData } from "./ContactData";
-import { Patient } from "./Patient";
+import { InstitutionContactData } from './ContactData';
+import { Patient } from './Patient';
 
 export type Institution = {
   uuid?: string;
@@ -11,9 +11,9 @@ export type Institution = {
   contactData?: InstitutionContactData[];
   patients?: Patient[];
   archived?: boolean;
-}
+};
 
 export type InstitutionInput = Institution & {
   telephoneNumber?: string;
   mailAddress?: string;
-}
+};

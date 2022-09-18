@@ -155,8 +155,8 @@ export const getDaysEvents = async (
             },
           },
           {
-            isDeleted: false
-          }
+            isDeleted: false,
+          },
         ],
       },
       include: {
@@ -165,7 +165,10 @@ export const getDaysEvents = async (
     });
     for (let i = 0; i < events.length; i++) {
       if (events[i].patient) {
-        events[i].patient = decryptPatient({patient: events[i].patient, fields: encryptedPatientFields})
+        events[i].patient = decryptPatient({
+          patient: events[i].patient,
+          fields: encryptedPatientFields,
+        });
       }
     }
     res.json(events);
@@ -205,7 +208,10 @@ export const getWeeksEvents = async (
     });
     for (let i = 0; i < events.length; i++) {
       if (events[i].patient) {
-        events[i].patient = decryptPatient({patient: events[i].patient, fields: encryptedPatientFields})
+        events[i].patient = decryptPatient({
+          patient: events[i].patient,
+          fields: encryptedPatientFields,
+        });
       }
     }
     res.json(events);
@@ -227,8 +233,8 @@ export const getAllEvents = async (
   try {
     const events = await prisma.event.findMany({
       where: {
-        isDeleted: false
-      }
+        isDeleted: false,
+      },
     });
     res.json(events);
     res.status(200);
@@ -249,8 +255,8 @@ export const getAllDeletedEvents = async (
   try {
     const events = await prisma.event.findMany({
       where: {
-        isDeleted: true
-      }
+        isDeleted: true,
+      },
     });
     res.json(events);
     res.status(200);

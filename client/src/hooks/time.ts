@@ -2,7 +2,10 @@ import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 
 function msUntilNext() {
-  return dayjs().startOf('second').add(1,'second').diff(dayjs(),'milliseconds');
+  return dayjs()
+    .startOf('second')
+    .add(1, 'second')
+    .diff(dayjs(), 'milliseconds');
 }
 
 export function useCurrentTime() {
