@@ -7,6 +7,7 @@ import { Patient } from '../types/Patient';
  * creates a contract to be printed and signed by
  * the patient before starting the therapy
  * @param {Patient} p - patient to print the contract for
+ * @param {Company} c - company details to print the contract for
  * @returns {jsPDF} jsPDF doc object
  */
 export const contract = (p: Patient, c: Company | undefined): jsPDF => {
