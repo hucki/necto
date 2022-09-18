@@ -6,7 +6,6 @@ import {
   GridItem,
   SimpleGrid,
 } from '@chakra-ui/react';
-// import jsPDF from 'jspdf';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
@@ -156,7 +155,9 @@ export const PersonForm = ({
     }
   };
 
-  const personContract = contract(person, currentCompany);
+  const patientContract = (person as Patient).hasContract
+    ? undefined
+    : contract(person, currentCompany);
   // const contractOutput = personContract.output('datauristring');
 
   const contractFileName = `contract_${(
@@ -164,9 +165,6 @@ export const PersonForm = ({
     '_' +
     person.firstName
   ).replace(' ', '')}.pdf`;
-  const downloadContract = () => {
-    personContract.save(contractFileName);
-  };
   const patientCheckboxes = () => {
     return (
       <ModalFormGroup
@@ -202,7 +200,15 @@ export const PersonForm = ({
           />
           <FormLabel>{t('label.hasContract')}</FormLabel>
         </FormControl>
-        <Button onClick={() => downloadContract()}>PDF</Button>
+        {patientContract && (
+          <Button
+            onClick={() => {
+              patientContract.save(contractFileName);
+            }}
+          >
+            PDF
+          </Button>
+        )}
       </ModalFormGroup>
     );
   };
