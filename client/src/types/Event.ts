@@ -10,6 +10,16 @@ export type EventType =
   | 'leave'
   | 'roomBooking';
 
+export type LeaveType =
+  | 'sick'
+  | 'sickChild'
+  | 'paidVacation'
+  | 'unpaidLeave'
+  | 'parentalLeave'
+  | 'special';
+
+export type LeaveStatus = 'requested' | 'cancelled' | 'approved';
+
 export type Event = {
   uuid?: string;
   userId: string;
@@ -39,6 +49,10 @@ export type Event = {
   employee?: Employee;
 };
 
+export type Leave = Event & {
+  leaveStatus: LeaveStatus;
+  leaveType: LeaveType;
+};
 export type Appointment = {
   uuid?: string;
   rowId: string;
