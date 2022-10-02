@@ -1,16 +1,8 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ModalOverlay, ModalFooter, IconButton } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import {
-  Button,
-  ErrorMessage,
-  EventModalBody,
-  EventModalContent,
-  EventModalHeader,
-} from '../Library';
+import { Button, ErrorMessage } from '../Library';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
 import utc from 'dayjs/plugin/utc';
@@ -27,8 +19,8 @@ import CalendarEventForm from './CalendarEventForm';
 import { checkOverlap } from '../../helpers/eventChecker';
 import { rrulestr } from 'rrule';
 import { useViewport } from '../../hooks/useViewport';
-import { EventModalFooter } from '../Library/Modal';
 import { useHolidays } from '../../hooks/useHolidays';
+import CalendarItemModal from './CalendarItemModal';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -165,125 +157,120 @@ function CalendarEventInput({
     }
   }
 
-  return (
-    <div>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        scrollBehavior="inside"
-        size={isMobile ? 'full' : undefined}
-      >
-        <ModalOverlay
-          css={{
-            backgroundColor: 'rgba(0,0,0,0.3)',
+  const ModalHeaderContent = () => {
+    return (
+      <>
+        <div>
+          <div className="modal-title">
+            {t(
+              `calendar.event.${
+                newEvent.type === 'note' ? 'noteTitle' : 'newAppointmentTitle'
+              }`
+            )}{' '}
+            {ressource?.displayName
+              ? t('dict.for') + ' ' + ressource.displayName
+              : ''}
+          </div>
+          <div
+            className="modal-subtitle"
+            style={{
+              fontSize: '0.8rem',
+            }}
+          >
+            {newEvent.startTime.format('llll')}
+          </div>
+        </div>
+        {newEvent.isHomeVisit && (
+          <FaHouseUser
+            style={{
+              width: '2rem',
+              height: '2rem',
+            }}
+          />
+        )}
+        {newEvent.isRecurring && (
+          <FaLink
+            style={{
+              width: '2rem',
+              height: '2rem',
+            }}
+          />
+        )}
+        {newEvent.isDiagnostic && (
+          <FaCommentMedical
+            style={{
+              width: '2rem',
+              height: '2rem',
+            }}
+          />
+        )}
+        <IconButton
+          aria-label="close modal"
+          icon={<FaTimes />}
+          onClick={onClose}
+        />
+      </>
+    );
+  };
+
+  const ModalFooterContent = () => {
+    return (
+      <>
+        <div
+          className="row"
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'end',
           }}
         >
-          <EventModalContent>
-            <EventModalHeader
-              bgColor={
-                newEvent.type === 'note' ? 'note' : newEvent?.bgColor || 'green'
-              }
-            >
-              <div>
-                <div className="modal-title">
-                  {t(
-                    `calendar.event.${
-                      newEvent.type === 'note'
-                        ? 'noteTitle'
-                        : 'newAppointmentTitle'
-                    }`
-                  )}{' '}
-                  {ressource?.displayName
-                    ? t('dict.for') + ' ' + ressource.displayName
-                    : ''}
-                </div>
-                <div
-                  className="modal-subtitle"
-                  css={{
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {newEvent.startTime.format('llll')}
-                </div>
-              </div>
-              {newEvent.isHomeVisit && (
-                <FaHouseUser
-                  css={{
-                    width: '2rem',
-                    height: '2rem',
-                  }}
-                />
-              )}
-              {newEvent.isRecurring && (
-                <FaLink
-                  css={{
-                    width: '2rem',
-                    height: '2rem',
-                  }}
-                />
-              )}
-              {newEvent.isDiagnostic && (
-                <FaCommentMedical
-                  css={{
-                    width: '2rem',
-                    height: '2rem',
-                  }}
-                />
-              )}
-              <IconButton
-                aria-label="close modal"
-                icon={<FaTimes />}
-                onClick={onClose}
-              />
-            </EventModalHeader>
-            <EventModalBody
-              bgColor={newEvent.type === 'note' ? 'note' : undefined}
-            >
-              <CalendarEventForm
-                event={newEvent}
-                setMessage={setMessage}
-                handleChangedEvent={handleChangedEvent}
-              />
-              {message && <ErrorMessage error={{ message }} />}
-            </EventModalBody>
-            <EventModalFooter
-              bgColor={newEvent.type === 'note' ? 'note' : undefined}
-            >
-              <div
-                className="row"
-                css={{
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'end',
-                }}
-              >
-                <Button
-                  icon={<FaTimes />}
-                  aria-label="close modal"
-                  type="button"
-                  onClick={onClose}
-                  size="sm"
-                  colorScheme="blue"
-                  variant="outline"
-                >
-                  {t('button.close')}
-                </Button>
-                <Button
-                  aria-label="save changes"
-                  type="button"
-                  size="sm"
-                  colorScheme="blue"
-                  onClick={handleSubmit}
-                >
-                  {t('button.save')}
-                </Button>
-              </div>
-            </EventModalFooter>
-          </EventModalContent>
-        </ModalOverlay>
-      </Modal>
-    </div>
+          <Button
+            icon={<FaTimes />}
+            aria-label="close modal"
+            type="button"
+            onClick={onClose}
+            size="sm"
+            colorScheme="blue"
+            variant="outline"
+          >
+            {t('button.close')}
+          </Button>
+          <Button
+            aria-label="save changes"
+            type="button"
+            size="sm"
+            colorScheme="blue"
+            onClick={handleSubmit}
+          >
+            {t('button.save')}
+          </Button>
+        </div>
+      </>
+    );
+  };
+  return (
+    <CalendarItemModal
+      isOpen={isOpen}
+      onClose={onClose}
+      modalHeader={<ModalHeaderContent />}
+      headerBgColor={
+        newEvent.type === 'note' ? 'note' : newEvent?.bgColor || 'green'
+      }
+      modalBody={
+        <>
+          <CalendarEventForm
+            event={newEvent}
+            setMessage={setMessage}
+            handleChangedEvent={handleChangedEvent}
+          />
+          {message && <ErrorMessage error={{ message }} />}
+        </>
+      }
+      bodyBgColor={newEvent.type === 'note' ? 'note' : undefined}
+      modalFooter={<ModalFooterContent />}
+      size={isMobile ? 'full' : undefined}
+    />
   );
 }
 
