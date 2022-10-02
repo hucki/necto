@@ -84,7 +84,7 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
         alignItems: 'flex-start',
       }}
     >
-      <FilterBar hasDayWeekOption />
+      <FilterBar hasDayWeekOption hasCalendarOption />
       {/* <Flex alignItems="center" maxW="100%">
         <Label htmlFor="view">{t('calendar.view.label')}</Label>
         <Select name="view" value={currentView} onChange={onCurrentViewChange}>
