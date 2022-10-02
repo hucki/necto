@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ReactNode, useEffect } from 'react';
 import { useState } from 'react';
-import { CalendarView } from './types';
+import { CalendarOption, CalendarView } from './types';
 import { Company } from '../../types/Company';
 import { Team } from '../../types/Employee';
 import { filterContext } from '.';
@@ -17,6 +17,8 @@ export const FilterProvider: FunctionComponent = ({
     companies,
   } = useAllCompanies();
   const [calendarView, setCalendarView] = useState<CalendarView>('day');
+  const [currentCalendarOption, setCurrentCalendarOption] =
+    useState<CalendarOption>('appointments');
   const [currentCompany, setCurrentCompany] = useState<Company>(
     () => companies[0]
   );
@@ -40,6 +42,8 @@ export const FilterProvider: FunctionComponent = ({
         setCurrentBuildingId,
         currentTeam,
         setCurrentTeam,
+        currentCalendarOption,
+        setCurrentCalendarOption,
       }}
     >
       {children}

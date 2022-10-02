@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import { FilterContext } from './types';
 
 export const defaultFilterContextProps: FilterContext = {
-  calendarView: 'day',
+  calendarView: 'week',
   setCalendarView: () => undefined,
   currentCompany: undefined,
   setCurrentCompany: () => undefined,
@@ -10,6 +10,8 @@ export const defaultFilterContextProps: FilterContext = {
   setCurrentTeam: () => undefined,
   currentBuildingId: undefined,
   setCurrentBuildingId: () => undefined,
+  currentCalendarOption: 'appointments',
+  setCurrentCalendarOption: () => undefined,
 };
 
 export const filterContext = createContext<FilterContext>(

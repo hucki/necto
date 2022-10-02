@@ -11,6 +11,7 @@ interface FilterBarProps {
   hasCompanyFilter?: boolean;
   hasBuildingFilter?: boolean;
   hasDayWeekOption?: boolean;
+  hasCalendarOption?: boolean;
 }
 
 const FilterBar = ({
@@ -18,6 +19,7 @@ const FilterBar = ({
   hasBuildingFilter = false,
   hasCompanyFilter = false,
   hasDayWeekOption = false,
+  hasCalendarOption = false,
 }: FilterBarProps) => {
   const { t } = useTranslation();
   const {
@@ -29,6 +31,8 @@ const FilterBar = ({
     setCurrentBuildingId,
     calendarView,
     setCalendarView,
+    currentCalendarOption,
+    setCurrentCalendarOption,
   } = useFilter();
 
   const { isLoading: isLoadingTeams, error, teams } = useAllTeams();
@@ -73,6 +77,10 @@ const FilterBar = ({
 
   function onDayWeekChangeHandler(event: any) {
     setCalendarView(event.target.value);
+  }
+
+  function onAppointmentsLeaveChangeHandler(event: any) {
+    setCurrentCalendarOption(event.target.value);
   }
 
   return (
@@ -135,6 +143,23 @@ const FilterBar = ({
           >
             <option value="day">{t('calendar.view.day')}</option>
             <option value="week">{t('calendar.view.week')}</option>
+          </Select>
+        </>
+      )}
+      {hasCalendarOption && (
+        <>
+          <Label htmlFor="AppointmentsLeave">
+            {t('calendar.option.label')}
+          </Label>
+          <Select
+            name="AppointmentsLeave"
+            value={currentCalendarOption}
+            onChange={onAppointmentsLeaveChangeHandler}
+          >
+            <option value="appointments">
+              {t('calendar.option.appointments')}
+            </option>
+            <option value="leave">{t('calendar.option.leave')}</option>
           </Select>
         </>
       )}
