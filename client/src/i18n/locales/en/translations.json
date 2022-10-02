@@ -6,6 +6,11 @@
       "week": "Week",
       "month": "Month"
     },
+    "option": {
+      "label": "mode",
+      "appointments": "Appointments",
+      "leave": "Leave"
+    },
     "event": {
       "newAppointmentTitle": "New Appointment",
       "editAppointmentTitle": "Appointment",
@@ -24,6 +29,16 @@
       "start": "start",
       "end": "end",
       "previewRecurringApointments": "preview recurring appointments"
+    },
+    "leave": {
+      "type": {
+        "sick": "sick leave",
+        "sickChild": "child sick leave",
+        "paidVacation": "paid vacation",
+        "unpaidLeave": "unpaid leave",
+        "parentalLeave": "parental leave",
+        "special": "special leave"
+      }
     }
   },
   "button": {

@@ -6,6 +6,11 @@
       "week": "Woche",
       "month": "Monat"
     },
+    "option": {
+      "label": "Eingabe",
+      "appointments": "Termine",
+      "leave": "Abwesenheit"
+    },
     "event": {
       "noteTitle": "📝 Notiz",
       "newAppointmentTitle": "Neuer Termin",
@@ -25,6 +30,16 @@
       "start": "Start",
       "end": "Ende",
       "previewRecurringApointments": "Vorschau Terminserie"
+    },
+    "leave": {
+      "type": {
+        "sick": "Krank",
+        "sickChild": "Kind Krank",
+        "paidVacation": "Urlaub",
+        "unpaidLeave": "unbez. Urlaub",
+        "parentalLeave": "Elternzeit",
+        "special": "special"
+      }
     }
   },
   "button": {
