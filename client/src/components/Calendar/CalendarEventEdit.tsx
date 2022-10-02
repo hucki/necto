@@ -17,9 +17,9 @@ import {
   Button,
   ControlWrapper,
   ErrorMessage,
-  EventModalBody,
-  EventModalContent,
-  EventModalHeader,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
   // RadioGroup,
 } from '../Library';
 import dayjs from 'dayjs';
@@ -49,7 +49,7 @@ import CalendarEventForm from './CalendarEventForm';
 import de from 'date-fns/locale/de';
 import { checkOverlap } from '../../helpers/eventChecker';
 import { useViewport } from '../../hooks/useViewport';
-import { EventModalFooter } from '../Library/Modal';
+import { ModalFooter } from '../Library/Modal';
 import {
   RiCheckboxBlankLine,
   RiCheckboxLine,
@@ -187,8 +187,8 @@ function CalendarEventEdit({
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}
         >
-          <EventModalContent>
-            <EventModalHeader
+          <ModalContent>
+            <ModalHeader
               bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}
             >
               {changedEvent.isDone !== true ? (
@@ -265,8 +265,8 @@ function CalendarEventEdit({
                 icon={<FaTimes />}
                 onClick={onClose}
               />
-            </EventModalHeader>
-            <EventModalBody bgColor={isNote ? 'note' : undefined}>
+            </ModalHeader>
+            <ModalBody bgColor={isNote ? 'note' : undefined}>
               {isReadOnly && (
                 <CalendarEventView
                   isNote={isNote}
@@ -287,9 +287,9 @@ function CalendarEventEdit({
                 />
               )}
               {message && <ErrorMessage error={{ message }} />}
-            </EventModalBody>
+            </ModalBody>
 
-            <EventModalFooter bgColor={isNote ? 'note' : undefined}>
+            <ModalFooter bgColor={isNote ? 'note' : undefined}>
               <div
                 className="row"
                 css={{
@@ -357,8 +357,8 @@ function CalendarEventEdit({
                   )}
                 </ControlWrapper>
               </div>
-            </EventModalFooter>
-          </EventModalContent>
+            </ModalFooter>
+          </ModalContent>
         </ModalOverlay>
       </Modal>
     </div>
