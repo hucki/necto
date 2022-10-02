@@ -18,6 +18,7 @@ import {
 } from '../Library';
 import { useSwipe } from '../../hooks/useSwipe';
 import { filterContext } from '../../providers/filter';
+import CalendarLeaveInput from './CalendarLeaveInput';
 
 interface CalendarInputProps {
   events: Event[];
@@ -43,9 +44,10 @@ function CalendarContainer({
   const daysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const prevDaysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const { goTo } = useContext(UserDateContext);
-  const { calendarView } = useContext(filterContext);
+  const { calendarView, currentCalendarOption } = useContext(filterContext);
   const { setTouchStart, setTouchEnd, direction } = useSwipe();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const eventModal = useDisclosure();
+  const leaveModal = useDisclosure();
   const [clickedId, setClickedId] = useState<string | undefined>(undefined);
   const [clickedDateTime, setClickedDateTime] = useState(dayjs());
   const [numOfDays] = useState(
@@ -60,9 +62,13 @@ function CalendarContainer({
   );
   const scaleWidth = '1rem';
   const isToday = dayjs().isBetween(daysRange[0], daysRange[1], 'date', '[]');
-  const handleCloseInput = () => {
+  const handleCloseEventInput = () => {
     setClickedId(undefined);
-    onClose();
+    eventModal.onClose();
+  };
+  const handleCloseLeaveInput = () => {
+    setClickedId(undefined);
+    leaveModal.onClose();
   };
   useEffect(() => {
     if (direction) {
@@ -142,7 +148,11 @@ function CalendarContainer({
         setClickedId={setClickedId}
         clickedDateTime={clickedDateTime}
         setClickedDateTime={setClickedDateTime}
-        openModal={onOpen}
+        openModal={
+          currentCalendarOption === 'appointments'
+            ? eventModal.onOpen
+            : leaveModal.onOpen
+        }
         readOnly={readOnly}
         columnHeaderFormat={columnHeaderFormat}
         columnSubHeaderContent={columnSubHeaderContent}
@@ -170,16 +180,26 @@ function CalendarContainer({
         {calendarScale}
       </CalendarScale>
       {calendarDays}
-      {clickedId && (
-        <CalendarEventInput
-          uuid={clickedId}
-          ressource={ressources.filter((r) => r.uuid === clickedId)[0]}
-          dateTime={clickedDateTime}
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={handleCloseInput}
-        />
-      )}
+      {clickedId ? (
+        currentCalendarOption === 'appointments' ? (
+          <CalendarEventInput
+            uuid={clickedId}
+            ressource={ressources.filter((r) => r.uuid === clickedId)[0]}
+            dateTime={clickedDateTime}
+            isOpen={eventModal.isOpen}
+            onOpen={eventModal.onOpen}
+            onClose={handleCloseEventInput}
+          />
+        ) : (
+          <CalendarLeaveInput
+            uuid={clickedId}
+            ressource={ressources.filter((r) => r.uuid === clickedId)[0]}
+            dateTime={clickedDateTime}
+            isOpen={leaveModal.isOpen}
+            onClose={handleCloseLeaveInput}
+          />
+        )
+      ) : null}
     </CalendarWrapper>
   );
 }
