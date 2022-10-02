@@ -42,7 +42,7 @@ import {
   IconButton,
   ControlWrapper,
 } from './Buttons';
-import { EventModalContent, EventModalHeader, EventModalBody } from './Modal';
+import { ModalContent, ModalHeader, ModalBody, ModalFooter } from './Modal';
 import { TabPanel } from './Tabs';
 
 export {
@@ -82,8 +82,9 @@ export {
   DatePicker,
   RadioGroup,
   ControlWrapper,
-  EventModalHeader,
-  EventModalContent,
-  EventModalBody,
+  ModalHeader,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
   TabPanel,
 };

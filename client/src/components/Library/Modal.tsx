@@ -1,9 +1,14 @@
 import * as mq from '../../styles/media-queries';
-import { ModalContent, ModalHeader, ModalBody } from '@chakra-ui/react';
+import {
+  ModalContent as ChakraModalContent,
+  ModalHeader as ChakraModalHeader,
+  ModalBody as ChakraModalBody,
+  ModalFooter as ChakraModalFooter,
+} from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import { BgColor } from '../../types/Colors';
 
-const EventModalContent = styled(ModalContent)({
+const ModalContent = styled(ChakraModalContent)({
   display: 'grid',
   gridTemplateRows: '1fr 6fr 1fr',
   maxWidth: '450px',
@@ -17,10 +22,10 @@ const EventModalContent = styled(ModalContent)({
   // },
 });
 
-interface EventModalHeaderProps {
+interface ModalHeaderProps {
   bgColor?: BgColor;
 }
-const EventModalHeader = styled(ModalHeader)(
+const ModalHeader = styled(ChakraModalHeader)(
   {
     fontSize: '1.1rem',
     fontWeight: 'bold',
@@ -30,7 +35,7 @@ const EventModalHeader = styled(ModalHeader)(
     alignItems: 'center',
     padding: '0.5rem',
   },
-  ({ bgColor = 'green' }: EventModalHeaderProps) => {
+  ({ bgColor = 'green' }: ModalHeaderProps) => {
     return {
       backgroundColor: `var(--bg${
         bgColor[0].toUpperCase() + bgColor.substring(1)
@@ -39,13 +44,13 @@ const EventModalHeader = styled(ModalHeader)(
   }
 );
 
-const EventModalBody = styled(ModalBody)(
+const ModalBody = styled(ChakraModalBody)(
   {
     padding: '0.5rem',
     display: 'flex',
     flexDirection: 'column',
   },
-  ({ bgColor }: EventModalHeaderProps) => {
+  ({ bgColor }: ModalHeaderProps) => {
     if (bgColor) {
       return {
         backgroundColor: `var(--bg${
@@ -55,13 +60,13 @@ const EventModalBody = styled(ModalBody)(
     }
   }
 );
-const EventModalFooter = styled(ModalBody)(
+const ModalFooter = styled(ChakraModalFooter)(
   {
     padding: '0.5rem',
     display: 'flex',
     flexDirection: 'column',
   },
-  ({ bgColor }: EventModalHeaderProps) => {
+  ({ bgColor }: ModalHeaderProps) => {
     if (bgColor) {
       return {
         backgroundColor: `var(--bg${
@@ -71,9 +76,4 @@ const EventModalFooter = styled(ModalBody)(
     }
   }
 );
-export {
-  EventModalContent,
-  EventModalHeader,
-  EventModalBody,
-  EventModalFooter,
-};
+export { ModalContent, ModalHeader, ModalBody, ModalFooter };
