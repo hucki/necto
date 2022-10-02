@@ -146,6 +146,8 @@ model Event {
   ressourceId             String?                  @db.Uuid
   title                   String?                  @db.VarChar
   type                    String?                  @db.VarChar
+  leaveStatus             String?                  @db.VarChar(64) @default("")
+  leaveType               String?                  @db.VarChar(64) @default("")
   isDiagnostic            Boolean                  @default(false)
   isHomeVisit             Boolean?
   isDone                  Boolean?                 @default(false)
