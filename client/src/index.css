@@ -52,6 +52,11 @@ code {
   --bgNoteBorder: darkkhaki;
   --bgNote: khaki;
   --bgNoteGradient: linear-gradient(135deg, khaki 90%, darkgrey);
+
+  --bgLeaveText: grey;
+  --bgLeaveBorder: black;
+  --bgLeave: rgb(47, 79, 79, 0.2);
+  --bgLeaveGradient: linear-gradient(135deg, khaki 90%, darkgrey);
 }
 
 .box {
