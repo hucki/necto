@@ -7,7 +7,7 @@ import {
   queryCache,
 } from 'react-query';
 import { client } from '../services/ApiClient';
-import { CancellationReason, Event } from '../types/Event';
+import { CancellationReason, Event, LeaveStatus } from '../types/Event';
 
 export function useEvent(
   id: number
@@ -45,7 +45,7 @@ export function useDeleteEvent(): MutationResultPair<
 
 export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
   const eventsQuery = useQuery('events', async () => {
-    return client<Event[]>('events');
+    return client<Event[]>('events/a');
   });
 
   const events = eventsQuery.data ?? [];
@@ -62,6 +62,20 @@ export function useWeeksEvents(
 ): QueryResult<Event[]> & { rawEvents: Event[] } {
   const eventsQuery = useQuery(['events', year, week], async () => {
     return client<Event[]>(`events/w/${year}/${week}`);
+  });
+
+  const rawEvents = eventsQuery.data ?? [];
+  return {
+    rawEvents,
+    ...eventsQuery,
+  };
+}
+
+export function useLeavesByStatus(
+  leaveStatus: LeaveStatus
+): QueryResult<Event[]> & { rawEvents: Event[] } {
+  const eventsQuery = useQuery(['events', leaveStatus], async () => {
+    return client<Event[]>(`leaves/${leaveStatus}`);
   });
 
   const rawEvents = eventsQuery.data ?? [];
@@ -113,6 +127,24 @@ export function useUpdateEvent(): MutationResultPair<
   const updateEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client<Event>(`events/${event.uuid}`, {
       data: event,
+      method: 'PATCH',
+    });
+  };
+  return useMutation(updateEvent, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('events');
+    },
+  });
+}
+
+export function useApproveLeave(): MutationResultPair<
+  Event,
+  Error,
+  { event: Event },
+  string
+> {
+  const updateEvent = async ({ event }: { event: Event }): Promise<Event> => {
+    return client<Event>(`leaves/${event.uuid}`, {
       method: 'PATCH',
     });
   };
