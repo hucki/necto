@@ -83,7 +83,7 @@ function CalendarLeaveEdit({
                     fontSize: '0.8rem',
                   }}
                 >
-                  {dayjs(leave.startTime).format('llll')}
+                  {dayjs(leave.startTime).format('ll')}
                 </div>
               </div>
               <IconButton
