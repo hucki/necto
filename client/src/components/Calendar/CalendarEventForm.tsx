@@ -31,6 +31,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import de from 'date-fns/locale/de';
 import { useAllPatients } from '../../hooks/patient';
+import { getNewUTCDate } from '../../helpers/dataConverter';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -49,13 +50,6 @@ function CalendarEventForm({
 }: CalendarEventFormProps): JSX.Element {
   const { t } = useTranslation();
   const { isLoading: isLoadingPatients, error, patients } = useAllPatients();
-
-  const getNewUTCDate = (dateTime: Dayjs) => {
-    const dt = dayjs.utc(dateTime);
-    return new Date(
-      Date.UTC(dt.year(), dt.month(), dt.date(), dt.hour(), dt.minute(), 0)
-    );
-  };
 
   // Form state
   const [currentEvent, setCurrentEvent] = useState<Event>(() => ({ ...event }));
