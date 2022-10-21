@@ -38,6 +38,9 @@
         "unpaidLeave": "unpaid leave",
         "parentalLeave": "parental leave",
         "special": "special leave"
+      },
+      "status": {
+        "requested": "requested"
       }
     }
   },

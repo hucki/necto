@@ -39,6 +39,9 @@
         "unpaidLeave": "unbez. Urlaub",
         "parentalLeave": "Elternzeit",
         "special": "special"
+      },
+      "status": {
+        "requested": "beantragt"
       }
     }
   },
