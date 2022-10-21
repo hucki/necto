@@ -21,6 +21,7 @@ import { rrulestr } from 'rrule';
 import { useViewport } from '../../hooks/useViewport';
 import { useHolidays } from '../../hooks/useHolidays';
 import CalendarItemModal from './CalendarItemModal';
+import { ModalFooterControls } from './ModalFooterControls';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -213,42 +214,6 @@ function CalendarEventInput({
     );
   };
 
-  const ModalFooterContent = () => {
-    return (
-      <>
-        <div
-          className="row"
-          style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'end',
-          }}
-        >
-          <Button
-            icon={<FaTimes />}
-            aria-label="close modal"
-            type="button"
-            onClick={onClose}
-            size="sm"
-            colorScheme="blue"
-            variant="outline"
-          >
-            {t('button.close')}
-          </Button>
-          <Button
-            aria-label="save changes"
-            type="button"
-            size="sm"
-            colorScheme="blue"
-            onClick={handleSubmit}
-          >
-            {t('button.save')}
-          </Button>
-        </div>
-      </>
-    );
-  };
   return (
     <CalendarItemModal
       isOpen={isOpen}
@@ -268,7 +233,9 @@ function CalendarEventInput({
         </>
       }
       bodyBgColor={newEvent.type === 'note' ? 'note' : undefined}
-      modalFooter={<ModalFooterContent />}
+      modalFooter={
+        <ModalFooterControls onClose={onClose} onSubmit={handleSubmit} />
+      }
       size={isMobile ? 'full' : undefined}
     />
   );
