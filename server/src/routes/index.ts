@@ -116,6 +116,9 @@ router.post('/events', eventController.addEvent);
 router.patch('/events/:eventId', eventController.updateEvent);
 router.delete('/events/:eventId', eventController.deleteEvent);
 
+// leave routes
+router.get('/leaves/:leaveStatus', eventController.getLeavesByStatus);
+router.patch('/leaves/:leaveId', eventController.approveLeave);
 // patient routes
 //router.get('/patients/:eventId', eventController.getPatients);
 router.get('/patients', patientController.getAllPatients);

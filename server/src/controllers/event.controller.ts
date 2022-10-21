@@ -5,6 +5,7 @@ import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import { decryptPatient } from '../utils/crypto';
 import { encryptedPatientFields } from './patient.controller';
+import { Event } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
@@ -25,6 +26,8 @@ export const addEvent = async (
         ressourceId: req.body.ressourceId,
         title: req.body.title,
         type: req.body.type,
+        leaveType: req.body.leaveType,
+        leaveStatus: req.body.leaveStatus,
         isDiagnostic: req.body.isDiagnostic,
         isHomeVisit: req.body.isHomeVisit,
         isAllDay: req.body.isAllDay,
@@ -72,6 +75,8 @@ export const updateEvent = async (
         ressourceId: req.body.ressourceId,
         title: req.body.title,
         type: req.body.type,
+        leaveType: req.body.leaveType,
+        leaveStatus: req.body.leaveStatus,
         isDiagnostic: req.body.isDiagnostic,
         isHomeVisit: req.body.isHomeVisit,
         isAllDay: req.body.isAllDay,
@@ -138,7 +143,7 @@ export const getDaysEvents = async (
     )
       .set('hour', 0)
       .set('minute', 0)
-      .set('second', 1);
+      .set('second', 0);
     const endDate = startDate.add(24, 'h');
 
     const events = await prisma.event.findMany({
@@ -237,6 +242,83 @@ export const getAllEvents = async (
       },
     });
     res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * get Leaves by status
+ *  @param {Event['leaveStatus']} req.params.leaveStatus
+ */
+export const getLeavesByStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const events = await prisma.event.findMany({
+      where: {
+        isDeleted: false,
+        type: 'leave',
+        leaveStatus: req.params.leaveStatus,
+      },
+      include: {
+        employee: true,
+      },
+    });
+    res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * approve Leave
+ *  @param {Event['id']} req.params.leaveId
+ */
+export const approveLeave = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const leaveId = req.params.leaveId;
+    const approvedLeave = await prisma.event.update({
+      where: {
+        uuid: leaveId,
+      },
+      data: {
+        leaveStatus: 'approved',
+      },
+      include: {
+        childEvents: true,
+      },
+    });
+    if (
+      approvedLeave.leaveStatus === 'approved' &&
+      approvedLeave.childEvents.length
+    ) {
+      for (let i = 0; i < approvedLeave.childEvents.length; i++) {
+        await prisma.event.update({
+          where: {
+            uuid: approvedLeave.childEvents[i].uuid,
+          },
+          data: {
+            leaveStatus: 'approved',
+          },
+        });
+      }
+    }
+    const result = await prisma.event.findUnique({
+      where: { uuid: leaveId },
+      include: { childEvents: true },
+    });
+    res.json(result);
     res.status(200);
     return;
   } catch (e) {
