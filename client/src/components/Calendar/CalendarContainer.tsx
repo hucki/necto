@@ -95,6 +95,7 @@ function CalendarContainer({
   // calculate boundaries to fit all events
   events.forEach((event) => {
     // FIXME: this resets only the scale but not the CalendarColumns
+    if (event.isAllDay) return;
     const newStart = dayjs(event.startTime).hour();
     const newEnd = dayjs(event.endTime).hour();
     if (currentHoursInterval === undefined) {
