@@ -26,6 +26,8 @@ export type Event = {
   ressourceId: string;
   title: string;
   type: EventType;
+  leaveStatus?: LeaveStatus;
+  leaveType?: LeaveType;
   isDiagnostic: boolean;
   isHomeVisit: boolean;
   isAllDay: boolean;
@@ -49,10 +51,6 @@ export type Event = {
   employee?: Employee;
 };
 
-export type Leave = Event & {
-  leaveStatus: LeaveStatus;
-  leaveType: LeaveType;
-};
 export type Appointment = {
   uuid?: string;
   rowId: string;
