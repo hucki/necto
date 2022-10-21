@@ -1,5 +1,6 @@
 import { TeamMember } from '../types/User';
 import { Event, Appointment } from '../types/Event';
+import dayjs, { Dayjs } from 'dayjs';
 
 export function appointment2Event(
   appointment: Appointment,
@@ -58,3 +59,10 @@ export function events2Appointments(
   }
   return newAppointments;
 }
+
+export const getNewUTCDate = (dateTime: Dayjs) => {
+  const dt = dayjs.utc(dateTime);
+  return new Date(
+    Date.UTC(dt.year(), dt.month(), dt.date(), dt.hour(), dt.minute(), 0)
+  );
+};
