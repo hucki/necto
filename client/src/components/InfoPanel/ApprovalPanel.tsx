@@ -1,9 +1,9 @@
-import { Box, Heading, Tag, TagLeftIcon, VStack } from '@chakra-ui/react';
+import { Box, Tag, VStack } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgCheck } from 'react-icons/cg';
-import { useApproveLeave, useLeavesByStatus } from '../../hooks/events';
+import { useApproveLeave } from '../../hooks/events';
 import { Event } from '../../types/Event';
 import { IconButton } from '../Library';
 
@@ -81,17 +81,12 @@ const ListItem = ({ event }: ListItemProps) => {
   );
 };
 
-const ApprovalPanel = () => {
-  const { rawEvents: events } = useLeavesByStatus('requested');
-
-  const uniqueRequests = events.filter(
-    (event) => event.rrule === '' || !event.parentEventId
-  ).length;
-
+interface ApprovalPanelProps {
+  events: Event[];
+}
+const ApprovalPanel = ({ events }: ApprovalPanelProps) => {
   const eventsToApprove = events ? (
-    events
-      .filter((event) => event.rrule === '' || !event.parentEventId)
-      .map((event) => <ListItem key={event.uuid} event={event} />)
+    events.map((event) => <ListItem key={event.uuid} event={event} />)
   ) : (
     <div>no leave to approve</div>
   );
@@ -99,9 +94,6 @@ const ApprovalPanel = () => {
   return (
     <>
       <div className="user-wrapper">
-        <Heading as="h2" size="md" mb="2">
-          offene Anträge ({uniqueRequests})
-        </Heading>
         <VStack>{eventsToApprove}</VStack>
       </div>
     </>

@@ -1,7 +1,6 @@
-import { Box, Heading, Tag, TagLeftIcon, VStack } from '@chakra-ui/react';
+import { Box, Tag, TagLeftIcon, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { CgAdd, CgBlock } from 'react-icons/cg';
-import { useAllUsers } from '../../hooks/user';
 import { MinimalUser } from '../../types/Auth';
 import { User } from '../../types/User';
 import { IconButton } from '../Library';
@@ -99,28 +98,20 @@ const ListItem = ({ user }: ListItemProps) => {
   );
 };
 
-const NewUserPanel = () => {
-  const { users, isLoading } = useAllUsers();
-
-  const usersList = users ? (
-    users
-      .filter((user) => !user?.permissions?.length)
-      .map((user) => (
-        <ListItem
-          key={user.uuid}
-          user={minimizeUser(user as User & { uuid: string; email: string })}
-        />
-      ))
-  ) : (
-    <div>no new users to activate</div>
-  );
+interface NewUserPanelProps {
+  newUsers: User[];
+}
+const NewUserPanel = ({ newUsers }: NewUserPanelProps) => {
+  const usersList = newUsers.map((user) => (
+    <ListItem
+      key={user.uuid}
+      user={minimizeUser(user as User & { uuid: string; email: string })}
+    />
+  ));
 
   return (
     <>
       <div className="user-wrapper">
-        <Heading as="h2" size="md" mb="2">
-          neue User
-        </Heading>
         <VStack>{usersList}</VStack>
       </div>
     </>
