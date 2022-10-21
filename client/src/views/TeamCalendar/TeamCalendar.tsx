@@ -40,7 +40,7 @@ function TeamCalendar(): JSX.Element {
   const ressources: EmployeeRessource[] = teamMembers?.length
     ? teamMembers.map(({ employee }: TeamMemberMapProps) => ({
         uuid: employee.uuid,
-        displayName: employee.firstName,
+        displayName: employee.alias || employee.firstName,
         shortDescription: employee.firstName,
         longDescription: employee.firstName + ' ' + employee.lastName,
         bgColor: employee.contract[0].bgColor,
@@ -61,7 +61,7 @@ function TeamCalendar(): JSX.Element {
       }}
     >
       <Flex>
-        <FilterBar hasTeamsFilter />
+        <FilterBar hasTeamsFilter hasCalendarOption />
       </Flex>
       <CalendarContainer
         readOnly={false}
