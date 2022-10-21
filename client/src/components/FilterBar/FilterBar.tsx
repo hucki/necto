@@ -157,9 +157,9 @@ const FilterBar = ({
             onChange={onAppointmentsLeaveChangeHandler}
           >
             <option value="appointments">
-              {t('calendar.option.appointments')}
+              📅 {t('calendar.option.appointments')}
             </option>
-            <option value="leave">{t('calendar.option.leave')}</option>
+            <option value="leave"> 🏝 {t('calendar.option.leave')}</option>
           </Select>
         </>
       )}
