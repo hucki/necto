@@ -18,7 +18,14 @@ import {
 import CalendarTimeMarker from './CalendarTimeMarker';
 import { useHolidays } from '../../hooks/useHolidays';
 import { DayHeaderLabel, HolidayLabel } from '../Library/Calendar';
+import CalendarLeaveEdit from './CalendarLeaveEdit';
+import CalendarChooseEntryModal from './CalendarChooseEntryModal';
 dayjs.locale('de');
+
+export type OnClickCalendarEventProps = {
+  e: React.MouseEvent<HTMLDivElement, MouseEvent>;
+  event: Event;
+};
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -64,11 +71,39 @@ function CalendarColumn({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [clickedEvent, setClickedEvent] = useState<Event | null>(null);
+  const [clickedMultiEvents, setClickedMultiEvents] = useState<
+    Event[] | undefined
+  >();
 
-  function onClickCalendarEvent(event: Event) {
-    setClickedEvent(event);
+  function onClickCalendarEvent({ e, event }: OnClickCalendarEventProps) {
+    const clickedEventElements = allClickedElements(e.pageX, e.pageY);
+    if (clickedEventElements.length > 1) {
+      setClickedMultiEvents(
+        // clickedEventElements
+        //   .map((el) =>
+        events.filter((ev) =>
+          clickedEventElements.includes(ev.uuid as string)
+        ) || undefined
+      );
+      console.log('check this:', { clickedEventElements, clickedMultiEvents });
+    } else {
+      setClickedEvent(event);
+    }
   }
 
+  const allClickedElements = (x: number, y: number) => {
+    return (
+      document
+        .elementsFromPoint(x, y)
+        .filter((element) => element.id.startsWith('calEntry-'))
+        .map((element) => element.id.substring(9)) || undefined
+    );
+  };
+
+  const onChosenEvent = (e: Event) => {
+    setClickedMultiEvents(undefined);
+    setClickedEvent(e);
+  };
   function closeClickedEventHandler() {
     setClickedEvent(null);
     onClose();
@@ -92,7 +127,9 @@ function CalendarColumn({
     e.preventDefault();
     if (e.target !== e.currentTarget) return;
     setClickedId(e.currentTarget.id.split(/_r/)[1].toString());
-    const clickedDate = dayjs(e.currentTarget.id.split(/_d/)[1].substr(0, 8));
+    const clickedDate = dayjs(
+      e.currentTarget.id.split(/_d/)[1].substring(0, 8)
+    );
     const { height, top } = e.currentTarget.getBoundingClientRect();
     const startOfDay = clickedDate.add(hoursInterval[0], 'hour');
     const pxPerHour = height / numOfHours;
@@ -104,6 +141,12 @@ function CalendarColumn({
   }
 
   function getItemStyle(event: Event) {
+    if (event.isAllDay) {
+      return {
+        top: '0',
+        height: '100%',
+      };
+    }
     const minsToday = numOfHours * 60;
     const minsFromStartOfDay = dayjs(event.startTime).diff(
       dayjs(event.startTime).startOf('day').add(hoursInterval[0], 'h'),
@@ -152,6 +195,26 @@ function CalendarColumn({
   ));
 
   const columnHeader = date.format(columnHeaderFormat);
+
+  const editModal = clickedEvent ? (
+    clickedEvent?.type !== 'leave' ? (
+      <CalendarEventEdit
+        event={clickedEvent}
+        isOpen={true}
+        readOnly={true}
+        onClose={closeClickedEventHandler}
+        onOpen={onOpen}
+      />
+    ) : (
+      <CalendarLeaveEdit
+        leave={clickedEvent}
+        isOpen={true}
+        readOnly={true}
+        onClose={closeClickedEventHandler}
+        onOpen={onOpen}
+      />
+    )
+  ) : undefined;
   return (
     <CalendarColumnWrapper
       id={`CalendarDay_d${date.format('YYYYMMDD')}`}
@@ -191,15 +254,13 @@ function CalendarColumn({
       >
         {ressourceColsBody}
       </div>
-      {clickedEvent && (
-        <CalendarEventEdit
-          event={clickedEvent}
-          isOpen={true}
-          readOnly={true}
-          onClose={closeClickedEventHandler}
-          onOpen={onOpen}
+      {clickedEvent && editModal}
+      {
+        <CalendarChooseEntryModal
+          events={clickedMultiEvents}
+          handleChosenEvent={onChosenEvent}
         />
-      )}
+      }
     </CalendarColumnWrapper>
   );
 }
