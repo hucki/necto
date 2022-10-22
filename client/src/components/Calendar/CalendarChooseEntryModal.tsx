@@ -15,7 +15,7 @@ import { Button } from '../Library';
 import dayjs from 'dayjs';
 
 interface CalendarChooseEntryModalProps {
-  events: Event[] | undefined;
+  events: Event[];
   handleChosenEvent: (e: Event) => void;
 }
 
@@ -83,6 +83,7 @@ function CalendarChooseEntryModal({
                 display: 'grid',
                 gridAutoColumns: '1fr 1fr',
                 gap: '1rem',
+                maxHeight: `${events.length * 4}rem`,
               }}
             >
               {eventButtons}
