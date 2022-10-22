@@ -1,5 +1,5 @@
 import React, { Dispatch, useContext, useEffect, useState } from 'react';
-import Dashboard from '../components/Dashboard/Dashboard';
+import Dashboard from '../components/organisms/Dashboard/Dashboard';
 import { connect } from 'react-redux';
 import { useUser } from '../hooks/user';
 import { logIn } from '../actions/actions';
@@ -10,11 +10,11 @@ import {
   Footer,
   ContentContainer,
 } from '../components/Library/AppLayout';
-import NavBar from '../components/NavBar/NavBar';
 import { logout } from '../services/Auth';
 import { AuthContext } from '../providers/AuthProvider';
-import ErrorBoundary from '../components/Error/ErrorBoundary';
-import SideNav from '../components/SideNav/SideNav';
+import ErrorBoundary from '../components/molecules/Error/ErrorBoundary';
+import SideNav from '../components/organisms/SideNav/SideNav';
+import HeadaerBar from '../components/organisms/HeaderBar/HeaderBar';
 
 interface AuthenticatedAppInputProps {
   id: string;
@@ -44,7 +44,7 @@ function AuthenticatedApp({
         <ErrorBoundary>
           <ContentContainer>
             <Header>
-              <NavBar
+              <HeadaerBar
                 isSideNavOpen={isNavOpen}
                 onSideNavOpen={() => setIsNavOpen(true)}
               />

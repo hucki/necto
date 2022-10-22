@@ -4,7 +4,7 @@ import { Box, Heading, Stack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '../components/molecules/Logo/LogoIcon';
 import { useViewport } from '../hooks/useViewport';
-import LogoutButton from '../components/Auth/LogoutButton';
+import LogoutButton from '../components/atoms/LogoutButton';
 
 function UnauthorizedApp(): JSX.Element {
   const { t } = useTranslation();

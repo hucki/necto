@@ -3,7 +3,7 @@
 import { Spinner } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
-import PersonList from '../../components/Person/PersonList';
+import PersonList from '../../components/organisms/Person/PersonList';
 import { useAllPatients } from '../../hooks/patient';
 
 function Patients(): JSX.Element {

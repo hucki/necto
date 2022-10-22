@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
-import CalendarContainer from '../../components/Calendar/CalendarContainer';
+import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents, useWeeksEvents } from '../../hooks/events';
 import dayjs from 'dayjs';
@@ -14,7 +14,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
-import FilterBar from '../../components/FilterBar/FilterBar';
+import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 import { filterContext } from '../../providers/filter';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 

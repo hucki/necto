@@ -9,7 +9,7 @@ import {
   RiUserSettingsFill,
   RiUserSettingsLine,
 } from 'react-icons/ri';
-import UserProfile from '../../components/UserProfile/UserProfile';
+import UserProfile from '../../components/organisms/UserProfile/UserProfile';
 import { useTranslation } from 'react-i18next';
 import EventSettings from '../EventSettings/EventSettings';
 import { useContext } from 'react';

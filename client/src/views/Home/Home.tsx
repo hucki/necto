@@ -9,9 +9,9 @@ import {
 import dayjs from 'dayjs';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ApprovalPanel from '../../components/InfoPanel/ApprovalPanel';
-import NewUserPanel from '../../components/InfoPanel/NewUserPanel';
-import UpcomingPanel from '../../components/InfoPanel/UpcomingPanel';
+import ApprovalPanel from '../../components/molecules/InfoPanel/ApprovalPanel';
+import NewUserPanel from '../../components/molecules/InfoPanel/NewUserPanel';
+import UpcomingPanel from '../../components/molecules/InfoPanel/UpcomingPanel';
 import { Greeting, NotificationCount } from '../../components/Library/Messages';
 import { useEmployeeEvents, useLeavesByStatus } from '../../hooks/events';
 import { useAllUsers, useUser } from '../../hooks/user';

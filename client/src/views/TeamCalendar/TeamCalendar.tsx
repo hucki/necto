@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CalendarContainer from '../../components/Calendar/CalendarContainer';
+import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents } from '../../hooks/events';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
-import FilterBar from '../../components/FilterBar/FilterBar';
+import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 import { Employee } from '../../types/Employee';
 import { EmployeeRessource } from '../../types/Ressource';
 import { UserDateContext } from '../../providers/UserDate';

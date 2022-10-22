@@ -16,10 +16,10 @@ import {
   useAllArchivedInstitutions,
   useAllInstitutions,
 } from '../../hooks/institution';
-import InstitutionList from '../../components/Institution/InstitutionList';
+import InstitutionList from '../../components/organisms/Institution/InstitutionList';
 import { CgAddR } from 'react-icons/cg';
 import { InstitutionInput } from '../../types/Institution';
-import { InstitutionModal } from '../../components/Institution/InstitutionModal';
+import { InstitutionModal } from '../../components/organisms/Institution/InstitutionModal';
 import { useViewport } from '../../hooks/useViewport';
 
 const defaultInstitution: InstitutionInput = {

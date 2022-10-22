@@ -17,7 +17,7 @@ import ResetPassword from '../views/Auth/ResetPassword';
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '../components/molecules/Logo/LogoIcon';
 import { useViewport } from '../hooks/useViewport';
-import ErrorBoundary from '../components/Error/ErrorBoundary';
+import ErrorBoundary from '../components/molecules/Error/ErrorBoundary';
 
 function UnauthenticatedApp(): JSX.Element {
   const { t } = useTranslation();

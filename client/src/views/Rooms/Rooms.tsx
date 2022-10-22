@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
-import CalendarContainer from '../../components/Calendar/CalendarContainer';
+import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { Event, EventType } from '../../types/Event';
 import dayjs from 'dayjs';
@@ -13,7 +13,7 @@ import { useAllRooms } from '../../hooks/rooms';
 import { useAllbuildings } from '../../hooks/buildings';
 import { Flex } from '@chakra-ui/react';
 import { useFilter } from '../../hooks/useFilter';
-import FilterBar from '../../components/FilterBar/FilterBar';
+import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 
 function getBookings(buildingId: string, rooms: Room[]) {
   const createBookings = () => {
