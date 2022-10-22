@@ -2,8 +2,10 @@ import { Icon, Modal, ModalOverlay } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
-import { RiCheckboxBlankLine, RiCheckFill } from 'react-icons/ri';
+import { FaTimes, FaTrash } from 'react-icons/fa';
+import { RiCheckFill } from 'react-icons/ri';
+import { getEventSeries } from '../../helpers/dataConverter';
+import { useDeleteEventWithChildren } from '../../hooks/events';
 import { useViewport } from '../../hooks/useViewport';
 import { Event } from '../../types/Event';
 import {
@@ -36,12 +38,15 @@ function CalendarLeaveEdit({
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
   const [changedLeave, setChangedLeave] = useState<Event>(() => leave);
+  const [deleteEventWithChildren] = useDeleteEventWithChildren();
+  const { startTime, endTime, parentEventId } = getEventSeries(changedLeave);
 
   const handleAppprove = () => {
     console.log('approve');
   };
   const handleDelete = () => {
-    console.log('delete');
+    if (!parentEventId) return;
+    deleteEventWithChildren({ uuid: parentEventId });
   };
   const handleSubmit = () => {
     console.log('submit');
@@ -63,14 +68,7 @@ function CalendarLeaveEdit({
         >
           <ModalContent>
             <ModalHeader bgColor={changedLeave?.bgColor || 'green'}>
-              {!isApproved ? (
-                <IconButton
-                  aria-label="set isApproved"
-                  disabled={dayjs(changedLeave.endTime).isBefore(dayjs())}
-                  icon={<RiCheckboxBlankLine />}
-                  onClick={handleAppprove}
-                />
-              ) : (
+              {!isApproved ? null : (
                 <Icon as={RiCheckFill} w={8} h={8} fill="green" />
               )}
               <div>
@@ -83,7 +81,11 @@ function CalendarLeaveEdit({
                     fontSize: '0.8rem',
                   }}
                 >
-                  {dayjs(leave.startTime).format('ll')}
+                  {dayjs(startTime).format('ll') === dayjs(endTime).format('ll')
+                    ? dayjs(startTime).format('ll')
+                    : dayjs(startTime).format('ll') +
+                      ' - ' +
+                      dayjs(endTime).format('ll')}
                 </div>
               </div>
               <IconButton
@@ -92,7 +94,7 @@ function CalendarLeaveEdit({
                 onClick={onClose}
               />
             </ModalHeader>
-            <ModalBody>This is the ModalBody</ModalBody>
+            <ModalBody></ModalBody>
 
             <ModalFooter>
               <div
@@ -109,8 +111,9 @@ function CalendarLeaveEdit({
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
                     disabled={
-                      dayjs(changedLeave.endTime).isBefore(dayjs()) ||
-                      isApproved
+                      isApproved ||
+                      !parentEventId ||
+                      dayjs(changedLeave.endTime).isBefore(dayjs())
                     }
                     colorScheme="red"
                     size="sm"
@@ -119,31 +122,6 @@ function CalendarLeaveEdit({
                   >
                     {t('button.delete')}
                   </Button>
-                </ControlWrapper>
-                <ControlWrapper>
-                  {isReadOnly ? (
-                    <Button
-                      leftIcon={<FaEdit />}
-                      aria-label="edit event"
-                      type="button"
-                      onClick={() => setIsReadOnly(!isReadOnly)}
-                      colorScheme="blue"
-                      size="sm"
-                    >
-                      {t('button.edit')}
-                    </Button>
-                  ) : (
-                    <Button
-                      aria-label="save changes"
-                      type="button"
-                      disabled={isReadOnly}
-                      onClick={handleSubmit}
-                      size="sm"
-                      colorScheme="blue"
-                    >
-                      {t('button.save')}
-                    </Button>
-                  )}
                 </ControlWrapper>
               </div>
             </ModalFooter>
