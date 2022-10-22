@@ -126,6 +126,34 @@ export const deleteEvent = async (
     next(e);
   }
 };
+
+/**
+ * delete one Event and its childEvents by eventId
+ *  @param {string} req.params.eventId
+ */
+export const deleteEventWithChildren = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const eventId = req.params.eventId;
+    const deletedEvent = await prisma.event.update({
+      where: { uuid: eventId },
+      data: { isDeleted: true },
+    });
+    await prisma.event.updateMany({
+      where: { parentEventId: eventId },
+      data: { isDeleted: true },
+    });
+    res.json(deletedEvent);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
 /**
  * get all Events that are taking place in the given year/week combination
  *  @param {string} req.params.year
@@ -166,6 +194,52 @@ export const getDaysEvents = async (
       },
       include: {
         patient: true,
+        parentEvent: { include: { childEvents: true } },
+        childEvents: true,
+      },
+    });
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].patient) {
+        events[i].patient = decryptPatient({
+          patient: events[i].patient,
+          fields: encryptedPatientFields,
+        });
+      }
+    }
+    res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * get all Events of the defined employeeId
+ *  @param {string} req.params.employeeId
+ */
+export const getEmployeeEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const employeeId = req.params.employeeId;
+    const events = await prisma.event.findMany({
+      where: {
+        AND: [
+          {
+            isDeleted: false,
+          },
+          employeeId && {
+            ressourceId: employeeId,
+          },
+        ],
+      },
+      include: {
+        patient: true,
+        parentEvent: { include: { childEvents: true } },
+        childEvents: true,
       },
     });
     for (let i = 0; i < events.length; i++) {
@@ -209,6 +283,8 @@ export const getWeeksEvents = async (
       },
       include: {
         patient: true,
+        parentEvent: { include: { childEvents: true } },
+        childEvents: true,
       },
     });
     for (let i = 0; i < events.length; i++) {
@@ -267,6 +343,8 @@ export const getLeavesByStatus = async (
       },
       include: {
         employee: true,
+        parentEvent: { include: { childEvents: true } },
+        childEvents: true,
       },
     });
     res.json(events);
