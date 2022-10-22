@@ -100,10 +100,6 @@ const CalendarLeaveInput = ({
         }
         const rruleObj = rrulestr(createdEvent.rrule);
         const rruleList = rruleObj?.all();
-        const eventDuration = dayjs(createdEvent.endTime).diff(
-          dayjs(createdEvent.startTime),
-          'm'
-        );
         if (rruleList && rruleList.length > 1) {
           const currentTZHour = dayjs.utc(rruleList[0]).local().hour();
           for (let i = 1; i < rruleList.length; i++) {
@@ -111,7 +107,7 @@ const CalendarLeaveInput = ({
             const nextEvent = newLeave;
             nextEvent.parentEventId = createdEvent.uuid;
             nextEvent.startTime = dt;
-            nextEvent.endTime = dt.add(eventDuration, 'm');
+            nextEvent.endTime = dt.hour(23).minute(59);
             await createEvent({
               event: nextEvent,
             });
