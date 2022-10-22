@@ -56,7 +56,7 @@ export const register = async ({
 export const resetPassword = async ({
   email,
 }: ResetData): Promise<ResetResponse> => {
-  return authClient('pw/reset/', { email });
+  return authClient('pw/', { email });
 };
 
 export const updatePassword = async ({
@@ -64,7 +64,7 @@ export const updatePassword = async ({
   newPassword,
 }: UpdateData): Promise<ResetResponse> => {
   const method = 'PATCH';
-  return authClient('pw/update/', { oldPassword, newPassword }, method);
+  return authClient('pw/', { oldPassword, newPassword }, method);
 };
 
 export const getToken = () => {

@@ -1,8 +1,17 @@
-import { Flex, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { Institution } from '../../types/Institution';
-import { Button, IconButton } from '../Library';
+import { IconButton } from '../atoms/Buttons';
 
 interface InstitutionListProps {
   institutions: Institution[];

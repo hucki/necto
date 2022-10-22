@@ -1,10 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { FormControl } from '@chakra-ui/react';
+import { Button, FormControl } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input, Button, FormLabel } from '../../components/Library';
+import { Input, FormLabel } from '../../components/Library';
 import { AuthContext } from '../../providers/AuthProvider';
 
 const LoginForm = (): JSX.Element => {

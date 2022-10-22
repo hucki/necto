@@ -16,10 +16,11 @@ import { connect } from 'react-redux';
 import { switchView } from '../../actions/actions';
 import { useHistory, useLocation } from 'react-router';
 import { AppState } from '../../types/AppState';
-import { IconButton, NavigationButton, Sidebar } from '../Library';
+import { Sidebar } from '../Library';
 import { useTranslation } from 'react-i18next';
 import { FaHandHoldingMedical } from 'react-icons/fa';
 import { AuthContext } from '../../providers/AuthProvider';
+import { IconButton, NavigationButton } from '../atoms/Buttons';
 
 interface SidebarProps {
   dispatch: Dispatch<any>;

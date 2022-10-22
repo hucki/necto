@@ -1,4 +1,4 @@
-import { Icon, Modal, ModalOverlay } from '@chakra-ui/react';
+import { Icon, Modal, Button } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,14 +8,14 @@ import { getEventSeries } from '../../helpers/dataConverter';
 import { useDeleteEventWithChildren } from '../../hooks/events';
 import { useViewport } from '../../hooks/useViewport';
 import { Event } from '../../types/Event';
+import { IconButton } from '../atoms/Buttons';
+import { ControlWrapper } from '../atoms/ControlWrapper';
 import {
-  Button,
-  ControlWrapper,
-  IconButton,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
 } from '../Library';
 
 interface CalendarLeaveEditProps {
@@ -55,11 +55,7 @@ function CalendarLeaveEdit({
         scrollBehavior="inside"
         size={isMobile ? 'full' : undefined}
       >
-        <ModalOverlay
-          css={{
-            backgroundColor: 'rgba(0,0,0,0.3)',
-          }}
-        >
+        <ModalOverlay>
           <ModalContent>
             <ModalHeader bgColor={changedLeave?.bgColor || 'green'}>
               {!isApproved ? null : (

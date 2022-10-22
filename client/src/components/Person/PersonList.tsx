@@ -1,4 +1,5 @@
 import {
+  Button,
   Flex,
   Icon,
   InputGroup,
@@ -31,10 +32,11 @@ import { useViewport } from '../../hooks/useViewport';
 import { Doctor } from '../../types/Doctor';
 import { Patient, WaitingPatient } from '../../types/Patient';
 import * as colors from '../../styles/colors';
-import { Button, IconButton, Input } from '../Library';
+import { Input } from '../Library';
 import { PersonModal } from './PersonModal';
 import { Person } from '../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
+import { IconButton } from '../atoms/Buttons';
 
 type ListType = 'doctors' | 'patients' | 'waitingPatients';
 

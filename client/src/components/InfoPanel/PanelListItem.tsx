@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgCheck } from 'react-icons/cg';
 import { Event } from '../../types/Event';
-import { IconButton } from '../Library';
+import { IconButton } from '../atoms/Buttons';
 
 type PanelListItemProps = {
   event: Event;

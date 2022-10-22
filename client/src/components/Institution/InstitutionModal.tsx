@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Button,
   Icon,
   ModalFooter,
   ModalHeader,
@@ -14,8 +15,9 @@ import {
   useUpdateInstitution,
 } from '../../hooks/institution';
 import { Institution } from '../../types/Institution';
-import { Button, ControlWrapper, IconButton } from '../Library';
 import { InstitutionForm } from './InstitutionForm';
+import { IconButton } from '../atoms/Buttons';
+import { ControlWrapper } from '../atoms/ControlWrapper';
 
 interface InstitutionModalProps {
   institution: Institution;

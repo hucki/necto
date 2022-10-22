@@ -1,11 +1,11 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { FormControl } from '@chakra-ui/react';
+import { Button, FormControl } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import styled from '@emotion/styled/macro';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input, Button, FormLabel } from '../../components/Library';
+import { Input, FormLabel } from '../../components/Library';
 import { register } from '../../services/Auth';
 import { RegisterResponse } from '../../types/Auth';
 

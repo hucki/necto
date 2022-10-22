@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { FullPageSpinner } from '../components/Library';
+import { FullPageSpinner } from '../components/atoms/LoadingSpinner';
 import { AuthContext } from '../providers/AuthProvider';
 import { FilterProvider } from '../providers/filter/FilterProvider';
 import { UserDateProvider } from '../providers/UserDate';

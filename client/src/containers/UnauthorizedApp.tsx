@@ -2,7 +2,7 @@ import React from 'react';
 import { AppContainer, ContentContainer } from '../components/Library';
 import { Box, Heading, Stack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import LogoIcon from '../components/Logo/LogoIcon';
+import LogoIcon from '../components/molecules/Logo/LogoIcon';
 import { useViewport } from '../hooks/useViewport';
 import LogoutButton from '../components/Auth/LogoutButton';
 

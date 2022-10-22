@@ -6,7 +6,6 @@ import { Contract, Employee, Employee2Team, Team } from '../../types/Employee';
 import { useAddEmployeeToTeam } from '../../hooks/teams';
 import { useAllTeams } from '../../hooks/teams';
 import {
-  Button,
   FormLabel,
   Input,
   LabelledInput,
@@ -14,6 +13,7 @@ import {
   Select,
 } from '../../components/Library';
 import {
+  Button,
   FormControl,
   Heading,
   List,

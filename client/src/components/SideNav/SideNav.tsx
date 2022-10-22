@@ -9,11 +9,12 @@ import {
 } from 'react-icons/ri';
 import { useHistory, useLocation } from 'react-router';
 import { AppState } from '../../types/AppState';
-import { IconButton, NavigationButton, SideNavContainer } from '../Library';
+import { SideNavContainer } from '../Library';
 import { useTranslation } from 'react-i18next';
 import { FaClinicMedical, FaRegBuilding } from 'react-icons/fa';
 import { AuthContext } from '../../providers/AuthProvider';
 import { CgCalendarDates, CgClose, CgHome, CgUser } from 'react-icons/cg';
+import { IconButton, NavigationButton } from '../atoms/Buttons';
 
 interface SideNavProps {
   isOpen: boolean;

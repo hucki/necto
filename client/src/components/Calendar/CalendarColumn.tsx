@@ -85,7 +85,6 @@ function CalendarColumn({
           clickedEventElements.includes(ev.uuid as string)
         ) || undefined
       );
-      console.log('check this:', { clickedEventElements, clickedMultiEvents });
     } else {
       setClickedEvent(event);
     }

@@ -1,12 +1,9 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { connect } from 'react-redux';
 import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents } from '../../hooks/events';
 import dayjs from 'dayjs';
-import { FullPageSpinner } from '../../components/Library';
 import { useContext, useEffect, useState } from 'react';
 import FilterBar from '../../components/FilterBar/FilterBar';
 import { Employee } from '../../types/Employee';
@@ -14,6 +11,7 @@ import { EmployeeRessource } from '../../types/Ressource';
 import { UserDateContext } from '../../providers/UserDate';
 import { useFilter } from '../../hooks/useFilter';
 import { Flex } from '@chakra-ui/react';
+import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 function TeamCalendar(): JSX.Element {
   const { currentTeam } = useFilter();
@@ -51,7 +49,7 @@ function TeamCalendar(): JSX.Element {
 
   return (
     <div
-      css={{
+      style={{
         height: '100%',
         width: '100%',
         display: 'flex',

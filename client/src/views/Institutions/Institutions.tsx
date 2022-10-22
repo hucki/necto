@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Button,
   Flex,
   FormControl,
   FormLabel,
@@ -16,7 +17,6 @@ import {
   useAllInstitutions,
 } from '../../hooks/institution';
 import InstitutionList from '../../components/Institution/InstitutionList';
-import { Button } from '../../components/Library';
 import { CgAddR } from 'react-icons/cg';
 import { InstitutionInput } from '../../types/Institution';
 import { InstitutionModal } from '../../components/Institution/InstitutionModal';

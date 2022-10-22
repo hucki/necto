@@ -1,7 +1,7 @@
+import { Button } from '@chakra-ui/react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTimes } from 'react-icons/fa';
-import { Button } from '../Library';
 
 interface ModalFooterControlsProps {
   onSubmit?: () => void;

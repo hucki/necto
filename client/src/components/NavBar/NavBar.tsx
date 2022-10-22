@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import dayjs from 'dayjs';
-import { Button, IconButton, DatePicker } from '../Library';
-import { Flex, Grid } from '@chakra-ui/react';
+import { DatePicker } from '../Library';
+import { Button, Flex, Grid } from '@chakra-ui/react';
 import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
 import { registerLocale } from 'react-datepicker';
@@ -13,6 +13,7 @@ import {
   CgChevronRight,
   CgMenuGridO,
 } from 'react-icons/cg';
+import { IconButton } from '../atoms/Buttons';
 registerLocale('de', de);
 
 interface NavBarProps {

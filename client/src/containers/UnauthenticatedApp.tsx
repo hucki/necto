@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { AppContainer, Button, ContentContainer } from '../components/Library';
+import { AppContainer, ContentContainer } from '../components/Library';
 import {
   Box,
+  Button,
   Heading,
   Stack,
   Tab,
@@ -14,7 +15,7 @@ import LoginForm from '../views/Auth/LoginForm';
 import Register from '../views/Auth/Register';
 import ResetPassword from '../views/Auth/ResetPassword';
 import { useTranslation } from 'react-i18next';
-import LogoIcon from '../components/Logo/LogoIcon';
+import LogoIcon from '../components/molecules/Logo/LogoIcon';
 import { useViewport } from '../hooks/useViewport';
 import ErrorBoundary from '../components/Error/ErrorBoundary';
 

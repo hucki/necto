@@ -4,9 +4,14 @@ import {
   ModalHeader as ChakraModalHeader,
   ModalBody as ChakraModalBody,
   ModalFooter as ChakraModalFooter,
+  ModalOverlay as ChakraModalOverlay,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import { BgColor } from '../../types/Colors';
+
+const ModalOverlay = styled(ChakraModalOverlay)({
+  backgroundColor: 'rgba(0,0,0,0.3)',
+});
 
 const ModalContent = styled(ChakraModalContent)({
   display: 'grid',
@@ -76,4 +81,4 @@ const ModalFooter = styled(ChakraModalFooter)(
     }
   }
 );
-export { ModalContent, ModalHeader, ModalBody, ModalFooter };
+export { ModalContent, ModalHeader, ModalBody, ModalFooter, ModalOverlay };

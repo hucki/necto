@@ -1,4 +1,5 @@
 import {
+  Button,
   Icon,
   ModalFooter,
   ModalHeader,
@@ -14,7 +15,8 @@ import { useCreateDoctor, useUpdateDoctor } from '../../hooks/doctor';
 import { useCreatePatient, useUpdatePatient } from '../../hooks/patient';
 import { ContactData } from '../../types/ContactData';
 import { Person } from '../../types/Person';
-import { Button, ControlWrapper, IconButton } from '../Library';
+import { IconButton } from '../atoms/Buttons';
+import { ControlWrapper } from '../atoms/ControlWrapper';
 import { PersonForm } from './PersonForm';
 
 interface PersonModalProps {

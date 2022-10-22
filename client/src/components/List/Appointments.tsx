@@ -1,4 +1,5 @@
 import {
+  Button,
   ChakraProps,
   Flex,
   Icon,
@@ -15,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { Event } from '../../types/Event';
-import { Button, IconButton } from '../Library';
+import { IconButton } from '../atoms/Buttons';
 
 interface AppointmentListProps {
   events: Event[];

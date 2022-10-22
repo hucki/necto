@@ -20,7 +20,6 @@ import {
   CalendarColumnRessourceBody,
 } from './Calendar';
 import { FilterBarContainer } from './FilterBar';
-import { FullPageSpinner } from './LoadingSpinner';
 import {
   Input,
   Textarea,
@@ -37,12 +36,12 @@ import {
 } from './FormElements';
 import { ErrorMessage } from './Messages';
 import {
-  Button,
-  NavigationButton,
-  IconButton,
-  ControlWrapper,
-} from './Buttons';
-import { ModalContent, ModalHeader, ModalBody, ModalFooter } from './Modal';
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalOverlay,
+} from './Modal';
 import { TabPanel } from './Tabs';
 
 export {
@@ -64,7 +63,6 @@ export {
   Header,
   Footer,
   FilterBarContainer,
-  FullPageSpinner,
   Input,
   Textarea,
   TextDisplay,
@@ -76,15 +74,12 @@ export {
   LabelledSelect,
   Select,
   ErrorMessage,
-  Button,
-  NavigationButton,
-  IconButton,
   DatePicker,
   RadioGroup,
-  ControlWrapper,
   ModalHeader,
   ModalContent,
   ModalBody,
   ModalFooter,
+  ModalOverlay,
   TabPanel,
 };

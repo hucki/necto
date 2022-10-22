@@ -12,6 +12,7 @@ import {
   Switch,
   Textarea,
   FormControl,
+  Button,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event } from '../../types/Event';
@@ -21,7 +22,6 @@ import {
   Input,
   DatePicker,
   Select,
-  Button,
   FormLabel,
 } from '../Library';
 import { RRule, Options } from 'rrule';

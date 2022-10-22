@@ -1,10 +1,8 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Button,
   Modal,
-  ModalOverlay,
   IconButton,
   Menu,
   MenuButton,
@@ -14,13 +12,11 @@ import {
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, useState } from 'react';
 import {
-  Button,
-  ControlWrapper,
   ErrorMessage,
   ModalBody,
   ModalContent,
   ModalHeader,
-  // RadioGroup,
+  ModalOverlay,
 } from '../Library';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
@@ -55,6 +51,7 @@ import {
   RiCheckboxLine,
   RiCheckFill,
 } from 'react-icons/ri';
+import { ControlWrapper } from '../atoms/ControlWrapper';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -175,18 +172,14 @@ function CalendarEventEdit({
   };
 
   return (
-    <div>
+    <>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
         scrollBehavior="inside"
         size={isMobile ? 'full' : undefined}
       >
-        <ModalOverlay
-          css={{
-            backgroundColor: 'rgba(0,0,0,0.3)',
-          }}
-        >
+        <ModalOverlay>
           <ModalContent>
             <ModalHeader
               bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}
@@ -220,7 +213,7 @@ function CalendarEventEdit({
                 </div>
                 <div
                   className="modal-subtitle"
-                  css={{
+                  style={{
                     fontSize: '0.8rem',
                   }}
                 >
@@ -230,7 +223,7 @@ function CalendarEventEdit({
               {changedEvent.patient && !changedEvent.patient.hasContract && (
                 <FaExclamation
                   color="red"
-                  css={{
+                  style={{
                     width: '1rem',
                     height: '1rem',
                   }}
@@ -238,7 +231,7 @@ function CalendarEventEdit({
               )}
               {changedEvent.isHomeVisit && (
                 <FaHouseUser
-                  css={{
+                  style={{
                     width: '1rem',
                     height: '1rem',
                   }}
@@ -246,7 +239,7 @@ function CalendarEventEdit({
               )}
               {changedEvent.isRecurring && (
                 <FaLink
-                  css={{
+                  style={{
                     width: '1rem',
                     height: '1rem',
                   }}
@@ -254,7 +247,7 @@ function CalendarEventEdit({
               )}
               {changedEvent.isDiagnostic && (
                 <FaCommentMedical
-                  css={{
+                  style={{
                     width: '1rem',
                     height: '1rem',
                   }}
@@ -292,7 +285,7 @@ function CalendarEventEdit({
             <ModalFooter bgColor={isNote ? 'note' : undefined}>
               <div
                 className="row"
-                css={{
+                style={{
                   width: '100%',
                   display: 'flex',
                   flexDirection: 'row',
@@ -361,7 +354,7 @@ function CalendarEventEdit({
           </ModalContent>
         </ModalOverlay>
       </Modal>
-    </div>
+    </>
   );
 }
 

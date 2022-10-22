@@ -3,7 +3,7 @@ import React from 'react';
 import { CgAdd, CgBlock } from 'react-icons/cg';
 import { MinimalUser } from '../../types/Auth';
 import { User } from '../../types/User';
-import { IconButton } from '../Library';
+import { IconButton } from '../atoms/Buttons';
 
 const minimizeUser = (
   user: User & { uuid: string; email: string }

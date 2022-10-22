@@ -21,13 +21,8 @@ import { ContactData } from '../../types/ContactData';
 import { Doctor } from '../../types/Doctor';
 import { Patient } from '../../types/Patient';
 import { Person } from '../../types/Person';
-import {
-  IconButton,
-  Input,
-  FormLabel,
-  ModalFormGroup,
-  Select,
-} from '../Library';
+import { IconButton } from '../atoms/Buttons';
+import { Input, FormLabel, ModalFormGroup, Select } from '../Library';
 import { AppointmentList } from '../List/Appointments';
 
 interface PersonFormProps {

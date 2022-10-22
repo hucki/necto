@@ -7,11 +7,11 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Button,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useViewport } from '../../hooks/useViewport';
 import { Event } from '../../types/Event';
-import { Button } from '../Library';
 import dayjs from 'dayjs';
 
 interface CalendarChooseEntryModalProps {

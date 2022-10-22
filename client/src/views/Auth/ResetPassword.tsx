@@ -1,9 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { Button } from '@chakra-ui/react';
 import { jsx } from '@emotion/react';
 import React, { FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormGroup, Input, Button, Label } from '../../components/Library';
+import { FormGroup, Input, Label } from '../../components/Library';
 import { resetPassword } from '../../services/Auth';
 import { ResetResponse } from '../../types/Auth';
 

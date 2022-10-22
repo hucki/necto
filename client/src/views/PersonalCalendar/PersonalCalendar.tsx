@@ -6,7 +6,6 @@ import CalendarContainer from '../../components/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
 import { useDaysEvents, useWeeksEvents } from '../../hooks/events';
 import dayjs from 'dayjs';
-import { FullPageSpinner } from '../../components/Library';
 import { useContext, useEffect, useState } from 'react';
 import { EmployeeRessource } from '../../types/Ressource';
 import { useUser } from '../../hooks/user';
@@ -17,6 +16,7 @@ import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
 import FilterBar from '../../components/FilterBar/FilterBar';
 import { filterContext } from '../../providers/filter';
+import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(LocalizedFormat);
