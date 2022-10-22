@@ -56,8 +56,16 @@
     "archive": "archivieren",
     "activate": "aktivieren"
   },
+  "time": {
+    "ofDay": {
+      "morning": "Morgen",
+      "day": "Tag",
+      "evening": "Abend"
+    }
+  },
   "dict": {
-    "for": "für"
+    "for": "für",
+    "good": "Guten"
   },
   "error": {
     "prefix": "Es gab einen Fehler",

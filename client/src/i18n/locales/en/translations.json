@@ -55,8 +55,16 @@
     "archive": "archive",
     "activate": "activate"
   },
+  "time": {
+    "ofDay": {
+      "morning": "morning",
+      "day": "day",
+      "evening": "evening"
+    }
+  },
   "dict": {
-    "for": "for"
+    "for": "for",
+    "good": "Good"
   },
   "error": {
     "prefix": "There was an error",
