@@ -53,13 +53,13 @@ router.post(
 );
 
 router.post('/register', authController.registerUser);
-router.post('/pw/reset', authController.resetPassword);
+router.post('/pw', authController.resetPassword);
 
 // authenticated routes
 router.use(authController.isAuthenticated);
 // router.use(passport.authenticate('jwt' /*, {session: false}*/))
 // router.get('/me', passport.authenticate('jwt'/*, {session: false}*/), authController.getMe);
-router.patch('/pw/update', authController.updatePassword);
+router.patch('/pw', authController.updatePassword);
 router.get('/me', authController.getMe);
 router.post('/logout', authController.logout);
 // check Authentication
@@ -124,9 +124,9 @@ router.patch('/leaves/:leaveId', eventController.approveLeave);
 // patient routes
 //router.get('/patients/:eventId', eventController.getPatients);
 router.get('/patients', patientController.getAllPatients);
+router.get('/patients/:patientId', patientController.getPatientsEvents);
 router.patch('/patients/:patientId', patientController.updatePatient);
 router.get('/waiting', patientController.getWaitingPatients);
-router.get('/patients/:patientId', patientController.getPatientsEvents);
 router.post('/patients', patientController.addPatient);
 
 router.post(
@@ -183,7 +183,7 @@ router.patch(
 
 // tenant routes
 router.get('/tenants', tenantController.getAllTenants);
-router.post('/tenant', tenantController.addTenant);
+router.post('/tenants', tenantController.addTenant);
 
 // company routes
 router.get('/companies', companyController.getAllCompanies);
