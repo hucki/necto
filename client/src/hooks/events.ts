@@ -43,6 +43,29 @@ export function useDeleteEvent(): MutationResultPair<
   });
 }
 
+export function useDeleteEventWithChildren(): MutationResultPair<
+  { message: string },
+  Error,
+  { uuid: string },
+  string
+> {
+  const deleteEventWithChildren = async ({
+    uuid,
+  }: {
+    uuid: string;
+  }): Promise<{ message: string }> => {
+    return client<{ message: string }>(`events/c/${uuid}`, {
+      method: 'DELETE',
+    });
+  };
+
+  return useMutation(deleteEventWithChildren, {
+    onSuccess: () => {
+      queryCache.invalidateQueries('events');
+    },
+  });
+}
+
 export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
   const eventsQuery = useQuery('events', async () => {
     return client<Event[]>('events/a');
@@ -99,6 +122,20 @@ export function useDaysEvents(
   return {
     rawEvents,
     ...eventsDayQuery,
+  };
+}
+
+export function useEmployeeEvents(
+  employeeId: string
+): QueryResult<Event[]> & { employeeEvents: Event[] } {
+  const employeeEventsQuery = useQuery(['events', employeeId], async () => {
+    return client<Event[]>(`events/e/${employeeId}`);
+  });
+
+  const employeeEvents = employeeEventsQuery.data ?? [];
+  return {
+    employeeEvents,
+    ...employeeEventsQuery,
   };
 }
 

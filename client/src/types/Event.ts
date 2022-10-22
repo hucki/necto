@@ -44,6 +44,8 @@ export type Event = {
   roomId?: string;
   patientId?: string;
   parentEventId?: string;
+  parentEvent?: Event;
+  childEvents?: Event[];
   createdAt?: Date;
   updatedAt?: Date;
   bgColor?: BgColor;
