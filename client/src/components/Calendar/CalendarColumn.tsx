@@ -255,12 +255,12 @@ function CalendarColumn({
         {ressourceColsBody}
       </div>
       {clickedEvent && editModal}
-      {
+      {clickedMultiEvents && (
         <CalendarChooseEntryModal
           events={clickedMultiEvents}
           handleChosenEvent={onChosenEvent}
         />
-      }
+      )}
     </CalendarColumnWrapper>
   );
 }
