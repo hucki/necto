@@ -1,6 +1,5 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx, keyframes } from '@emotion/react';
+import React from 'react';
+import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled/macro';
 import { FaSpinner } from 'react-icons/fa';
 
@@ -19,7 +18,7 @@ Spinner.defaultProps = {
 function FullPageSpinner(): JSX.Element {
   return (
     <div
-      css={{
+      style={{
         fontSize: '4em',
         height: '100vh',
         display: 'flex',

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import AppLogo from '../../assets/AppLogo.svg';
+import AppLogo from '../../../assets/AppLogo.svg';
 
 const IconWrapper = styled.div({
   width: '4rem',
