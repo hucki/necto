@@ -16,7 +16,7 @@ export const FilterProvider: FunctionComponent = ({
     error: hasErrorCompanies,
     companies,
   } = useAllCompanies();
-  const [calendarView, setCalendarView] = useState<CalendarView>('day');
+  const [calendarView, setCalendarView] = useState<CalendarView>('week');
   const [currentCalendarOption, setCurrentCalendarOption] =
     useState<CalendarOption>('appointments');
   const [currentCompany, setCurrentCompany] = useState<Company>(
