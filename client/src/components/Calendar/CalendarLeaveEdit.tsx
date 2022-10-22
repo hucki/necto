@@ -35,21 +35,15 @@ function CalendarLeaveEdit({
 }: CalendarLeaveEditProps) {
   const { t } = useTranslation();
   const { isMobile } = useViewport();
-  const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
   const [changedLeave, setChangedLeave] = useState<Event>(() => leave);
   const [deleteEventWithChildren] = useDeleteEventWithChildren();
   const { startTime, endTime, parentEventId } = getEventSeries(changedLeave);
 
-  const handleAppprove = () => {
-    console.log('approve');
-  };
   const handleDelete = () => {
     if (!parentEventId) return;
     deleteEventWithChildren({ uuid: parentEventId });
-  };
-  const handleSubmit = () => {
-    console.log('submit');
+    onClose();
   };
 
   const isApproved = changedLeave.leaveStatus === 'approved';
