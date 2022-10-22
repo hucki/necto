@@ -57,4 +57,9 @@ const NotificationCount = styled.div(({ count }: NotificationCountProps) => ({
   textAlign: 'center',
 }));
 
-export { ErrorMessage, NotificationCount };
+const Greeting = styled.div({
+  fontWeight: 'bold',
+  padding: '1rem',
+});
+
+export { ErrorMessage, NotificationCount, Greeting };
