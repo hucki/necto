@@ -1,9 +1,19 @@
 import React from 'react';
-import classes from './Footer.module.css';
+import styled from '@emotion/styled/macro';
+
+const FooterContainer = styled.div({
+  width: '100%',
+  backgroundColor: 'white',
+  color: '#3338',
+  marginTop: '15px',
+  padding: '10px',
+  textAlign: 'right',
+  boxShadow: '0 0 15px #3333',
+});
 
 function Footer() {
   return (
-    <div className={classes.Footer}>
+    <FooterContainer>
       <p>
         made with{' '}
         <span role="img" aria-label="pineapple">
@@ -14,7 +24,7 @@ function Footer() {
         </span>{' '}
         by Hucki
       </p>
-    </div>
+    </FooterContainer>
   );
 }
 
