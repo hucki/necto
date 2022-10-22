@@ -148,9 +148,6 @@ const FilterBar = ({
       )}
       {hasCalendarOption && (
         <>
-          <Label htmlFor="AppointmentsLeave">
-            {t('calendar.option.label')}
-          </Label>
           <Select
             name="AppointmentsLeave"
             value={currentCalendarOption}
