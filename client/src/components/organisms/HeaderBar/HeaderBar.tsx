@@ -14,6 +14,7 @@ import {
   CgMenuGridO,
 } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
+import { useFilter } from '../../../hooks/useFilter';
 registerLocale('de', de);
 
 interface HeadaerBarProps {
@@ -21,7 +22,8 @@ interface HeadaerBarProps {
   onSideNavOpen: () => void;
 }
 
-const HeadaerBar = ({ isSideNavOpen, onSideNavOpen }: HeadaerBarProps) => {
+const HeaderBar = ({ isSideNavOpen, onSideNavOpen }: HeadaerBarProps) => {
+  const { calendarView } = useFilter();
   const { currentDate, setCurrentDate, goTo } = useContext(UserDateContext);
   const { isMobile } = useViewport();
 
@@ -61,18 +63,21 @@ const HeadaerBar = ({ isSideNavOpen, onSideNavOpen }: HeadaerBarProps) => {
             <div>{dayjs().format('DD')}</div>
           </div>
         </Button>
-        <IconButton
-          marginLeft={2}
-          aria-label="previous week"
-          leftIcon={<CgChevronDoubleLeft size="2rem" />}
-          onClick={() => goTo('previousWeek')}
-        />
-        <IconButton
-          marginRight={2}
-          aria-label="previous day"
-          leftIcon={<CgChevronLeft size="2rem" />}
-          onClick={() => goTo('previousDay')}
-        />
+        {calendarView === 'week' ? (
+          <IconButton
+            marginRight={2}
+            aria-label="previous week"
+            leftIcon={<CgChevronDoubleLeft size="2rem" />}
+            onClick={() => goTo('previousWeek')}
+          />
+        ) : (
+          <IconButton
+            marginRight={2}
+            aria-label="previous day"
+            leftIcon={<CgChevronLeft size="2rem" />}
+            onClick={() => goTo('previousDay')}
+          />
+        )}
         <div style={{ maxWidth: '100px' }}>
           <DatePicker
             locale="de"
@@ -81,21 +86,24 @@ const HeadaerBar = ({ isSideNavOpen, onSideNavOpen }: HeadaerBarProps) => {
             selected={currentDate?.toDate()}
           />
         </div>
-        <IconButton
-          marginLeft={2}
-          aria-label="next day"
-          icon={<CgChevronRight size="2rem" />}
-          onClick={() => goTo('nextDay')}
-        />
-        <IconButton
-          marginRight={2}
-          aria-label="next week"
-          icon={<CgChevronDoubleRight size="2rem" />}
-          onClick={() => goTo('nextWeek')}
-        />
+        {calendarView === 'day' ? (
+          <IconButton
+            marginLeft={2}
+            aria-label="next day"
+            icon={<CgChevronRight size="2rem" />}
+            onClick={() => goTo('nextDay')}
+          />
+        ) : (
+          <IconButton
+            marginLeft={2}
+            aria-label="next week"
+            icon={<CgChevronDoubleRight size="2rem" />}
+            onClick={() => goTo('nextWeek')}
+          />
+        )}
       </Flex>
     </Grid>
   );
 };
 
-export default HeadaerBar;
+export default HeaderBar;
