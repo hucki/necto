@@ -14,7 +14,7 @@ import { logout } from '../services/Auth';
 import { AuthContext } from '../providers/AuthProvider';
 import ErrorBoundary from '../components/molecules/Error/ErrorBoundary';
 import SideNav from '../components/organisms/SideNav/SideNav';
-import HeadaerBar from '../components/organisms/HeaderBar/HeaderBar';
+import HeaderBar from '../components/organisms/HeaderBar/HeaderBar';
 
 interface AuthenticatedAppInputProps {
   id: string;
@@ -44,7 +44,7 @@ function AuthenticatedApp({
         <ErrorBoundary>
           <ContentContainer>
             <Header>
-              <HeadaerBar
+              <HeaderBar
                 isSideNavOpen={isNavOpen}
                 onSideNavOpen={() => setIsNavOpen(true)}
               />
