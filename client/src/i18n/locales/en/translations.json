@@ -11,6 +11,12 @@
       "appointments": "Appointments",
       "leave": "Leave"
     },
+    "toast": {
+      "created": "created",
+      "updated": "updated",
+      "patient": "Patient",
+      "doctor": "Doctor"
+    },
     "event": {
       "newAppointmentTitle": "New Appointment",
       "editAppointmentTitle": "Appointment",

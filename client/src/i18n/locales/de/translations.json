@@ -11,6 +11,12 @@
       "appointments": "Termine",
       "leave": "Abwesenheit"
     },
+    "toast": {
+      "created": "angelegt",
+      "updated": "aktualisiert",
+      "patient": "Patient:in",
+      "doctor": "Ärzt:in"
+    },
     "event": {
       "noteTitle": "📝 Notiz",
       "newAppointmentTitle": "Neuer Termin",
