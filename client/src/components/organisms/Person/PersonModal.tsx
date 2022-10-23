@@ -56,9 +56,12 @@ export const PersonModal = ({
     type,
     result,
   }: ToastOptionsProps): UseToastOptions => {
+    const [t] = useTranslation();
     return {
-      title: `${personType} ${type}.`,
-      description: `${personType} ${currentPerson.lastName}, ${currentPerson.firstName} has been ${type}`,
+      title: `${t(`toast.${personType}`)} ${t(`toast.${type}`)}.`,
+      description: `${currentPerson.lastName}, ${
+        currentPerson.firstName
+      } has been ${t(`toast.${type}`)}`,
       status: result,
       duration: 5000,
       isClosable: true,
