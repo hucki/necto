@@ -22,7 +22,6 @@ import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
 // import * as seedController from '../controllers/seed.controller';
 // import expressjwt from 'express-jwt';
-// import { jwtCheck } from '../middleware/authentication';
 import passport from 'passport';
 const router = express.Router();
 const errorRouter = express.Router();
@@ -62,17 +61,11 @@ router.use(authController.isAuthenticated);
 router.patch('/pw', authController.updatePassword);
 router.get('/me', authController.getMe);
 router.post('/logout', authController.logout);
-// check Authentication
-// router.use(jwtCheck);
 
 router.get('/teammembers', teamMemberController.getAllTeamMembers);
 
-// auth routes
-//router.get('/auth/is', authController.isAuthenticated);
-
 // user routes
 
-router.get('/a0users/:a0Id', userController.getOneUserByAuth0Id);
 // router.get('/users/:userId', userController.getOneUser);
 router.get('/users', userController.getAllUsers);
 router.get('/users/:uuid', userController.getUser);

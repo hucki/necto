@@ -28,51 +28,6 @@ export const getAllUsers = async (
 };
 
 /**
- * get one User with the given Auth0 ID
- *  @param {string} req.params.a0Id
- */
-export const getOneUserByAuth0Id = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const user = await prisma.user.findFirst({
-      where: {
-        a0Id: req.params.a0Id,
-      },
-      include: {
-        userSettings: {
-          where: {
-            validUntil: {
-              equals: null,
-            },
-          },
-          include: {
-            employee: {
-              include: {
-                contract: true,
-              },
-            },
-          },
-        },
-        permissions: {
-          include: {
-            permission: true,
-          },
-        },
-      },
-    });
-    res.json(user);
-    res.status(200);
-    return;
-  } catch (e) {
-    console.log(e);
-    next(e);
-  }
-};
-
-/**
  * get one User with uuid
  *  @param {string} req.params.uuid
  */
