@@ -155,7 +155,7 @@ export const PatientForm = ({
       <b>Termine:</b>
       {currentPatient.events &&
         currentPatient.events.map((event) => (
-          <div key={event.uuid}>{event.startTime}</div>
+          <div key={event.uuid}>{event.startTime.format('lll')}</div>
         ))}
     </>
   );
