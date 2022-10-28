@@ -3,10 +3,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { createStore } from 'redux';
 import reducer from '../reducers/index';
 import { Provider } from 'react-redux';
-// import { ReactQueryDevtools } from 'react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ChakraProvider, Container } from '@chakra-ui/react';
 import { AuthProvider } from '../providers/AuthProvider';
 import { AuthChecker } from './AuthChecker';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 declare global {
   interface Window {
@@ -22,16 +25,18 @@ store.subscribe(() => {});
 function App() {
   return (
     <Provider store={store}>
-      <AuthProvider>
-        <ChakraProvider>
-          <Container m={0} p={0}>
-            <Router>
-              <AuthChecker />
-            </Router>
-          </Container>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        </ChakraProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ChakraProvider>
+            <Container m={0} p={0}>
+              <Router>
+                <AuthChecker />
+              </Router>
+            </Container>
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          </ChakraProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </Provider>
   );
 }
