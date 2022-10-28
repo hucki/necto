@@ -7,7 +7,7 @@ import {
   RiTeamLine,
   RiZzzLine,
 } from 'react-icons/ri';
-import { useHistory, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { AppState } from '../../../types/AppState';
 import { SideNavContainer } from '../../Library';
 import { useTranslation } from 'react-i18next';
@@ -24,9 +24,9 @@ interface SideNavProps {
 const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
   const { pathname: currentView } = useLocation();
   const { user, logMeOut } = useContext(AuthContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const onClickHandler = (route: string) => {
-    history.push(route);
+    navigate(route);
     onClose();
   };
   const handleLogout = () => {
