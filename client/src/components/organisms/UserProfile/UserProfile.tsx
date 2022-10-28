@@ -1,6 +1,3 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
 import React, { FormEvent, useEffect, useState } from 'react';
 
 import {
@@ -30,9 +27,9 @@ interface UserProfileProps {
 const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
   const { t } = useTranslation();
   const { isLoading, user } = useUser(id);
-  const [updateUser] = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateUser();
   const [response, setResponse] = useState<UpdateResponse | undefined>();
-  const [createUserSettings] = useCreateUserSettings();
+  const { mutateAsync: createUserSettings } = useCreateUserSettings();
   // const {
   //   isLoading: isLoadingEmployees,
   //   error,
@@ -190,15 +187,15 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
     <div>
       <form
         onSubmit={onSubmitHandler}
-        css={{
+        style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          '> div, h2, button': {
-            margin: '10px auto',
-            width: '100%',
-            maxWidth: '300px',
-          },
+          // '> div, h2, button': {
+          //   margin: '10px auto',
+          //   width: '100%',
+          //   maxWidth: '300px',
+          // },
         }}
       >
         <Heading as="h2" size="md">

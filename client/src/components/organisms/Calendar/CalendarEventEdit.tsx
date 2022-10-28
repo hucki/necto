@@ -82,10 +82,10 @@ function CalendarEventEdit({
     cancellationReasons,
   } = useAllCancellationReasons();
 
-  const [updateEvent, { error: savingError }] = useUpdateEvent();
-  const [deleteEvent] = useDeleteEvent();
+  const { mutateAsync: updateEvent, error: savingError } = useUpdateEvent();
+  const { mutateAsync: deleteEvent } = useDeleteEvent();
 
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | undefined>();
   const [changedEvent, setChangedEvent] = useState<Event>(event);
   const isNote = changedEvent.type === 'note';
   const handleChangedEvent = (changedEvent: Event) => {
@@ -113,7 +113,7 @@ function CalendarEventEdit({
 
   function handleSubmit() {
     if (checkOverlap({ eventToCheck: changedEvent, eventList: rawEvents })) {
-      setMessage(t('error.event.overlapping'));
+      setMessage(t('error.event.overlapping') || undefined);
       return false;
     }
     if (changedEvent) {

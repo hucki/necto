@@ -22,7 +22,7 @@ import { PermissionLevel } from '../../types/UserSettings';
 
 export const UserSettings = () => {
   const { t } = useTranslation();
-  const [updateUser] = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateUser();
   const { isLoading, error, users, refetch } = useAllUsers();
   const {
     isLoading: isLoadingPermissions,

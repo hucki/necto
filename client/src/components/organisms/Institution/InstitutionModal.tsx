@@ -31,9 +31,9 @@ export const InstitutionModal = ({
   const toast = useToast();
   const { t } = useTranslation();
 
-  const [updateInstitution, { error: updateInstitutionError }] =
+  const { mutateAsync: updateInstitution, error: updateInstitutionError } =
     useUpdateInstitution();
-  const [createInstitution, { error: createInstitutionError }] =
+  const { mutateAsync: createInstitution, error: createInstitutionError } =
     useCreateInstitution();
 
   const [currentInstitution, setCurrentInstitution] = useState<Institution>(

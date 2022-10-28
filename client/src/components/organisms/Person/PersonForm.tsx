@@ -41,8 +41,8 @@ export const PersonForm = ({
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
   const { doctors } = useAllDoctors();
-  const [createPatientContact] = useCreatePatientContact();
-  const [createDoctorContact] = useCreateDoctorContact();
+  const { mutateAsync: createPatientContact } = useCreatePatientContact();
+  const { mutateAsync: createDoctorContact } = useCreateDoctorContact();
   const { institutions } = useAllInstitutions();
   const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({
     ...person,

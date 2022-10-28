@@ -9,7 +9,8 @@ import {
 
 const EventSettings = () => {
   const { isLoading, error, cancellationReasons } = useAllCancellationReasons();
-  const [createCancellationReason] = useCreateCancellationReason();
+  const { mutateAsync: createCancellationReason } =
+    useCreateCancellationReason();
   const [newCancellationReason, setNewCancellationReason] = useState({
     id: '',
     description: '',

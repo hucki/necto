@@ -37,7 +37,7 @@ function CalendarLeaveEdit({
   const { isMobile } = useViewport();
 
   const [changedLeave, setChangedLeave] = useState<Event>(() => leave);
-  const [deleteEventWithChildren] = useDeleteEventWithChildren();
+  const { mutateAsync: deleteEventWithChildren } = useDeleteEventWithChildren();
   const { startTime, endTime, parentEventId } = getEventSeries(changedLeave);
 
   const handleDelete = () => {

@@ -8,7 +8,7 @@ interface ApprovalPanelProps {
   events: Event[];
 }
 const ApprovalPanel = ({ events }: ApprovalPanelProps) => {
-  const [approveLeave] = useApproveLeave();
+  const { mutateAsync: approveLeave } = useApproveLeave();
   const handleApproveLeave = ({ leave }: { leave: Event }) => {
     approveLeave({ event: leave });
   };

@@ -76,9 +76,10 @@ const EmployeeSettings = () => {
   const { isLoading: isLoadingTeams, error: errorTeams, teams } = useAllTeams();
   const { isLoading: isLoadingUsers, error: errorUsers, users } = useAllUsers();
 
-  const [updateEmployee] = useUpdateEmployee();
+  const { mutateAsync: updateEmployee } = useUpdateEmployee();
 
-  const [addEmployeeToTeam, { error: savingError }] = useAddEmployeeToTeam();
+  const { mutateAsync: addEmployeeToTeam, error: savingError } =
+    useAddEmployeeToTeam();
   const [currentEmployee, setCurrentemployee] = useState<
     Employee | undefined
   >();

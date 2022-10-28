@@ -83,14 +83,14 @@ function CalendarEventInput({
   const [newEvent, setNewEvent] = useState<Event>(defaultEvent);
   const { isLoading, isError, rawEvents } = useDaysEvents(dateTime);
 
-  const [createEvent, { error: savingError }] = useCreateEvent();
-  const [message, setMessage] = useState<string | null>(null);
+  const { mutateAsync: createEvent, error: savingError } = useCreateEvent();
+  const [message, setMessage] = useState<string | undefined>();
 
   useEffect(() => {
     // reset event State if new incoming datetime or uuid
     setIsNote(getIsNote(dateTime));
     setNewEvent(defaultEvent);
-    setMessage(null);
+    setMessage(undefined);
   }, [dateTime, uuid, isNote]);
 
   const handleChangedEvent = (changedEvent: Event) => {
@@ -117,7 +117,7 @@ function CalendarEventInput({
 
   async function handleSubmit() {
     if (checkOverlap({ eventToCheck: newEvent, eventList: rawEvents })) {
-      setMessage(t('error.event.overlapping'));
+      setMessage(t('error.event.overlapping') || undefined);
       return false;
     }
     if (newEvent) {
