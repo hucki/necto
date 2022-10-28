@@ -2,6 +2,7 @@ import { Button } from '@chakra-ui/react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTimes } from 'react-icons/fa';
+import { IconButton } from '../../atoms/Buttons';
 
 interface ModalFooterControlsProps {
   onSubmit?: () => void;
@@ -26,16 +27,14 @@ export const ModalFooterControls = ({
         }}
       >
         <Button
-          icon={<FaTimes />}
-          aria-label="close modal"
+          leftIcon={<FaTimes />}
+          aria-label="cancel modal"
           type="button"
           disabled={!onClose}
           onClick={onClose ? onClose : () => {}}
           size="sm"
-          colorScheme="blue"
-          variant="outline"
         >
-          {t('button.close')}
+          {t('button.cancel')}
         </Button>
         <Button
           aria-label="save changes"
