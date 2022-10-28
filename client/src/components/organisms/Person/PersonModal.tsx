@@ -14,6 +14,8 @@ import { useUpdateContact } from '../../../hooks/contact';
 import { useCreateDoctor, useUpdateDoctor } from '../../../hooks/doctor';
 import { useCreatePatient, useUpdatePatient } from '../../../hooks/patient';
 import { ContactData } from '../../../types/ContactData';
+import { Doctor } from '../../../types/Doctor';
+import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/ControlWrapper';
@@ -35,13 +37,13 @@ export const PersonModal = ({
   const toast = useToast();
   const { t } = useTranslation();
 
-  const [updatePatient] = useUpdatePatient();
-  const [createPatient] = useCreatePatient();
+  const { mutateAsync: updatePatient } = useUpdatePatient();
+  const { mutateAsync: createPatient } = useCreatePatient();
 
-  const [updateDoctor] = useUpdateDoctor();
-  const [createDoctor] = useCreateDoctor();
+  const { mutateAsync: updateDoctor } = useUpdateDoctor();
+  const { mutateAsync: createDoctor } = useCreateDoctor();
 
-  const [updateContact] = useUpdateContact();
+  const { mutateAsync: updateContact } = useUpdateContact();
 
   const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'edit');
   const [currentPerson, setCurrentPerson] = useState<Person>(() => ({
@@ -91,13 +93,13 @@ export const PersonModal = ({
       if (currentPerson.uuid) {
         // update
         personType === 'patient'
-          ? updatePatient({ patient: currentPerson }).then((res) => {
+          ? updatePatient({ patient: currentPerson }).then((res: Patient) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
                 toast(toastOptions({ type: 'updated', result: 'success' }));
               }
             })
-          : updateDoctor({ doctor: currentPerson }).then((res) => {
+          : updateDoctor({ doctor: currentPerson }).then((res: Doctor) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
                 toast(toastOptions({ type: 'updated', result: 'success' }));
@@ -113,13 +115,13 @@ export const PersonModal = ({
       } else {
         // create
         personType === 'patient'
-          ? createPatient({ patient: currentPerson }).then((res) => {
+          ? createPatient({ patient: currentPerson }).then((res: Patient) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
                 toast(toastOptions({ type: 'created', result: 'success' }));
               }
             })
-          : createDoctor({ doctor: currentPerson }).then((res) => {
+          : createDoctor({ doctor: currentPerson }).then((res: Doctor) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
                 toast(toastOptions({ type: 'created', result: 'success' }));
