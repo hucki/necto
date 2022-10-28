@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useHistory } from 'react-router';
 import { getToken, login, logout, me, tokenKey } from '../services/Auth';
 import { LoginResponse, MinimalUser } from '../types/Auth';
 
@@ -50,7 +49,6 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 function AuthProvider({ children }: { children: any }) {
-  const history = useHistory();
   const [userToken, setUserToken] = useState<string | null>(() => getToken());
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
