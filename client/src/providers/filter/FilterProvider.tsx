@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { useState } from 'react';
 import { CalendarOption, CalendarView } from './types';
 import { Company } from '../../types/Company';
@@ -6,11 +6,10 @@ import { Team } from '../../types/Employee';
 import { filterContext } from '.';
 import { useAllCompanies } from '../../hooks/companies';
 
-export const FilterProvider: FunctionComponent = ({
-  children,
-}: {
+type FilterProviderProps = {
   children?: ReactNode;
-}) => {
+};
+export const FilterProvider = ({ children }: FilterProviderProps) => {
   const {
     isLoading: isLoadingCompanies,
     error: hasErrorCompanies,
