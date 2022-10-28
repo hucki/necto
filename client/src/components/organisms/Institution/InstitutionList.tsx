@@ -44,7 +44,7 @@ const InstitutionList = ({
   const tableBody = institutions.map((institution, index) => (
     <Tr key={index} id={institution.uuid} onClick={onClickRow}>
       {tableColumns.map((key, index) => (
-        <Td key={index}>{institution[key]}</Td>
+        <Td key={index}>{institution[key] as string}</Td>
       ))}
     </Tr>
   ));
