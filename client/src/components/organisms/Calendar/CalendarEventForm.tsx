@@ -40,7 +40,7 @@ dayjs.locale('de');
 interface CalendarEventFormProps {
   event: Event;
   handleChangedEvent: (event: Event) => void;
-  setMessage: (message: string | null) => void;
+  setMessage: (message: string | undefined) => void;
 }
 
 function CalendarEventForm({
@@ -78,7 +78,7 @@ function CalendarEventForm({
     const key = event.currentTarget.name;
     const value = event.currentTarget.value;
     setCurrentEvent((cur) => ({ ...cur, [`${key}`]: value }));
-    setMessage(null);
+    setMessage(undefined);
   }
 
   function onTextareaChange(event: React.FormEvent<HTMLTextAreaElement>) {
@@ -86,7 +86,7 @@ function CalendarEventForm({
     const key = event.currentTarget.name;
     const value = event.currentTarget.value;
     setCurrentEvent((cur) => ({ ...cur, [`${key}`]: value }));
-    setMessage(null);
+    setMessage(undefined);
   }
 
   function onCheckboxChange(event: React.FormEvent<HTMLInputElement>) {
@@ -95,7 +95,7 @@ function CalendarEventForm({
       ...cur,
       [`${event.currentTarget.name}`]: event.currentTarget.checked,
     }));
-    setMessage(null);
+    setMessage(undefined);
   }
 
   function onIsNoteChange(event: React.FormEvent<HTMLInputElement>) {
@@ -104,7 +104,7 @@ function CalendarEventForm({
       ...cur,
       type: event.currentTarget.checked ? 'note' : 'Appointment',
     }));
-    setMessage(null);
+    setMessage(undefined);
   }
 
   type TimeChangeProps = {
@@ -124,7 +124,7 @@ function CalendarEventForm({
           endTime: dayjs(date.toString()).add(eventDuration, 'm'),
         }));
     }
-    setMessage(null);
+    setMessage(undefined);
   }
 
   function onSelectChange(event: React.FormEvent<HTMLSelectElement>) {
@@ -145,7 +145,7 @@ function CalendarEventForm({
       ...cur,
       endTime: dayjs(cur.startTime.toString()).add(event.target.value, 'm'),
     }));
-    setMessage(null);
+    setMessage(undefined);
   }
 
   function handleRecurringIntervalChange(event: BaseSyntheticEvent) {
@@ -156,7 +156,7 @@ function CalendarEventForm({
         ? 20
         : event.target.value;
     setRecurringInterval(interval);
-    setMessage(null);
+    setMessage(undefined);
   }
 
   useEffect(() => {
