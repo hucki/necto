@@ -1,19 +1,20 @@
 import {
   useQuery,
-  QueryResult,
+  UseQueryResult,
   useMutation,
-  MutationResultPair,
-  queryCache,
-} from 'react-query';
+  UseMutationResult,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Patient } from '../types/Patient';
 
-export function useCreatePatient(): MutationResultPair<
+export function useCreatePatient(): UseMutationResult<
   Patient,
   Error,
   { patient: Patient },
   string
 > {
+  const queryClient = useQueryClient();
   const createPatient = async ({
     patient,
   }: {
@@ -23,17 +24,18 @@ export function useCreatePatient(): MutationResultPair<
   };
   return useMutation(createPatient, {
     onSuccess: () => {
-      queryCache.invalidateQueries('patients');
+      queryClient.invalidateQueries(['patients']);
     },
   });
 }
 
-export function useUpdatePatient(): MutationResultPair<
+export function useUpdatePatient(): UseMutationResult<
   Patient,
   Error,
   { patient: Patient },
   string
 > {
+  const queryClient = useQueryClient();
   const updatePatient = async ({
     patient,
   }: {
@@ -46,16 +48,16 @@ export function useUpdatePatient(): MutationResultPair<
   };
   return useMutation(updatePatient, {
     onSuccess: () => {
-      queryCache.invalidateQueries('patients');
-      queryCache.invalidateQueries('waiting');
+      queryClient.invalidateQueries(['patients']);
+      queryClient.invalidateQueries(['waiting']);
     },
   });
 }
 
-export function useAllPatients(): QueryResult<Patient[]> & {
+export function useAllPatients(): UseQueryResult<Patient[]> & {
   patients: Patient[];
 } {
-  const patientsQuery = useQuery('patients', async () => {
+  const patientsQuery = useQuery(['patients'], async () => {
     return client<Patient[]>('patients');
   });
 
@@ -67,10 +69,10 @@ export function useAllPatients(): QueryResult<Patient[]> & {
   };
 }
 
-export function useAllWaitingPatients(): QueryResult<Patient[]> & {
+export function useAllWaitingPatients(): UseQueryResult<Patient[]> & {
   patients: Patient[];
 } {
-  const patientsQuery = useQuery('waiting', async () => {
+  const patientsQuery = useQuery(['waiting'], async () => {
     return client<Patient[]>('waiting');
   });
 

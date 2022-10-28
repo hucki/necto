@@ -1,16 +1,16 @@
 import {
   useQuery,
-  QueryResult,
-  queryCache,
+  UseQueryResult,
+  useQueryClient,
   useMutation,
-  MutationResultPair,
-} from 'react-query';
+  UseMutationResult,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Employee } from '../types/Employee';
 
 export function useEmployee(
   uuid: string
-): QueryResult<Employee> & { employee: Employee | undefined } {
+): UseQueryResult<Employee> & { employee: Employee | undefined } {
   const employeeQuery = useQuery(['employee', uuid], async () => {
     return client<Employee>(`employees/${uuid}`);
   });
@@ -21,12 +21,13 @@ export function useEmployee(
   };
 }
 
-export function useUpdateEmployee(): MutationResultPair<
+export function useUpdateEmployee(): UseMutationResult<
   Employee,
   Error,
   { employee: Employee },
   string
 > {
+  const queryClient = useQueryClient();
   const updateEmployee = async ({
     employee,
   }: {
@@ -36,15 +37,15 @@ export function useUpdateEmployee(): MutationResultPair<
   };
   return useMutation(updateEmployee, {
     onSuccess: () => {
-      queryCache.invalidateQueries('employees');
+      queryClient.invalidateQueries(['employees']);
     },
   });
 }
 
-export function useAllEmployees(): QueryResult<Employee[]> & {
+export function useAllEmployees(): UseQueryResult<Employee[]> & {
   employees: Employee[];
 } {
-  const employeesQuery = useQuery('employees/all', async () => {
+  const employeesQuery = useQuery(['employees/all'], async () => {
     return client<Employee[]>('employees/all');
   });
 

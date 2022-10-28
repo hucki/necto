@@ -1,17 +1,17 @@
 import {
   useQuery,
-  QueryResult,
+  UseQueryResult,
   useMutation,
-  MutationResultPair,
-  queryCache,
-} from 'react-query';
+  UseMutationResult,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { TeamMember, User } from '../types/User';
 import { UserSettings } from '../types/UserSettings';
 
 export function useUser(
   id: string
-): QueryResult<User> & { user: User | undefined } {
+): UseQueryResult<User> & { user: User | undefined } {
   const userQuery = useQuery(['user', id], async () => {
     return client<User>(`users/${id}`);
   });
@@ -22,24 +22,25 @@ export function useUser(
   };
 }
 
-export function useAddUser(): MutationResultPair<
+export function useAddUser(): UseMutationResult<
   User,
   Error,
   { user: User },
   string
 > {
+  const queryClient = useQueryClient();
   const createUser = async ({ user }: { user: User }): Promise<User> => {
     return client<User>('users', { data: user });
   };
   return useMutation(createUser, {
     onSuccess: () => {
-      queryCache.invalidateQueries('users');
+      queryClient.invalidateQueries(['users']);
     },
   });
 }
 
-export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
-  const usersQuery = useQuery('users', async () => {
+export function useAllUsers(): UseQueryResult<User[]> & { users: User[] } {
+  const usersQuery = useQuery(['users'], async () => {
     return client<User[]>('users');
   });
 
@@ -51,10 +52,10 @@ export function useAllUsers(): QueryResult<User[]> & { users: User[] } {
   };
 }
 
-export function useAllTeamMembers(): QueryResult<TeamMember[]> & {
+export function useAllTeamMembers(): UseQueryResult<TeamMember[]> & {
   teamMembers: TeamMember[];
 } {
-  const teamMembersQuery = useQuery('teamMembers', async () => {
+  const teamMembersQuery = useQuery(['teamMembers'], async () => {
     return client<TeamMember[]>('teamMembers');
   });
 
@@ -66,12 +67,13 @@ export function useAllTeamMembers(): QueryResult<TeamMember[]> & {
   };
 }
 
-export function useCreateUserSettings(): MutationResultPair<
+export function useCreateUserSettings(): UseMutationResult<
   UserSettings,
   Error,
   { userSettings: UserSettings },
   string
 > {
+  const queryClient = useQueryClient();
   const createUserSettings = async ({
     userSettings,
   }: {
@@ -81,17 +83,18 @@ export function useCreateUserSettings(): MutationResultPair<
   };
   return useMutation(createUserSettings, {
     onSuccess: () => {
-      queryCache.invalidateQueries('settings/user');
+      queryClient.invalidateQueries(['settings/user']);
     },
   });
 }
 
-export function useUpdateUserSettings(): MutationResultPair<
+export function useUpdateUserSettings(): UseMutationResult<
   UserSettings,
   Error,
   { userSettings: UserSettings },
   string
 > {
+  const queryClient = useQueryClient();
   const updateUserSettings = async ({
     userSettings,
   }: {
@@ -104,23 +107,24 @@ export function useUpdateUserSettings(): MutationResultPair<
   };
   return useMutation(updateUserSettings, {
     onSuccess: () => {
-      queryCache.invalidateQueries('settings/user');
+      queryClient.invalidateQueries(['settings/user']);
     },
   });
 }
 
-export function useUpdateUser(): MutationResultPair<
+export function useUpdateUser(): UseMutationResult<
   User,
   Error,
   { user: User },
   string
 > {
+  const queryClient = useQueryClient();
   const updateUser = async ({ user }: { user: User }): Promise<User> => {
     return client<User>('users', { data: user, method: 'PATCH' });
   };
   return useMutation(updateUser, {
     onSuccess: () => {
-      queryCache.invalidateQueries('users');
+      queryClient.invalidateQueries(['users']);
     },
   });
 }

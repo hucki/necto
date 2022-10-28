@@ -1,17 +1,17 @@
 import dayjs, { Dayjs } from 'dayjs';
 import {
   useQuery,
-  QueryResult,
+  UseQueryResult,
   useMutation,
-  MutationResultPair,
-  queryCache,
-} from 'react-query';
+  UseMutationResult,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { CancellationReason, Event, LeaveStatus } from '../types/Event';
 
 export function useEvent(
   id: number
-): QueryResult<Event> & { event: Event | undefined } {
+): UseQueryResult<Event> & { event: Event | undefined } {
   const eventQuery = useQuery(['event', id], async () => {
     return client<Event>(`events/${id}`);
   });
@@ -22,12 +22,13 @@ export function useEvent(
   };
 }
 
-export function useDeleteEvent(): MutationResultPair<
+export function useDeleteEvent(): UseMutationResult<
   { message: string },
   Error,
   { uuid: string },
   string
 > {
+  const queryClient = useQueryClient();
   const deleteEvent = async ({
     uuid,
   }: {
@@ -38,17 +39,18 @@ export function useDeleteEvent(): MutationResultPair<
 
   return useMutation(deleteEvent, {
     onSuccess: () => {
-      queryCache.invalidateQueries('events');
+      queryClient.invalidateQueries(['events']);
     },
   });
 }
 
-export function useDeleteEventWithChildren(): MutationResultPair<
+export function useDeleteEventWithChildren(): UseMutationResult<
   { message: string },
   Error,
   { uuid: string },
   string
 > {
+  const queryClient = useQueryClient();
   const deleteEventWithChildren = async ({
     uuid,
   }: {
@@ -61,13 +63,13 @@ export function useDeleteEventWithChildren(): MutationResultPair<
 
   return useMutation(deleteEventWithChildren, {
     onSuccess: () => {
-      queryCache.invalidateQueries('events');
+      queryClient.invalidateQueries(['events']);
     },
   });
 }
 
-export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
-  const eventsQuery = useQuery('events', async () => {
+export function useAllEvents(): UseQueryResult<Event[]> & { events: Event[] } {
+  const eventsQuery = useQuery(['events'], async () => {
     return client<Event[]>('events/a');
   });
 
@@ -82,7 +84,7 @@ export function useAllEvents(): QueryResult<Event[]> & { events: Event[] } {
 export function useWeeksEvents(
   year: number,
   week: number
-): QueryResult<Event[]> & { rawEvents: Event[] } {
+): UseQueryResult<Event[]> & { rawEvents: Event[] } {
   const eventsQuery = useQuery(['events', year, week], async () => {
     return client<Event[]>(`events/w/${year}/${week}`);
   });
@@ -96,7 +98,7 @@ export function useWeeksEvents(
 
 export function useLeavesByStatus(
   leaveStatus: LeaveStatus
-): QueryResult<Event[]> & { rawEvents: Event[] } {
+): UseQueryResult<Event[]> & { rawEvents: Event[] } {
   const eventsQuery = useQuery(['events', leaveStatus], async () => {
     return client<Event[]>(`leaves/${leaveStatus}`);
   });
@@ -110,7 +112,7 @@ export function useLeavesByStatus(
 
 export function useDaysEvents(
   currentDate: Dayjs
-): QueryResult<Event[]> & { rawEvents: Event[] } {
+): UseQueryResult<Event[]> & { rawEvents: Event[] } {
   const year = dayjs(currentDate).format('YYYY');
   const month = dayjs(currentDate).format('MM');
   const day = dayjs(currentDate).format('DD');
@@ -127,7 +129,7 @@ export function useDaysEvents(
 
 export function useEmployeeEvents(
   employeeId: string
-): QueryResult<Event[]> & { employeeEvents: Event[] } {
+): UseQueryResult<Event[]> & { employeeEvents: Event[] } {
   const employeeEventsQuery = useQuery(['events', employeeId], async () => {
     return client<Event[]>(`events/e/${employeeId}`);
   });
@@ -139,28 +141,30 @@ export function useEmployeeEvents(
   };
 }
 
-export function useCreateEvent(): MutationResultPair<
+export function useCreateEvent(): UseMutationResult<
   Event,
   Error,
   { event: Event },
   string
 > {
+  const queryClient = useQueryClient();
   const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client<Event>('events', { data: event });
   };
   return useMutation(createEvent, {
     onSuccess: () => {
-      queryCache.invalidateQueries('events');
+      queryClient.invalidateQueries(['events']);
     },
   });
 }
 
-export function useUpdateEvent(): MutationResultPair<
+export function useUpdateEvent(): UseMutationResult<
   Event,
   Error,
   { event: Event },
   string
 > {
+  const queryClient = useQueryClient();
   const updateEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client<Event>(`events/${event.uuid}`, {
       data: event,
@@ -169,17 +173,18 @@ export function useUpdateEvent(): MutationResultPair<
   };
   return useMutation(updateEvent, {
     onSuccess: () => {
-      queryCache.invalidateQueries('events');
+      queryClient.invalidateQueries(['events']);
     },
   });
 }
 
-export function useApproveLeave(): MutationResultPair<
+export function useApproveLeave(): UseMutationResult<
   Event,
   Error,
   { event: Event },
   string
 > {
+  const queryClient = useQueryClient();
   const updateEvent = async ({ event }: { event: Event }): Promise<Event> => {
     return client<Event>(`leaves/${event.uuid}`, {
       method: 'PATCH',
@@ -187,19 +192,20 @@ export function useApproveLeave(): MutationResultPair<
   };
   return useMutation(updateEvent, {
     onSuccess: () => {
-      queryCache.invalidateQueries('events');
+      queryClient.invalidateQueries(['events']);
     },
   });
 }
 
 const cancellationReasonsRoute = 'settings/event/cr';
 
-export function useCreateCancellationReason(): MutationResultPair<
+export function useCreateCancellationReason(): UseMutationResult<
   CancellationReason,
   Error,
   { cr: CancellationReason },
   string
 > {
+  const queryClient = useQueryClient();
   const createCancellationReason = async ({
     cr,
   }: {
@@ -209,17 +215,18 @@ export function useCreateCancellationReason(): MutationResultPair<
   };
   return useMutation(createCancellationReason, {
     onSuccess: () => {
-      queryCache.invalidateQueries(cancellationReasonsRoute);
+      queryClient.invalidateQueries([cancellationReasonsRoute]);
     },
   });
 }
 
-export function useUpdateCancellationReason(): MutationResultPair<
+export function useUpdateCancellationReason(): UseMutationResult<
   CancellationReason,
   Error,
   { cr: CancellationReason },
   string
 > {
+  const queryClient = useQueryClient();
   const updateCancellationReason = async ({
     cr,
   }: {
@@ -232,15 +239,15 @@ export function useUpdateCancellationReason(): MutationResultPair<
   };
   return useMutation(updateCancellationReason, {
     onSuccess: () => {
-      queryCache.invalidateQueries(cancellationReasonsRoute);
+      queryClient.invalidateQueries([cancellationReasonsRoute]);
     },
   });
 }
 
-export function useAllCancellationReasons(): QueryResult<
+export function useAllCancellationReasons(): UseQueryResult<
   CancellationReason[]
 > & { cancellationReasons: CancellationReason[] } {
-  const usersQuery = useQuery(cancellationReasonsRoute, async () => {
+  const usersQuery = useQuery([cancellationReasonsRoute], async () => {
     return client<CancellationReason[]>(cancellationReasonsRoute);
   });
 

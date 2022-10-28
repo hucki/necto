@@ -1,19 +1,21 @@
 import {
   useQuery,
-  QueryResult,
+  UseQueryResult,
   useMutation,
-  MutationResultPair,
-  queryCache,
-} from 'react-query';
+  UseMutationResult,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Doctor } from '../types/Doctor';
 
-export function useCreateDoctor(): MutationResultPair<
+export function useCreateDoctor(): UseMutationResult<
   Doctor,
   Error,
   { doctor: Doctor },
   string
 > {
+  const queryClient = useQueryClient();
+
   const createDoctor = async ({
     doctor,
   }: {
@@ -23,17 +25,18 @@ export function useCreateDoctor(): MutationResultPair<
   };
   return useMutation(createDoctor, {
     onSuccess: () => {
-      queryCache.invalidateQueries('doctors');
+      queryClient.invalidateQueries(['doctors']);
     },
   });
 }
 
-export function useUpdateDoctor(): MutationResultPair<
+export function useUpdateDoctor(): UseMutationResult<
   Doctor,
   Error,
   { doctor: Doctor },
   string
 > {
+  const queryClient = useQueryClient();
   const updateDoctor = async ({
     doctor,
   }: {
@@ -46,15 +49,15 @@ export function useUpdateDoctor(): MutationResultPair<
   };
   return useMutation(updateDoctor, {
     onSuccess: () => {
-      queryCache.invalidateQueries('doctors');
+      queryClient.invalidateQueries(['doctors']);
     },
   });
 }
 
-export function useAllDoctors(): QueryResult<Doctor[]> & {
+export function useAllDoctors(): UseQueryResult<Doctor[]> & {
   doctors: Doctor[];
 } {
-  const doctorsQuery = useQuery('doctors', async () => {
+  const doctorsQuery = useQuery(['doctors'], async () => {
     return client<Doctor[]>('doctors');
   });
 

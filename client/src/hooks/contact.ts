@@ -1,13 +1,18 @@
-import { useMutation, queryCache, MutationResultPair } from 'react-query';
+import {
+  useMutation,
+  useQueryClient,
+  UseMutationResult,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { ContactData } from '../types/ContactData';
 
-export function useCreatePatientContact(): MutationResultPair<
+export function useCreatePatientContact(): UseMutationResult<
   ContactData,
   Error,
   { contactData: ContactData },
   string
 > {
+  const queryClient = useQueryClient();
   const createPatientContact = async ({
     contactData,
   }: {
@@ -19,16 +24,17 @@ export function useCreatePatientContact(): MutationResultPair<
   };
   return useMutation(createPatientContact, {
     onSuccess: () => {
-      queryCache.invalidateQueries('patients');
+      queryClient.invalidateQueries(['patients']);
     },
   });
 }
-export function useCreateDoctorContact(): MutationResultPair<
+export function useCreateDoctorContact(): UseMutationResult<
   ContactData,
   Error,
   { contactData: ContactData },
   string
 > {
+  const queryClient = useQueryClient();
   const createDoctorContact = async ({
     contactData,
   }: {
@@ -40,17 +46,18 @@ export function useCreateDoctorContact(): MutationResultPair<
   };
   return useMutation(createDoctorContact, {
     onSuccess: () => {
-      queryCache.invalidateQueries('doctors');
+      queryClient.invalidateQueries(['doctors']);
     },
   });
 }
 
-export function useUpdateContact(): MutationResultPair<
+export function useUpdateContact(): UseMutationResult<
   ContactData,
   Error,
   { contactData: ContactData },
   string
 > {
+  const queryClient = useQueryClient();
   const updateContact = async ({
     contactData,
   }: {
@@ -63,9 +70,9 @@ export function useUpdateContact(): MutationResultPair<
   };
   return useMutation(updateContact, {
     onSuccess: () => {
-      queryCache.invalidateQueries('patients');
-      queryCache.invalidateQueries('doctors');
-      queryCache.invalidateQueries('waiting');
+      queryClient.invalidateQueries(['patients']);
+      queryClient.invalidateQueries(['doctors']);
+      queryClient.invalidateQueries(['waiting']);
     },
   });
 }

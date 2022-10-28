@@ -1,11 +1,12 @@
-import { useQuery, QueryResult } from 'react-query';
+import { useQuery, UseQueryResult, QueryClient } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Company } from '../types/Company';
 
-export function useAllCompanies(): QueryResult<Company[]> & {
+export function useAllCompanies(): UseQueryResult<Company[]> & {
   companies: Company[];
 } {
-  const companiesQuery = useQuery('companies', async () => {
+  const queryClient = new QueryClient();
+  const companiesQuery = useQuery(['companies'], async () => {
     return client<Company[]>('companies');
   });
 

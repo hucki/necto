@@ -1,16 +1,16 @@
 import {
   useQuery,
-  QueryResult,
-  MutationResultPair,
+  UseQueryResult,
+  UseMutationResult,
   useMutation,
-  queryCache,
-} from 'react-query';
+  useQueryClient,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Employee, Employee2Team, Team } from '../types/Employee';
 
 export function useTeam(
   uuid: string
-): QueryResult<Team> & { team: Team | undefined } {
+): UseQueryResult<Team> & { team: Team | undefined } {
   const teamQuery = useQuery(['team', uuid], async () => {
     return client<Team>(`teams/${uuid}`);
   });
@@ -21,8 +21,8 @@ export function useTeam(
   };
 }
 
-export function useAllTeams(): QueryResult<Team[]> & { teams: Team[] } {
-  const teamsQuery = useQuery('teams', async () => {
+export function useAllTeams(): UseQueryResult<Team[]> & { teams: Team[] } {
+  const teamsQuery = useQuery(['teams'], async () => {
     return client<Team[]>('teams');
   });
 
@@ -37,12 +37,13 @@ export function useAllTeams(): QueryResult<Team[]> & { teams: Team[] } {
   };
 }
 
-export function useAddEmployeeToTeam(): MutationResultPair<
+export function useAddEmployeeToTeam(): UseMutationResult<
   Employee2Team,
   Error,
   { employee2Team: Employee2Team },
   string
 > {
+  const queryClient = useQueryClient();
   const addEmployeeToTeam = async ({
     employee2Team,
   }: {
@@ -52,7 +53,7 @@ export function useAddEmployeeToTeam(): MutationResultPair<
   };
   return useMutation(addEmployeeToTeam, {
     onSuccess: () => {
-      queryCache.invalidateQueries('emlpoyee2Team');
+      queryClient.invalidateQueries(['emlpoyee2Team']);
     },
   });
 }

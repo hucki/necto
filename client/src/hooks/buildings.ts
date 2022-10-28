@@ -1,10 +1,10 @@
-import { useQuery, QueryResult } from 'react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Building } from '../types/Rooms';
 
 export function usebuilding(
   uuid: string
-): QueryResult<Building> & { building: Building | undefined } {
+): UseQueryResult<Building> & { building: Building | undefined } {
   const buildingQuery = useQuery(['building', uuid], async () => {
     return client<Building>(`buildings/${uuid}`);
   });
@@ -15,10 +15,10 @@ export function usebuilding(
   };
 }
 
-export function useAllbuildings(): QueryResult<Building[]> & {
+export function useAllbuildings(): UseQueryResult<Building[]> & {
   buildings: Building[];
 } {
-  const buildingsQuery = useQuery('buildings', async () => {
+  const buildingsQuery = useQuery(['buildings'], async () => {
     return client<Building[]>('buildings');
   });
 

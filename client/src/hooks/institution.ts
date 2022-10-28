@@ -1,19 +1,20 @@
 import {
   useQuery,
-  QueryResult,
+  UseQueryResult,
   useMutation,
-  MutationResultPair,
-  queryCache,
-} from 'react-query';
+  UseMutationResult,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Institution, InstitutionInput } from '../types/Institution';
 
-export function useCreateInstitution(): MutationResultPair<
+export function useCreateInstitution(): UseMutationResult<
   Institution,
   Error,
   { institution: InstitutionInput },
   string
 > {
+  const queryClient = useQueryClient();
   const createInstitution = async ({
     institution,
   }: {
@@ -23,19 +24,20 @@ export function useCreateInstitution(): MutationResultPair<
   };
   return useMutation(createInstitution, {
     onSuccess: () => {
-      queryCache.invalidateQueries('institutions');
-      queryCache.invalidateQueries('institutions/all');
-      queryCache.invalidateQueries('institutions/archived');
+      queryClient.invalidateQueries(['institutions']);
+      queryClient.invalidateQueries(['institutions/all']);
+      queryClient.invalidateQueries(['institutions/archived']);
     },
   });
 }
 
-export function useUpdateInstitution(): MutationResultPair<
+export function useUpdateInstitution(): UseMutationResult<
   Institution,
   Error,
   { institution: InstitutionInput },
   string
 > {
+  const queryClient = useQueryClient();
   const updateInstitution = async ({
     institution,
   }: {
@@ -48,16 +50,16 @@ export function useUpdateInstitution(): MutationResultPair<
   };
   return useMutation(updateInstitution, {
     onSuccess: () => {
-      queryCache.invalidateQueries('institutions/all');
-      queryCache.invalidateQueries('institutions/archived');
+      queryClient.invalidateQueries(['institutions/all']);
+      queryClient.invalidateQueries(['institutions/archived']);
     },
   });
 }
 
-export function useAllInstitutions(): QueryResult<Institution[]> & {
+export function useAllInstitutions(): UseQueryResult<Institution[]> & {
   institutions: Institution[];
 } {
-  const institutionsQuery = useQuery('institutions/all', async () => {
+  const institutionsQuery = useQuery(['institutions/all'], async () => {
     return client<Institution[]>('institutions/all');
   });
 
@@ -69,10 +71,10 @@ export function useAllInstitutions(): QueryResult<Institution[]> & {
   };
 }
 
-export function useAllArchivedInstitutions(): QueryResult<Institution[]> & {
+export function useAllArchivedInstitutions(): UseQueryResult<Institution[]> & {
   institutions: Institution[];
 } {
-  const institutionsQuery = useQuery('institutions/archived', async () => {
+  const institutionsQuery = useQuery(['institutions/archived'], async () => {
     return client<Institution[]>('institutions/archived');
   });
 
