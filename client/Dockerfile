@@ -1,6 +1,6 @@
 # build environment
 # Pull Docker Hub base image
-FROM node:14.16.0-alpine3.10 AS builder
+FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
