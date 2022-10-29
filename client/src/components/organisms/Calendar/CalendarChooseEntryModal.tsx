@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 
 interface CalendarChooseEntryModalProps {
   events: Event[];
+  // eslint-disable-next-line no-unused-vars
   handleChosenEvent: (e: Event) => void;
 }
 

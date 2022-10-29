@@ -1,9 +1,8 @@
-// import UserContext — you'd learn how to implement this below
 import React, {
   createContext,
   Dispatch,
+  ReactNode,
   SetStateAction,
-  useContext,
   useMemo,
   useState,
 } from 'react';
@@ -21,16 +20,17 @@ export type GoToTarget =
 type UserDateContextType = {
   currentDate: Dayjs | undefined;
   setCurrentDate: Dispatch<SetStateAction<Dayjs>>;
+  // eslint-disable-next-line no-unused-vars
   goTo: (target: GoToTarget) => void;
 };
 
 const UserDateContext = createContext<UserDateContextType>({
   currentDate: undefined,
   setCurrentDate: () => undefined,
-  goTo: (target) => undefined,
+  goTo: () => undefined,
 });
 
-function UserDateProvider({ children }: { children: any }) {
+function UserDateProvider({ children }: { children: ReactNode }) {
   const [currentDate, setCurrentDate] = useState(dayjs());
 
   const goTo = (target: GoToTarget) => {

@@ -29,6 +29,7 @@ interface PersonFormProps {
   person: Person;
   isReadOnly: boolean;
   personType: 'doctor' | 'patient';
+  // eslint-disable-next-line no-unused-vars
   onChange: (person: Person, contactDataCollection: ContactData[]) => void;
 }
 

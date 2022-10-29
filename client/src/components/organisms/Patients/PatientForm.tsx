@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { getDisplayName } from '../../../helpers/displayNames';
 import { useAllDoctors } from '../../../hooks/doctor';
-import { useViewport } from '../../../hooks/useViewport';
 import { Patient } from '../../../types/Patient';
 import {
   Input,
@@ -17,6 +16,7 @@ import {
 interface PatientFormProps {
   patient: Patient;
   type: 'create' | 'update' | 'view';
+  // eslint-disable-next-line no-unused-vars
   onChange: (patient: Patient) => void;
 }
 
@@ -41,9 +41,8 @@ export const PatientForm = ({
   type = 'view',
   onChange,
 }: PatientFormProps) => {
-  const { isMobile } = useViewport();
   const { t } = useTranslation();
-  const { isLoading, error, doctors } = useAllDoctors();
+  const { doctors } = useAllDoctors();
   const [currentPatient, setCurrentPatient] = useState<Patient>(() => ({
     ...patient,
   }));

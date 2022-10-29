@@ -64,6 +64,7 @@ export async function client<T, P = T>(
   });
 }
 
+// eslint-disable-next-line no-unused-vars
 const queryParamsToString: (queryParams: QueryParams) => string = (
   queryParams
 ) => {

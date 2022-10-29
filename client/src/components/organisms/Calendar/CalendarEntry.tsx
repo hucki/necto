@@ -18,14 +18,15 @@ import {
 } from '../../Library/Event';
 import { t } from 'i18next';
 import { useViewport } from '../../../hooks/useViewport';
-import { OnClickCalendarEventProps } from './CalendarColumn';
+import { ItemStyle, OnClickCalendarEventProps } from './CalendarColumn';
 
 interface CalendarEntryProps {
   event: Event;
   readOnly: boolean;
   showTime?: boolean;
+  // eslint-disable-next-line no-unused-vars
   onClickHandler: ({ e, event }: OnClickCalendarEventProps) => void;
-  styles: any;
+  styles: ItemStyle;
 }
 
 export const CalendarEntry = ({
@@ -84,12 +85,8 @@ export const CalendarEntry = ({
         ]);
       }
     }
-    // setIcons((icons) => [...icons, <span key="isDiagnostic" style={{color: 'red'}}>D</span>]);
   }, [event]);
 
-  const timeString = `${dayjs(event.startTime).format('HH:mm')} - ${dayjs(
-    event.endTime
-  ).format('HH:mm')}`;
   const startTimeString = `${dayjs(event.startTime).format('HH:mm')}`;
 
   const isNote = event.type === 'note';

@@ -15,6 +15,7 @@ import { IconButton } from '../../atoms/Buttons';
 
 interface InstitutionListProps {
   institutions: Institution[];
+  // eslint-disable-next-line no-unused-vars
   onClickRow: (event: React.MouseEvent<HTMLTableRowElement>) => void;
   showArchived: boolean;
 }
@@ -23,7 +24,6 @@ const InstitutionList = ({
   onClickRow,
   showArchived,
 }: InstitutionListProps) => {
-  // pagination controls
   const rowsPerPage = 6;
   const numOfPages = Math.ceil(institutions.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);

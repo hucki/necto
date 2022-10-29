@@ -18,6 +18,7 @@ import HeaderBar from '../components/organisms/HeaderBar/HeaderBar';
 
 interface AuthenticatedAppInputProps {
   id: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: Dispatch<any>;
 }
 
@@ -27,7 +28,7 @@ function AuthenticatedApp({
 }: AuthenticatedAppInputProps): JSX.Element {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { setIsAuthenticated, isLoading } = useContext(AuthContext);
-  const { user, isError, error } = useUser(id);
+  const { user, isError } = useUser(id);
   useEffect(() => {
     if (isError && !isLoading) {
       setIsAuthenticated(false);
@@ -75,6 +76,7 @@ function AuthenticatedApp({
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MapDispatchToProps = (dispatch: Dispatch<any>) => {
   return {
     logIn,

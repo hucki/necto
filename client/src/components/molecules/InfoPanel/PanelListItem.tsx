@@ -8,6 +8,7 @@ import { IconButton } from '../../atoms/Buttons';
 
 type PanelListItemProps = {
   event: Event;
+  // eslint-disable-next-line no-unused-vars
   handleApproveLeave?: ({ leave }: { leave: Event }) => void;
 };
 
