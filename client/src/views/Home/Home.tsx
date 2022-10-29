@@ -16,19 +16,16 @@ import { Greeting, NotificationCount } from '../../components/Library/Messages';
 import { useEmployeeEvents, useLeavesByStatus } from '../../hooks/events';
 import { useAllUsers, useUser } from '../../hooks/user';
 import { AuthContext } from '../../providers/AuthProvider';
+import { Event } from '../../types/Event';
 
 interface EmployeeEventAccordionItemProps {
   employeeId: string;
   now: dayjs.Dayjs;
+  upcomingEvents: Event[];
 }
 const EmployeeEventAccordionItem = ({
-  employeeId,
-  now,
+  upcomingEvents,
 }: EmployeeEventAccordionItemProps) => {
-  const { employeeEvents } = useEmployeeEvents(employeeId);
-  const upcomingEvents = employeeEvents.filter((e) =>
-    dayjs(e.startTime).isAfter(now)
-  );
   return (
     <AccordionItem isDisabled={upcomingEvents.length < 1}>
       <h2>
@@ -68,6 +65,10 @@ const Home = () => {
     ? 'day'
     : 'evening';
 
+  const { employeeEvents } = useEmployeeEvents(employeeId);
+  const upcomingEvents = employeeEvents.filter((e) =>
+    dayjs(e.startTime).isAfter(now)
+  );
   return (
     <>
       <div
@@ -79,7 +80,10 @@ const Home = () => {
         <Greeting>{`${t('dict.good')} ${t(`time.ofDay.${timeOfDay}`)} ${
           user?.firstName
         }`}</Greeting>
-        <Accordion allowMultiple defaultIndex={2}>
+        <Accordion
+          allowMultiple
+          defaultIndex={upcomingEvents.length ? [2] : undefined}
+        >
           {(user?.isAdmin || user?.isPlanner) && (
             <AccordionItem isDisabled={newUsers.length < 1}>
               <h2>
@@ -127,7 +131,11 @@ const Home = () => {
             </AccordionItem>
           )}
           {employeeId && (
-            <EmployeeEventAccordionItem employeeId={employeeId} now={now} />
+            <EmployeeEventAccordionItem
+              upcomingEvents={upcomingEvents}
+              employeeId={employeeId}
+              now={now}
+            />
           )}
         </Accordion>
       </div>
