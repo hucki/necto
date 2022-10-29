@@ -1,13 +1,12 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
+import React from 'react';
 import { Spinner } from '@chakra-ui/react';
-import { jsx } from '@emotion/react';
 import { connect } from 'react-redux';
+import { PersonListWrapper } from '../../components/atoms/Wrapper';
 import PersonList from '../../components/organisms/Person/PersonList';
 import { useAllWaitingPatients } from '../../hooks/patient';
 
 function WaitingList(): JSX.Element {
-  const { isLoading, error, patients } = useAllWaitingPatients();
+  const { isLoading, patients } = useAllWaitingPatients();
   const waitingPatients = patients.map((patient, index) => ({
     numberInLine: index + 1,
     ...patient,
@@ -18,18 +17,9 @@ function WaitingList(): JSX.Element {
   ) : !patients.length ? (
     <div>no data available</div>
   ) : (
-    <div
-      css={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-      }}
-    >
+    <PersonListWrapper>
       <PersonList persons={waitingPatients} />
-    </div>
+    </PersonListWrapper>
   );
 }
 

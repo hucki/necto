@@ -1,6 +1,4 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { connect } from 'react-redux';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
@@ -14,6 +12,7 @@ import { useAllbuildings } from '../../hooks/buildings';
 import { Flex } from '@chakra-ui/react';
 import { useFilter } from '../../hooks/useFilter';
 import FilterBar from '../../components/molecules/FilterBar/FilterBar';
+import { ViewWrapper } from '../../components/atoms/Wrapper';
 
 function getBookings(buildingId: string, rooms: Room[]) {
   const createBookings = () => {
@@ -76,12 +75,8 @@ function getRooms(buildingId: string, rooms: Room[]) {
 }
 
 function Rooms(): JSX.Element {
-  const { isLoading: isLoadingRooms, error: errorRooms, rooms } = useAllRooms();
-  const {
-    isLoading: isLoadingBuildings,
-    error: errorBuildings,
-    buildings,
-  } = useAllbuildings();
+  const { isLoading: isLoadingRooms, rooms } = useAllRooms();
+  const { isLoading: isLoadingBuildings, buildings } = useAllbuildings();
   const [calendarDate] = useState(dayjs('2022-01-17'));
   const { currentBuildingId, setCurrentBuildingId } = useFilter();
 
@@ -110,16 +105,7 @@ function Rooms(): JSX.Element {
   return !currentBuildingId || isLoadingBuildings || isLoadingRooms ? (
     <div>pending</div>
   ) : (
-    <div
-      css={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-      }}
-    >
+    <ViewWrapper>
       <Flex maxW={300}>
         <FilterBar hasBuildingFilter />
       </Flex>
@@ -130,7 +116,7 @@ function Rooms(): JSX.Element {
         daysRange={[calendarDate, calendarDate.add(4, 'day')]}
         columnHeaderFormat={'dddd'}
       />
-    </div>
+    </ViewWrapper>
   );
 }
 

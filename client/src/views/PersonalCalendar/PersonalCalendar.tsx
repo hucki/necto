@@ -1,6 +1,4 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import { connect } from 'react-redux';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
 import { AppState } from '../../types/AppState';
@@ -17,6 +15,7 @@ import { useViewport } from '../../hooks/useViewport';
 import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 import { filterContext } from '../../providers/filter';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
+import { ViewWrapper } from '../../components/atoms/Wrapper';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(LocalizedFormat);
@@ -41,11 +40,6 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   const { user, isLoading: isLoadingUser } = useUser(id);
   const isLoading =
     isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
-
-  const [currentView, setCurrentView] = useState<'day' | 'week'>('day');
-  const onCurrentViewChange = (event: any) => {
-    setCurrentView(event.target.value);
-  };
 
   useEffect(() => {
     if (currentDate && calendarDate !== currentDate)
@@ -74,24 +68,8 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   ];
 
   return (
-    <div
-      css={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-      }}
-    >
+    <ViewWrapper>
       <FilterBar hasDayWeekOption hasCalendarOption />
-      {/* <Flex alignItems="center" maxW="100%">
-        <Label htmlFor="view">{t('calendar.view.label')}</Label>
-        <Select name="view" value={currentView} onChange={onCurrentViewChange}>
-          <option value="day">{t('calendar.view.day')}</option>
-          <option value="week">{t('calendar.view.week')}</option>
-        </Select>
-      </Flex> */}
       {calendarView === 'day' && (
         <CalendarContainer
           readOnly={false}
@@ -115,7 +93,7 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
           columnSubHeaderContent={isMobile ? 'dd' : 'dddd'}
         />
       )}
-    </div>
+    </ViewWrapper>
   );
 }
 
