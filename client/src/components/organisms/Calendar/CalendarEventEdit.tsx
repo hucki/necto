@@ -60,7 +60,6 @@ interface CalendarEventEditProps {
   event: Event;
   isOpen: boolean;
   readOnly: boolean;
-  onOpen: () => void;
   onClose: () => void;
 }
 
@@ -68,21 +67,17 @@ function CalendarEventEdit({
   event,
   isOpen,
   readOnly = false,
-  onOpen,
   onClose,
 }: CalendarEventEditProps): JSX.Element {
   const { t } = useTranslation();
   const { isMobile } = useViewport();
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
-  const { isLoading, isError, rawEvents } = useDaysEvents(event.startTime);
-  const {
-    isLoading: isLoadingCR,
-    error: errorCR,
-    cancellationReasons,
-  } = useAllCancellationReasons();
+  const { rawEvents } = useDaysEvents(event.startTime);
+  const { isLoading: isLoadingCR, cancellationReasons } =
+    useAllCancellationReasons();
 
-  const { mutateAsync: updateEvent, error: savingError } = useUpdateEvent();
+  const { mutateAsync: updateEvent } = useUpdateEvent();
   const { mutateAsync: deleteEvent } = useDeleteEvent();
 
   const [message, setMessage] = useState<string | undefined>();
