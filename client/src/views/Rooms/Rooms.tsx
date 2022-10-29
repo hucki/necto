@@ -1,7 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
-import { AppState } from '../../types/AppState';
 import { Event, EventType } from '../../types/Event';
 import dayjs from 'dayjs';
 import { Room } from '../../types/Ressource';
@@ -120,10 +118,4 @@ function Rooms(): JSX.Element {
   );
 }
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    hoursInterval: state.settings.hoursInterval,
-  };
-};
-
-export default connect(mapStateToProps, null)(Rooms);
+export default Rooms;

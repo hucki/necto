@@ -1,6 +1,5 @@
 import React from 'react';
 import { Spinner } from '@chakra-ui/react';
-import { connect } from 'react-redux';
 import { PersonListWrapper } from '../../components/atoms/Wrapper';
 import PersonList from '../../components/organisms/Person/PersonList';
 import { useAllWaitingPatients } from '../../hooks/patient';
@@ -23,4 +22,4 @@ function WaitingList(): JSX.Element {
   );
 }
 
-export default connect(null, null)(WaitingList);
+export default WaitingList;

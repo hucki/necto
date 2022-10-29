@@ -1,7 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
-import { AppState } from '../../types/AppState';
 import { useDaysEvents } from '../../hooks/events';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
@@ -71,10 +69,4 @@ function TeamCalendar(): JSX.Element {
   );
 }
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    hoursInterval: state.settings.hoursInterval,
-  };
-};
-
-export default connect(mapStateToProps, null)(TeamCalendar);
+export default TeamCalendar;

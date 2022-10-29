@@ -1,8 +1,6 @@
 import React, { CSSProperties, useContext } from 'react';
-import { connect } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAllTeamMembers } from '../../../hooks/user';
-import { AppState } from '../../../types/AppState';
 import TeamCalendar from '../../../views/TeamCalendar/TeamCalendar';
 import PersonalCalendar from '../../../views/PersonalCalendar/PersonalCalendar';
 import Rooms from '../../../views/Rooms/Rooms';
@@ -89,10 +87,4 @@ const Dashboard = ({ id }: DashboardInputProps) => {
   );
 };
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    currentView: state.settings.currentView,
-  };
-};
-
-export default connect(mapStateToProps, null)(Dashboard);
+export default Dashboard;
