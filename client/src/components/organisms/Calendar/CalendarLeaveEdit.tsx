@@ -9,7 +9,7 @@ import { useDeleteEventWithChildren } from '../../../hooks/events';
 import { useViewport } from '../../../hooks/useViewport';
 import { Event } from '../../../types/Event';
 import { IconButton } from '../../atoms/Buttons';
-import { ControlWrapper } from '../../atoms/ControlWrapper';
+import { ControlWrapper } from '../../atoms/Wrapper';
 import {
   ModalBody,
   ModalContent,

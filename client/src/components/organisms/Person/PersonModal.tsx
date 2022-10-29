@@ -18,7 +18,7 @@ import { Doctor } from '../../../types/Doctor';
 import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
-import { ControlWrapper } from '../../atoms/ControlWrapper';
+import { ControlWrapper } from '../../atoms/Wrapper';
 import { PersonForm } from './PersonForm';
 
 interface PersonModalProps {

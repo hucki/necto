@@ -51,7 +51,7 @@ import {
   RiCheckboxLine,
   RiCheckFill,
 } from 'react-icons/ri';
-import { ControlWrapper } from '../../atoms/ControlWrapper';
+import { ControlWrapper } from '../../atoms/Wrapper';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');

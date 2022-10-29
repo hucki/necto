@@ -17,7 +17,7 @@ import {
 import { Institution } from '../../../types/Institution';
 import { InstitutionForm } from './InstitutionForm';
 import { IconButton } from '../../atoms/Buttons';
-import { ControlWrapper } from '../../atoms/ControlWrapper';
+import { ControlWrapper } from '../../atoms/Wrapper';
 
 interface InstitutionModalProps {
   institution: Institution;
