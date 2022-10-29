@@ -1,15 +1,26 @@
 import { useState, TouchEvent, useEffect } from 'react';
 
-type SwipeDirection = 'up' | 'down' | 'left' | 'right';
+const directions = {
+  vertical: ['up', 'down'] as const,
+  horizontal: ['left', 'right'] as const,
+};
+type VerticalDirection = typeof directions.vertical[number];
+type HorizontalDirection = typeof directions.horizontal[number];
 
 export const useSwipe = () => {
-  const [direction, setDirection] = useState<SwipeDirection | undefined>();
+  const [verticalDirection, setVerticalDirection] = useState<
+    VerticalDirection | undefined
+  >();
+  const [horizontalDirection, setHorizontalDirection] = useState<
+    HorizontalDirection | undefined
+  >();
   const [touchStart, setTouchStart] = useState<TouchEvent | undefined>();
   const [touchEnd, setTouchEnd] = useState<TouchEvent | undefined>();
 
   useEffect(() => {
     if (!touchStart || !touchEnd) {
-      setDirection(undefined);
+      setVerticalDirection(undefined);
+      setHorizontalDirection(undefined);
       return;
     }
     if (touchStart && touchEnd) {
@@ -17,7 +28,6 @@ export const useSwipe = () => {
         setTouchEnd(undefined);
         return;
       }
-      // TODO: implement up/down
       const changedX =
         touchEnd.changedTouches[0].clientX -
         touchStart.changedTouches[0].clientX;
@@ -25,12 +35,17 @@ export const useSwipe = () => {
         touchEnd.changedTouches[0].clientY -
         touchStart.changedTouches[0].clientY;
       const unsignedChangedX = Math.sign(changedX) * changedX;
-      if (unsignedChangedX > 10) setDirection(changedX < 0 ? 'left' : 'right');
+      const unsignedChangedY = Math.sign(changedY) * changedY;
+      if (unsignedChangedX > 10)
+        setHorizontalDirection(changedX < 0 ? 'left' : 'right');
+      if (unsignedChangedY > 10)
+        setVerticalDirection(changedY < 0 ? 'up' : 'down');
     }
   }, [touchStart, touchEnd]);
 
   return {
-    direction,
+    horizontalDirection,
+    verticalDirection,
     setTouchEnd,
     setTouchStart,
   };
