@@ -1,6 +1,5 @@
-import React, { Dispatch, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Dashboard from '../components/organisms/Dashboard/Dashboard';
-import { connect } from 'react-redux';
 import { useUser } from '../hooks/user';
 import { logIn } from '../actions/actions';
 import {
@@ -15,17 +14,14 @@ import { AuthContext } from '../providers/AuthProvider';
 import ErrorBoundary from '../components/molecules/Error/ErrorBoundary';
 import SideNav from '../components/organisms/SideNav/SideNav';
 import HeaderBar from '../components/organisms/HeaderBar/HeaderBar';
+import { useDispatch } from 'react-redux';
 
 interface AuthenticatedAppInputProps {
   id: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dispatch: Dispatch<any>;
 }
 
-function AuthenticatedApp({
-  id,
-  dispatch,
-}: AuthenticatedAppInputProps): JSX.Element {
+function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
+  const dispatch = useDispatch();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { setIsAuthenticated, isLoading } = useContext(AuthContext);
   const { user, isError } = useUser(id);
@@ -76,12 +72,4 @@ function AuthenticatedApp({
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const MapDispatchToProps = (dispatch: Dispatch<any>) => {
-  return {
-    logIn,
-    dispatch,
-  };
-};
-
-export default connect(null, MapDispatchToProps)(AuthenticatedApp);
+export default AuthenticatedApp;
