@@ -1,16 +1,11 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { jsx } from '@emotion/react';
+import React from 'react';
 import styled from '@emotion/styled/macro';
 import { t } from 'i18next';
 import * as colors from '../../styles/colors';
 
-interface ErrorMessageVariants {
-  [key: string]: { display: string };
-}
-const errorMessageVariants: ErrorMessageVariants = {
-  stack: { display: 'block' },
-  inline: { display: 'inline-block' },
+const displayVariant = {
+  stack: 'block',
+  inline: 'inline-block',
 };
 
 interface ErrorInputProps {
@@ -27,15 +22,20 @@ function ErrorMessage({
   return (
     <div
       role="alert"
-      css={[{ color: colors.danger }, errorMessageVariants[variant]]}
+      style={{
+        color: colors.danger,
+        display: displayVariant[variant as 'stack' | 'inline'],
+      }}
       {...props}
     >
       <span>{t('error.prefix')}</span>
       <pre
-        css={[
-          { whiteSpace: 'break-spaces', margin: '0', marginBottom: -5 },
-          errorMessageVariants[variant],
-        ]}
+        style={{
+          whiteSpace: 'break-spaces',
+          margin: '0',
+          marginBottom: -5,
+          display: variant === 'stack' ? 'block' : 'inline-block',
+        }}
       >
         {error.message}
       </pre>
