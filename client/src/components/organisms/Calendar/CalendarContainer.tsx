@@ -4,7 +4,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../../types/Event';
 import { AppState } from '../../../types/AppState';
 import { EmployeeRessource, Room } from '../../../types/Ressource';
-import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
 import { useDisclosure } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
@@ -20,6 +19,7 @@ import { useSwipe } from '../../../hooks/useSwipe';
 import { filterContext } from '../../../providers/filter';
 import CalendarLeaveInput from './CalendarLeaveInput';
 import { SwipeIndicator } from '../../atoms/SwipeIndicator';
+import { useSelector } from 'react-redux';
 
 interface CalendarInputProps {
   events: Event[];
@@ -34,13 +34,15 @@ const currentDayjs = dayjs();
 
 function CalendarContainer({
   events,
-  hoursInterval,
   ressources,
   daysRange = [currentDayjs, currentDayjs],
   readOnly = false,
   columnHeaderFormat = 'dddd DD.MM.',
   columnSubHeaderContent = 'ressource',
 }: CalendarInputProps): JSX.Element {
+  const hoursInterval = useSelector(
+    (state) => (state as AppState).settings.hoursInterval
+  );
   const daysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const prevDaysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const { goTo } = useContext(UserDateContext);
@@ -202,10 +204,5 @@ function CalendarContainer({
     </CalendarWrapper>
   );
 }
-const mapStateToProps = (state: AppState) => {
-  return {
-    hoursInterval: state.settings.hoursInterval,
-  };
-};
 
-export default connect(mapStateToProps, null)(CalendarContainer);
+export default CalendarContainer;
