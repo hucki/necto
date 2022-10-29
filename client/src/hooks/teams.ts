@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
-import { Employee, Employee2Team, Team } from '../types/Employee';
+import { Employee2Team, Team } from '../types/Employee';
 
 export function useTeam(
   uuid: string

@@ -23,12 +23,8 @@ import { PermissionLevel } from '../../types/UserSettings';
 export const UserSettings = () => {
   const { t } = useTranslation();
   const { mutateAsync: updateUser } = useUpdateUser();
-  const { isLoading, error, users, refetch } = useAllUsers();
-  const {
-    isLoading: isLoadingPermissions,
-    error: permissionsError,
-    permissions,
-  } = useAllPermissions();
+  const { isLoading, users, refetch } = useAllUsers();
+  const { isLoading: isLoadingPermissions, permissions } = useAllPermissions();
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [currentPermission, setCurrentPermission] = useState<
     PermissionLevel | undefined
@@ -60,7 +56,7 @@ export const UserSettings = () => {
     }
   }, [currentUser, isLoading]);
 
-  const onUserChangeHandler = (event: any) => {
+  const onUserChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentUser(users.filter((t) => t.uuid === event.target.value)[0]);
   };
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -70,7 +66,9 @@ export const UserSettings = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const onPermissionChangeHandler = (event: any) => {
+  const onPermissionChangeHandler = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setCurrentPermission(
       permissions.filter((t) => t.uuid === event.target.value)[0]
     );

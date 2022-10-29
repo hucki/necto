@@ -1,12 +1,12 @@
 import { Checkbox, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useViewport } from '../../../hooks/useViewport';
 import { Institution, InstitutionInput } from '../../../types/Institution';
 import { FormLabel, Input } from '../../Library';
 
 interface InstitutionFormProps {
   institution: Institution;
+  // eslint-disable-next-line no-unused-vars
   onChange: (institution: Institution) => void;
 }
 
@@ -14,7 +14,6 @@ export const InstitutionForm = ({
   institution,
   onChange,
 }: InstitutionFormProps) => {
-  const { isMobile } = useViewport();
   const { t } = useTranslation();
   const [currentInstitution, setCurrentInstitution] =
     useState<InstitutionInput>(() => ({ ...institution }));
@@ -49,21 +48,6 @@ export const InstitutionForm = ({
     setCurrentInstitution((institution) => ({
       ...institution,
       [`${key}`]: event.currentTarget.checked,
-    }));
-  }
-
-  interface OnSelectChangeProps {
-    event: React.FormEvent<HTMLSelectElement>;
-    key: InstitutionKey;
-  }
-
-  function onSelectChange({ event, key }: OnSelectChangeProps) {
-    event.preventDefault();
-    const val =
-      event.currentTarget.value === 'remove' ? null : event.currentTarget.value;
-    setCurrentInstitution((institution) => ({
-      ...institution,
-      [`${key}`]: val,
     }));
   }
 

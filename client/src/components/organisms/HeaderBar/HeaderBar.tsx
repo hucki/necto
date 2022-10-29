@@ -22,7 +22,7 @@ interface HeadaerBarProps {
   onSideNavOpen: () => void;
 }
 
-const HeaderBar = ({ isSideNavOpen, onSideNavOpen }: HeadaerBarProps) => {
+const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
   const { calendarView } = useFilter();
   const { currentDate, setCurrentDate, goTo } = useContext(UserDateContext);
   const { isMobile } = useViewport();

@@ -5,7 +5,6 @@ import {
   useUpdateUser,
   useUser,
 } from '../../../hooks/user';
-// import { useAllEmployees } from '../../hooks/employees';
 import { Input, LabelledInput } from '../../Library';
 import { RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +17,6 @@ import {
   UseToastOptions,
 } from '@chakra-ui/react';
 import { updatePassword } from '../../../services/Auth';
-import { UpdateResponse } from '../../../types/Auth';
 
 interface UserProfileProps {
   id: string;
@@ -28,22 +26,13 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
   const { t } = useTranslation();
   const { isLoading, user } = useUser(id);
   const { mutateAsync: updateUser } = useUpdateUser();
-  const [response, setResponse] = useState<UpdateResponse | undefined>();
   const { mutateAsync: createUserSettings } = useCreateUserSettings();
-  // const {
-  //   isLoading: isLoadingEmployees,
-  //   error,
-  //   employees,
-  //   refetch,
-  // } = useAllEmployees();
   const [state, setState] = useState<'view' | 'edit'>('view');
   const [userState, setUserState] = useState({
     uuid: user?.uuid,
     firstName: user ? user.firstName : '',
     lastName: user ? user.lastName : '',
     email: user ? user.email : '',
-    // employeeId: user && user?.userSettings?.length &&
-    // user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
   });
   const [passwordState, setPasswordState] = useState({
     oldPassword: '',
@@ -94,7 +83,6 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
         uuid: user.uuid,
         firstName: user.firstName,
         lastName: user.lastName,
-        // employeeId: user?.userSettings?.length && user.userSettings[0].employeeId ? user.userSettings[0].employeeId : '',
       }));
     }
   }, [user, isLoading]);
@@ -113,13 +101,6 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
     setPasswordState((currentState) => ({
       ...currentState,
       [e.target.name]: e.target.value,
-    }));
-  };
-
-  const onSelectHandler = (e: any): void => {
-    setUserState((currentState) => ({
-      ...currentState,
-      employeeId: e.target.value,
     }));
   };
 
@@ -163,11 +144,9 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
       });
       setPasswordUpdateResponse(response);
       toast(updatePasswordSuccessOptions);
-      // console.log('✅ changePassword response:', response);
     } catch (error) {
       setPasswordUpdateResponse(error as string);
       toast(updatePasswordErrorOptions);
-      // console.log('❌ changePassword error:', error);
     }
     setPasswordState({
       oldPassword: '',
@@ -191,11 +170,6 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          // '> div, h2, button': {
-          //   margin: '10px auto',
-          //   width: '100%',
-          //   maxWidth: '300px',
-          // },
         }}
       >
         <Heading as="h2" size="md">
@@ -221,21 +195,6 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
           value={userState.lastName}
           onChangeHandler={onChangeHandler}
         />
-        {/* <FormGroup>
-          <Label htmlFor="employee">Employee</Label>
-          <Select
-            disabled={state === 'view'}
-            name="employeeId"
-            value={userState.employeeId}
-            onChange={onSelectHandler}
-          >
-            {employees.filter(e => !e.user || e.user.userId === userState.uuid).map((e, i) => (
-              <option key={i} value={e.uuid}>
-                {e.lastName + ', ' + e.firstName}
-              </option>
-            ))}
-          </Select>
-        </FormGroup> */}
         <Heading as="h2" size="md">
           {t('auth.password')}
         </Heading>

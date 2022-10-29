@@ -1,4 +1,3 @@
-import * as mq from '../../styles/media-queries';
 import {
   ModalContent as ChakraModalContent,
   ModalHeader as ChakraModalHeader,
@@ -20,11 +19,6 @@ const ModalContent = styled(ChakraModalContent)({
   borderRadius: '3px',
   backgroundColor: 'white',
   boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
-  // margin: '20vh auto',
-  // [mq.small]: {
-  // width: '100vw',
-  // margin: '10vh auto',
-  // },
 });
 
 interface ModalHeaderProps {

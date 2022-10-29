@@ -1,17 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
-import { FaCheck } from 'react-icons/fa';
-import styled from '@emotion/styled';
 import { LabelledInput } from '../../Library';
 import { Icon } from '@chakra-ui/react';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
-
-const DataWrapper = styled.div({
-  display: 'grid',
-  gridTemplateColumns: '1fr 3fr',
-});
-const DataDisplay = styled.div({ fontWeight: 'bold' });
 
 const CalendarEventView = ({
   eventTitle,

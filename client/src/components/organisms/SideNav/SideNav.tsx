@@ -8,7 +8,6 @@ import {
   RiZzzLine,
 } from 'react-icons/ri';
 import { useNavigate, useLocation } from 'react-router';
-import { AppState } from '../../../types/AppState';
 import { SideNavContainer } from '../../Library';
 import { useTranslation } from 'react-i18next';
 import { FaClinicMedical, FaRegBuilding } from 'react-icons/fa';
@@ -156,12 +155,6 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
       </NavigationButton>
     </SideNavContainer>
   );
-};
-
-const MapStateToProps = (state: AppState) => {
-  return {
-    currentView: state.settings.currentView,
-  };
 };
 
 export default SideNav;

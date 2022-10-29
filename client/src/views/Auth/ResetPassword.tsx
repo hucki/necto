@@ -1,13 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import {
-  FormGroup,
-  Input,
-  Label,
-  FormControl,
-  FormLabel,
-} from '../../components/Library';
+import { Input, FormControl, FormLabel } from '../../components/Library';
 import { resetPassword } from '../../services/Auth';
 import { ResetResponse } from '../../types/Auth';
 

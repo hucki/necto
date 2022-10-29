@@ -63,7 +63,7 @@ const CalendarLeaveInput = ({
 
   const [newLeave, setNewLeave] = useState<Event>(defaultLeave);
   const [chosenLeaveType, setChosenLeaveType] = useState<LeaveType>();
-  const { mutateAsync: createEvent, error: savingError } = useCreateEvent();
+  const { mutateAsync: createEvent } = useCreateEvent();
   const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
     freq: RRule.DAILY,
     interval: 1,

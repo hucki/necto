@@ -26,7 +26,7 @@ import {
 } from '../../Library';
 import { RRule, Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import de from 'date-fns/locale/de';
@@ -39,7 +39,9 @@ dayjs.locale('de');
 
 interface CalendarEventFormProps {
   event: Event;
+  // eslint-disable-next-line no-unused-vars
   handleChangedEvent: (event: Event) => void;
+  // eslint-disable-next-line no-unused-vars
   setMessage: (message: string | undefined) => void;
 }
 
@@ -49,7 +51,7 @@ function CalendarEventForm({
   handleChangedEvent,
 }: CalendarEventFormProps): JSX.Element {
   const { t } = useTranslation();
-  const { isLoading: isLoadingPatients, error, patients } = useAllPatients();
+  const { patients } = useAllPatients();
 
   // Form state
   const [currentEvent, setCurrentEvent] = useState<Event>(() => ({ ...event }));
@@ -71,6 +73,7 @@ function CalendarEventForm({
     useState<RecurringFrequency>('WEEKLY');
   const [recurringInterval, setRecurringInterval] =
     useState<RecurringInterval>(10);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [timeline, setTimeline] = useState<ReactElement<any, any>>();
 
   function onInputChange(event: React.FormEvent<HTMLInputElement>) {

@@ -32,7 +32,6 @@ interface CalendarEventInputProps {
   ressource: EmployeeRessource | Room;
   dateTime: Dayjs;
   isOpen: boolean;
-  onOpen: () => void;
   onClose: () => void;
 }
 
@@ -41,7 +40,6 @@ function CalendarEventInput({
   ressource,
   dateTime,
   isOpen,
-  onOpen,
   onClose,
 }: CalendarEventInputProps): JSX.Element {
   const { t } = useTranslation();
@@ -81,9 +79,9 @@ function CalendarEventInput({
     patientId: '',
   };
   const [newEvent, setNewEvent] = useState<Event>(defaultEvent);
-  const { isLoading, isError, rawEvents } = useDaysEvents(dateTime);
+  const { rawEvents } = useDaysEvents(dateTime);
 
-  const { mutateAsync: createEvent, error: savingError } = useCreateEvent();
+  const { mutateAsync: createEvent } = useCreateEvent();
   const [message, setMessage] = useState<string | undefined>();
 
   useEffect(() => {

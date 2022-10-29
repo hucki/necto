@@ -72,14 +72,13 @@ const ContractOverview = ({
 
 const EmployeeSettings = () => {
   const { t } = useTranslation();
-  const { isLoading, error, employees, refetch } = useAllEmployees();
-  const { isLoading: isLoadingTeams, error: errorTeams, teams } = useAllTeams();
-  const { isLoading: isLoadingUsers, error: errorUsers, users } = useAllUsers();
+  const { isLoading, employees, refetch } = useAllEmployees();
+  const { isLoading: isLoadingTeams, teams } = useAllTeams();
+  const { users } = useAllUsers();
 
   const { mutateAsync: updateEmployee } = useUpdateEmployee();
 
-  const { mutateAsync: addEmployeeToTeam, error: savingError } =
-    useAddEmployeeToTeam();
+  const { mutateAsync: addEmployeeToTeam } = useAddEmployeeToTeam();
   const [currentEmployee, setCurrentemployee] = useState<
     Employee | undefined
   >();
@@ -126,7 +125,9 @@ const EmployeeSettings = () => {
     }
   }, [isLoading, isLoadingTeams]);
 
-  const onEmployeeChangeHandler = (event: any) => {
+  const onEmployeeChangeHandler = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setCurrentemployee(
       employees.filter((t) => t.uuid === event.target.value)[0]
     );
@@ -140,7 +141,7 @@ const EmployeeSettings = () => {
     }));
   };
 
-  const onTeamChangeHandler = (event: any) => {
+  const onTeamChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
   };
 
@@ -176,7 +177,7 @@ const EmployeeSettings = () => {
       },
     });
   };
-  const onSelectHandler = (e: any): void => {
+  const onSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setEmployeeState((currentState) => ({
       ...currentState,
       userId: e.target.value,

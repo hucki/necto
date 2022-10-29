@@ -7,8 +7,7 @@ import { AuthContext } from '../../providers/AuthProvider';
 const LoginForm = (): JSX.Element => {
   const { t } = useTranslation();
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const { isAuthenticated, user, logMeIn, errorMessage } =
-    useContext(AuthContext);
+  const { isAuthenticated, logMeIn } = useContext(AuthContext);
   const [loginState, setLoginState] = useState({
     email: '',
     password: '',

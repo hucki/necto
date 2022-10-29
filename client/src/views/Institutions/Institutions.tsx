@@ -36,10 +36,9 @@ const defaultInstitution: InstitutionInput = {
 function Institutions(): JSX.Element {
   const { isMobile } = useViewport();
   const [showArchived, setShowArchived] = useState(false);
-  const { isLoading, error, institutions } = useAllInstitutions();
+  const { isLoading, institutions } = useAllInstitutions();
   const {
     isLoading: isLoadingArchivedInstitutions,
-    error: errorArchivedInstitutions,
     institutions: archivedInstitutions,
   } = useAllArchivedInstitutions();
   const { isOpen: isOpenCreate, onOpen, onClose } = useDisclosure();

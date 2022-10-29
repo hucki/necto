@@ -5,6 +5,7 @@ import { useAllCompanies } from '../../../hooks/companies';
 import { useFilter } from '../../../hooks/useFilter';
 import { useAllbuildings } from '../../../hooks/buildings';
 import { useTranslation } from 'react-i18next';
+import { CalendarOption, CalendarView } from '../../../providers/filter/types';
 
 interface FilterBarProps {
   hasTeamsFilter?: boolean;
@@ -35,19 +36,11 @@ const FilterBar = ({
     setCurrentCalendarOption,
   } = useFilter();
 
-  const { isLoading: isLoadingTeams, error, teams } = useAllTeams();
+  const { isLoading: isLoadingTeams, teams } = useAllTeams();
 
-  const {
-    isLoading: isLoadingCompanies,
-    error: hasErrorCompanies,
-    companies,
-  } = useAllCompanies();
+  const { isLoading: isLoadingCompanies, companies } = useAllCompanies();
 
-  const {
-    isLoading: isLoadingBuildings,
-    error: errorBuildings,
-    buildings,
-  } = useAllbuildings();
+  const { buildings } = useAllbuildings();
 
   useEffect(() => {
     if (!isLoadingTeams && teams.length) {
@@ -61,26 +54,30 @@ const FilterBar = ({
     }
   }, [isLoadingCompanies]);
 
-  function onTeamChangeHandler(event: any) {
-    setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
-  }
-
-  function onCompanyChangeHandler(event: any) {
-    setCurrentCompany(
-      companies.filter((c) => c.uuid === event.target.value)[0]
+  function onTeamSelecthandler(event: React.FormEvent<HTMLSelectElement>) {
+    setCurrentTeam(
+      teams.filter((t) => t.uuid === event.currentTarget.value)[0]
     );
   }
 
-  function onBuildingChangeHandler(event: any) {
-    setCurrentBuildingId(event.target.value);
+  function onCompanySelecthandler(event: React.FormEvent<HTMLSelectElement>) {
+    setCurrentCompany(
+      companies.filter((c) => c.uuid === event.currentTarget.value)[0]
+    );
   }
 
-  function onDayWeekChangeHandler(event: any) {
-    setCalendarView(event.target.value);
+  function onBuildingSelecthandler(event: React.FormEvent<HTMLSelectElement>) {
+    setCurrentBuildingId(event.currentTarget.value);
   }
 
-  function onAppointmentsLeaveChangeHandler(event: any) {
-    setCurrentCalendarOption(event.target.value);
+  function onDayWeekSelecthandler(event: React.FormEvent<HTMLSelectElement>) {
+    setCalendarView(event.currentTarget.value as CalendarView);
+  }
+
+  function onAppointmentsLeaveSelecthandler(
+    event: React.FormEvent<HTMLSelectElement>
+  ) {
+    setCurrentCalendarOption(event.currentTarget.value as CalendarOption);
   }
 
   return (
@@ -91,7 +88,7 @@ const FilterBar = ({
           <Select
             name="team"
             value={currentTeam.uuid}
-            onChange={onTeamChangeHandler}
+            onChange={onTeamSelecthandler}
           >
             {teams.map((t, i) => (
               <option key={i} value={t.uuid}>
@@ -107,7 +104,7 @@ const FilterBar = ({
           <Select
             name="building"
             value={currentBuildingId}
-            onChange={onBuildingChangeHandler}
+            onChange={onBuildingSelecthandler}
           >
             {buildings.map((t, i) => (
               <option key={i} value={t.uuid}>
@@ -123,7 +120,7 @@ const FilterBar = ({
           <Select
             name="company"
             value={currentCompany.uuid}
-            onChange={onCompanyChangeHandler}
+            onChange={onCompanySelecthandler}
           >
             {companies.map((c, i) => (
               <option key={i} value={c.uuid}>
@@ -139,7 +136,7 @@ const FilterBar = ({
           <Select
             name="DayWeek"
             value={calendarView}
-            onChange={onDayWeekChangeHandler}
+            onChange={onDayWeekSelecthandler}
           >
             <option value="day">{t('calendar.view.day')}</option>
             <option value="week">{t('calendar.view.week')}</option>
@@ -151,7 +148,7 @@ const FilterBar = ({
           <Select
             name="AppointmentsLeave"
             value={currentCalendarOption}
-            onChange={onAppointmentsLeaveChangeHandler}
+            onChange={onAppointmentsLeaveSelecthandler}
           >
             <option value="appointments">
               📅 {t('calendar.option.appointments')}

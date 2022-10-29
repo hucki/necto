@@ -10,11 +10,7 @@ type FilterProviderProps = {
   children?: ReactNode;
 };
 export const FilterProvider = ({ children }: FilterProviderProps) => {
-  const {
-    isLoading: isLoadingCompanies,
-    error: hasErrorCompanies,
-    companies,
-  } = useAllCompanies();
+  const { companies } = useAllCompanies();
   const [calendarView, setCalendarView] = useState<CalendarView>('week');
   const [currentCalendarOption, setCurrentCalendarOption] =
     useState<CalendarOption>('appointments');

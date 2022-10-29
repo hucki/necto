@@ -6,7 +6,7 @@ import { Team } from '../../types/Employee';
 dayjs.extend(isBetween);
 
 const TeamSettings = () => {
-  const { isLoading, error, teams } = useAllTeams();
+  const { isLoading, teams } = useAllTeams();
   const [currentTeam, setCurrentTeam] = useState<Team | undefined>();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const TeamSettings = () => {
       setCurrentTeam(teams[0]);
     }
   }, [isLoading]);
-  const onTeamChangeHandler = (event: any) => {
+  const onTeamChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
   };
 

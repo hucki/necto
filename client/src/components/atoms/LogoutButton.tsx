@@ -5,7 +5,7 @@ import { AuthContext } from '../../providers/AuthProvider';
 
 const LogoutButton = () => {
   const { t } = useTranslation();
-  const { user, logMeOut } = useContext(AuthContext);
+  const { logMeOut } = useContext(AuthContext);
 
   return (
     <>

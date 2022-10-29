@@ -22,7 +22,6 @@ import ErrorBoundary from '../components/molecules/Error/ErrorBoundary';
 function UnauthenticatedApp(): JSX.Element {
   const { t } = useTranslation();
   const { isMobile } = useViewport();
-  const [registrationActive, setRegistrationActive] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
   const [resetActive, setResetActive] = useState(false);
   const resetTabIndex = 2;

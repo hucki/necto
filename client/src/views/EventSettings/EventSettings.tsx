@@ -8,7 +8,7 @@ import {
 } from '../../hooks/events';
 
 const EventSettings = () => {
-  const { isLoading, error, cancellationReasons } = useAllCancellationReasons();
+  const { isLoading, cancellationReasons } = useAllCancellationReasons();
   const { mutateAsync: createCancellationReason } =
     useCreateCancellationReason();
   const [newCancellationReason, setNewCancellationReason] = useState({
