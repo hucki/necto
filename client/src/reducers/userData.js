@@ -1,9 +1,8 @@
 import { LOG_IN } from '../actions/actions';
 import { LOG_OUT } from '../actions/actions';
-import { initialState } from '../assets/data';
 
 export default function userData(
-  state = initialState.userData,
+  state = { currentUser: null, currentUserId: null },
   { type, payload }
 ) {
   const newState = {};

@@ -1,9 +1,8 @@
 import { SET_HOURS } from '../actions/actions';
 import { SWITCH_VIEW } from '../actions/actions';
-import { initialState } from '../assets/data';
 
 export default function settings(
-  state = initialState.settings,
+  state = { hoursInterval: [6, 18], currentView: 'Appointments' },
   { type, payload }
 ) {
   const newState = {};
