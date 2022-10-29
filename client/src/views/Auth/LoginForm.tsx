@@ -1,10 +1,7 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { Button, FormControl } from '@chakra-ui/react';
-import { jsx } from '@emotion/react';
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
+import { Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { Input, FormLabel } from '../../components/Library';
+import { Input, FormLabel, FormControl } from '../../components/Library';
 import { AuthContext } from '../../providers/AuthProvider';
 
 const LoginForm = (): JSX.Element => {
@@ -44,16 +41,11 @@ const LoginForm = (): JSX.Element => {
     <div>
       <form
         onSubmit={onSubmitHandler}
-        css={{
+        style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
           marginTop: '10px',
-          '> div': {
-            margin: '10px auto',
-            width: '100%',
-            maxWidth: '300px',
-          },
         }}
       >
         <FormControl id="email">

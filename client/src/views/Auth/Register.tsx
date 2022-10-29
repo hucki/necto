@@ -1,11 +1,8 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { Button, FormControl } from '@chakra-ui/react';
-import { jsx } from '@emotion/react';
-import styled from '@emotion/styled/macro';
 import React, { FormEvent, useEffect, useState } from 'react';
+import { Button } from '@chakra-ui/react';
+import styled from '@emotion/styled/macro';
 import { useTranslation } from 'react-i18next';
-import { Input, FormLabel } from '../../components/Library';
+import { Input, FormLabel, FormControl } from '../../components/Library';
 import { register } from '../../services/Auth';
 import { RegisterResponse } from '../../types/Auth';
 
@@ -119,7 +116,7 @@ const Register = ({ onHasRegistered }: RegisterProps): JSX.Element => {
     <div>
       <form
         onSubmit={onSubmitHandler}
-        css={{
+        style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',

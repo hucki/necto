@@ -1,10 +1,13 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { Button } from '@chakra-ui/react';
-import { jsx } from '@emotion/react';
 import React, { FormEvent, useState } from 'react';
+import { Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { FormGroup, Input, Label } from '../../components/Library';
+import {
+  FormGroup,
+  Input,
+  Label,
+  FormControl,
+  FormLabel,
+} from '../../components/Library';
 import { resetPassword } from '../../services/Auth';
 import { ResetResponse } from '../../types/Auth';
 
@@ -26,7 +29,7 @@ interface ResetPasswordProps {
 const ResetPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
   const { t } = useTranslation();
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const [pending, setPending] = useState(false);
+  const [, setPending] = useState(false);
   const [resetState, setResetState] = useState({
     email: '',
   });
@@ -77,19 +80,13 @@ const ResetPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
     <div>
       <form
         onSubmit={onSubmitHandler}
-        css={{
+        style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          '> div': {
-            margin: '10px auto',
-            width: '100%',
-            maxWidth: '300px',
-          },
         }}
       >
-        <FormGroup>
-          <Label htmlFor="email">{t('auth.email')}</Label>
+        <FormControl id="email">
           <Input
             type="text"
             name="email"
@@ -97,7 +94,8 @@ const ResetPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
             value={resetState.email}
             onChange={onChangeHandler}
           />
-        </FormGroup>
+          <FormLabel>{t('auth.email')}</FormLabel>
+        </FormControl>
         <Button
           aria-label="resetPassword"
           type="submit"

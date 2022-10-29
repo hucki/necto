@@ -3,7 +3,7 @@ import {
   Input as ChakraInput,
   Select as ChakraSelect,
   FormLabel as ChakraFormLabel,
-  FormControl,
+  FormControl as ChakraFormControl,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import ReactDatePicker from 'react-datepicker';
@@ -111,14 +111,22 @@ type LabelledSelectProps = CommonLabelledFormElementProps & {
   hasOptionNoSelection?: boolean;
   noSelectionLabel?: string;
   options: User[];
+  // eslint-disable-next-line no-unused-vars
   onChangeHandler: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
 type LabelledInputProps = CommonLabelledFormElementProps & {
   autoComplete?: string;
   type?: React.HTMLInputTypeAttribute;
+  // eslint-disable-next-line no-unused-vars
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
+
+const FormControl = styled(ChakraFormControl)({
+  margin: '10px auto',
+  width: '100%',
+  maxWidth: '300px',
+});
 
 const LabelledSelect = ({
   id,
@@ -133,7 +141,7 @@ const LabelledSelect = ({
   noSelectionLabel = 'No Selection',
 }: LabelledSelectProps) => {
   return (
-    <FormControl id={id} style={{ margin: '5px auto' }} isRequired={isRequired}>
+    <FormControl id={id} isRequired={isRequired}>
       <Select
         disabled={disabled}
         name={name}
@@ -185,6 +193,7 @@ export {
   Textarea,
   FormGroup,
   FormLabel,
+  FormControl,
   Label,
   Select,
   DatePicker,
