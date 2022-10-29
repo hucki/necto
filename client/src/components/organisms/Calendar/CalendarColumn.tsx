@@ -42,7 +42,7 @@ interface CalendarColumnInputProps {
   columnHeaderFormat?: CalendarColumnHeaderFormat;
   columnSubHeaderContent?: CalendarColumnSubHeaderContent;
 }
-interface ItemStyle {
+export interface ItemStyle {
   top: string;
   height: string;
 }
@@ -53,22 +53,19 @@ function CalendarColumn({
   ressources,
   numOfHours,
   hoursInterval,
-  clickedId,
   setClickedId,
-  clickedDateTime,
   setClickedDateTime,
   openModal,
   readOnly = false,
   columnHeaderFormat = 'dddd',
   columnSubHeaderContent = 'ressource',
 }: CalendarColumnInputProps): JSX.Element {
-  const { isHoliday, isPublicHoliday, isWeekend } = useHolidays();
-  const isHolidayToday = isHoliday({ date: dateInput });
+  const { isPublicHoliday, isWeekend } = useHolidays();
   const isPublicHolidayToday = isPublicHoliday({ date: dateInput });
   const isToday = dayjs().isSame(dateInput, 'day');
 
   const date = dateInput.locale('de');
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onOpen, onClose } = useDisclosure();
 
   const [clickedEvent, setClickedEvent] = useState<Event | null>(null);
   const [clickedMultiEvents, setClickedMultiEvents] = useState<
@@ -202,7 +199,6 @@ function CalendarColumn({
         isOpen={true}
         readOnly={true}
         onClose={closeClickedEventHandler}
-        onOpen={onOpen}
       />
     ) : (
       <CalendarLeaveEdit
@@ -228,9 +224,7 @@ function CalendarColumn({
         id={`DayHeader_d${date.format('YYYYMMDD')}`}
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
       >
-        <DayHeaderLabel size={isPublicHolidayToday ? 'small' : undefined}>
-          {columnHeader}
-        </DayHeaderLabel>
+        <DayHeaderLabel>{columnHeader}</DayHeaderLabel>
         {isPublicHolidayToday && (
           <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
         )}
