@@ -31,7 +31,7 @@ export const ModalFooterControls = ({
           aria-label="cancel modal"
           type="button"
           disabled={!onClose}
-          onClick={onClose ? onClose : () => {}}
+          onClick={onClose ? onClose : () => console.log('not implemented')}
           size="sm"
         >
           {t('button.cancel')}
@@ -42,7 +42,7 @@ export const ModalFooterControls = ({
           size="sm"
           colorScheme="blue"
           disabled={!onSubmit}
-          onClick={onSubmit ? onSubmit : () => {}}
+          onClick={onSubmit ? onSubmit : () => console.log('not implemented')}
         >
           {t('button.save')}
         </Button>
