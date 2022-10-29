@@ -79,7 +79,7 @@ const Home = () => {
         <Greeting>{`${t('dict.good')} ${t(`time.ofDay.${timeOfDay}`)} ${
           user?.firstName
         }`}</Greeting>
-        <Accordion allowMultiple>
+        <Accordion allowMultiple defaultIndex={2}>
           {(user?.isAdmin || user?.isPlanner) && (
             <AccordionItem isDisabled={newUsers.length < 1}>
               <h2>
