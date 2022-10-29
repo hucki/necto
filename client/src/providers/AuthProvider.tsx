@@ -1,6 +1,7 @@
 import React, {
   createContext,
   Dispatch,
+  ReactNode,
   SetStateAction,
   useEffect,
   useState,
@@ -32,6 +33,7 @@ type AuthContextType = {
   isLoading: boolean;
   isError: boolean;
   errorMessage: string;
+  // eslint-disable-next-line no-unused-vars
   logMeIn: ({ email, password }: LogMeInProps) => Promise<void>;
   logMeOut: () => void;
 };
@@ -42,13 +44,14 @@ const AuthContext = createContext<AuthContextType>({
   user: undefined,
   setUser: () => undefined,
   isLoading: false,
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   logMeIn: ({ email, password }: LogMeInProps) => new Promise(() => undefined),
   logMeOut: () => undefined,
   isError: false,
   errorMessage: '',
 });
 
-function AuthProvider({ children }: { children: any }) {
+function AuthProvider({ children }: { children: ReactNode }) {
   const [userToken, setUserToken] = useState<string | null>(() => getToken());
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
@@ -74,6 +77,7 @@ function AuthProvider({ children }: { children: any }) {
   }, [user]);
   useEffect(() => {
     const fetchMe = async () => {
+      if (isError) setIsError(false);
       try {
         const thisIsMe = await me();
         if (!thisIsMe) return setIsAuthenticated(false);
@@ -88,6 +92,7 @@ function AuthProvider({ children }: { children: any }) {
         });
       } catch (error) {
         console.error(error);
+        setIsError(true);
         return setIsAuthenticated(false);
       }
     };
