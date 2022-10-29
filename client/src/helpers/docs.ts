@@ -18,7 +18,7 @@ export const contract = (p: Patient, c: Company | undefined): jsPDF => {
   const lineHeight = 6;
   const paragraphDistance = 10;
 
-  const nextLine = (offset: number = 0) => {
+  const nextLine = (offset = 0) => {
     return (currentLine += lineHeight + offset);
   };
 
@@ -37,12 +37,12 @@ export const contract = (p: Patient, c: Company | undefined): jsPDF => {
     doc.setFont(currentFont.fontName, currentFont.fontStyle);
   };
 
-  const nextParagraph = (offset: number = 0) => {
+  const nextParagraph = (offset = 0) => {
     return (currentLine += paragraphDistance + offset);
   };
   const doc = new jsPDF();
 
-  const printParagraph = (text: string, offsetFirstLine: number = 10) => {
+  const printParagraph = (text: string, offsetFirstLine = 10) => {
     const res = [];
     let remains = text;
     for (let i = 0; i < text.length; i += lineWidth) {
