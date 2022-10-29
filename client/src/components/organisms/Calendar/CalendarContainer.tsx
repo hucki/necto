@@ -6,7 +6,7 @@ import { AppState } from '../../../types/AppState';
 import { EmployeeRessource, Room } from '../../../types/Ressource';
 import { connect } from 'react-redux';
 import { CalendarColumn } from './CalendarColumn';
-import { useDisclosure, useToast } from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
 import { GoToTarget, UserDateContext } from '../../../providers/UserDate';
 import {
@@ -19,6 +19,7 @@ import {
 import { useSwipe } from '../../../hooks/useSwipe';
 import { filterContext } from '../../../providers/filter';
 import CalendarLeaveInput from './CalendarLeaveInput';
+import { SwipeIndicator } from '../../atoms/SwipeIndicator';
 
 interface CalendarInputProps {
   events: Event[];
@@ -40,12 +41,11 @@ function CalendarContainer({
   columnHeaderFormat = 'dddd DD.MM.',
   columnSubHeaderContent = 'ressource',
 }: CalendarInputProps): JSX.Element {
-  const toast = useToast();
   const daysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const prevDaysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const { goTo } = useContext(UserDateContext);
   const { calendarView, currentCalendarOption } = useContext(filterContext);
-  const { setTouchStart, setTouchEnd, direction } = useSwipe();
+  const { setTouchStart, setTouchEnd, horizontalDirection } = useSwipe();
   const eventModal = useDisclosure();
   const leaveModal = useDisclosure();
   const [clickedId, setClickedId] = useState<string | undefined>(undefined);
@@ -61,7 +61,6 @@ function CalendarContainer({
       : currentHoursInterval[1] - currentHoursInterval[0] + 1
   );
   const scaleWidth = '1rem';
-  const isToday = dayjs().isBetween(daysRange[0], daysRange[1], 'date', '[]');
   const handleCloseEventInput = () => {
     setClickedId(undefined);
     eventModal.onClose();
@@ -71,15 +70,15 @@ function CalendarContainer({
     leaveModal.onClose();
   };
   useEffect(() => {
-    if (direction) {
+    if (horizontalDirection) {
       if (!clickedId) {
-        const target = `${direction === 'left' ? 'next' : 'previous'}${
-          calendarView[0].toUpperCase() + calendarView.substring(1)
-        }`;
+        const target = `${
+          horizontalDirection === 'left' ? 'next' : 'previous'
+        }${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
         goTo(target as GoToTarget);
       }
     }
-  }, [direction, clickedId]);
+  }, [horizontalDirection, clickedId]);
 
   useEffect(() => {
     if (daysRange[0].isSame(daysRangeRef.current[0])) {
@@ -88,9 +87,6 @@ function CalendarContainer({
       prevDaysRangeRef.current = daysRangeRef.current;
       daysRangeRef.current = daysRange;
     }
-    // TODO: use Refs to determine if we skipped for- or backwards and give a visual hint to the user
-    // if (daysRange[0].isBefore(prevDaysRangeRef.current[0])) toast({title: 'yeah', description: 'hey we skipped BACKWARDs'});
-    // if (daysRange[0].isAfter(prevDaysRangeRef.current[0])) toast({title: 'yeah', description: 'hey we skipped FORWARD'});
   }, [daysRange]);
   // calculate boundaries to fit all events
   events.forEach((event) => {
@@ -188,7 +184,6 @@ function CalendarContainer({
             ressource={ressources.filter((r) => r.uuid === clickedId)[0]}
             dateTime={clickedDateTime}
             isOpen={eventModal.isOpen}
-            onOpen={eventModal.onOpen}
             onClose={handleCloseEventInput}
           />
         ) : (
@@ -201,6 +196,9 @@ function CalendarContainer({
           />
         )
       ) : null}
+      {horizontalDirection && (
+        <SwipeIndicator direction={horizontalDirection} />
+      )}
     </CalendarWrapper>
   );
 }
