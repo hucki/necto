@@ -89,7 +89,7 @@ router.post('/employee2team', employeeToTeamController.addEmployeeToTeam);
 // contract routes
 router.get('/contracts', contractController.getAllContracts);
 router.post('/contracts', contractController.addContract);
-router.put('/contracts', contractController.updateContract);
+router.patch('/contracts/:contractId', contractController.updateContract);
 
 // room routes
 router.get('/rooms', roomController.getAllRooms);

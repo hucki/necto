@@ -32,7 +32,10 @@ export const addContract = async (
     const createdContract = await prisma.contract.create({
       data: {
         tenantId: tenantId,
-        ...req.body,
+        employeeId: req.body.employeeId,
+        bgColor: req.body.bgColor,
+        appointmentsPerWeek: parseInt(req.body.appointmentsPerWeek),
+        hoursPerWeek: parseInt(req.body.hoursPerWeek),
       },
       include: {
         employee: true,
@@ -56,12 +59,15 @@ export const updateContract = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    const contractId = parseInt(req.params.contractId);
     const updatedContract = await prisma.contract.update({
       where: {
-        id: req.body.id,
+        id: contractId,
       },
       data: {
-        ...req.body,
+        bgColor: req.body.bgColor,
+        appointmentsPerWeek: parseInt(req.body.appointmentsPerWeek),
+        hoursPerWeek: parseInt(req.body.hoursPerWeek),
       },
       include: {
         employee: true,
