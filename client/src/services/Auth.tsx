@@ -49,7 +49,6 @@ export const register = async ({
   firstName,
   lastName,
 }: RegisterData): Promise<RegisterResponse> => {
-  console.log({ email, password, firstName, lastName });
   return authClient('register/', { email, password, firstName, lastName });
 };
 
@@ -107,6 +106,9 @@ const authClient = async (
   const request = new Request(encodeURI(`${serverApiUrl}/${endpoint}`), config);
 
   return window.fetch(request).then(async (response) => {
+    if (response.status === 500) {
+      throw new Error(response.statusText);
+    }
     try {
       const data = await response.json();
       if (response.ok) {
