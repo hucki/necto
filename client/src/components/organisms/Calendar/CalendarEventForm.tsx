@@ -105,7 +105,7 @@ function CalendarEventForm({
     event.preventDefault();
     setCurrentEvent((cur) => ({
       ...cur,
-      type: event.currentTarget.checked ? 'note' : 'Appointment',
+      type: event.currentTarget.checked ? 'note' : 'appointment',
     }));
     setMessage(undefined);
   }

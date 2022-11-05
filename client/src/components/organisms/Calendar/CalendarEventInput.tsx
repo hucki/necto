@@ -71,7 +71,7 @@ function CalendarEventInput({
     isDone: false,
     rrule: '',
     bgColor: ressource?.bgColor || 'green',
-    type: getIsNote(dateTime) ? 'note' : 'Appointment',
+    type: getIsNote(dateTime) ? 'note' : 'appointment',
     isAllDay: false,
     isCancelled: false,
     isCancelledReason: '',
