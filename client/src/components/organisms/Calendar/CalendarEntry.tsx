@@ -40,12 +40,6 @@ export const CalendarEntry = ({
   const [icons, setIcons] = useState<JSX.Element[] | []>([]);
   useEffect(() => {
     setIcons([]);
-    if (event.patient && !event.patient.hasContract) {
-      setIcons((icons) => [
-        ...icons,
-        <FaExclamation key="noContractIcon" color="red" />,
-      ]);
-    }
     if (event.isHomeVisit) {
       setIcons((icons) => [...icons, <FaHouseUser key="homeVisitIcon" />]);
     }
@@ -87,7 +81,9 @@ export const CalendarEntry = ({
     }
   }, [event]);
 
-  const startTimeString = `${dayjs(event.startTime).format('HH:mm')}`;
+  const fullTimeString = `${dayjs(event.startTime).format('HH:mm')} - ${dayjs(
+    event.endTime
+  ).format('HH:mm')}`;
 
   const isNote = event.type === 'note';
   const isLeave = event.type === 'leave';
@@ -106,22 +102,25 @@ export const CalendarEntry = ({
     <CalendarEntryContainer
       checked={(isLeave && isApproved) || (!isLeave && isDone)}
       bgColor={isLeave ? 'leave' : isNote ? 'note' : event.bgColor}
-      title={!isLeave ? startTimeString + ' ' + entryTitle : entryTitle}
+      title={!isLeave ? fullTimeString + ' ' + entryTitle : entryTitle}
       key={event.uuid?.toString()}
       id={'calEntry-' + event.uuid?.toString()}
       onClick={readOnly ? undefined : (e) => onClickHandler({ e, event })}
       className={`${readOnly ? 'read-only' : ''}`}
       style={styles}
     >
+      <CalendarEntryContent strikeThrough={isNote && isDone}>
+        {event.patient && !event.patient.hasContract && (
+          <FaExclamation key="noContractIcon" color="red" />
+        )}
+        {entryTitle}
+      </CalendarEntryContent>
       <CalendarEntryIconContainer>
         {!isNote && !isLeave && showTime && (
-          <CalendarEntryTime>{startTimeString}</CalendarEntryTime>
+          <CalendarEntryTime>{fullTimeString}</CalendarEntryTime>
         )}
         <span style={{ display: 'flex', flexDirection: 'row' }}>{icons}</span>
       </CalendarEntryIconContainer>
-      <CalendarEntryContent strikeThrough={isNote && isDone}>
-        {entryTitle}
-      </CalendarEntryContent>
     </CalendarEntryContainer>
   );
 };

@@ -14,15 +14,17 @@ const CalendarEntryContainer = styled.div(
     position: 'absolute',
     width: '100%',
     minHeight: '2rem',
+    textAlign: 'left',
+    paddingTop: '0.1rem',
     '&:after': {
       position: 'absolute',
       content: '""',
-      fontSize: 'large',
+      fontSize: 'small',
       fontWeight: 'bold',
       fontFamily: 'arial',
       color: '#090',
-      top: 8,
-      right: 5,
+      top: -4,
+      right: 3,
       transform: 'scaleX(-1) rotate(-45deg)',
     },
   },
@@ -31,6 +33,7 @@ const CalendarEntryContainer = styled.div(
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
       fontSize: '0.7em',
       fontWeight: '300',
+      paddingRight: checked ? '0.8rem' : '0.1rem',
       justifyContent: 'space-between',
       overflow: 'hidden',
       borderBottomRightRadius: '0.25rem',
@@ -64,13 +67,15 @@ const CalendarEntryIconContainer = styled.div({
   justifyContent: 'space-between',
 });
 
-const CalendarEntryContent = styled.span(
+const CalendarEntryContent = styled.div(
   ({ strikeThrough }: CalendarEntryContentProps) => ({
+    display: 'flex',
     color: 'var(--secondary)',
-    fontSize: '0.8rem',
+    fontSize: '0.6rem',
     lineHeight: 'initial',
-    textAlign: 'center',
+    textAlign: 'left',
     textDecoration: strikeThrough ? 'line-through' : undefined,
+    fontWeight: 'bold',
   })
 );
 
@@ -79,7 +84,6 @@ const CalendarEntryTime = styled.span({
   fontSize: '0.6rem',
   lineHeight: 'initial',
   textAlign: 'center',
-  fontWeight: 'bold',
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
