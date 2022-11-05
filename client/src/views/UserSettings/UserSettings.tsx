@@ -11,6 +11,10 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiArrowDropRightLine } from 'react-icons/ri';
 import {
+  EmployeeSettingsWrapper,
+  SettingsGrid,
+} from '../../components/atoms/Wrapper';
+import {
   FormLabel,
   LabelledInput,
   LabelledSelect,
@@ -102,75 +106,83 @@ export const UserSettings = () => {
         onChangeHandler={onUserChangeHandler}
         options={users}
       />
-      <Heading as="h2" size="sm" mb="2" mt="5">
-        {t('menu.personalData')}
-      </Heading>
-      <LabelledInput
-        label="email"
-        disabled={false}
-        type="text"
-        name="email"
-        id="email"
-        autoComplete="email"
-        value={userState.email || ''}
-        onChangeHandler={onChangeHandler}
-      />
-      <LabelledInput
-        label={t('label.firstName')}
-        disabled={false}
-        type="text"
-        name="firstName"
-        id="firstName"
-        autoComplete="given-name"
-        value={userState.firstName || ''}
-        onChangeHandler={onChangeHandler}
-      />
-      <LabelledInput
-        id="lastName"
-        disabled={false}
-        type="text"
-        name="lastName"
-        autoComplete="family-name"
-        value={userState.lastName}
-        onChangeHandler={onChangeHandler}
-        label={t('label.lastName')}
-      />
-      <Heading as="h2" size="sm" mb="2" mt="5">
-        {t('label.currentPermissions')}
-      </Heading>
-      {userState?.permissions?.length ? (
-        <List>
-          {userState.permissions.map((t, i) => (
-            <ListItem key={i}>
-              <ListIcon as={RiArrowDropRightLine} />
-              {t?.permission?.description}
-            </ListItem>
-          ))}
-        </List>
-      ) : (
-        <p>no permissions so far!</p>
-      )}
-      {currentPermission && (
-        <>
-          <FormControl style={{ margin: '10px auto' }}>
-            <Select
-              name="team"
-              value={currentPermission.uuid}
-              onChange={onPermissionChangeHandler}
-            >
-              {permissions.map((t, i) => (
-                <option key={i} value={t.uuid}>
-                  {t.displayName}
-                </option>
+      <SettingsGrid>
+        <EmployeeSettingsWrapper>
+          <Heading as="h2" size="sm" mb="2" mt="5">
+            {t('menu.personalData')}
+          </Heading>
+          <LabelledInput
+            label="email"
+            disabled={false}
+            type="text"
+            name="email"
+            id="email"
+            autoComplete="email"
+            value={userState.email || ''}
+            onChangeHandler={onChangeHandler}
+          />
+          <LabelledInput
+            label={t('label.firstName')}
+            disabled={false}
+            type="text"
+            name="firstName"
+            id="firstName"
+            autoComplete="given-name"
+            value={userState.firstName || ''}
+            onChangeHandler={onChangeHandler}
+          />
+          <LabelledInput
+            id="lastName"
+            disabled={false}
+            type="text"
+            name="lastName"
+            autoComplete="family-name"
+            value={userState.lastName}
+            onChangeHandler={onChangeHandler}
+            label={t('label.lastName')}
+          />
+        </EmployeeSettingsWrapper>
+        <EmployeeSettingsWrapper>
+          <Heading as="h2" size="sm" mb="2" mt="5">
+            {t('label.currentPermissions')}
+          </Heading>
+          {userState?.permissions?.length ? (
+            <List>
+              {userState.permissions.map((t, i) => (
+                <ListItem key={i}>
+                  <ListIcon as={RiArrowDropRightLine} />
+                  {t?.permission?.description}
+                </ListItem>
               ))}
-            </Select>
-            <FormLabel htmlFor="team">{t('label.newPermission')}:</FormLabel>
-          </FormControl>
-          <Button type="button" onClick={handleAddPermissionToUser}>
-            Add
-          </Button>
-        </>
-      )}
+            </List>
+          ) : (
+            <p>no permissions so far!</p>
+          )}
+          {currentPermission && (
+            <>
+              <FormControl style={{ margin: '10px auto' }}>
+                <Select
+                  name="team"
+                  value={currentPermission.uuid}
+                  onChange={onPermissionChangeHandler}
+                >
+                  {permissions.map((t, i) => (
+                    <option key={i} value={t.uuid}>
+                      {t.displayName}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel htmlFor="team">
+                  {t('label.newPermission')}:
+                </FormLabel>
+              </FormControl>
+              <Button type="button" onClick={handleAddPermissionToUser}>
+                Add
+              </Button>
+            </>
+          )}
+        </EmployeeSettingsWrapper>
+      </SettingsGrid>
     </>
   );
 };

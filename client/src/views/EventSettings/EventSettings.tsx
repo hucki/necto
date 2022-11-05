@@ -1,6 +1,10 @@
 import { Button, Heading, List, ListIcon, ListItem } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { RiArrowDropRightLine } from 'react-icons/ri';
+import {
+  EmployeeSettingsWrapper,
+  SettingsGrid,
+} from '../../components/atoms/Wrapper';
 import { FormGroup, LabelledInput } from '../../components/Library';
 import {
   useAllCancellationReasons,
@@ -57,38 +61,44 @@ const EventSettings = () => {
       <Heading as="h2" size="lg">
         Event Settings
       </Heading>
-      <Heading as="h3" size="md" mb="2" mt="5">
-        Cancellation Reasons
-      </Heading>
-      {isLoading ? (
-        'pending'
-      ) : cancellationReasons.length ? (
-        <CurrentCRs />
-      ) : (
-        'no cancellationReasons'
-      )}
-      <Heading as="h3" size="md" mb="2" mt="5">
-        new Reason
-      </Heading>
-      <LabelledInput
-        label="Id"
-        id="cancellationReasonId"
-        name="cancellationReasonId"
-        value={newCancellationReason.id}
-        onChangeHandler={(e) => handleChange(e, 'id')}
-        type="text"
-      />
-      <LabelledInput
-        label="Description"
-        id="cancellationReasonDescription"
-        name="cancellationReasonDescription"
-        value={newCancellationReason.description}
-        onChangeHandler={(e) => handleChange(e, 'description')}
-        type="text"
-      />
-      <FormGroup>
-        <Button onClick={handleSubmit}>Save</Button>
-      </FormGroup>
+      <SettingsGrid>
+        <EmployeeSettingsWrapper>
+          <Heading as="h3" size="md" mb="2" mt="5">
+            Cancellation Reasons
+          </Heading>
+          {isLoading ? (
+            'pending'
+          ) : cancellationReasons.length ? (
+            <CurrentCRs />
+          ) : (
+            'no cancellationReasons'
+          )}
+        </EmployeeSettingsWrapper>
+        <EmployeeSettingsWrapper>
+          <Heading as="h3" size="md" mb="2" mt="5">
+            new Reason
+          </Heading>
+          <LabelledInput
+            label="Id"
+            id="cancellationReasonId"
+            name="cancellationReasonId"
+            value={newCancellationReason.id}
+            onChangeHandler={(e) => handleChange(e, 'id')}
+            type="text"
+          />
+          <LabelledInput
+            label="Description"
+            id="cancellationReasonDescription"
+            name="cancellationReasonDescription"
+            value={newCancellationReason.description}
+            onChangeHandler={(e) => handleChange(e, 'description')}
+            type="text"
+          />
+          <FormGroup>
+            <Button onClick={handleSubmit}>Save</Button>
+          </FormGroup>
+        </EmployeeSettingsWrapper>
+      </SettingsGrid>
     </>
   );
 };

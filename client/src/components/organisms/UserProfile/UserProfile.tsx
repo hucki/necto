@@ -17,6 +17,11 @@ import {
   UseToastOptions,
 } from '@chakra-ui/react';
 import { updatePassword } from '../../../services/Auth';
+import {
+  ControlWrapper,
+  EmployeeSettingsWrapper,
+  SettingsGrid,
+} from '../../atoms/Wrapper';
 
 interface UserProfileProps {
   id: string;
@@ -164,84 +169,7 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
   if (!isLoading && !user) return <div>no user</div>;
   return (
     <div>
-      <form
-        onSubmit={onSubmitHandler}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-        }}
-      >
-        <Heading as="h2" size="md">
-          {t('menu.personalData')}
-        </Heading>
-        <LabelledInput
-          label={t('label.firstName')}
-          disabled={state === 'view'}
-          type="text"
-          name="firstName"
-          id="firstName"
-          autoComplete="given-name"
-          value={userState.firstName}
-          onChangeHandler={onChangeHandler}
-        />
-        <LabelledInput
-          label={t('label.lastName')}
-          disabled={state === 'view'}
-          type="text"
-          name="lastName"
-          id="lastName"
-          autoComplete="family-name"
-          value={userState.lastName}
-          onChangeHandler={onChangeHandler}
-        />
-        <Heading as="h2" size="md">
-          {t('auth.password')}
-        </Heading>
-        <Input
-          type="text"
-          name="email"
-          hidden
-          readOnly
-          autoComplete="username"
-          value={userState.email}
-        />
-        <LabelledInput
-          label={t('auth.oldPassword')}
-          disabled={state === 'view'}
-          type="password"
-          name="oldPassword"
-          id="oldPassword"
-          autoComplete="old-password"
-          value={passwordState.oldPassword}
-          onChangeHandler={onPasswordChangeHandler}
-        />
-        <LabelledInput
-          label={t('auth.newPassword')}
-          disabled={state === 'view'}
-          type="password"
-          name="newPassword"
-          id="newPassword"
-          autoComplete="new-password"
-          value={passwordState.newPassword}
-          onChangeHandler={onPasswordChangeHandler}
-        />
-        <FormControl isInvalid={!newPasswordConfirmed}>
-          <LabelledInput
-            label={t('auth.confirmPassword')}
-            disabled={state === 'view'}
-            type="password"
-            name="newPasswordConfirmation"
-            id="newPasswordConfirmation"
-            autoComplete="new-password"
-            value={passwordState.newPasswordConfirmation}
-            onChangeHandler={onPasswordChangeHandler}
-          />
-
-          {!newPasswordConfirmed && (
-            <FormErrorMessage>new password has to match</FormErrorMessage>
-          )}
-        </FormControl>
+      <ControlWrapper>
         {state === 'view' ? (
           <Button aria-label="toggle edit mode" onClick={toggleEdit}>
             <RiEditFill />
@@ -264,6 +192,84 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
             </Button>
           </div>
         )}
+      </ControlWrapper>
+      <form onSubmit={onSubmitHandler}>
+        <SettingsGrid>
+          <EmployeeSettingsWrapper>
+            <Heading as="h2" size="md">
+              {t('menu.personalData')}
+            </Heading>
+            <LabelledInput
+              label={t('label.firstName')}
+              disabled={state === 'view'}
+              type="text"
+              name="firstName"
+              id="firstName"
+              autoComplete="given-name"
+              value={userState.firstName}
+              onChangeHandler={onChangeHandler}
+            />
+            <LabelledInput
+              label={t('label.lastName')}
+              disabled={state === 'view'}
+              type="text"
+              name="lastName"
+              id="lastName"
+              autoComplete="family-name"
+              value={userState.lastName}
+              onChangeHandler={onChangeHandler}
+            />
+          </EmployeeSettingsWrapper>
+          <EmployeeSettingsWrapper>
+            <Heading as="h2" size="md">
+              {t('auth.password')}
+            </Heading>
+            <Input
+              type="text"
+              name="email"
+              hidden
+              readOnly
+              autoComplete="username"
+              value={userState.email}
+            />
+            <LabelledInput
+              label={t('auth.oldPassword')}
+              disabled={state === 'view'}
+              type="password"
+              name="oldPassword"
+              id="oldPassword"
+              autoComplete="old-password"
+              value={passwordState.oldPassword}
+              onChangeHandler={onPasswordChangeHandler}
+            />
+            <LabelledInput
+              label={t('auth.newPassword')}
+              disabled={state === 'view'}
+              type="password"
+              name="newPassword"
+              id="newPassword"
+              autoComplete="new-password"
+              value={passwordState.newPassword}
+              onChangeHandler={onPasswordChangeHandler}
+            />
+            <FormControl isInvalid={!newPasswordConfirmed}>
+              <LabelledInput
+                label={t('auth.confirmPassword')}
+                disabled={state === 'view'}
+                type="password"
+                name="newPasswordConfirmation"
+                id="newPasswordConfirmation"
+                autoComplete="new-password"
+                value={passwordState.newPasswordConfirmation}
+                onChangeHandler={onPasswordChangeHandler}
+              />
+
+              {!newPasswordConfirmed && (
+                <FormErrorMessage>new password has to match</FormErrorMessage>
+              )}
+            </FormControl>
+          </EmployeeSettingsWrapper>
+        </SettingsGrid>
       </form>
     </div>
   );
