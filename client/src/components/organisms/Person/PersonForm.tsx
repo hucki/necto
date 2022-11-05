@@ -23,7 +23,7 @@ import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { Input, FormLabel, ModalFormGroup, Select } from '../../Library';
-import { AppointmentList } from '../List/Appointments';
+import { EventList } from '../List/Events';
 
 interface PersonFormProps {
   person: Person;
@@ -399,7 +399,7 @@ export const PersonForm = ({
                   <b style={{ marginLeft: '0.5rem' }}>
                     {t('label.appointments')}:
                   </b>
-                  <AppointmentList events={currentPatient.events} />
+                  <EventList events={currentPatient.events} />
                 </>
               ) : (
                 <b style={{ marginLeft: '0.5rem' }}>
