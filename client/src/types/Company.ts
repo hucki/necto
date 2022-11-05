@@ -1,5 +1,5 @@
 export type Company = {
-  uuid?: string;
+  uuid: string;
   name: string;
   name2: string;
   street: string;
