@@ -6,7 +6,13 @@ import {
   useCreateEmployee,
   useUpdateEmployee,
 } from '../../hooks/employees';
-import { Contract, Employee, Employee2Team, Team } from '../../types/Employee';
+import {
+  Contract,
+  Employee,
+  Employee2Team,
+  NewContract,
+  Team,
+} from '../../types/Employee';
 import { useAddEmployeeToTeam } from '../../hooks/teams';
 import { useAllTeams } from '../../hooks/teams';
 import {
@@ -33,11 +39,12 @@ import {
   SettingsGrid,
 } from '../../components/atoms/Wrapper';
 import { IconButton } from '../../components/atoms/Buttons';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaSave, FaTimes } from 'react-icons/fa';
+import { useCreateContract, useUpdateContract } from '../../hooks/contract';
 dayjs.extend(isBetween);
 
 interface ContractOverviewProps {
-  contract: Contract;
+  contract: Contract | NewContract;
   disabled: boolean;
   handleChangeContract: ({
     // eslint-disable-next-line no-unused-vars
@@ -55,6 +62,7 @@ const ContractOverview = ({
   disabled = true,
 }: ContractOverviewProps) => {
   const { t } = useTranslation();
+  const bgColor = contract.bgColor || 'green';
   return (
     <>
       <Heading as="h2" size="sm" mb="3" mt="5">
@@ -97,7 +105,7 @@ const ContractOverview = ({
           value={contract.bgColor || 'green'}
           style={{
             backgroundColor: `var(--bg${
-              contract.bgColor[0].toUpperCase() + contract.bgColor.substring(1)
+              bgColor[0].toUpperCase() + bgColor.substring(1)
             })`,
           }}
           onChange={(e) => {
@@ -130,6 +138,8 @@ const EmployeeSettings = () => {
   const { mutateAsync: createEmployee, status: createEmployeeStatus } =
     useCreateEmployee();
   const { mutateAsync: updateEmployee } = useUpdateEmployee();
+  const { mutateAsync: updateContract } = useUpdateContract();
+  const { mutateAsync: createContract } = useCreateContract();
   const { mutateAsync: addEmployeeToTeam, status: addEmployeeToTeamStatus } =
     useAddEmployeeToTeam();
 
@@ -158,14 +168,15 @@ const EmployeeSettings = () => {
         ? currentEmployee?.companyId
         : currentCompany?.uuid || '',
   });
-  const defaultContract: Contract = {
-    userId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
+  const defaultContract: NewContract = {
+    employeeId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
     hoursPerWeek: 0,
     appointmentsPerWeek: 0,
     bgColor: 'green',
-    validUntil: null,
   };
-  const [currentContract, setCurrentContract] = useState<Contract>(() => {
+  const [currentContract, setCurrentContract] = useState<
+    Contract | NewContract
+  >(() => {
     if (currentEmployee?.contract.length) {
       return {
         ...sanitizeContract(currentEmployee.contract[0]),
@@ -211,7 +222,6 @@ const EmployeeSettings = () => {
     targetName: string;
     targetValue: string;
   }) => {
-    console.log({ targetName, targetValue });
     setCurrentContract((contract) => ({
       ...contract,
       [targetName]: targetValue,
@@ -274,6 +284,22 @@ const EmployeeSettings = () => {
         validUntil,
       },
     });
+    if (currentContract.hasOwnProperty('id')) {
+      updateContract({
+        contract: {
+          ...defaultContract,
+          ...currentContract,
+        } as Contract,
+      });
+    } else {
+      createContract({
+        contract: {
+          ...defaultContract,
+          ...currentContract,
+        } as NewContract,
+      });
+    }
+    refetchEmployees();
   };
   const onSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setEmployeeState((currentState) => ({
@@ -296,6 +322,7 @@ const EmployeeSettings = () => {
       bgColor: contract.bgColor || 'green',
     };
   };
+
   useEffect(() => {
     if (!isLoading && currentEmployee) {
       setState('view');
@@ -307,12 +334,14 @@ const EmployeeSettings = () => {
       }));
       setCurrentContract({
         ...defaultContract,
+        employeeId: currentEmployee.uuid,
         ...(currentEmployee.contract[0]
           ? sanitizeContract(currentEmployee.contract[0])
           : undefined),
       });
     }
   }, [currentEmployee, isLoading]);
+
   return !currentEmployee ? null : (
     <>
       <ControlWrapper>
@@ -343,151 +372,158 @@ const EmployeeSettings = () => {
           </Select>
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
-      </ControlWrapper>
-      <form onSubmit={onSubmitHandler}>
-        <SettingsGrid>
-          <EmployeeSettingsWrapper>
-            <Heading as="h2" size="sm" mb="2" mt="5">
-              {t('menu.personalData')}
-            </Heading>
-            <LabelledInput
-              id="firstName"
-              disabled={state === 'view'}
-              type="text"
-              name="firstName"
-              autoComplete="given-name"
-              value={employeeState.firstName}
-              onChangeHandler={onChangeHandler}
-              label={t('label.firstName')}
-            />
-            <LabelledInput
-              id="alias"
-              disabled={state === 'view'}
-              type="text"
-              name="alias"
-              autoComplete="alias"
-              value={employeeState.alias}
-              onChangeHandler={onChangeHandler}
-              label={t('label.alias')}
-            />
-            <LabelledInput
-              id="lastName"
-              disabled={state === 'view'}
-              type="text"
-              name="lastName"
-              autoComplete="family-name"
-              value={employeeState.lastName}
-              onChangeHandler={onChangeHandler}
-              label={t('label.lastName')}
-            />
-            <LabelledInput
-              id="validUntil"
-              disabled={state === 'view'}
-              type="date"
-              name="validUntil"
-              autoComplete="valid-until"
-              value={
-                employeeState.validUntil
-                  ? dayjs(employeeState.validUntil).format('YYYY-MM-DD')
-                  : ''
-              }
-              onChangeHandler={onChangeHandler}
-              label={t('label.validUntil')}
-            />
-            <LabelledSelect
-              id="user"
-              disabled={state === 'view'}
-              name="userId"
-              value={employeeState.userId}
-              onChangeHandler={onSelectHandler}
-              hasOptionNoSelection={true}
-              noSelectionLabel="❌ No User"
-              label={t('label.user')}
-              options={users}
-            />
-          </EmployeeSettingsWrapper>
-          <EmployeeSettingsWrapper>
-            {currentContract ? (
-              <ContractOverview
-                disabled={state === 'view'}
-                contract={currentContract}
-                handleChangeContract={onContractChangeHandler}
-              />
-            ) : (
-              <b>no Contract!</b>
-            )}
-          </EmployeeSettingsWrapper>
-
-          {state === 'view' ? (
-            <Button aria-label="toggle edit mode" onClick={toggleEdit}>
-              <RiEditFill />
+        {state === 'view' ? (
+          <Button
+            aria-label="toggle edit mode"
+            onClick={toggleEdit}
+            colorScheme="blue"
+          >
+            <RiEditFill />
+          </Button>
+        ) : (
+          <>
+            <Button
+              aria-label="save changes"
+              onClick={onSubmitHandler}
+              colorScheme="blue"
+            >
+              <FaSave />
             </Button>
+            <Button
+              aria-label="cancel changes"
+              type="button"
+              onClick={cancelEdit}
+              colorScheme="red"
+            >
+              <FaTimes />
+            </Button>
+          </>
+        )}
+      </ControlWrapper>
+      <SettingsGrid>
+        <EmployeeSettingsWrapper>
+          <Heading as="h2" size="sm" mb="2" mt="5">
+            {t('menu.personalData')}
+          </Heading>
+          <LabelledInput
+            id="firstName"
+            disabled={state === 'view'}
+            type="text"
+            name="firstName"
+            autoComplete="given-name"
+            value={employeeState.firstName}
+            onChangeHandler={onChangeHandler}
+            label={t('label.firstName')}
+          />
+          <LabelledInput
+            id="alias"
+            disabled={state === 'view'}
+            type="text"
+            name="alias"
+            autoComplete="alias"
+            value={employeeState.alias}
+            onChangeHandler={onChangeHandler}
+            label={t('label.alias')}
+          />
+          <LabelledInput
+            id="lastName"
+            disabled={state === 'view'}
+            type="text"
+            name="lastName"
+            autoComplete="family-name"
+            value={employeeState.lastName}
+            onChangeHandler={onChangeHandler}
+            label={t('label.lastName')}
+          />
+          <LabelledInput
+            id="validUntil"
+            disabled={state === 'view'}
+            type="date"
+            name="validUntil"
+            autoComplete="valid-until"
+            value={
+              employeeState.validUntil
+                ? dayjs(employeeState.validUntil).format('YYYY-MM-DD')
+                : ''
+            }
+            onChangeHandler={onChangeHandler}
+            label={t('label.validUntil')}
+          />
+          <LabelledSelect
+            id="user"
+            disabled={state === 'view'}
+            name="userId"
+            value={employeeState.userId}
+            onChangeHandler={onSelectHandler}
+            hasOptionNoSelection={true}
+            noSelectionLabel="❌ No User"
+            label={t('label.user')}
+            options={users}
+          />
+        </EmployeeSettingsWrapper>
+        <EmployeeSettingsWrapper>
+          {currentContract ? (
+            <ContractOverview
+              disabled={state === 'view'}
+              contract={currentContract}
+              handleChangeContract={onContractChangeHandler}
+            />
           ) : (
-            <div>
-              <Button aria-label="save changes" type="submit">
-                {t('button.save')}
-              </Button>
-              <Button
-                aria-label="cancel changes"
-                type="button"
-                onClick={cancelEdit}
-              >
-                {t('button.cancel')}
-              </Button>
-            </div>
+            <b>no Contract!</b>
           )}
-          <EmployeeSettingsWrapper>
-            {currentEmployee.teams?.length ? (
-              <>
-                <Heading as="h3" size="sm" mb="2" mt="5">
-                  {t('label.currentTeams')}
-                </Heading>
-                <List style={{ marginBottom: '10px' }}>
-                  {currentEmployee.teams.map((t, i) => (
-                    <ListItem key={i}>
-                      <ListIcon as={RiArrowDropRightLine} />
-                      {t.team.displayName}
-                    </ListItem>
+        </EmployeeSettingsWrapper>
+
+        <EmployeeSettingsWrapper>
+          {currentEmployee.teams?.length ? (
+            <>
+              <Heading as="h3" size="sm" mb="2" mt="5">
+                {t('label.currentTeams')}
+              </Heading>
+              <List style={{ marginBottom: '10px' }}>
+                {currentEmployee.teams.map((t, i) => (
+                  <ListItem key={i}>
+                    <ListIcon as={RiArrowDropRightLine} />
+                    {t.team.displayName}
+                  </ListItem>
+                ))}
+              </List>
+            </>
+          ) : (
+            <span>
+              no teams found. Please add the employee to at least one team!
+            </span>
+          )}
+          {currentTeam && remainingTeams.length > 0 && (
+            <ControlWrapper>
+              <FormControl id="team">
+                <Select
+                  name="team"
+                  value={currentTeam.uuid}
+                  onChange={onTeamChangeHandler}
+                >
+                  {remainingTeams.map((t, i) => (
+                    <option key={i} value={t.uuid}>
+                      {t.displayName}
+                    </option>
                   ))}
-                </List>
-              </>
-            ) : (
-              <span>
-                no teams found. Please add the employee to at least one team!
-              </span>
-            )}
-            {currentTeam && remainingTeams.length > 0 && (
-              <ControlWrapper>
-                <FormControl id="team">
-                  <Select
-                    name="team"
-                    value={currentTeam.uuid}
-                    onChange={onTeamChangeHandler}
-                  >
-                    {remainingTeams.map((t, i) => (
-                      <option key={i} value={t.uuid}>
-                        {t.displayName}
-                      </option>
-                    ))}
-                  </Select>
-                  <FormLabel>team to add to:</FormLabel>
-                </FormControl>
-                <IconButton
-                  aria-label="add employee to team"
-                  icon={<FaPlus />}
-                  alignSelf="center"
-                  type="button"
-                  onClick={handleAddEmployeeToTeam}
-                  disabled={
-                    state !== 'edit' || addEmployeeToTeamStatus !== 'idle'
-                  }
-                  colorScheme="green"
-                />
-              </ControlWrapper>
-            )}
-          </EmployeeSettingsWrapper>
-        </SettingsGrid>
-      </form>
+                </Select>
+                <FormLabel>team to add to:</FormLabel>
+              </FormControl>
+              <IconButton
+                aria-label="add employee to team"
+                icon={<FaPlus />}
+                alignSelf="center"
+                type="button"
+                onClick={handleAddEmployeeToTeam}
+                disabled={
+                  state !== 'edit' || addEmployeeToTeamStatus !== 'idle'
+                }
+                colorScheme="green"
+              />
+            </ControlWrapper>
+          )}
+        </EmployeeSettingsWrapper>
+      </SettingsGrid>
     </>
   );
 };
