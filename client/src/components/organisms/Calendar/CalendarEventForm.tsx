@@ -15,7 +15,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
-import { Event } from '../../../types/Event';
+import { Event, NewEvent } from '../../../types/Event';
 import {
   FormGroup,
   Label,
@@ -38,9 +38,9 @@ dayjs.extend(utc);
 dayjs.locale('de');
 
 interface CalendarEventFormProps {
-  event: Event;
+  event: Event | NewEvent;
   // eslint-disable-next-line no-unused-vars
-  handleChangedEvent: (event: Event) => void;
+  handleChangedEvent: (event: Event | NewEvent) => void;
   // eslint-disable-next-line no-unused-vars
   setMessage: (message: string | undefined) => void;
 }
@@ -54,7 +54,9 @@ function CalendarEventForm({
   const { patients } = useAllPatients();
 
   // Form state
-  const [currentEvent, setCurrentEvent] = useState<Event>(() => ({ ...event }));
+  const [currentEvent, setCurrentEvent] = useState<Event | NewEvent>(() => ({
+    ...event,
+  }));
   const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
     freq: RRule.WEEKLY,
     interval: 1,
@@ -212,7 +214,9 @@ function CalendarEventForm({
 
   useEffect(() => {
     handleChangedEvent({
-      uuid: currentEvent.uuid,
+      uuid: currentEvent.hasOwnProperty('uuid')
+        ? (currentEvent as Event).uuid
+        : undefined,
       userId: currentEvent.userId,
       ressourceId: currentEvent.ressourceId,
       title: currentEvent.title,
@@ -248,7 +252,7 @@ function CalendarEventForm({
 
   const isNote = currentEvent.type === 'note';
   const isDone = currentEvent.isDone;
-  const isNewEvent = !currentEvent.uuid;
+  const isNewEvent = !currentEvent.hasOwnProperty('uuid');
 
   return (
     <div>

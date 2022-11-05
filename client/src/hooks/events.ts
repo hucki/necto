@@ -7,7 +7,12 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
-import { CancellationReason, Event, LeaveStatus } from '../types/Event';
+import {
+  CancellationReason,
+  Event,
+  LeaveStatus,
+  NewEvent,
+} from '../types/Event';
 
 export function useEvent(
   id: number
@@ -144,12 +149,16 @@ export function useEmployeeEvents(
 export function useCreateEvent(): UseMutationResult<
   Event,
   Error,
-  { event: Event },
+  { event: NewEvent },
   string
 > {
   const queryClient = useQueryClient();
-  const createEvent = async ({ event }: { event: Event }): Promise<Event> => {
-    return client<Event>('events', { data: event });
+  const createEvent = async ({
+    event,
+  }: {
+    event: NewEvent;
+  }): Promise<Event> => {
+    return client<NewEvent, Event>('events', { data: event });
   };
   return useMutation(createEvent, {
     onSuccess: () => {

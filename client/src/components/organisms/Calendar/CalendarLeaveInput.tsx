@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { FaCommentMedical, FaTimes } from 'react-icons/fa';
 import { Options, RRule, rrulestr } from 'rrule';
 import { useCreateEvent } from '../../../hooks/events';
-import { Event, LeaveType } from '../../../types/Event';
+import { LeaveType, NewEvent } from '../../../types/Event';
 import { EmployeeRessource, Room } from '../../../types/Ressource';
 import { DatePicker, FormLabel } from '../../Library';
 import CalendarItemModal from './CalendarItemModal';
@@ -39,7 +39,7 @@ const CalendarLeaveInput = ({
 }: CalendarLeaveInputProps) => {
   const { t } = useTranslation();
 
-  const defaultLeave: Event = {
+  const defaultLeave: NewEvent = {
     userId: uuid.toString(),
     ressourceId: uuid,
     title: '',
@@ -61,7 +61,7 @@ const CalendarLeaveInput = ({
     patientId: '',
   };
 
-  const [newLeave, setNewLeave] = useState<Event>(defaultLeave);
+  const [newLeave, setNewLeave] = useState<NewEvent>(defaultLeave);
   const [chosenLeaveType, setChosenLeaveType] = useState<LeaveType>();
   const { mutateAsync: createEvent } = useCreateEvent();
   const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({

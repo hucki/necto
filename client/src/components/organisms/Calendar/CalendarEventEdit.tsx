@@ -29,7 +29,7 @@ import {
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { CancellationReason, Event } from '../../../types/Event';
+import { CancellationReason, Event, NewEvent } from '../../../types/Event';
 import {
   FaHouseUser,
   FaLink,
@@ -83,7 +83,7 @@ function CalendarEventEdit({
   const [message, setMessage] = useState<string | undefined>();
   const [changedEvent, setChangedEvent] = useState<Event>(event);
   const isNote = changedEvent.type === 'note';
-  const handleChangedEvent = (changedEvent: Event) => {
+  const handleChangedEvent = (changedEvent: Event | NewEvent) => {
     setChangedEvent({
       uuid: event.uuid,
       userId: event.userId,

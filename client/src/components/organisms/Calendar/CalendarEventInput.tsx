@@ -11,7 +11,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../../hooks/events';
-import { Event } from '../../../types/Event';
+import { NewEvent } from '../../../types/Event';
 import { EmployeeRessource, Room } from '../../../types/Ressource';
 import { FaCommentMedical, FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
@@ -56,7 +56,7 @@ function CalendarEventInput({
   const initialStartTime = getIsNote(dateTime)
     ? dayjs(dateTime).minute(0)
     : dateTime;
-  const defaultEvent: Event = {
+  const defaultEvent: NewEvent = {
     userId: uuid.toString(),
     ressourceId: uuid,
     title: '',
@@ -78,7 +78,7 @@ function CalendarEventInput({
     roomId: '',
     patientId: '',
   };
-  const [newEvent, setNewEvent] = useState<Event>(defaultEvent);
+  const [newEvent, setNewEvent] = useState<NewEvent>(defaultEvent);
   const { rawEvents } = useDaysEvents(dateTime);
 
   const { mutateAsync: createEvent } = useCreateEvent();
@@ -91,7 +91,7 @@ function CalendarEventInput({
     setMessage(undefined);
   }, [dateTime, uuid, isNote]);
 
-  const handleChangedEvent = (changedEvent: Event) => {
+  const handleChangedEvent = (changedEvent: NewEvent) => {
     setNewEvent({
       userId: defaultEvent.userId,
       ressourceId: defaultEvent.ressourceId,

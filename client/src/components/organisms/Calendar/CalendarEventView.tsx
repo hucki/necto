@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { LabelledInput } from '../../Library';
 import { Icon } from '@chakra-ui/react';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
+import { CalendarEventViewWrapper } from '../../atoms/Wrapper';
 
 const CalendarEventView = ({
   eventTitle,
@@ -17,7 +18,7 @@ const CalendarEventView = ({
 }: CalenderEventViewProps) => {
   const { t } = useTranslation();
   return (
-    <>
+    <CalendarEventViewWrapper>
       {!isNote && (
         <>
           <LabelledInput
@@ -106,7 +107,7 @@ const CalendarEventView = ({
           />
         </>
       )}
-    </>
+    </CalendarEventViewWrapper>
   );
 };
 

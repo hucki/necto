@@ -21,7 +21,7 @@ export type LeaveType =
 export type LeaveStatus = 'requested' | 'cancelled' | 'approved';
 
 export type Event = {
-  uuid?: string;
+  uuid: string;
   userId: string;
   ressourceId: string;
   title: string;
@@ -52,7 +52,29 @@ export type Event = {
   patient?: Patient;
   employee?: Employee;
 };
-
+export type NewEvent = Pick<
+  Event,
+  | 'userId'
+  | 'ressourceId'
+  | 'title'
+  | 'type'
+  | 'leaveType'
+  | 'leaveStatus'
+  | 'isDiagnostic'
+  | 'isHomeVisit'
+  | 'isAllDay'
+  | 'isRecurring'
+  | 'isCancelled'
+  | 'isDone'
+  | 'isCancelledReason'
+  | 'rrule'
+  | 'startTime'
+  | 'endTime'
+  | 'patientId'
+  | 'roomId'
+  | 'bgColor'
+  | 'parentEventId'
+>;
 export type CancellationReason = {
   id: string;
   description: string;
