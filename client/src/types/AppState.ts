@@ -15,7 +15,6 @@ export type AppState = {
   };
   settings: {
     hoursInterval: [number, number];
-    currentView: string;
   };
   userData: {
     currentUser: string;
