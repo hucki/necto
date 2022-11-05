@@ -18,10 +18,10 @@ import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { Event } from '../../../types/Event';
 import { IconButton } from '../../atoms/Buttons';
 
-interface AppointmentListProps {
+interface EventListProps {
   events: Event[];
 }
-export const AppointmentList = ({ events }: AppointmentListProps) => {
+export const EventList = ({ events }: EventListProps) => {
   const cancelStyle: ChakraProps['css'] = {
     textDecoration: 'line-through',
     color: 'gray',
