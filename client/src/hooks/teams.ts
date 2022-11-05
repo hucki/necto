@@ -54,6 +54,7 @@ export function useAddEmployeeToTeam(): UseMutationResult<
   return useMutation(addEmployeeToTeam, {
     onSuccess: () => {
       queryClient.invalidateQueries(['emlpoyee2Team']);
+      queryClient.invalidateQueries(['emlpoyees']);
     },
   });
 }
