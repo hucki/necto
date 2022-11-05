@@ -1,20 +1,20 @@
 import dayjs from 'dayjs';
-import { Event } from '../types/Event';
+import { Event, NewEvent } from '../types/Event';
 
 interface CheckOverlapProps {
-  eventToCheck: Event;
+  eventToCheck: NewEvent | Event;
   eventList: Event[];
 }
 
 export function checkOverlap({ eventToCheck, eventList }: CheckOverlapProps) {
   if (eventToCheck) {
-    const newEvent = !eventToCheck.uuid;
     const checkStart = eventToCheck.startTime;
     const checkEnd = eventToCheck.endTime;
     const result = eventList.filter(
       (event) =>
         !event.isCancelled &&
-        (newEvent || eventToCheck.uuid !== event.uuid) &&
+        (!eventToCheck.hasOwnProperty('uuid') ||
+          (eventToCheck as Event).uuid !== event.uuid) &&
         eventToCheck.ressourceId === event.ressourceId &&
         ((dayjs(checkStart) >= dayjs(event.startTime) &&
           dayjs(checkStart) < dayjs(event.endTime)) ||
