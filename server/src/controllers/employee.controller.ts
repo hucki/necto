@@ -80,7 +80,9 @@ export const addEmployee = async (
     const createdEmployee = await prisma.employee.create({
       data: {
         tenantId: tenantId,
-        ...req.body,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        companyId: req.body.companyId,
         contract: {
           create: {
             tenantId: tenantId,
@@ -96,15 +98,14 @@ export const addEmployee = async (
       },
     });
 
-    // let createdContract = null;
-    // if (!createdEmployee.contract.length) {
-    //   createdContract = await prisma.contract.create({
-    //     data: {
-    //       employeeId: createdEmployee.uuid,
-    //       tenantId: tenantId,
-    //     },
-    //   });
-    // }
+    if (!createdEmployee.contract.length) {
+      await prisma.contract.create({
+        data: {
+          employeeId: createdEmployee.uuid,
+          tenantId: tenantId,
+        },
+      });
+    }
 
     res.json(createdEmployee);
     res.status(201);
