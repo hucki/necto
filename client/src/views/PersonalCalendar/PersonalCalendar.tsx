@@ -14,6 +14,7 @@ import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 import { filterContext } from '../../providers/filter';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { ViewWrapper } from '../../components/atoms/Wrapper';
+import { CalendarView } from '../../providers/filter/types';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(LocalizedFormat);
@@ -25,7 +26,10 @@ interface PersonalCalendarInputProps {
 }
 
 function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
-  const { calendarView } = useContext(filterContext);
+  const [currentCalendarView, setCurrentCalendarView] = useState<
+    CalendarView | undefined
+  >();
+  const { calendarView, setCalendarView } = useContext(filterContext);
   const { isMobile } = useViewport();
   const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
@@ -38,6 +42,13 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   const { user, isLoading: isLoadingUser } = useUser(id);
   const isLoading =
     isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
+
+  useEffect(() => {
+    if (!currentCalendarView) {
+      setCalendarView('week');
+      setCurrentCalendarView('week');
+    }
+  }, [currentCalendarView]);
 
   useEffect(() => {
     if (currentDate && calendarDate !== currentDate)
@@ -67,7 +78,7 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
 
   return (
     <ViewWrapper>
-      <FilterBar hasDayWeekOption hasCalendarOption />
+      <FilterBar hasDayWeekOption hasEventTypeOption />
       {calendarView === 'day' && (
         <CalendarContainer
           readOnly={false}
