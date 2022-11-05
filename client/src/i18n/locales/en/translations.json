@@ -130,6 +130,7 @@
     "contractData": "contract data",
     "newPermission": "new permission",
     "currentPermissions": "current permissions",
+    "currentTeams": "current teams",
     "validUntil": "valid until",
     "bgColor": "color",
     "hoursPerWeek": "hours per week",
