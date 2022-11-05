@@ -11,12 +11,6 @@
       "appointments": "Appointments",
       "leave": "Leave"
     },
-    "toast": {
-      "created": "created",
-      "updated": "updated",
-      "patient": "Patient",
-      "doctor": "Doctor"
-    },
     "event": {
       "newAppointmentTitle": "New Appointment",
       "editAppointmentTitle": "Appointment",
@@ -50,6 +44,12 @@
       }
     }
   },
+  "toast": {
+    "created": "created",
+    "updated": "updated",
+    "patient": "Patient",
+    "doctor": "Doctor"
+  },
   "button": {
     "close": "close",
     "save": "save",
@@ -70,7 +70,8 @@
   },
   "dict": {
     "for": "for",
-    "good": "Good"
+    "good": "Good",
+    "hasBeen": "has been"
   },
   "error": {
     "prefix": "There was an error",

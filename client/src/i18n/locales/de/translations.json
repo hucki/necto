@@ -11,12 +11,6 @@
       "appointments": "Termine",
       "leave": "Abwesenheit"
     },
-    "toast": {
-      "created": "angelegt",
-      "updated": "aktualisiert",
-      "patient": "Patient:in",
-      "doctor": "Ärzt:in"
-    },
     "event": {
       "noteTitle": "📝 Notiz",
       "newAppointmentTitle": "Neuer Termin",
@@ -51,6 +45,12 @@
       }
     }
   },
+  "toast": {
+    "created": "angelegt",
+    "updated": "aktualisiert",
+    "patient": "Patient:in",
+    "doctor": "Ärzt:in"
+  },
   "button": {
     "close": "schliessen",
     "save": "speichern",
@@ -71,7 +71,8 @@
   },
   "dict": {
     "for": "für",
-    "good": "Guten"
+    "good": "Guten",
+    "hasBeen": "wurde"
   },
   "error": {
     "prefix": "Es gab einen Fehler",
