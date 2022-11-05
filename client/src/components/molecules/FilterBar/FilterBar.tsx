@@ -5,14 +5,14 @@ import { useAllCompanies } from '../../../hooks/companies';
 import { useFilter } from '../../../hooks/useFilter';
 import { useAllbuildings } from '../../../hooks/buildings';
 import { useTranslation } from 'react-i18next';
-import { CalendarOption, CalendarView } from '../../../providers/filter/types';
+import { EventTypeOption, CalendarView } from '../../../providers/filter/types';
 
 interface FilterBarProps {
   hasTeamsFilter?: boolean;
   hasCompanyFilter?: boolean;
   hasBuildingFilter?: boolean;
   hasDayWeekOption?: boolean;
-  hasCalendarOption?: boolean;
+  hasEventTypeOption?: boolean;
 }
 
 const FilterBar = ({
@@ -20,7 +20,7 @@ const FilterBar = ({
   hasBuildingFilter = false,
   hasCompanyFilter = false,
   hasDayWeekOption = false,
-  hasCalendarOption = false,
+  hasEventTypeOption = false,
 }: FilterBarProps) => {
   const { t } = useTranslation();
   const {
@@ -32,8 +32,8 @@ const FilterBar = ({
     setCurrentBuildingId,
     calendarView,
     setCalendarView,
-    currentCalendarOption,
-    setCurrentCalendarOption,
+    currentEventType,
+    setCurrentEventType,
   } = useFilter();
 
   const { isLoading: isLoadingTeams, teams } = useAllTeams();
@@ -74,10 +74,8 @@ const FilterBar = ({
     setCalendarView(event.currentTarget.value as CalendarView);
   }
 
-  function onAppointmentsLeaveSelecthandler(
-    event: React.FormEvent<HTMLSelectElement>
-  ) {
-    setCurrentCalendarOption(event.currentTarget.value as CalendarOption);
+  function onEventTypeSelecthandler(event: React.FormEvent<HTMLSelectElement>) {
+    setCurrentEventType(event.currentTarget.value as EventTypeOption);
   }
 
   return (
@@ -143,12 +141,12 @@ const FilterBar = ({
           </Select>
         </>
       )}
-      {hasCalendarOption && (
+      {hasEventTypeOption && (
         <>
           <Select
-            name="AppointmentsLeave"
-            value={currentCalendarOption}
-            onChange={onAppointmentsLeaveSelecthandler}
+            name="eventType"
+            value={currentEventType}
+            onChange={onEventTypeSelecthandler}
           >
             <option value="appointments">
               📅 {t('calendar.option.appointments')}

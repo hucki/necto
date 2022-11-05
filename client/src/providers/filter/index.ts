@@ -10,8 +10,8 @@ export const defaultFilterContextProps: FilterContext = {
   setCurrentTeam: () => undefined,
   currentBuildingId: undefined,
   setCurrentBuildingId: () => undefined,
-  currentCalendarOption: 'appointments',
-  setCurrentCalendarOption: () => undefined,
+  currentEventType: 'appointments',
+  setCurrentEventType: () => undefined,
 };
 
 export const filterContext = createContext<FilterContext>(

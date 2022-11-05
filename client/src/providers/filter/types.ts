@@ -3,7 +3,7 @@ import { Company } from '../../types/Company';
 import { Team } from '../../types/Employee';
 
 export type CalendarView = 'day' | 'week';
-export type CalendarOption = 'appointments' | 'leave';
+export type EventTypeOption = 'appointments' | 'leave';
 
 export type FilterStateContextType = {
   calendarView: CalendarView;
@@ -14,8 +14,8 @@ export type FilterStateContextType = {
   setCurrentTeam: Dispatch<SetStateAction<Team | undefined>>;
   currentBuildingId: string | undefined;
   setCurrentBuildingId: Dispatch<SetStateAction<string | undefined>>;
-  currentCalendarOption: CalendarOption;
-  setCurrentCalendarOption: Dispatch<SetStateAction<CalendarOption>>;
+  currentEventType: EventTypeOption;
+  setCurrentEventType: Dispatch<SetStateAction<EventTypeOption>>;
 };
 
 export type FilterContext = FilterStateContextType;

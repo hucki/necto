@@ -46,7 +46,7 @@ function CalendarContainer({
   const daysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const prevDaysRangeRef = useRef<[Dayjs, Dayjs]>(daysRange);
   const { goTo } = useContext(UserDateContext);
-  const { calendarView, currentCalendarOption } = useContext(filterContext);
+  const { calendarView, currentEventType } = useContext(filterContext);
   const { setTouchStart, setTouchEnd, horizontalDirection } = useSwipe();
   const eventModal = useDisclosure();
   const leaveModal = useDisclosure();
@@ -148,7 +148,7 @@ function CalendarContainer({
         clickedDateTime={clickedDateTime}
         setClickedDateTime={setClickedDateTime}
         openModal={
-          currentCalendarOption === 'appointments'
+          currentEventType === 'appointments'
             ? eventModal.onOpen
             : leaveModal.onOpen
         }
@@ -180,7 +180,7 @@ function CalendarContainer({
       </CalendarScale>
       {calendarDays}
       {clickedId ? (
-        currentCalendarOption === 'appointments' ? (
+        currentEventType === 'appointments' ? (
           <CalendarEventInput
             uuid={clickedId}
             ressource={ressources.filter((r) => r.uuid === clickedId)[0]}

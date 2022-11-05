@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
 import { useState } from 'react';
-import { CalendarOption, CalendarView } from './types';
+import { EventTypeOption, CalendarView } from './types';
 import { Company } from '../../types/Company';
 import { Team } from '../../types/Employee';
 import { filterContext } from '.';
@@ -12,8 +12,8 @@ type FilterProviderProps = {
 export const FilterProvider = ({ children }: FilterProviderProps) => {
   const { companies } = useAllCompanies();
   const [calendarView, setCalendarView] = useState<CalendarView>('week');
-  const [currentCalendarOption, setCurrentCalendarOption] =
-    useState<CalendarOption>('appointments');
+  const [currentEventType, setCurrentEventType] =
+    useState<EventTypeOption>('appointments');
   const [currentCompany, setCurrentCompany] = useState<Company>(
     () => companies[0]
   );
@@ -37,8 +37,8 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
         setCurrentBuildingId,
         currentTeam,
         setCurrentTeam,
-        currentCalendarOption,
-        setCurrentCalendarOption,
+        currentEventType,
+        setCurrentEventType,
       }}
     >
       {children}
