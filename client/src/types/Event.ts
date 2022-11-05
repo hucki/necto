@@ -6,7 +6,7 @@ import { Patient } from './Patient';
 export type EventType =
   | 'custom'
   | 'note'
-  | 'Appointment'
+  | 'appointment'
   | 'leave'
   | 'roomBooking';
 
@@ -51,24 +51,6 @@ export type Event = {
   bgColor?: BgColor;
   patient?: Patient;
   employee?: Employee;
-};
-
-export type Appointment = {
-  uuid?: string;
-  rowId: string;
-  ressourceId: string;
-  duration: number;
-  isRecurring: boolean;
-  frequency: string;
-  count: number;
-  title: string;
-  startTime: Dayjs;
-  endTime: Dayjs;
-  rrule: string;
-  rruleString: string;
-  bgColor: BgColor;
-  isHomeVisit: boolean;
-  roomId?: string;
 };
 
 export type CancellationReason = {
