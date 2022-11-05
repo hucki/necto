@@ -6,7 +6,7 @@ import {
   UseMutationResult,
 } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
-import { Employee } from '../types/Employee';
+import { Employee, NewEmployee } from '../types/Employee';
 
 export function useEmployee(
   uuid: string
@@ -19,6 +19,28 @@ export function useEmployee(
     employee,
     ...employeeQuery,
   };
+}
+
+export function useCreateEmployee(): UseMutationResult<
+  Employee,
+  Error,
+  { employee: NewEmployee },
+  string
+> {
+  const queryClient = useQueryClient();
+
+  const createEmployee = async ({
+    employee,
+  }: {
+    employee: NewEmployee;
+  }): Promise<Employee> => {
+    return client<NewEmployee, Employee>('employees', { data: employee });
+  };
+  return useMutation(createEmployee, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['employees']);
+    },
+  });
 }
 
 export function useUpdateEmployee(): UseMutationResult<

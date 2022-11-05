@@ -1,4 +1,5 @@
 import { BgColor } from './Colors';
+import { Company } from './Company';
 import { UserSettings } from './UserSettings';
 
 export type Team = {
@@ -19,7 +20,13 @@ export type Employee = {
   createdAt?: Date;
   updatedAt?: Date;
   user?: UserSettings;
+  companyId: Company['uuid'];
 };
+
+export type NewEmployee = Pick<
+  Employee,
+  'firstName' | 'lastName' | 'companyId'
+>;
 
 export type Contract = {
   id?: number;

@@ -1,7 +1,11 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { useAllEmployees, useUpdateEmployee } from '../../hooks/employees';
+import {
+  useAllEmployees,
+  useCreateEmployee,
+  useUpdateEmployee,
+} from '../../hooks/employees';
 import { Contract, Employee, Employee2Team, Team } from '../../types/Employee';
 import { useAddEmployeeToTeam } from '../../hooks/teams';
 import { useAllTeams } from '../../hooks/teams';
@@ -24,6 +28,7 @@ import { RiArrowDropRightLine, RiEditFill } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useAllUsers } from '../../hooks/user';
 import { colors } from '../../config/colors';
+import { useFilter } from '../../hooks/useFilter';
 dayjs.extend(isBetween);
 
 interface ContractOverviewProps {
@@ -51,7 +56,7 @@ const ContractOverview = ({
       <FormControl id="bgColor" style={{ margin: '8px auto' }}>
         <Select
           disabled={disabled}
-          value={contract.bgColor}
+          value={contract.bgColor || 'green'}
           style={{
             backgroundColor: `var(--bg${
               contract.bgColor[0].toUpperCase() + contract.bgColor.substring(1)
@@ -75,10 +80,13 @@ const EmployeeSettings = () => {
   const { isLoading, employees, refetch } = useAllEmployees();
   const { isLoading: isLoadingTeams, teams } = useAllTeams();
   const { users } = useAllUsers();
+  const { currentCompany } = useFilter();
 
+  const { mutateAsync: createEmployee, status: createEmployeeStatus } =
+    useCreateEmployee();
   const { mutateAsync: updateEmployee } = useUpdateEmployee();
-
   const { mutateAsync: addEmployeeToTeam } = useAddEmployeeToTeam();
+
   const [currentEmployee, setCurrentemployee] = useState<
     Employee | undefined
   >();
@@ -99,6 +107,10 @@ const EmployeeSettings = () => {
       currentEmployee && currentEmployee?.contract
         ? currentEmployee?.contract
         : [],
+    companyId:
+      currentEmployee && currentEmployee?.companyId
+        ? currentEmployee?.companyId
+        : currentCompany?.uuid || '',
   });
   const defaultContract: Contract = {
     userId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
@@ -107,9 +119,14 @@ const EmployeeSettings = () => {
     bgColor: 'green',
     validUntil: null,
   };
-  const [currentContract, setCurrentContract] = useState<Contract>(
-    () => currentEmployee?.contract[0] || defaultContract
-  );
+  const [currentContract, setCurrentContract] = useState<Contract>(() => {
+    if (currentEmployee?.contract.length) {
+      return {
+        ...sanitizeContract(currentEmployee.contract[0]),
+      };
+    }
+    return defaultContract;
+  });
   const [currentTeam, setCurrentTeam] = useState<Team | undefined>();
   const [state, setState] = useState<'view' | 'edit'>('view');
   const remainingTeams = teams.filter(
@@ -143,6 +160,22 @@ const EmployeeSettings = () => {
 
   const onTeamChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
+  };
+
+  const handleCreateEmployee = async () => {
+    if (!currentCompany?.uuid) {
+      return;
+    }
+    const defaultEmployee = {
+      uuid: '',
+      firstName: 'first Name',
+      lastName: 'last Name',
+      contract: [],
+      companyId: currentCompany.uuid,
+    };
+    await createEmployee({ employee: defaultEmployee }).then((employee) =>
+      setCurrentemployee(employees.filter((t) => t.uuid === employee.uuid)[0])
+    );
   };
 
   const handleAddEmployeeToTeam = () => {
@@ -190,6 +223,14 @@ const EmployeeSettings = () => {
     toggleEdit(e);
   };
 
+  const sanitizeContract = (contract: Contract): Contract => {
+    return {
+      ...contract,
+      hoursPerWeek: contract.hoursPerWeek || 0,
+      appointmentsPerWeek: contract.appointmentsPerWeek || 0,
+      bgColor: contract.bgColor || 'green',
+    };
+  };
   useEffect(() => {
     if (!isLoading && currentEmployee) {
       setState('view');
@@ -197,10 +238,11 @@ const EmployeeSettings = () => {
         ...currentState,
         ...currentEmployee,
         userId: currentEmployee.user?.userId || '',
+        alias: currentEmployee.alias || '',
       }));
       setCurrentContract({
         ...defaultContract,
-        ...currentEmployee.contract[0],
+        ...sanitizeContract(currentEmployee.contract[0]),
       });
     }
   }, [currentEmployee, isLoading]);
@@ -211,6 +253,13 @@ const EmployeeSettings = () => {
     </>
   ) : (
     <>
+      <Button
+        disabled={createEmployeeStatus !== 'idle'}
+        colorScheme="green"
+        onClick={handleCreateEmployee}
+      >
+        Create Employee
+      </Button>
       <form
         onSubmit={onSubmitHandler}
         style={{
@@ -322,7 +371,7 @@ const EmployeeSettings = () => {
         {currentEmployee.teams?.length ? (
           <>
             <Heading as="h3" size="sm" mb="2" mt="5">
-              current teams
+              {t('label.currentTeams')}
             </Heading>
             <List style={{ marginBottom: '10px' }}>
               {currentEmployee.teams.map((t, i) => (
