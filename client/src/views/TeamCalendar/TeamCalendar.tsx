@@ -12,7 +12,9 @@ import { Flex } from '@chakra-ui/react';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 function TeamCalendar(): JSX.Element {
-  const { currentTeam } = useFilter();
+  const { currentTeam, setCalendarView } = useFilter();
+  setCalendarView('day');
+
   const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
@@ -57,7 +59,7 @@ function TeamCalendar(): JSX.Element {
       }}
     >
       <Flex>
-        <FilterBar hasTeamsFilter hasCalendarOption />
+        <FilterBar hasTeamsFilter hasEventTypeOption />
       </Flex>
       <CalendarContainer
         readOnly={false}
