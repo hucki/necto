@@ -1,4 +1,3 @@
-import { BgColor } from './Colors';
 import { Employee } from './Employee';
 import { User } from './User';
 
@@ -12,17 +11,6 @@ export type UserSettings = {
   updatedAt?: Date;
   user?: User;
   employee?: Employee;
-};
-
-export type Contract = {
-  id?: number;
-  userId: string;
-  hoursPerWeek: number;
-  appointmentsPerWeek: number;
-  bgColor: BgColor;
-  validUntil: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
 };
 
 export type UserToPermissions = {

@@ -29,15 +29,20 @@ export type NewEmployee = Pick<
 >;
 
 export type Contract = {
-  id?: number;
-  userId: string;
-  hoursPerWeek: number;
-  appointmentsPerWeek: number;
-  bgColor: BgColor;
-  validUntil: null | Date;
+  id: number;
+  employeeId: string;
+  hoursPerWeek?: number;
+  appointmentsPerWeek?: number;
+  bgColor?: BgColor;
+  validUntil?: null | Date;
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+export type NewContract = Pick<
+  Contract,
+  'employeeId' | 'hoursPerWeek' | 'appointmentsPerWeek' | 'bgColor'
+>;
 
 export type Employee2Team = {
   employee: Employee;
