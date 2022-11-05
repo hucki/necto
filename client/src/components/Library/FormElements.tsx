@@ -125,7 +125,6 @@ type LabelledInputProps = CommonLabelledFormElementProps & {
 const FormControl = styled(ChakraFormControl)({
   margin: '10px auto',
   width: '100%',
-  maxWidth: '300px',
 });
 
 const LabelledSelect = ({
@@ -174,7 +173,7 @@ const LabelledInput = ({
   type = 'text',
 }: LabelledInputProps) => {
   return (
-    <FormControl id={id} style={{ margin: '5px auto' }} isRequired={isRequired}>
+    <FormControl id={id} isRequired={isRequired}>
       <Input
         disabled={disabled}
         type={type}
