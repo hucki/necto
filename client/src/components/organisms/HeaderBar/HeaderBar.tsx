@@ -45,7 +45,7 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
           onClick={onSideNavOpen}
         />
       </div>
-      <Flex className="calenndar-control" justifySelf="end">
+      <Flex className="calendar-control" justifySelf="end">
         <Button
           marginX={2}
           disabled={dayjs().isSame(dayjs(currentDate), 'day')}
