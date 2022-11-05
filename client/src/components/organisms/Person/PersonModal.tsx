@@ -51,19 +51,18 @@ export const PersonModal = ({
   }));
 
   type ToastOptionsProps = {
-    type: 'created' | 'updated';
     result: 'error' | 'success' | 'info' | 'warning' | undefined;
+    title: string;
+    description: string;
   };
   const toastOptions = ({
-    type,
+    title,
+    description,
     result,
   }: ToastOptionsProps): UseToastOptions => {
-    const [t] = useTranslation();
     return {
-      title: `${t(`toast.${personType}`)} ${t(`toast.${type}`)}.`,
-      description: `${currentPerson.lastName}, ${
-        currentPerson.firstName
-      } has been ${t(`toast.${type}`)}`,
+      title,
+      description,
       status: result,
       duration: 5000,
       isClosable: true,
@@ -89,6 +88,7 @@ export const PersonModal = ({
   };
 
   const onSaveChanges = () => {
+    let toastType: 'updated' | 'created' = 'updated';
     if (currentPerson?.firstName && currentPerson?.lastName) {
       if (currentPerson.uuid) {
         // update
@@ -96,13 +96,33 @@ export const PersonModal = ({
           ? updatePatient({ patient: currentPerson }).then((res: Patient) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
-                toast(toastOptions({ type: 'updated', result: 'success' }));
+                toast(
+                  toastOptions({
+                    title: `${t(`toast.${personType}`)} ${t(
+                      `toast.${toastType}`
+                    )}.`,
+                    description: `${currentPerson.lastName}, ${
+                      currentPerson.firstName
+                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                    result: 'success',
+                  })
+                );
               }
             })
           : updateDoctor({ doctor: currentPerson }).then((res: Doctor) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
-                toast(toastOptions({ type: 'updated', result: 'success' }));
+                toast(
+                  toastOptions({
+                    title: `${t(`toast.${personType}`)} ${t(
+                      `toast.${toastType}`
+                    )}.`,
+                    description: `${currentPerson.lastName}, ${
+                      currentPerson.firstName
+                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                    result: 'success',
+                  })
+                );
               }
             });
         if (currentPerson.contactData?.length) {
@@ -114,17 +134,38 @@ export const PersonModal = ({
         }
       } else {
         // create
+        toastType = 'created';
         personType === 'patient'
           ? createPatient({ patient: currentPerson }).then((res: Patient) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
-                toast(toastOptions({ type: 'created', result: 'success' }));
+                toast(
+                  toastOptions({
+                    title: `${t(`toast.${personType}`)} ${t(
+                      `toast.${toastType}`
+                    )}.`,
+                    description: `${currentPerson.lastName}, ${
+                      currentPerson.firstName
+                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                    result: 'success',
+                  })
+                );
               }
             })
           : createDoctor({ doctor: currentPerson }).then((res: Doctor) => {
               if (res?.uuid) {
                 setCurrentPerson(res);
-                toast(toastOptions({ type: 'created', result: 'success' }));
+                toast(
+                  toastOptions({
+                    title: `${t(`toast.${personType}`)} ${t(
+                      `toast.${toastType}`
+                    )}.`,
+                    description: `${currentPerson.lastName}, ${
+                      currentPerson.firstName
+                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                    result: 'success',
+                  })
+                );
               }
             });
       }
