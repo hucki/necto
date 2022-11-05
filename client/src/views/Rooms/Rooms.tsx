@@ -33,6 +33,7 @@ function getBookings(buildingId: string, rooms: Room[]) {
           )[0];
           if (thisRoom?.buildingId && thisRoom.buildingId === buildingId) {
             res.push({
+              uuid: '',
               id: count,
               userId: person.employeeId,
               ressourceId: bookings[j].roomId,
