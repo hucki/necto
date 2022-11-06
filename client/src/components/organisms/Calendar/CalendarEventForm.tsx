@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Popover,
@@ -13,6 +13,8 @@ import {
   Textarea,
   FormControl,
   Button,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event, NewEvent } from '../../../types/Event';
@@ -23,6 +25,7 @@ import {
   DatePicker,
   Select,
   FormLabel,
+  LabelledInput,
 } from '../../Library';
 import { RRule, Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
@@ -32,10 +35,108 @@ import utc from 'dayjs/plugin/utc';
 import de from 'date-fns/locale/de';
 import { useAllPatients } from '../../../hooks/patient';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
+import { RiSearchLine } from 'react-icons/ri';
+import { Patient } from '../../../types/Patient';
+import styled from '@emotion/styled/macro';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
+
+const PersonSearchResultContainer = styled.div({
+  border: '1px solid #3333',
+  borderRadius: '12px',
+  padding: '0.5rem',
+  fontSize: '0.75rem',
+  '.name': {
+    fontWeight: 'bold',
+  },
+});
+interface PersonSearchResultProps {
+  person: Patient;
+  // eslint-disable-next-line no-unused-vars
+  handleSelectPerson: ({ person }: { person: Patient }) => void;
+}
+const PersonSearchResult = ({
+  person,
+  handleSelectPerson,
+}: PersonSearchResultProps) => {
+  return (
+    <>
+      <PersonSearchResultContainer
+        onClick={() => handleSelectPerson({ person })}
+      >
+        <div className="name">{person.firstName + ' ' + person.lastName}</div>
+        <div className="birthday">
+          {person.birthday ? dayjs(person.birthday).format('lll') : null}
+        </div>
+        <div className="institution">{person.institution?.name}</div>
+      </PersonSearchResultContainer>
+    </>
+  );
+};
+
+interface PersonFilterProps {
+  persons: Patient[];
+  // eslint-disable-next-line no-unused-vars
+  handleSelectPerson: ({ person }: { person: Patient }) => void;
+}
+const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
+  const [search, setSearch] = useState('');
+  const filteredPersons = persons.filter(
+    (person) =>
+      person.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      person.lastName.toLowerCase().includes(search.toLowerCase())
+  );
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
+    setSearch(event.currentTarget.value);
+  };
+  const onSelectPerson = ({ person }: { person: Patient }) => {
+    setSearch('');
+    handleSelectPerson({ person });
+  };
+  return (
+    <>
+      <Popover
+        isOpen={Boolean(search.length)}
+        placement="bottom-start"
+        initialFocusRef={inputRef}
+      >
+        <PopoverTrigger>
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              <RiSearchLine />
+            </InputLeftElement>
+            <Input
+              id="search"
+              name="search"
+              type="text"
+              value={search}
+              onChange={handleSearch}
+              pl="2rem"
+              ref={inputRef}
+            />
+          </InputGroup>
+        </PopoverTrigger>
+        <PopoverContent>
+          {filteredPersons.length && (
+            <ul>
+              {filteredPersons.map((p) => (
+                <li>
+                  <PersonSearchResult
+                    person={p}
+                    handleSelectPerson={onSelectPerson}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+        </PopoverContent>
+      </Popover>
+    </>
+  );
+};
 
 interface CalendarEventFormProps {
   event: Event | NewEvent;
@@ -57,6 +158,11 @@ function CalendarEventForm({
   const [currentEvent, setCurrentEvent] = useState<Event | NewEvent>(() => ({
     ...event,
   }));
+  const currentPerson =
+    patients.length && currentEvent
+      ? patients.find((p) => p.uuid === currentEvent.patientId)
+      : undefined;
+
   const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
     freq: RRule.WEEKLY,
     interval: 1,
@@ -144,6 +250,12 @@ function CalendarEventForm({
     }
   }
 
+  function onSelectPerson(patientId: Event['patientId']) {
+    setCurrentEvent((cur) => ({
+      ...cur,
+      patientId,
+    }));
+  }
   function handleEventDurationChange(event: BaseSyntheticEvent) {
     setEventDuration(event.target.value);
     setCurrentEvent((cur) => ({
@@ -269,20 +381,24 @@ function CalendarEventForm({
       </FormGroup>
       {!isNote && (
         <FormControl id="patient" mb="0.75rem" mt="0.5rem">
-          <Select
-            name="patientId"
-            value={currentEvent.patientId}
-            onChange={onSelectChange}
-          >
-            <option key="noPatient" value="">
-              No {t('calendar.event.patient')}
-            </option>
-            {patients.map((p) => (
-              <option key={p.uuid} value={p.uuid}>
-                {p.lastName + ', ' + p.firstName}
-              </option>
-            ))}
-          </Select>
+          <PersonFilter
+            persons={patients}
+            handleSelectPerson={({ person }) => onSelectPerson(person.uuid)}
+          />
+          <>
+            <LabelledInput
+              disabled
+              id="patient"
+              name="patient"
+              label={t('calendar.event.patient')}
+              value={
+                currentPerson
+                  ? currentPerson.lastName + ', ' + currentPerson.firstName
+                  : 'no Patient'
+              }
+              onChangeHandler={() => undefined}
+            />
+          </>
           <FormLabel>{t('calendar.event.patient')}</FormLabel>
         </FormControl>
       )}
