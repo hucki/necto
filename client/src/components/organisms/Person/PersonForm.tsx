@@ -241,57 +241,60 @@ export const PersonForm = ({
       </ModalFormGroup>
     );
   };
-  interface ContactDataInputProps {
-    contactData: ContactData[];
-  }
 
-  const ContactDataInput = ({ contactData }: ContactDataInputProps) => {
-    const currentContacts = contactData.map(
-      (contactItem: ContactData, index) => (
+  const phoneFromContact = () => {
+    const currentPhones = currentContactDataCollection
+      .filter((c) => c.type === 'telephone')
+      .map((contact, index) => (
         <ModalFormGroup key={index}>
-          <FormControl id={contactItem.type + '_' + index}>
+          <FormControl id={contact.type + '_' + contact.uuid}>
             <Input
               isDisabled={isReadOnly}
               onChange={(e) =>
-                onContactChange({ event: e, id: contactItem.uuid || '' })
+                onContactChange({ event: e, id: contact.uuid || '' })
               }
-              id={contactItem.uuid}
-              value={contactItem.contact}
-            ></Input>
+              id={contact.uuid}
+              value={contact.contact}
+            />
             <FormLabel>
-              {contactItem.type === 'telephone' ? <CgPhone /> : <CgMail />}
+              <CgPhone />
             </FormLabel>
           </FormControl>
         </ModalFormGroup>
-      )
-    );
-    return <>{currentContacts}</>;
-  };
+      ));
 
-  const PhoneFromContact = () => {
-    const currentPhones = currentContactDataCollection.filter(
-      (c) => c.type === 'telephone'
-    );
     return (
       <>
-        {currentPhones.length && (
-          <ContactDataInput contactData={currentPhones} />
-        )}
+        {currentPhones.length && currentPhones}
         {!currentPhones.length && !isReadOnly ? <NewTelephoneInput /> : null}
       </>
     );
   };
 
-  const EmailFromContact = () => {
-    const currentEmails = currentContactDataCollection.filter(
-      (c) => c.type === 'email'
-    );
+  const emailFromContact = () => {
+    const currentEmails = currentContactDataCollection
+      .filter((c) => c.type === 'email')
+      .map((contact, index) => (
+        <ModalFormGroup key={index}>
+          <FormControl id={contact.type + '_' + contact.uuid}>
+            <Input
+              isDisabled={isReadOnly}
+              onChange={(e) =>
+                onContactChange({ event: e, id: contact.uuid || '' })
+              }
+              id={contact.uuid}
+              value={contact.contact}
+            />
+            <FormLabel>
+              <CgMail />
+            </FormLabel>
+          </FormControl>
+        </ModalFormGroup>
+      ));
 
     return (
       <>
-        {currentEmails.length && (
-          <ContactDataInput contactData={currentEmails} />
-        )}
+        {currentEmails.length && currentEmails}
         {!currentEmails.length && !isReadOnly ? (
           <ModalFormGroup>
             <FormControl id="addEmail">
@@ -387,8 +390,8 @@ export const PersonForm = ({
           {personType !== 'doctor' && patientCheckboxes()}
           {autoFormFields()}
           {personType !== 'doctor' && <BirthdayInput />}
-          <PhoneFromContact />
-          <EmailFromContact />
+          {phoneFromContact()}
+          {emailFromContact()}
         </GridItem>
         <GridItem>
           {personType !== 'doctor' && currentPatient && (
