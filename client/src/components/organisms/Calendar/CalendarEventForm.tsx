@@ -25,7 +25,6 @@ import {
   DatePicker,
   Select,
   FormLabel,
-  LabelledInput,
 } from '../../Library';
 import { RRule, Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
@@ -37,50 +36,18 @@ import { useAllPatients } from '../../../hooks/patient';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { RiSearchLine } from 'react-icons/ri';
 import { Patient } from '../../../types/Patient';
-import styled from '@emotion/styled/macro';
+import { PersonCard } from '../../molecules/Cards/PersonCard';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
-
-const PersonSearchResultContainer = styled.div({
-  border: '1px solid #3333',
-  borderRadius: '12px',
-  padding: '0.5rem',
-  fontSize: '0.75rem',
-  '.name': {
-    fontWeight: 'bold',
-  },
-});
-interface PersonSearchResultProps {
-  person: Patient;
-  // eslint-disable-next-line no-unused-vars
-  handleSelectPerson: ({ person }: { person: Patient }) => void;
-}
-const PersonSearchResult = ({
-  person,
-  handleSelectPerson,
-}: PersonSearchResultProps) => {
-  return (
-    <>
-      <PersonSearchResultContainer
-        onClick={() => handleSelectPerson({ person })}
-      >
-        <div className="name">{person.firstName + ' ' + person.lastName}</div>
-        <div className="birthday">
-          {person.birthday ? dayjs(person.birthday).format('lll') : null}
-        </div>
-        <div className="institution">{person.institution?.name}</div>
-      </PersonSearchResultContainer>
-    </>
-  );
-};
 
 interface PersonFilterProps {
   persons: Patient[];
   // eslint-disable-next-line no-unused-vars
   handleSelectPerson: ({ person }: { person: Patient }) => void;
 }
+
 const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
   const [search, setSearch] = useState('');
   const filteredPersons = persons.filter(
@@ -121,13 +88,18 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
         </PopoverTrigger>
         <PopoverContent>
           {filteredPersons.length && (
-            <ul>
+            <ul
+              style={{
+                paddingLeft: '0.2rem',
+                paddingRight: '0.2rem',
+                display: 'grid',
+                gap: '0.2rem',
+                boxShadow: '0 0 15px #3333',
+              }}
+            >
               {filteredPersons.map((p) => (
-                <li>
-                  <PersonSearchResult
-                    person={p}
-                    handleSelectPerson={onSelectPerson}
-                  />
+                <li key={p.uuid}>
+                  <PersonCard person={p} handleClickPerson={onSelectPerson} />
                 </li>
               ))}
             </ul>
@@ -385,20 +357,7 @@ function CalendarEventForm({
             persons={patients}
             handleSelectPerson={({ person }) => onSelectPerson(person.uuid)}
           />
-          <>
-            <LabelledInput
-              disabled
-              id="patient"
-              name="patient"
-              label={t('calendar.event.patient')}
-              value={
-                currentPerson
-                  ? currentPerson.lastName + ', ' + currentPerson.firstName
-                  : 'no Patient'
-              }
-              onChangeHandler={() => undefined}
-            />
-          </>
+          {currentPerson && <PersonCard person={currentPerson} />}
           <FormLabel>{t('calendar.event.patient')}</FormLabel>
         </FormControl>
       )}
