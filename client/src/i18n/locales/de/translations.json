@@ -136,7 +136,8 @@
     "validUntil": "gültig bis",
     "bgColor": "Farbe",
     "hoursPerWeek": "Std. pro Woche",
-    "appointmentsPerWeek": "Therapien pro Woche"
+    "appointmentsPerWeek": "Therapien pro Woche",
+    "birthday": "Geburtstag"
   },
   "auth": {
     "login": "anmelden",

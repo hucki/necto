@@ -135,7 +135,8 @@
     "validUntil": "valid until",
     "bgColor": "color",
     "hoursPerWeek": "hours per week",
-    "appointmentsPerWeek": "appointments per week"
+    "appointmentsPerWeek": "appointments per week",
+    "birthday": "birthday"
   },
   "auth": {
     "login": "login",
