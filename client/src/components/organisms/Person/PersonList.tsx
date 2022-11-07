@@ -37,6 +37,8 @@ import { PersonModal } from './PersonModal';
 import { Person } from '../../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
+import { FaExclamation } from 'react-icons/fa';
+import { PersonCard } from '../../molecules/Cards/PersonCard';
 
 type ListType = 'doctors' | 'patients' | 'waitingPatients';
 
@@ -155,11 +157,7 @@ function PersonList({ persons }: PersonListProps) {
   };
 
   // pagination Config
-  const rowsPerPage = isMobile
-    ? listType === 'waitingPatients'
-      ? 10
-      : 14
-    : 20;
+  const rowsPerPage = isMobile ? 10 : 15;
   const numOfPages = Math.ceil(filteredPersons.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -236,19 +234,12 @@ function PersonList({ persons }: PersonListProps) {
               <b>{p.numberInLine}</b>
             </Td>
           )}
-          <Td>{p.title}</Td>
-          <Td>{p.lastName}</Td>
-          <Td>{p.firstName}</Td>
           <Td>
-            {p.contactData
-              ?.filter((c) => c.type === 'telephone')
-              .map((tel) => (
-                <div key={tel.uuid}>{tel.contact}</div>
-              ))}
+            <PersonCard person={p} />
           </Td>
           {!isDoctor(p) && (
             <>
-              <Td>
+              <Td textAlign="center">
                 <Icon
                   as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
                   w={5}
@@ -256,15 +247,14 @@ function PersonList({ persons }: PersonListProps) {
                   color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
                 />
               </Td>
-              <Td>
-                <Icon
-                  as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
-                  w={5}
-                  h={5}
-                  color={p.hasContract ? 'green' : 'red'}
-                />
+              <Td textAlign="center">
+                {!p.hasContract ? (
+                  <FaExclamation key="noContractIcon" color="red" />
+                ) : (
+                  <Icon as={RiCheckLine} w={5} h={5} color={'green'} />
+                )}
               </Td>
-              <Td>{p.gender}</Td>
+              <Td textAlign="center">{p.gender}</Td>
             </>
           )}
           <Td>
@@ -277,30 +267,20 @@ function PersonList({ persons }: PersonListProps) {
           {!isDoctor(p) && (
             <>
               <Td>{p.notices}</Td>
-              <Td>{p.doctor && getDisplayName(p.doctor)}</Td>
               <Td>
-                {p.institution &&
-                  p.institution.name +
-                    ' ' +
-                    (p.institution.description
-                      ? `(${p.institution.description})`
-                      : null)}
+                {p.doctor &&
+                  getDisplayName({ person: p.doctor, type: 'short' })}
               </Td>
             </>
           )}
-          {isDoctor(p) && (
-            <>
-              <Td>{p.street}</Td>
-              <Td>{p.zip}</Td>
-              <Td>{p.city}</Td>
-            </>
-          )}
           {isWaitingPatient(p) ? (
-            <Td>{dayjs(p.isWaitingSince).format('ll')}</Td>
+            <Td textAlign="center">{dayjs(p.isWaitingSince).format('ll')}</Td>
           ) : !isDoctor(p) ? (
-            <Td>{dayjs(p.firstContactAt).format('ll')}</Td>
+            <Td textAlign="center">{dayjs(p.firstContactAt).format('ll')}</Td>
           ) : null}
-          {isWaitingPatient(p) && p.events?.length ? (
+          {isWaitingPatient(p) &&
+          p.events?.length &&
+          p.events.filter((event) => !event.isCancelled).length ? (
             <Td>
               <b>
                 {
@@ -368,10 +348,7 @@ function PersonList({ persons }: PersonListProps) {
           <Thead>
             <Tr>
               {listType === 'waitingPatients' && <Th width={5}>Nr </Th>}
-              <Th>{t('label.title')}</Th>
-              <Th>{t('label.lastName')}</Th>
-              <Th>{t('label.firstName')}</Th>
-              <Th>{t('label.telephoneNumber')} </Th>
+              <Th></Th>
               {listType !== 'doctors' && (
                 <>
                   <Th width={5}>{t('label.isAddpayFreed')}</Th>
@@ -384,14 +361,6 @@ function PersonList({ persons }: PersonListProps) {
                 <>
                   <Th>{t('label.notices')} </Th>
                   <Th>{t('label.doctor')} </Th>
-                  <Th>{t('label.careFacility')} </Th>
-                </>
-              )}
-              {listType === 'doctors' && (
-                <>
-                  <Th>{t('label.street')}</Th>
-                  <Th>{t('label.zip')}</Th>
-                  <Th>{t('label.city')}</Th>
                 </>
               )}
               {listType === 'waitingPatients' ? (

@@ -1,6 +1,5 @@
 import {
   Button,
-  Icon,
   ModalFooter,
   ModalHeader,
   useToast,
@@ -8,7 +7,6 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CgSmile } from 'react-icons/cg';
 import { FaArchive, FaEdit, FaTimes } from 'react-icons/fa';
 import { useUpdateContact } from '../../../hooks/contact';
 import { useCreateDoctor, useUpdateDoctor } from '../../../hooks/doctor';
@@ -19,6 +17,7 @@ import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/Wrapper';
+import { PersonCard } from '../../molecules/Cards/PersonCard';
 import { PersonForm } from './PersonForm';
 
 interface PersonModalProps {
@@ -191,12 +190,8 @@ export const PersonModal = ({
         alignItems="center"
         display="flex"
         justifyContent="space-between"
-        fontSize="clamp(0.2rem, 0.5rem + 2vw, 24px)"
       >
-        <Icon as={CgSmile} w={10} h={10} mr={2} />
-        <div className="person-info">
-          {currentPerson.lastName + ', ' + currentPerson.firstName}
-        </div>
+        <PersonCard person={currentPerson} hasBorder />
         <IconButton
           aria-label="close modal"
           icon={<FaTimes />}
