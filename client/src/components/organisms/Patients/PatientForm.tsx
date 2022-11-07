@@ -128,7 +128,10 @@ export const PatientForm = ({
             {type === 'view' ? (
               <TextDisplay id="doctorId">
                 {currentPatient['doctor'] &&
-                  getDisplayName(currentPatient['doctor'])}
+                  getDisplayName({
+                    person: currentPatient['doctor'],
+                    type: 'short',
+                  })}
               </TextDisplay>
             ) : (
               <>
