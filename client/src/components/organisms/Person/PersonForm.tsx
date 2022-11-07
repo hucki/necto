@@ -6,6 +6,7 @@ import {
   GridItem,
   SimpleGrid,
 } from '@chakra-ui/react';
+import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
@@ -22,7 +23,13 @@ import { Doctor } from '../../../types/Doctor';
 import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
-import { Input, FormLabel, ModalFormGroup, Select } from '../../Library';
+import {
+  Input,
+  FormLabel,
+  ModalFormGroup,
+  Select,
+  DatePicker,
+} from '../../Library';
 import { EventList } from '../List/Events';
 
 interface PersonFormProps {
@@ -85,6 +92,11 @@ export const PersonForm = ({
     id: string;
   }
 
+  interface OnDateSelectProps {
+    date: ReactDatePickerReturnType;
+    key: PersonKey;
+  }
+
   function onInputChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
     const currentValue = event.currentTarget.value;
@@ -99,6 +111,10 @@ export const PersonForm = ({
         c.uuid === id ? { ...c, contact: newContact } : c
       )
     );
+  }
+
+  function onDateSelect({ date, key }: OnDateSelectProps) {
+    setCurrentPerson((person) => ({ ...person, [`${key}`]: date }));
   }
   function onCheckboxChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
@@ -208,71 +224,74 @@ export const PersonForm = ({
       </ModalFormGroup>
     );
   };
-  const telephone = () => {
-    const currentPhones = currentContactDataCollection
-      .filter((c) => c.type === 'telephone')
-      .map((phone: ContactData, index) => (
+  const NewTelephoneInput = () => {
+    return (
+      <ModalFormGroup>
+        <FormControl id="addPhone">
+          <IconButton
+            disabled={!currentPerson.uuid}
+            aria-label="add-phone"
+            icon={<CgAdd />}
+            onClick={() => createContact('telephone')}
+          />
+          <FormLabel>
+            <CgPhone />
+          </FormLabel>
+        </FormControl>
+      </ModalFormGroup>
+    );
+  };
+  interface ContactDataInputProps {
+    contactData: ContactData[];
+  }
+
+  const ContactDataInput = ({ contactData }: ContactDataInputProps) => {
+    const currentContacts = contactData.map(
+      (contactItem: ContactData, index) => (
         <ModalFormGroup key={index}>
-          <FormControl id={'telephone' + index}>
+          <FormControl id={contactItem.type + '_' + index}>
             <Input
               isDisabled={isReadOnly}
               onChange={(e) =>
-                onContactChange({ event: e, id: phone.uuid || '' })
+                onContactChange({ event: e, id: contactItem.uuid || '' })
               }
-              id={phone.uuid}
-              value={phone.contact}
+              id={contactItem.uuid}
+              value={contactItem.contact}
             ></Input>
             <FormLabel>
-              <CgPhone />
+              {contactItem.type === 'telephone' ? <CgPhone /> : <CgMail />}
             </FormLabel>
           </FormControl>
         </ModalFormGroup>
-      ));
+      )
+    );
+    return <>{currentContacts}</>;
+  };
+
+  const PhoneFromContact = () => {
+    const currentPhones = currentContactDataCollection.filter(
+      (c) => c.type === 'telephone'
+    );
     return (
       <>
-        {currentPhones}
-        {!currentPhones.length && !isReadOnly ? (
-          <ModalFormGroup>
-            <FormControl id="addPhone">
-              <IconButton
-                disabled={!currentPerson.uuid}
-                aria-label="add-phone"
-                icon={<CgAdd />}
-                onClick={() => createContact('telephone')}
-              />
-              <FormLabel>
-                <CgPhone />
-              </FormLabel>
-            </FormControl>
-          </ModalFormGroup>
-        ) : null}
+        {currentPhones.length && (
+          <ContactDataInput contactData={currentPhones} />
+        )}
+        {!currentPhones.length && !isReadOnly ? <NewTelephoneInput /> : null}
       </>
     );
   };
 
-  const email = () => {
-    const currentEmails = currentContactDataCollection
-      .filter((c) => c.type === 'email')
-      .map((email: ContactData, index) => (
-        <ModalFormGroup key={index}>
-          <FormControl id={'email' + index}>
-            <Input
-              isDisabled={isReadOnly}
-              onChange={(e) =>
-                onContactChange({ event: e, id: email.uuid || '' })
-              }
-              id={email.uuid}
-              value={email.contact}
-            ></Input>
-            <FormLabel>
-              <CgMail />
-            </FormLabel>
-          </FormControl>
-        </ModalFormGroup>
-      ));
+  const EmailFromContact = () => {
+    const currentEmails = currentContactDataCollection.filter(
+      (c) => c.type === 'email'
+    );
+
     return (
       <>
-        {currentEmails}
+        {currentEmails.length && (
+          <ContactDataInput contactData={currentEmails} />
+        )}
         {!currentEmails.length && !isReadOnly ? (
           <ModalFormGroup>
             <FormControl id="addEmail">
@@ -290,6 +309,29 @@ export const PersonForm = ({
           </ModalFormGroup>
         ) : null}
       </>
+    );
+  };
+
+  const BirthdayInput = () => {
+    if (!currentPatient) return null;
+    return (
+      <ModalFormGroup>
+        <FormControl id="birthday">
+          <DatePicker
+            disabled={isReadOnly}
+            name="birthday"
+            locale="de"
+            dateFormat="P"
+            selected={
+              currentPatient.birthday && dayjs(currentPatient.birthday).toDate()
+            }
+            onChange={(date: ReactDatePickerReturnType) => {
+              if (date) onDateSelect({ date, key: 'birthday' });
+            }}
+          />
+          <FormLabel>{t('label.birthday')}</FormLabel>
+        </FormControl>
+      </ModalFormGroup>
     );
   };
   const autoFormFields = () => {
@@ -344,8 +386,9 @@ export const PersonForm = ({
         <GridItem>
           {personType !== 'doctor' && patientCheckboxes()}
           {autoFormFields()}
-          {telephone()}
-          {email()}
+          {personType !== 'doctor' && <BirthdayInput />}
+          <PhoneFromContact />
+          <EmailFromContact />
         </GridItem>
         <GridItem>
           {personType !== 'doctor' && currentPatient && (
