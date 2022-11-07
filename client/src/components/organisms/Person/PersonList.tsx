@@ -37,7 +37,6 @@ import { PersonModal } from './PersonModal';
 import { Person } from '../../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
-import { FaExclamation } from 'react-icons/fa';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
 
 type ListType = 'doctors' | 'patients' | 'waitingPatients';
@@ -248,11 +247,12 @@ function PersonList({ persons }: PersonListProps) {
                 />
               </Td>
               <Td textAlign="center">
-                {!p.hasContract ? (
-                  <FaExclamation key="noContractIcon" color="red" />
-                ) : (
-                  <Icon as={RiCheckLine} w={5} h={5} color={'green'} />
-                )}
+                <Icon
+                  as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
+                  w={5}
+                  h={5}
+                  color={p.hasContract ? 'green' : 'red'}
+                />
               </Td>
               <Td textAlign="center">{p.gender}</Td>
             </>
