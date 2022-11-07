@@ -69,13 +69,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    if (user?.isAdmin || user?.isEmployee || user?.isPlanner) {
-      setIsAuthorized(true);
-    } else {
-      setIsAuthorized(false);
-    }
-  }, [user]);
-  useEffect(() => {
     const fetchMe = async () => {
       if (isError) setIsError(false);
       try {
@@ -90,6 +83,11 @@ function AuthProvider({ children }: { children: ReactNode }) {
           isPlanner: thisIsMe.isPlanner,
           isEmployee: thisIsMe.isEmployee,
         });
+        if (thisIsMe.isAdmin || thisIsMe.isEmployee || thisIsMe.isPlanner) {
+          setIsAuthorized(true);
+        } else {
+          setIsAuthorized(false);
+        }
       } catch (error) {
         console.error(error);
         setIsError(true);
