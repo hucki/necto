@@ -1,12 +1,15 @@
 node_modules
 .env
 .DS_Store
+.secrets
 /server/dist
 /old_db
 /db-data
 docker-compose.yml
 docker-compose-prod.yml
+docker-compose-prod-old.yml
 docker-compose-stage.yml
+docker-compose-stage-certbot.yml
 /pgadmin/pgadmin.env
 /client/nginx/conf/nginx.conf
 /client/nginx/conf/nginx.stage.conf
