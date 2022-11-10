@@ -13,13 +13,6 @@ dotenv.config();
 const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 3001;
 
-console.log({
-  host: process.env.HOST,
-  port: process.env.PORT,
-  redisHost: process.env.REDIS_HOST,
-  mailHost: process.env.MAIL_HOST,
-});
-
 // setup redis session store
 const redisHost = process.env.REDIS_HOST || 'localhost';
 const redisPort = (process.env.REDIS_PORT as unknown as number) || 6379;
