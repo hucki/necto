@@ -77,6 +77,11 @@
     "prefix": "There was an error",
     "event": {
       "overlapping": "Overlapping Appointments are not allowed. Please check again"
+    },
+    "api": {
+      "token_wrong_or_expired": "Link wrong or expired. Please request a new reset link.",
+      "invalid_old_password": "the old password is invalid",
+      "could_not_update_user": "could not update user"
     }
   },
   "menu": {
