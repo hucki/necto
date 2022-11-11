@@ -44,12 +44,12 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
       />
       {/* Basics */}
       <NavigationButton
-        variant={currentView === '/' ? 'solid' : 'ghost'}
+        variant={currentView === '/home' ? 'solid' : 'ghost'}
         colorScheme="purple"
         aria-label="Home"
         leftIcon={<CgHome />}
-        key="/"
-        onClick={() => onClickHandler('/')}
+        key="/home"
+        onClick={() => onClickHandler('/home')}
       >
         {t('menu.home')}
       </NavigationButton>

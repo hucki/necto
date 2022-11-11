@@ -29,14 +29,14 @@ const Dashboard = ({ id }: DashboardInputProps) => {
   if (!teamMembers) return <div>Data missing</div>;
 
   const RedirectHome = () => {
-    return <Navigate to="/" />;
+    return <Navigate to="/home" />;
   };
 
   return (
     <>
       <div style={{ width: '100%', height: '100%' }}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/rooms" element={<Rooms />} />
           <Route
             path="/patients"
@@ -80,7 +80,7 @@ const Dashboard = ({ id }: DashboardInputProps) => {
           />
           <Route path="/personalcal" element={<PersonalCalendar id={id} />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="*" element={<div>Route not found</div>} />
+          <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </div>
     </>
