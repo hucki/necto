@@ -127,7 +127,7 @@ const authClient = async (
         if (response.status === 401 && endpoint !== 'logout/') {
           updateToken({ token: null });
         }
-        throw new Error(data.message);
+        throw new Error(typeof data === 'string' ? data : data.message);
       }
     } catch (e) {
       const error = e as Error;
