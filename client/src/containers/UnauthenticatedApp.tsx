@@ -11,13 +11,15 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react';
-import LoginForm from '../views/Auth/LoginForm';
-import Register from '../views/Auth/Register';
-import ResetPassword from '../views/Auth/ResetPassword';
+import LoginForm from '../components/organisms/Auth/LoginForm';
+import Register from '../components/organisms/Auth/Register';
+import ForgotPassword from '../components/organisms/Auth/ForgotPassword';
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '../components/molecules/Logo/LogoIcon';
 import { useViewport } from '../hooks/useViewport';
 import ErrorBoundary from '../components/molecules/Error/ErrorBoundary';
+import { Route, Routes } from 'react-router-dom';
+import ResetPassword from '../components/organisms/Auth/ResetPassword';
 
 function UnauthenticatedApp(): JSX.Element {
   const { t } = useTranslation();
@@ -26,11 +28,11 @@ function UnauthenticatedApp(): JSX.Element {
   const [resetActive, setResetActive] = useState(false);
   const resetTabIndex = 2;
 
-  const handleResetPassword = () => {
+  const handleForgotPassword = () => {
     setResetActive(true);
     setTabIndex(resetTabIndex);
   };
-  const hasResetPassword = () => {
+  const hasForgotPassword = () => {
     setTabIndex(0);
     setResetActive(false);
   };
@@ -39,6 +41,41 @@ function UnauthenticatedApp(): JSX.Element {
       setResetActive(false);
     }
   }, [tabIndex]);
+
+  const LoginTabs = () => {
+    return (
+      <>
+        <Heading as="h1" size="lg">
+          {t('auth.welcome')}
+        </Heading>
+        <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)}>
+          <TabList>
+            <Tab>{t('auth.login')}</Tab>
+            <Tab>{t('auth.register')}</Tab>
+            {resetActive && <Tab>{t('auth.resetPassword')}</Tab>}
+          </TabList>
+          <TabPanels>
+            <TabPanel p="0">
+              <ErrorBoundary>
+                <LoginForm />
+              </ErrorBoundary>
+              <Button w="100%" type="reset" onClick={handleForgotPassword}>
+                {t('auth.forgotPassword')}
+              </Button>
+            </TabPanel>
+            <TabPanel p="0">
+              <Register onHasRegistered={() => setTabIndex(0)} />
+            </TabPanel>
+            {resetActive && (
+              <TabPanel p="0">
+                <ForgotPassword onSubmit={hasForgotPassword} />
+              </TabPanel>
+            )}
+          </TabPanels>
+        </Tabs>
+      </>
+    );
+  };
   return (
     <AppContainer id="App">
       <ContentContainer alignItems="center" justifyContent="center">
@@ -51,35 +88,10 @@ function UnauthenticatedApp(): JSX.Element {
         >
           <Stack spacing="4" alignItems="center">
             <LogoIcon />
-            <Heading as="h1" size="lg">
-              {t('auth.welcome')}
-            </Heading>
-
-            <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)}>
-              <TabList>
-                <Tab>{t('auth.login')}</Tab>
-                <Tab>{t('auth.register')}</Tab>
-                {resetActive && <Tab>{t('auth.resetPassword')}</Tab>}
-              </TabList>
-              <TabPanels>
-                <TabPanel p="0">
-                  <ErrorBoundary>
-                    <LoginForm />
-                  </ErrorBoundary>
-                  <Button w="100%" type="reset" onClick={handleResetPassword}>
-                    {t('auth.forgotPassword')}
-                  </Button>
-                </TabPanel>
-                <TabPanel p="0">
-                  <Register onHasRegistered={() => setTabIndex(0)} />
-                </TabPanel>
-                {resetActive && (
-                  <TabPanel p="0">
-                    <ResetPassword onSubmit={hasResetPassword} />
-                  </TabPanel>
-                )}
-              </TabPanels>
-            </Tabs>
+            <Routes>
+              <Route path="/resetpassword/:token" element={<ResetPassword />} />
+              <Route path="*" element={<LoginTabs />} />
+            </Routes>
           </Stack>
         </Box>
       </ContentContainer>
