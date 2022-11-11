@@ -2,9 +2,9 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import { useTranslation } from 'react-i18next';
-import { Input, FormLabel, FormControl } from '../../components/Library';
-import { register } from '../../services/Auth';
-import { RegisterResponse } from '../../types/Auth';
+import { Input, FormLabel, FormControl } from '../../Library';
+import { register } from '../../../services/Auth';
+import { RegisterResponse } from '../../../types/Auth';
 
 interface RegisterError {
   location: string;

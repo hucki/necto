@@ -1,8 +1,8 @@
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { Input, FormLabel, FormControl } from '../../components/Library';
-import { AuthContext } from '../../providers/AuthProvider';
+import { Input, FormLabel, FormControl } from '../../Library';
+import { AuthContext } from '../../../providers/AuthProvider';
 
 const LoginForm = (): JSX.Element => {
   const { t } = useTranslation();

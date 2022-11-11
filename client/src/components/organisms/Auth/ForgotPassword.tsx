@@ -1,9 +1,9 @@
 import React, { FormEvent, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { Input, FormControl, FormLabel } from '../../components/Library';
-import { resetPassword } from '../../services/Auth';
-import { ResetResponse } from '../../types/Auth';
+import { Input, FormControl, FormLabel } from '../../Library';
+import { requestResetPassword } from '../../../services/Auth';
+import { ResetResponse } from '../../../types/Auth';
 
 interface RegisterError {
   location: string;
@@ -20,7 +20,7 @@ interface ResetPasswordProps {
   onSubmit: () => void;
 }
 
-const ResetPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
+const ForgotPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
   const { t } = useTranslation();
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [, setPending] = useState(false);
@@ -41,7 +41,9 @@ const ResetPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
     e.preventDefault();
     try {
       setPending(true);
-      const resetResponse = await resetPassword({ email: resetState.email });
+      const resetResponse = await requestResetPassword({
+        email: resetState.email,
+      });
       setTimeout(() => {
         setMessage(undefined);
         setResponse(undefined);
@@ -103,4 +105,4 @@ const ResetPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
   );
 };
 
-export default ResetPassword;
+export default ForgotPassword;
