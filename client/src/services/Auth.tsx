@@ -5,6 +5,7 @@ import {
   MinimalUser,
   RegisterData,
   RegisterResponse,
+  RequestResetData,
   ResetData,
   ResetResponse,
   UpdateData,
@@ -52,9 +53,9 @@ export const register = async ({
   return authClient('register/', { email, password, firstName, lastName });
 };
 
-export const resetPassword = async ({
+export const requestResetPassword = async ({
   email,
-}: ResetData): Promise<ResetResponse> => {
+}: RequestResetData): Promise<ResetResponse> => {
   return authClient('pw/', { email });
 };
 
@@ -64,6 +65,15 @@ export const updatePassword = async ({
 }: UpdateData): Promise<ResetResponse> => {
   const method = 'PATCH';
   return authClient('pw/', { oldPassword, newPassword }, method);
+};
+
+export const resetPassword = async ({
+  email,
+  newPassword,
+  token,
+}: ResetData): Promise<ResetResponse> => {
+  const method = 'PATCH';
+  return authClient('reset/', { email, newPassword, token }, method);
 };
 
 export const getToken = () => {

@@ -13,7 +13,13 @@ export type UpdateData = {
   newPassword: string;
 };
 
-export type ResetData = Omit<LoginData, 'password'>;
+export type ResetData = {
+  email: LoginData['email'];
+  newPassword: LoginData['password'];
+  token: string;
+};
+
+export type RequestResetData = Omit<LoginData, 'password'>;
 
 export type LoginResponse = {
   token: string;
@@ -32,7 +38,7 @@ export type MinimalUser = {
   uuid: string;
   email: string;
   firstName?: string;
-  lastName?: String;
+  lastName?: string;
   isAdmin?: boolean;
   isPlanner?: boolean;
   isEmployee?: boolean;
