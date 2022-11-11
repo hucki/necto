@@ -30,6 +30,7 @@ const ResetPassword = (): JSX.Element => {
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [, setPending] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
   const [resetState, setResetState] = useState({
     email: '',
     newPassword: '',
@@ -78,15 +79,23 @@ const ResetPassword = (): JSX.Element => {
       setSuccess(true);
     } catch (error) {
       setPending(false);
-      const errorResponse = error as ErrorResponse;
+      setError(true);
       let messages: Array<string> = [];
-      if (errorResponse && errorResponse.message) {
-        messages = [errorResponse.message];
-      } else if (errorResponse && errorResponse.errors?.length) {
-        const msgs = errorResponse.errors.map((e) => e.msg);
-        messages = [...msgs];
+      if (typeof error === 'string') {
+        messages = [t(`error.api.${error}`)];
+      } else {
+        const errorResponse = error as ErrorResponse;
+        if (errorResponse && errorResponse.message) {
+          messages = [t(`error.api.${errorResponse.message}`)];
+        } else if (errorResponse && errorResponse.errors?.length) {
+          const msgs = errorResponse.errors.map((e) => t(`error.api.${e.msg}`));
+          messages = [...msgs];
+        }
       }
-      setTimeout(() => setMessage(undefined), 2500);
+      setTimeout(() => {
+        setMessage(undefined);
+        navigate('/');
+      }, 2500);
       setMessage(messages.join());
     }
   };
@@ -96,10 +105,10 @@ const ResetPassword = (): JSX.Element => {
       <Heading as="h1" size="lg">
         {t('auth.resetPassword')}
       </Heading>
-      {success ? (
+      {success || error ? (
         <>
           {message && (
-            <Alert status="success">
+            <Alert status={success ? 'success' : 'error'}>
               <AlertIcon />
               {message}
             </Alert>
