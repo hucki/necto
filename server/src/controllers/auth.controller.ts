@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
+import crypto from 'node:crypto';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
@@ -178,7 +179,7 @@ export const logout = async (
   return;
 };
 
-export const resetPassword = async (
+export const forgotPassword = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -190,8 +191,62 @@ export const resetPassword = async (
     res.status(200).json('ok');
     return;
   }
+  // generate token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        uuid: user.uuid,
+      },
+      data: {
+        passwordResetToken,
+        passwordResetAt: new Date(Date.now() + 10 * 60 * 1000),
+      },
+    });
+    // send password reset link with token
+    const resetUrl = new URL(
+      req.headers.origin + `/resetpassword/?token=${passwordResetToken}`
+    );
+    await transporter.sendMail({
+      from: process.env.MAIL_FROM,
+      to: updatedUser.email,
+      subject: 'Password reset',
+      text: `Hi ${updatedUser.firstName}, \n
+              to reset your password please follow this link:\n
+              ${resetUrl.toString()}\n
+              Best, \n
+              Mundwerk IT`,
+      html: `Hi ${user.firstName},<br /><br />
+              to reset your password please follow this link:<br /><br />
+              <a href="${resetUrl.toString()}">reset password</a><br /><br />
+              Best,<br /><br />
+              Mundwerk IT`,
+    });
+  } catch (error) {
+    console.error('could not update user', { error });
+  }
+  res.status(200).json('ok');
+  return;
+};
+
+export const resetPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { email, newPassword, token } = req?.body;
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user || user.passwordResetToken !== token) {
+    // no action required if no user found with the provided email
+    res.status(200).json('ok');
+    return;
+  }
   // reset password
-  const newPassword = generatePassword();
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   try {
     const updatedUser = await prisma.user.update({
@@ -202,28 +257,13 @@ export const resetPassword = async (
         password: hashedPassword,
       },
     });
-    // send new password
-    await transporter.sendMail({
-      from: process.env.MAIL_FROM,
-      to: updatedUser.email,
-      subject: 'Password reset',
-      text: `Hi ${updatedUser.firstName}, \n
-              here is the new password you requested:\n
-              ${newPassword} \n
-              Best, \n
-              Mundwerk IT`,
-      html: `Hi ${user.firstName},<br /><br />
-              here is the new password you requested<br /><br />
-              <strong>${newPassword}</strong><br /><br />
-              Best,<br /><br />
-              Mundwerk IT`,
-    });
   } catch (error) {
     console.error('could not update user');
   }
   res.status(200).json('ok');
   return;
 };
+
 export const updatePassword = async (
   req: Request,
   res: Response,

@@ -52,7 +52,8 @@ router.post(
 );
 
 router.post('/register', authController.registerUser);
-router.post('/pw', authController.resetPassword);
+router.post('/pw', authController.forgotPassword);
+router.patch('/reset', authController.resetPassword);
 
 // authenticated routes
 router.use(authController.isAuthenticated);
