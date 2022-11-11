@@ -152,6 +152,7 @@
     "forgotPassword": "Forgot password? Click here!",
     "resetPassword": "reset password",
     "reset": "reset",
-    "notYetAuthorized": "You have succesfully registered, but your account is not yet activated."
+    "notYetAuthorized": "You have succesfully registered, but your account is not yet activated.",
+    "fillResetPasswordForm": "Please fill out this form to reset your password"
   }
 }

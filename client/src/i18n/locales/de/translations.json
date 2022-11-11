@@ -153,6 +153,7 @@
     "forgotPassword": "Passwort vergessen? Klick hier!",
     "resetPassword": "Passwort zurücksetzen",
     "reset": "zurücksetzen",
-    "notYetAuthorized": "Du hast Dich erfolgreich registriert, aber Dein account ist noch nicht freigeschaltet."
+    "notYetAuthorized": "Du hast Dich erfolgreich registriert, aber Dein account ist noch nicht freigeschaltet.",
+    "fillResetPasswordForm": "Bitte fülle dieses Formular aus, um Dein Passwort zurückzusetzen"
   }
 }
