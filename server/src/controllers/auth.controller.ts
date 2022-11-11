@@ -210,7 +210,7 @@ export const forgotPassword = async (
     });
     // send password reset link with token
     const resetUrl = new URL(
-      req.headers.origin + `/resetpassword/?token=${passwordResetToken}`
+      req.headers.origin + `/resetpassword/${passwordResetToken}`
     );
     await transporter.sendMail({
       from: process.env.MAIL_FROM,
@@ -228,7 +228,7 @@ export const forgotPassword = async (
               Mundwerk IT`,
     });
   } catch (error) {
-    console.error('could not update user', { error });
+    console.error('could_not_update_user', { error });
   }
   res.status(200).json('ok');
   return;
@@ -241,9 +241,16 @@ export const resetPassword = async (
 ): Promise<void> => {
   const { email, newPassword, token } = req?.body;
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || user.passwordResetToken !== token) {
+  if (!user) {
     // no action required if no user found with the provided email
     res.status(200).json('ok');
+    return;
+  }
+  if (
+    user.passwordResetToken !== token ||
+    user.passwordResetAt < new Date(Date.now())
+  ) {
+    res.status(400).json('token_wrong_or_expired');
     return;
   }
   // reset password
@@ -255,10 +262,12 @@ export const resetPassword = async (
       },
       data: {
         password: hashedPassword,
+        passwordResetToken: '',
+        passwordResetAt: new Date(Date.now()),
       },
     });
   } catch (error) {
-    console.error('could not update user');
+    console.error('could_not_update_user');
   }
   res.status(200).json('ok');
   return;
@@ -292,7 +301,7 @@ export const updatePassword = async (
       },
     });
   } catch (error) {
-    console.error('could not update user');
+    console.error('could_not_update_user');
   }
   res.status(200).json('ok');
   return;
