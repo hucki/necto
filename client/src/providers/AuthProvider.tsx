@@ -99,9 +99,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(false);
       setUser(undefined);
       setIsLoading(false);
-      if (window.location.pathname !== '/') {
-        window.location.assign('/');
-      }
     } else {
       setIsAuthenticated(true);
       if (!user) {
