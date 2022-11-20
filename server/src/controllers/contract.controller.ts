@@ -34,6 +34,7 @@ export const addContract = async (
         tenantId: tenantId,
         employeeId: req.body.employeeId,
         bgColor: req.body.bgColor,
+        roomId: req.body.roomId,
         appointmentsPerWeek: parseInt(req.body.appointmentsPerWeek),
         hoursPerWeek: parseInt(req.body.hoursPerWeek),
       },
@@ -66,6 +67,7 @@ export const updateContract = async (
       },
       data: {
         bgColor: req.body.bgColor,
+        roomId: req.body.roomId,
         appointmentsPerWeek: parseInt(req.body.appointmentsPerWeek),
         hoursPerWeek: parseInt(req.body.hoursPerWeek),
       },
