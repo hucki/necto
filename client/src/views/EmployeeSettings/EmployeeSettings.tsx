@@ -41,6 +41,7 @@ import {
 import { IconButton } from '../../components/atoms/Buttons';
 import { FaPlus, FaSave, FaTimes } from 'react-icons/fa';
 import { useCreateContract, useUpdateContract } from '../../hooks/contract';
+import { useAllRooms } from '../../hooks/rooms';
 dayjs.extend(isBetween);
 
 interface ContractOverviewProps {
@@ -62,6 +63,7 @@ const ContractOverview = ({
   disabled = true,
 }: ContractOverviewProps) => {
   const { t } = useTranslation();
+  const { rooms } = useAllRooms();
   const bgColor = contract.bgColor || 'green';
   return (
     <>
@@ -124,6 +126,29 @@ const ContractOverview = ({
         </Select>
         <FormLabel>{t('label.bgColor')}</FormLabel>
       </FormControl>
+      <FormControl id="roomId">
+        <Select
+          disabled={disabled}
+          name="roomId"
+          value={contract.roomId}
+          onChange={(e) => {
+            e.preventDefault();
+            handleChangeContract({
+              targetName: e.currentTarget.name,
+              targetValue: e.currentTarget.value,
+            });
+          }}
+        >
+          <option value="">{t('label.noRoom')}</option>
+          {rooms.map((room, i) => (
+            <option key={i} value={room.uuid}>
+              {room.displayName} (
+              {room.building.displayName + ': ' + room.description})
+            </option>
+          ))}
+        </Select>
+        <FormLabel>{t('label.room')}</FormLabel>
+      </FormControl>
     </>
   );
 };
@@ -172,6 +197,7 @@ const EmployeeSettings = () => {
     employeeId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
     hoursPerWeek: 0,
     appointmentsPerWeek: 0,
+    roomId: '',
     bgColor: 'green',
   };
   const [currentContract, setCurrentContract] = useState<
@@ -320,6 +346,7 @@ const EmployeeSettings = () => {
       hoursPerWeek: contract.hoursPerWeek || 0,
       appointmentsPerWeek: contract.appointmentsPerWeek || 0,
       bgColor: contract.bgColor || 'green',
+      roomId: contract.roomId || '',
     };
   };
 
