@@ -29,12 +29,12 @@ const FormLabel = styled(ChakraFormLabel)({
   position: 'absolute',
   backgroundColor: 'white',
   pointerEvents: 'none',
-  margin: '3px 2px',
+  margin: '1px 3px',
   padding: '1px 4px',
   transformOrigin: 'left top',
   zIndex: '2',
-  borderTopRightRadius: '0.5rem',
-  borderTopLeftRadius: '0.5rem',
+  borderRadius: '0.5rem',
+  boxShadow: '0px 1px 0px #3333',
 });
 
 const TextDisplay = styled.div(inputStyles, {
@@ -123,7 +123,7 @@ type LabelledInputProps = CommonLabelledFormElementProps & {
 };
 
 const FormControl = styled(ChakraFormControl)({
-  margin: '10px auto',
+  margin: '15px auto 10px auto',
   width: '100%',
 });
 
