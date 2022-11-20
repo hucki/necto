@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../../types/Event';
 import { AppState } from '../../../types/AppState';
-import { EmployeeRessource, Room } from '../../../types/Ressource';
+import { EmployeeRessource } from '../../../types/Ressource';
 import { CalendarColumn } from './CalendarColumn';
 import { useDisclosure } from '@chakra-ui/react';
 import CalendarEventInput from './CalendarEventInput';
@@ -20,6 +20,7 @@ import { filterContext } from '../../../providers/filter';
 import CalendarLeaveInput from './CalendarLeaveInput';
 import { SwipeIndicator } from '../../atoms/SwipeIndicator';
 import { useSelector } from 'react-redux';
+import { Room } from '../../../types/Rooms';
 
 interface CalendarInputProps {
   events: Event[];

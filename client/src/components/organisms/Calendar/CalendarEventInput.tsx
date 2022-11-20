@@ -12,7 +12,7 @@ import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../../hooks/events';
 import { NewEvent } from '../../../types/Event';
-import { EmployeeRessource, Room } from '../../../types/Ressource';
+import { EmployeeRessource } from '../../../types/Ressource';
 import { FaCommentMedical, FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
 import CalendarEventForm from './CalendarEventForm';
@@ -22,6 +22,8 @@ import { useViewport } from '../../../hooks/useViewport';
 import { useHolidays } from '../../../hooks/useHolidays';
 import CalendarItemModal from './CalendarItemModal';
 import { ModalFooterControls } from './ModalFooterControls';
+import { Room } from '../../../types/Rooms';
+import { isEmployeeRessource } from './CalendarColumn';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -70,7 +72,7 @@ function CalendarEventInput({
     isDiagnostic: false,
     isDone: false,
     rrule: '',
-    bgColor: ressource?.bgColor || 'green',
+    bgColor: isEmployeeRessource(ressource) ? ressource.bgColor : 'green',
     type: getIsNote(dateTime) ? 'note' : 'appointment',
     isAllDay: false,
     isCancelled: false,

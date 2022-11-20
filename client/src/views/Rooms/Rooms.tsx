@@ -2,7 +2,6 @@ import React from 'react';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
 import { Event, EventType } from '../../types/Event';
 import dayjs from 'dayjs';
-import { Room } from '../../types/Ressource';
 import { useEffect, useState } from 'react';
 import { bookingsPerPerson } from '../../assets/bookingsdata';
 import { useAllRooms } from '../../hooks/rooms';
@@ -11,6 +10,7 @@ import { Flex } from '@chakra-ui/react';
 import { useFilter } from '../../hooks/useFilter';
 import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 import { ViewWrapper } from '../../components/atoms/Wrapper';
+import { Room } from '../../types/Rooms';
 
 function getBookings(buildingId: string, rooms: Room[]) {
   const createBookings = () => {
@@ -31,7 +31,7 @@ function getBookings(buildingId: string, rooms: Room[]) {
           const thisRoom = rooms.filter(
             (room) => room.uuid === bookings[j].roomId
           )[0];
-          if (thisRoom?.buildingId && thisRoom.buildingId === buildingId) {
+          if (thisRoom?.building && thisRoom.building.uuid === buildingId) {
             res.push({
               uuid: '',
               id: count,
@@ -70,7 +70,7 @@ function getBookings(buildingId: string, rooms: Room[]) {
 }
 
 function getRooms(buildingId: string, rooms: Room[]) {
-  return rooms.filter((r) => r.buildingId === buildingId);
+  return rooms.filter((r) => r.building.uuid === buildingId);
 }
 
 function Rooms(): JSX.Element {

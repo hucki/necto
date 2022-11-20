@@ -6,7 +6,7 @@ import { FaCommentMedical, FaTimes } from 'react-icons/fa';
 import { Options, RRule, rrulestr } from 'rrule';
 import { useCreateEvent } from '../../../hooks/events';
 import { LeaveType, NewEvent } from '../../../types/Event';
-import { EmployeeRessource, Room } from '../../../types/Ressource';
+import { EmployeeRessource } from '../../../types/Ressource';
 import { DatePicker, FormLabel } from '../../Library';
 import CalendarItemModal from './CalendarItemModal';
 import { ModalFooterControls } from './ModalFooterControls';
@@ -16,6 +16,8 @@ import utc from 'dayjs/plugin/utc';
 import de from 'date-fns/locale/de';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { IconButton } from '../../atoms/Buttons';
+import { Room } from '../../../types/Rooms';
+import { isEmployeeRessource } from './CalendarColumn';
 
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
@@ -49,7 +51,7 @@ const CalendarLeaveInput = ({
     type: 'leave',
     leaveType: 'paidVacation',
     leaveStatus: 'requested',
-    bgColor: ressource?.bgColor || 'green',
+    bgColor: isEmployeeRessource(ressource) ? ressource.bgColor : 'green',
     isRecurring: false,
     isHomeVisit: false,
     isDiagnostic: false,

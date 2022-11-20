@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '../../../types/Event';
-import { EmployeeRessource, Room } from '../../../types/Ressource';
+import { EmployeeRessource } from '../../../types/Ressource';
 import { CalendarEntry } from './CalendarEntry';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -20,7 +20,15 @@ import { useHolidays } from '../../../hooks/useHolidays';
 import { DayHeaderLabel, HolidayLabel } from '../../Library/Calendar';
 import CalendarLeaveEdit from './CalendarLeaveEdit';
 import CalendarChooseEntryModal from './CalendarChooseEntryModal';
+import { Room } from '../../../types/Rooms';
 dayjs.locale('de');
+
+// Typeguard
+export const isEmployeeRessource = (
+  ressource: EmployeeRessource | Room
+): ressource is EmployeeRessource => {
+  return ressource.hasOwnProperty('bgColor');
+};
 
 export type OnClickCalendarEventProps = {
   e: React.MouseEvent<HTMLDivElement, MouseEvent>;
@@ -157,19 +165,21 @@ function CalendarColumn({
     };
     return itemStyle;
   }
-  const ressourceColsHeader = ressources.map((ressource, index) => (
-    <CalendarColumnRessourceHeader
-      id={`rcolHeader_r${ressource.uuid}`}
-      key={`rcolHeader_r${ressource.uuid}`}
-      numOfRessources={ressources.length}
-      bgColor={ressource.bgColor}
-      index={index}
-    >
-      {columnSubHeaderContent === 'ressource'
-        ? ressource.displayName
-        : date.format(columnSubHeaderContent)}
-    </CalendarColumnRessourceHeader>
-  ));
+  const ressourceColsHeader = ressources.map((ressource, index) => {
+    return (
+      <CalendarColumnRessourceHeader
+        id={`rcolHeader_r${ressource.uuid}`}
+        key={`rcolHeader_r${ressource.uuid}`}
+        numOfRessources={ressources.length}
+        bgColor={isEmployeeRessource(ressource) ? ressource.bgColor : undefined}
+        index={index}
+      >
+        {columnSubHeaderContent === 'ressource'
+          ? ressource.displayName
+          : date.format(columnSubHeaderContent)}
+      </CalendarColumnRessourceHeader>
+    );
+  });
   const ressourceColsBody = ressources.map((ressource, index) => (
     <CalendarColumnRessourceBody
       id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
