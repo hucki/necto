@@ -34,7 +34,11 @@ export const getAllRooms = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const allRooms = await prisma.room.findMany();
+    const allRooms = await prisma.room.findMany({
+      include: {
+        building: true,
+      },
+    });
     res.json(allRooms);
     res.status(201);
     return;
