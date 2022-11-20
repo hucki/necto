@@ -142,7 +142,9 @@
     "bgColor": "Farbe",
     "hoursPerWeek": "Std. pro Woche",
     "appointmentsPerWeek": "Therapien pro Woche",
-    "birthday": "Geburtstag"
+    "birthday": "Geburtstag",
+    "room": "Raum",
+    "noRoom": "kein Raum"
   },
   "auth": {
     "login": "anmelden",

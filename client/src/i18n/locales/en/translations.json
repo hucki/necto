@@ -141,7 +141,9 @@
     "bgColor": "color",
     "hoursPerWeek": "hours per week",
     "appointmentsPerWeek": "appointments per week",
-    "birthday": "birthday"
+    "birthday": "birthday",
+    "room": "room",
+    "noRoom": "no room"
   },
   "auth": {
     "login": "login",
