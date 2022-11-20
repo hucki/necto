@@ -123,6 +123,7 @@ model Contract {
   validUntil          DateTime? @db.Timestamptz(6)
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+  roomId              String?   @db.Uuid
   employee            Employee? @relation("contracts_employeeIdToemployees", fields: [employeeId], references: [uuid], onDelete: Cascade)
 
   @@map("contracts")
