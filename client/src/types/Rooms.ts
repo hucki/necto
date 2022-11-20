@@ -33,3 +33,10 @@ export interface Building {
     town: string;
   };
 }
+
+export type Room = {
+  uuid: string;
+  displayName: string;
+  description?: string;
+  building: Building;
+};
