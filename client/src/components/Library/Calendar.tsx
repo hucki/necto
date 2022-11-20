@@ -23,7 +23,7 @@ type CalendarRessourceProps = {
 };
 
 type CalendarRessourceHeaderProps = {
-  bgColor: string;
+  bgColor?: string;
 };
 
 const CalendarWrapper = styled.div({
