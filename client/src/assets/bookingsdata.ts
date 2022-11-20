@@ -1,6 +1,5 @@
 import { PersonBookings } from '../types/Rooms';
 // 🦙 Lena
-
 export const bookingsPerPerson: PersonBookings[] = [
   {
     employeeId: 'e355ffa6-993d-40aa-80fa-4ef0e3b61b89',
@@ -89,7 +88,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         bookings: [
           {
             roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
-            start: '13:30',
+            start: '12:30',
             end: '18:00',
           },
         ],
@@ -98,14 +97,9 @@ export const bookingsPerPerson: PersonBookings[] = [
         name: 'tuesday',
         bookings: [
           {
-            roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
-            start: '08:15',
-            end: '09:00',
-          },
-          {
             roomId: 'c6582f4e-53f4-4106-865e-ca7a9043a116',
-            start: '09:00',
-            end: '16:15',
+            start: '07:30',
+            end: '15:30',
           },
         ],
       },
@@ -113,8 +107,8 @@ export const bookingsPerPerson: PersonBookings[] = [
         name: 'wednesday',
         bookings: [
           {
-            roomId: 'c6582f4e-53f4-4106-865e-ca7a9043a116',
-            start: '14:15',
+            roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
+            start: '12:30',
             end: '17:15',
           },
         ],
@@ -124,7 +118,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         bookings: [
           {
             roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
-            start: '09:15',
+            start: '07:30',
             end: '16:00',
           },
         ],
@@ -134,8 +128,8 @@ export const bookingsPerPerson: PersonBookings[] = [
         bookings: [
           {
             roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
-            start: '07:45',
-            end: '09:15',
+            start: '07:20',
+            end: '09:30',
           },
         ],
       },
@@ -161,9 +155,9 @@ export const bookingsPerPerson: PersonBookings[] = [
         name: 'thursday',
         bookings: [
           {
-            roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
-            start: '08:00',
-            end: '09:00',
+            roomId: '21bcbbc2-a9bb-4a88-828c-861dff232330',
+            start: '13:00',
+            end: '15:15',
           },
         ],
       },
@@ -189,8 +183,8 @@ export const bookingsPerPerson: PersonBookings[] = [
         bookings: [
           {
             roomId: '21bcbbc2-a9bb-4a88-828c-861dff232330',
-            start: '12:30',
-            end: '14:15',
+            start: '08:00',
+            end: '09:30',
           },
         ],
       },
@@ -200,12 +194,12 @@ export const bookingsPerPerson: PersonBookings[] = [
           {
             roomId: '21bcbbc2-a9bb-4a88-828c-861dff232330',
             start: '07:45',
-            end: '08:15',
+            end: '08:30',
           },
           {
             roomId: '21bcbbc2-a9bb-4a88-828c-861dff232330',
-            start: '12:45',
-            end: '17:15',
+            start: '13:30',
+            end: '18:00',
           },
         ],
       },
@@ -214,7 +208,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         bookings: [
           {
             roomId: '21bcbbc2-a9bb-4a88-828c-861dff232330',
-            start: '08:15',
+            start: '09:00',
             end: '14:15',
           },
         ],
@@ -225,7 +219,7 @@ export const bookingsPerPerson: PersonBookings[] = [
         bookings: [
           {
             roomId: '21bcbbc2-a9bb-4a88-828c-861dff232330',
-            start: '08:15',
+            start: '09:00',
             end: '12:00',
           },
         ],
@@ -253,7 +247,7 @@ export const bookingsPerPerson: PersonBookings[] = [
           {
             roomId: 'c6582f4e-53f4-4106-865e-ca7a9043a116',
             start: '07:30',
-            end: '09:00',
+            end: '09:15',
           },
           {
             roomId: 'c6582f4e-53f4-4106-865e-ca7a9043a116',
@@ -262,16 +256,16 @@ export const bookingsPerPerson: PersonBookings[] = [
           },
         ],
       },
-      {
-        name: 'tuesday',
-        bookings: [
-          {
-            roomId: 'c6582f4e-53f4-4106-865e-ca7a9043a116',
-            start: '07:30',
-            end: '08:30',
-          },
-        ],
-      },
+      // {
+      //   name: 'tuesday',
+      //   bookings: [
+      //     {
+      //       roomId: 'c6582f4e-53f4-4106-865e-ca7a9043a116',
+      //       start: '07:30',
+      //       end: '08:30',
+      //     },
+      //   ],
+      // },
       {
         name: 'wednesday',
         bookings: [
@@ -312,16 +306,63 @@ export const bookingsPerPerson: PersonBookings[] = [
   },
   {
     employeeId: 'ac8c8f16-42d9-4528-a2ae-8d2c58eac9e9',
-    name: 'Evelyn',
+    name: '🍊 Evelyn',
     bgColor: 'mint',
     days: [
+      {
+        name: 'tuesday',
+        bookings: [
+          {
+            roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
+            start: '08:00',
+            end: '12:00',
+          },
+        ],
+      },
       {
         name: 'wednesday',
         bookings: [
           {
-            roomId: '6fc98d87-bbe6-4d1f-b43c-115d0a995a02',
+            roomId: 'c6582f4e-53f4-4106-865e-ca7a9043a116',
             start: '12:00',
             end: '16:00',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    employeeId: 'eeb71d05-692e-4ad2-a434-544f22a4879c',
+    name: '⚽️ Kathi',
+    bgColor: 'mint',
+    days: [
+      {
+        name: 'monday',
+        bookings: [
+          {
+            roomId: '21bcbbc2-a9bb-4a88-828c-861dff232330',
+            start: '16:30',
+            end: '18:00',
+          },
+        ],
+      },
+      {
+        name: 'wednesday',
+        bookings: [
+          {
+            roomId: '78dd08ff-2012-4ea2-8a86-8f0c8203cf1f',
+            start: '16:15',
+            end: '17:00',
+          },
+        ],
+      },
+      {
+        name: 'wednesday',
+        bookings: [
+          {
+            roomId: '78dd08ff-2012-4ea2-8a86-8f0c8203cf1f',
+            start: '17:45',
+            end: '18:30',
           },
         ],
       },
