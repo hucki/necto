@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
-import { Room } from '../types/Ressource';
+import { Room } from '../types/Rooms';
 
 export function useRoom(
   uuid: string
