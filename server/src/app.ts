@@ -34,12 +34,18 @@ transporter.verify(function (error, success) {
   }
 });
 const app: express.Application = express();
+app.disable('x-powered-by');
 app.set('trust proxy', true);
 
 // setup middleware
 app.use(morgan('tiny'));
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(
+  cors({
+    origin: process.env.APP_URL || 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(
   session({
     store: new RedisStore({
@@ -59,5 +65,5 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api', router);
 app.listen(port, () => {
-  console.log(`✅ Server running at http://${host}:${port}`);
+  console.log(`✅ Server running at ${host}:${port}`);
 });
