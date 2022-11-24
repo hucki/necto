@@ -137,22 +137,37 @@ export const updateEmployee = async (
         tenantId: tenantId,
       },
     });
-    // let updatedSettings;
-    // if (req.body.userId && req.body.userId !== req.body.user?.userId) {
-    //   updatedSettings = await prisma.userSettings.upsert({
-    //     where: {
-    //       id: req.body.user.id,
-    //     },
-    //     update: {
-    //       userId: req.body.userId,
-    //     },
-    //     create: {
-    //       userId: req.body.userId,
-    //       employeeId: req.body.uuid,
-    //       tenantId: tenantId,
-    //     },
-    //   });
-    // }
+    let updatedSettings;
+    if (req.body.userId) {
+      if (req.body.userId === 'remove') {
+        await prisma.userSettings.update({
+          where: {
+            employeeId: req.body.uuid,
+          },
+          data: {
+            employeeId: null,
+          },
+        });
+      } else if (!req.body.user) {
+        updatedSettings = await prisma.userSettings.create({
+          data: {
+            userId: req.body.userId,
+            employeeId: req.body.uuid,
+            tenantId: tenantId,
+          },
+        });
+      } else if (req.body.userId !== req.body.user.userId) {
+        updatedSettings = await prisma.userSettings.update({
+          where: {
+            id: req.body.user ? req.body.user.id : undefined,
+          },
+          data: {
+            userId: req.body.userId,
+          },
+        });
+      }
+    }
+
     res.json({ updatedEmployee });
     res.status(201);
     return;
