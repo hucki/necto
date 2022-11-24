@@ -22,6 +22,7 @@ import {
   EmployeeSettingsWrapper,
   SettingsGrid,
 } from '../../atoms/Wrapper';
+import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
 
 interface UserProfileProps {
   id: string;
@@ -169,28 +170,35 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
   if (!isLoading && !user) return <div>no user</div>;
   return (
     <div>
-      <ControlWrapper>
+      <ControlWrapper justifyContent="flex-end">
         {state === 'view' ? (
-          <Button aria-label="toggle edit mode" onClick={toggleEdit}>
+          <Button
+            aria-label="toggle edit mode"
+            onClick={toggleEdit}
+            colorScheme="blue"
+          >
             <RiEditFill />
           </Button>
         ) : (
-          <div>
+          <>
             <Button
               aria-label="save changes"
-              type="submit"
+              // type="submit"
               disabled={!isReadyToSubmit}
+              onClick={onSubmitHandler}
+              colorScheme="blue"
             >
-              {t('button.save')}
+              <IoSaveOutline size="1.5rem" />
             </Button>
             <Button
               aria-label="cancel changes"
               type="button"
               onClick={cancelEdit}
+              colorScheme="red"
             >
-              {t('button.cancel')}
+              <IoCloseOutline size="1.5rem" />
             </Button>
-          </div>
+          </>
         )}
       </ControlWrapper>
       <form onSubmit={onSubmitHandler}>

@@ -39,9 +39,10 @@ import {
   SettingsGrid,
 } from '../../components/atoms/Wrapper';
 import { IconButton } from '../../components/atoms/Buttons';
-import { FaPlus, FaSave, FaTimes } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { useCreateContract, useUpdateContract } from '../../hooks/contract';
 import { useAllRooms } from '../../hooks/rooms';
+import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
 dayjs.extend(isBetween);
 
 interface ContractOverviewProps {
@@ -332,7 +333,6 @@ const EmployeeSettings = () => {
     }));
   };
   const onSubmitHandler = (e: FormEvent): void => {
-    // TODO: handle user add and user remove
     e.preventDefault();
     onUpdateEmployee();
     toggleEdit(e);
@@ -412,7 +412,7 @@ const EmployeeSettings = () => {
               onClick={onSubmitHandler}
               colorScheme="blue"
             >
-              <FaSave />
+              <IoSaveOutline size="1.5rem" />
             </Button>
             <Button
               aria-label="cancel changes"
@@ -420,7 +420,7 @@ const EmployeeSettings = () => {
               onClick={cancelEdit}
               colorScheme="red"
             >
-              <FaTimes />
+              <IoCloseOutline size="1.5rem" />
             </Button>
           </>
         )}
