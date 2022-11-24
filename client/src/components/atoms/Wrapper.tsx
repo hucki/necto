@@ -1,8 +1,16 @@
 import styled from '@emotion/styled/macro';
 
-const ControlWrapper = styled.div({
-  display: 'flex',
-});
+interface ControlWrapperProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  justifyContent?: any;
+}
+
+const ControlWrapper = styled.div(
+  ({ justifyContent }: ControlWrapperProps) => ({
+    display: 'flex',
+    justifyContent: justifyContent ? justifyContent : undefined,
+  })
+);
 
 const wrapperStyles = {
   height: '100%',
