@@ -65,10 +65,14 @@ const Home = () => {
     ? 'day'
     : 'evening';
 
-  const { employeeEvents } = useEmployeeEvents(employeeId);
-  const upcomingEvents = employeeEvents.filter((e) =>
-    dayjs(e.startTime).isAfter(now)
-  );
+  const employeeEventsResult = employeeId
+    ? useEmployeeEvents(employeeId)
+    : undefined;
+  const upcomingEvents = employeeEventsResult
+    ? employeeEventsResult.employeeEvents.filter((e) =>
+        dayjs(e.startTime).isAfter(now)
+      )
+    : [];
   return (
     <>
       <div
