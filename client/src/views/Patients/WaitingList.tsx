@@ -1,8 +1,8 @@
 import React from 'react';
-import { Spinner } from '@chakra-ui/react';
 import { PersonListWrapper } from '../../components/atoms/Wrapper';
 import PersonList from '../../components/organisms/Person/PersonList';
 import { useAllWaitingPatients } from '../../hooks/patient';
+import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 function WaitingList(): JSX.Element {
   const { isLoading, patients } = useAllWaitingPatients();
@@ -12,7 +12,7 @@ function WaitingList(): JSX.Element {
   }));
 
   return isLoading ? (
-    <Spinner />
+    <FullPageSpinner />
   ) : !patients.length ? (
     <div>no data available</div>
   ) : (

@@ -8,7 +8,6 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
-  Spinner,
   Switch,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -21,6 +20,7 @@ import { CgAddR } from 'react-icons/cg';
 import { InstitutionInput } from '../../types/Institution';
 import { InstitutionModal } from '../../components/organisms/Institution/InstitutionModal';
 import { useViewport } from '../../hooks/useViewport';
+import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 const defaultInstitution: InstitutionInput = {
   name: '',
@@ -65,7 +65,7 @@ function Institutions(): JSX.Element {
   };
 
   return isLoading || isLoadingArchivedInstitutions ? (
-    <Spinner />
+    <FullPageSpinner />
   ) : (
     <div>
       <Flex flexDirection={'row'} p="0.5rem" alignItems="center">
