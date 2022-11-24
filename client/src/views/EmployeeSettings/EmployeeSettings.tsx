@@ -130,6 +130,9 @@ const ContractOverview = ({
         <Select
           disabled={disabled}
           name="roomId"
+          style={{
+            backgroundColor: contract.roomId ? undefined : 'var(--bgNote)',
+          }}
           value={contract.roomId}
           onChange={(e) => {
             e.preventDefault();
@@ -310,20 +313,15 @@ const EmployeeSettings = () => {
         validUntil,
       },
     });
+    const contract = {
+      ...defaultContract,
+      ...currentContract,
+    } as Contract;
+    if (contract.roomId === '') contract.roomId = undefined;
     if (currentContract.hasOwnProperty('id')) {
-      updateContract({
-        contract: {
-          ...defaultContract,
-          ...currentContract,
-        } as Contract,
-      });
+      updateContract({ contract });
     } else {
-      createContract({
-        contract: {
-          ...defaultContract,
-          ...currentContract,
-        } as NewContract,
-      });
+      createContract({ contract });
     }
     refetchEmployees();
   };
@@ -527,6 +525,9 @@ const EmployeeSettings = () => {
                   name="team"
                   value={currentTeam.uuid}
                   onChange={onTeamChangeHandler}
+                  disabled={
+                    state !== 'edit' || addEmployeeToTeamStatus !== 'idle'
+                  }
                 >
                   {remainingTeams.map((t, i) => (
                     <option key={i} value={t.uuid}>
