@@ -3,12 +3,12 @@ import { Tab, TabList, TabPanels, Tabs } from '@chakra-ui/react';
 import TeamSettings from '../TeamSettings/TeamSettings';
 import EmployeeSettings from '../EmployeeSettings/EmployeeSettings';
 import {
-  RiCalendarEventLine,
-  RiProfileLine,
-  RiShieldUserLine,
-  RiUserSettingsFill,
-  RiUserSettingsLine,
-} from 'react-icons/ri';
+  IoCalendarNumberOutline,
+  IoConstructOutline,
+  IoPeople,
+  IoPeopleCircleOutline,
+  IoPersonCircleOutline,
+} from 'react-icons/io5';
 import UserProfile from '../../components/organisms/UserProfile/UserProfile';
 import { useTranslation } from 'react-i18next';
 import EventSettings from '../EventSettings/EventSettings';
@@ -30,7 +30,7 @@ const Settings = (): JSX.Element => {
       name: 'teamSettings',
       label: (
         <>
-          <RiUserSettingsFill /> {t('menu.teamSettings')}
+          <IoPeople /> {t('menu.teamSettings')}
         </>
       ),
       content: <TeamSettings />,
@@ -40,7 +40,7 @@ const Settings = (): JSX.Element => {
       name: 'employeeSettings',
       label: (
         <>
-          <RiUserSettingsLine />
+          <IoPeopleCircleOutline />
           {t('menu.employeeSettings')}
         </>
       ),
@@ -51,7 +51,7 @@ const Settings = (): JSX.Element => {
       name: 'userSettings',
       label: (
         <>
-          <RiShieldUserLine />
+          <IoPersonCircleOutline />
           {t('menu.userSettings')}
         </>
       ),
@@ -62,7 +62,7 @@ const Settings = (): JSX.Element => {
       name: 'eventSettings',
       label: (
         <>
-          <RiCalendarEventLine />
+          <IoCalendarNumberOutline />
           {t('menu.eventSettings')}
         </>
       ),
@@ -73,7 +73,7 @@ const Settings = (): JSX.Element => {
       name: 'userProfile',
       label: (
         <>
-          <RiProfileLine />
+          <IoConstructOutline />
           {t('menu.profile')}
         </>
       ),
