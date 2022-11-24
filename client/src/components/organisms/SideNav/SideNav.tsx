@@ -1,18 +1,24 @@
 import React, { useContext } from 'react';
 import { Divider } from '@chakra-ui/react';
 import {
-  RiLogoutBoxLine,
-  RiMentalHealthLine,
-  RiSettingsLine,
-  RiTeamLine,
-  RiZzzLine,
-} from 'react-icons/ri';
+  IoBusinessOutline,
+  IoCalendarNumberOutline,
+  IoClose,
+  IoConstructOutline,
+  IoFileTrayFullOutline,
+  IoHomeOutline,
+  IoLogOutOutline,
+  IoManOutline,
+  IoMedkitOutline,
+  IoPeopleOutline,
+  IoPersonOutline,
+  IoStorefrontOutline,
+  IoWomanOutline,
+} from 'react-icons/io5';
 import { useNavigate, useLocation } from 'react-router';
 import { SideNavContainer } from '../../Library';
 import { useTranslation } from 'react-i18next';
-import { FaClinicMedical, FaRegBuilding } from 'react-icons/fa';
 import { AuthContext } from '../../../providers/AuthProvider';
-import { CgCalendarDates, CgClose, CgHome, CgUser } from 'react-icons/cg';
 import { IconButton, NavigationButton } from '../../atoms/Buttons';
 
 interface SideNavProps {
@@ -37,8 +43,8 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
     <SideNavContainer isOpen={isOpen}>
       {/* Menu Button */}
       <IconButton
-        aria-label="Open Menu"
-        icon={<CgClose />}
+        aria-label="Close Menu"
+        icon={<IoClose />}
         onClick={onClose}
         fontSize="2xl"
       />
@@ -47,7 +53,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         variant={currentView === '/home' ? 'solid' : 'ghost'}
         colorScheme="purple"
         aria-label="Home"
-        leftIcon={<CgHome />}
+        leftIcon={<IoHomeOutline />}
         key="/home"
         onClick={() => onClickHandler('/home')}
       >
@@ -58,7 +64,12 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         variant={currentView === '/personalcal' ? 'solid' : 'ghost'}
         colorScheme="teal"
         aria-label="Personal Calendar"
-        leftIcon={<CgUser />}
+        leftIcon={
+          <>
+            <IoCalendarNumberOutline />
+            <IoPersonOutline />
+          </>
+        }
         key="/personalcal"
         onClick={() => onClickHandler('/personalcal')}
       >
@@ -69,7 +80,12 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         variant={currentView === '/teamcal' ? 'solid' : 'ghost'}
         colorScheme="teal"
         aria-label="Team Calendar"
-        leftIcon={<RiTeamLine />}
+        leftIcon={
+          <>
+            <IoCalendarNumberOutline />
+            <IoPeopleOutline />
+          </>
+        }
         key="/teamcal"
         onClick={() => onClickHandler('/teamcal')}
       >
@@ -79,29 +95,40 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         colorScheme="teal"
         variant={currentView === '/rooms' ? 'solid' : 'ghost'}
         aria-label="Rooms"
-        leftIcon={<CgCalendarDates />}
+        leftIcon={
+          <>
+            <IoCalendarNumberOutline />
+            <IoStorefrontOutline />
+          </>
+        }
         key="/rooms"
         onClick={() => onClickHandler('/rooms')}
       >
         {isOpen ? t('menu.roomCalendar') : null}
       </NavigationButton>
+      <Divider />
       <NavigationButton
         hidden={!user?.isAdmin && !user?.isPlanner}
-        colorScheme="teal"
+        colorScheme="blue"
         variant={currentView === '/patients' ? 'solid' : 'ghost'}
         aria-label="Patients"
-        leftIcon={<RiMentalHealthLine />}
+        leftIcon={
+          <>
+            <IoWomanOutline />
+            <IoManOutline />
+          </>
+        }
         key="/patients"
         onClick={() => onClickHandler('/patients')}
       >
         {isOpen ? t('menu.patients') : null}
       </NavigationButton>
       <NavigationButton
-        hidden={!user?.isAdmin && !user?.isPlanner && !user?.isEmployee}
-        colorScheme="teal"
+        hidden={!user?.isAdmin && !user?.isPlanner}
+        colorScheme="blue"
         variant={currentView === '/waiting' ? 'solid' : 'ghost'}
         aria-label="WaitingList"
-        leftIcon={<RiZzzLine />}
+        leftIcon={<IoFileTrayFullOutline />}
         key="/waiting"
         onClick={() => onClickHandler('/waiting')}
       >
@@ -109,10 +136,10 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
       </NavigationButton>
       <NavigationButton
         hidden={!user?.isAdmin && !user?.isPlanner}
-        colorScheme="teal"
+        colorScheme="blue"
         variant={currentView === '/doctors' ? 'solid' : 'ghost'}
         aria-label="Doctors"
-        leftIcon={<FaClinicMedical />}
+        leftIcon={<IoMedkitOutline />}
         key="/doctors"
         onClick={() => onClickHandler('/doctors')}
       >
@@ -120,10 +147,10 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
       </NavigationButton>
       <NavigationButton
         hidden={!user?.isAdmin && !user?.isPlanner}
-        colorScheme="teal"
+        colorScheme="blue"
         variant={currentView === '/institutions' ? 'solid' : 'ghost'}
         aria-label="institutions"
-        leftIcon={<FaRegBuilding />}
+        leftIcon={<IoBusinessOutline />}
         key="/institutions"
         onClick={() => onClickHandler('/institutions')}
       >
@@ -135,7 +162,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         colorScheme="gray"
         variant={currentView === '/settings' ? 'solid' : 'ghost'}
         aria-label="Settings"
-        leftIcon={<RiSettingsLine />}
+        leftIcon={<IoConstructOutline />}
         key="/settings"
         onClick={() => onClickHandler('/settings')}
       >
@@ -149,7 +176,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         onClick={handleLogout}
         variant="ghost"
         aria-label="Logout"
-        leftIcon={<RiLogoutBoxLine />}
+        leftIcon={<IoLogOutOutline />}
       >
         {isOpen ? t('menu.logout') : null}
       </NavigationButton>
