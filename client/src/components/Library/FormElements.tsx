@@ -146,6 +146,10 @@ const LabelledSelect = ({
         name={name}
         value={value}
         onChange={onChangeHandler}
+        style={{
+          backgroundColor:
+            !value || value === 'remove' ? 'var(--bgNote)' : undefined,
+        }}
       >
         {hasOptionNoSelection && (
           <option value={'remove'}>{noSelectionLabel}</option>
