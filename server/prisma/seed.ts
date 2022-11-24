@@ -121,7 +121,7 @@ async function main() {
         tenantId,
       },
       {
-        displayName: 'plannen',
+        displayName: 'planner',
         description: 'planner role',
         tenantId,
       },
