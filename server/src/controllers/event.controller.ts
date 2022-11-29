@@ -196,6 +196,7 @@ export const getDaysEvents = async (
         patient: true,
         parentEvent: { include: { childEvents: true } },
         childEvents: true,
+        room: { include: { building: true } },
       },
     });
     for (let i = 0; i < events.length; i++) {
@@ -240,6 +241,7 @@ export const getEmployeeEvents = async (
         patient: true,
         parentEvent: { include: { childEvents: true } },
         childEvents: true,
+        room: { include: { building: true } },
       },
     });
     for (let i = 0; i < events.length; i++) {
@@ -285,6 +287,7 @@ export const getWeeksEvents = async (
         patient: true,
         parentEvent: { include: { childEvents: true } },
         childEvents: true,
+        room: { include: { building: true } },
       },
     });
     for (let i = 0; i < events.length; i++) {
@@ -345,6 +348,7 @@ export const getLeavesByStatus = async (
         employee: true,
         parentEvent: { include: { childEvents: true } },
         childEvents: true,
+        room: { include: { building: true } },
       },
     });
     res.json(events);
