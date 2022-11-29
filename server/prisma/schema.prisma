@@ -63,6 +63,7 @@ model Room {
   tenantId    String   @db.Uuid
   buildingId  String   @db.Uuid
   building    Building @relation(fields: [buildingId], references: [uuid])
+  events      Event[]  @relation("event_referenceIdToRoom")
 
   @@map("rooms")
 }
@@ -174,6 +175,7 @@ model Event {
   eventInstanceExceptions EventInstanceException[] @relation("eventInstanceExceptions_eventIdToEvents")
   patient                 Patient?                 @relation("event_referenceIdTopatient", fields: [patientId], references: [uuid])
   employee                Employee?                @relation("event_referenceIdToEmployee", fields: [ressourceId], references: [uuid])
+  room                    Room?                    @relation("event_referenceIdToRoom", fields: [roomId], references: [uuid])
 
   @@map("events")
 }
