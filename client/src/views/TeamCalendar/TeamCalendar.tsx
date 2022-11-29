@@ -42,6 +42,7 @@ function TeamCalendar(): JSX.Element {
         shortDescription: employee.firstName,
         longDescription: employee.firstName + ' ' + employee.lastName,
         bgColor: employee.contract[0].bgColor || 'green',
+        roomId: employee.contract[0].roomId || '',
       }))
     : [];
 

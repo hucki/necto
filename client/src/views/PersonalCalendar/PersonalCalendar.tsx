@@ -73,6 +73,7 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
       shortDescription: thisEmployee.firstName,
       longDescription: thisEmployee.firstName + ' ' + thisEmployee.lastName,
       bgColor: thisEmployee.contract[0].bgColor || '',
+      roomId: thisEmployee.contract[0].roomId || '',
     },
   ];
 
