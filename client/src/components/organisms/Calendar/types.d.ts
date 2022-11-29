@@ -7,6 +7,7 @@ type CalenderEventViewProps = {
   eventStartTime: Event['startTime'];
   eventEndTime: Event['endTime'];
   eventPatient: Event['patient'];
+  eventRoom: Event['room'];
 };
 
 type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
