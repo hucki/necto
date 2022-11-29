@@ -77,7 +77,7 @@ function CalendarEventInput({
     isAllDay: false,
     isCancelled: false,
     isCancelledReason: '',
-    roomId: '',
+    roomId: isEmployeeRessource(ressource) ? ressource.roomId : '',
     patientId: '',
   };
   const [newEvent, setNewEvent] = useState<NewEvent>(defaultEvent);
@@ -110,7 +110,7 @@ function CalendarEventInput({
       startTime: changedEvent.startTime,
       endTime: changedEvent.endTime,
       patientId: changedEvent.patientId,
-      roomId: defaultEvent.roomId,
+      roomId: changedEvent.roomId,
       bgColor: defaultEvent.bgColor,
     });
   };

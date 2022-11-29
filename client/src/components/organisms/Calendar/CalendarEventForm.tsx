@@ -33,6 +33,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import de from 'date-fns/locale/de';
 import { useAllPatients } from '../../../hooks/patient';
+import { useAllRooms } from '../../../hooks/rooms';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { RiSearchLine } from 'react-icons/ri';
 import { Patient } from '../../../types/Patient';
@@ -125,6 +126,7 @@ function CalendarEventForm({
 }: CalendarEventFormProps): JSX.Element {
   const { t } = useTranslation();
   const { patients } = useAllPatients();
+  const { rooms } = useAllRooms();
 
   // Form state
   const [currentEvent, setCurrentEvent] = useState<Event | NewEvent>(() => ({
@@ -297,6 +299,11 @@ function CalendarEventForm({
   }
 
   useEffect(() => {
+    if (currentEvent.isHomeVisit && currentEvent.roomId) {
+      setCurrentEvent((cur) => ({ ...cur, roomId: '' }));
+    }
+  }, [currentEvent.isHomeVisit]);
+  useEffect(() => {
     handleChangedEvent({
       uuid: currentEvent.hasOwnProperty('uuid')
         ? (currentEvent as Event).uuid
@@ -332,6 +339,7 @@ function CalendarEventForm({
     currentEvent.startTime,
     currentEvent.endTime,
     currentEvent.patientId,
+    currentEvent.roomId,
   ]);
 
   const isNote = currentEvent.type === 'note';
@@ -389,6 +397,26 @@ function CalendarEventForm({
         >
           {t(`calendar.event.${isNote ? 'text' : 'title'}`)}
         </FormLabel>
+      </FormControl>
+      <FormControl id="roomId">
+        <Select
+          name="roomId"
+          disabled={currentEvent.isHomeVisit}
+          style={{
+            backgroundColor: currentEvent.roomId ? undefined : 'var(--bgNote)',
+          }}
+          value={currentEvent.roomId}
+          onChange={onSelectChange}
+        >
+          <option value="">{t('label.noRoom')}</option>
+          {rooms.map((room, i) => (
+            <option key={i} value={room.uuid}>
+              {room.displayName} (
+              {room.building.displayName + ': ' + room.description})
+            </option>
+          ))}
+        </Select>
+        <FormLabel>{t('label.room')}</FormLabel>
       </FormControl>
       {!isNote && (
         <div>

@@ -2,6 +2,7 @@ import { Dayjs } from 'dayjs';
 import { BgColor } from './Colors';
 import { Employee } from './Employee';
 import { Patient } from './Patient';
+import { Room } from './Rooms';
 
 export type EventType =
   | 'custom'
@@ -51,6 +52,7 @@ export type Event = {
   bgColor?: BgColor;
   patient?: Patient;
   employee?: Employee;
+  room?: Room;
 };
 export type NewEvent = Pick<
   Event,

@@ -14,6 +14,7 @@ const CalendarEventView = ({
   eventStartTime,
   eventEndTime,
   eventPatient,
+  eventRoom,
   isNote,
 }: CalenderEventViewProps) => {
   const { t } = useTranslation();
@@ -105,6 +106,23 @@ const CalendarEventView = ({
             value={dayjs(eventEndTime).format('YYYY-MM-DDThh:mm')}
             onChangeHandler={() => undefined}
           />
+          {eventRoom && (
+            <LabelledInput
+              disabled
+              id="roomId"
+              name="roomId"
+              label={t('label.room')}
+              value={
+                eventRoom.displayName +
+                ' (' +
+                eventRoom.building.displayName +
+                ': ' +
+                eventRoom.description +
+                ')'
+              }
+              onChangeHandler={() => undefined}
+            />
+          )}
         </>
       )}
     </CalendarEventViewWrapper>

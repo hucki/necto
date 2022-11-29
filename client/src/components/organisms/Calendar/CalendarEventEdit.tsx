@@ -101,7 +101,7 @@ function CalendarEventEdit({
       startTime: changedEvent.startTime,
       endTime: changedEvent.endTime,
       patientId: changedEvent.patientId,
-      roomId: event.roomId,
+      roomId: changedEvent.roomId,
       bgColor: event.bgColor,
     });
   };
@@ -265,6 +265,7 @@ function CalendarEventEdit({
                   eventStartTime={changedEvent.startTime}
                   eventEndTime={changedEvent.endTime}
                   eventPatient={changedEvent.patient}
+                  eventRoom={changedEvent.room}
                 />
               )}
               {!isReadOnly && (
