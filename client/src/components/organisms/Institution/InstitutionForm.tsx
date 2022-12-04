@@ -1,13 +1,22 @@
 import { Checkbox, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCreateInstitutionContact } from '../../../hooks/contact';
+import { ContactData, ContactType } from '../../../types/ContactData';
 import { Institution, InstitutionInput } from '../../../types/Institution';
+import { ContactInput } from '../../atoms/ContactData/ContactInput';
+import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
 import { FormLabel, Input } from '../../Library';
 
 interface InstitutionFormProps {
   institution: Institution;
   // eslint-disable-next-line no-unused-vars
-  onChange: (institution: Institution) => void;
+  onChange: (
+    // eslint-disable-next-line no-unused-vars
+    institution: Institution,
+    // eslint-disable-next-line no-unused-vars
+    contactDataCollection: ContactData[]
+  ) => void;
 }
 
 export const InstitutionForm = ({
@@ -17,9 +26,97 @@ export const InstitutionForm = ({
   const { t } = useTranslation();
   const [currentInstitution, setCurrentInstitution] =
     useState<InstitutionInput>(() => ({ ...institution }));
-  const isReadOnly = institution.archived;
+  const [currentContactDataCollection, setCurrentContactDataCollection] =
+    useState<ContactData[]>(() => {
+      return (institution.contactData as ContactData[]) || [];
+    });
+  const isReadOnly = Boolean(institution.archived);
 
   type InstitutionKey = keyof InstitutionInput;
+
+  const { mutateAsync: createInstitutionContact } =
+    useCreateInstitutionContact();
+
+  const createContact = (type: ContactType) => {
+    createInstitutionContact({
+      contactData: {
+        institutionId: currentInstitution.uuid,
+        type,
+        contact: '',
+      },
+    }).then((contact) =>
+      setCurrentContactDataCollection((cur) =>
+        contact ? [...cur, contact] : cur
+      )
+    );
+  };
+
+  interface OnContactChangeProps {
+    event: React.FormEvent<HTMLInputElement>;
+    id: string;
+  }
+
+  function onContactChange({ event, id }: OnContactChangeProps) {
+    event.preventDefault();
+    const newContact = event.currentTarget.value;
+    setCurrentContactDataCollection((contactData) =>
+      contactData.map((c) =>
+        c.uuid === id ? { ...c, contact: newContact } : c
+      )
+    );
+  }
+
+  const phoneFromContact = () => {
+    const currentPhones = currentContactDataCollection
+      .filter((c) => c.type === 'telephone')
+      .map((contact, index) => (
+        <ContactInput
+          key={index}
+          isDisabled={isReadOnly}
+          contact={contact}
+          onChange={onContactChange}
+        />
+      ));
+
+    return (
+      <>
+        {(currentPhones.length && currentPhones) || null}
+        {!currentPhones.length && !isReadOnly ? (
+          <CreateContactButton
+            isDisabled={!currentInstitution.uuid}
+            type="telephone"
+            onCreate={createContact}
+          />
+        ) : null}
+      </>
+    );
+  };
+
+  const faxFromContact = () => {
+    const currentFaxes = currentContactDataCollection
+      .filter((c) => c.type === 'fax')
+      .map((contact, index) => (
+        <ContactInput
+          key={index}
+          isDisabled={isReadOnly}
+          contact={contact}
+          onChange={onContactChange}
+        />
+      ));
+
+    return (
+      <>
+        {(currentFaxes.length && currentFaxes) || null}
+        {!currentFaxes.length && !isReadOnly ? (
+          <CreateContactButton
+            isDisabled={!currentInstitution.uuid}
+            type="fax"
+            onCreate={createContact}
+          />
+        ) : null}
+      </>
+    );
+  };
 
   const autoFields: InstitutionKey[] = [
     'name',
@@ -52,8 +149,8 @@ export const InstitutionForm = ({
   }
 
   useEffect(() => {
-    onChange(currentInstitution);
-  }, [currentInstitution]);
+    onChange(currentInstitution, currentContactDataCollection);
+  }, [currentInstitution, currentContactDataCollection]);
 
   const autoFormFields = () => {
     return Object.keys(currentInstitution)
@@ -98,7 +195,11 @@ export const InstitutionForm = ({
   return (
     <>
       <SimpleGrid columns={[1, null, 2]} gap={6}>
-        <GridItem>{autoFormFields()}</GridItem>
+        <GridItem>
+          {autoFormFields()}
+          {phoneFromContact()}
+          {faxFromContact()}
+        </GridItem>
       </SimpleGrid>
     </>
   );

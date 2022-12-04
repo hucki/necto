@@ -18,6 +18,8 @@ import { Institution } from '../../../types/Institution';
 import { InstitutionForm } from './InstitutionForm';
 import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/Wrapper';
+import { ContactData } from '../../../types/ContactData';
+import { useUpdateContact } from '../../../hooks/contact';
 
 interface InstitutionModalProps {
   institution: Institution;
@@ -33,13 +35,21 @@ export const InstitutionModal = ({
 
   const { mutateAsync: updateInstitution } = useUpdateInstitution();
   const { mutateAsync: createInstitution } = useCreateInstitution();
+  const { mutateAsync: updateContact } = useUpdateContact();
 
   const [currentInstitution, setCurrentInstitution] = useState<Institution>(
     () => ({ ...institution })
   );
 
-  const handleCurrentInstitutionChange = (institution: Institution) => {
-    setCurrentInstitution((cur) => ({ ...cur, ...institution }));
+  const handleCurrentInstitutionChange = (
+    institution: Institution,
+    contactDataCollection: ContactData[]
+  ) => {
+    setCurrentInstitution((cur) => ({
+      ...cur,
+      ...institution,
+      contactData: contactDataCollection,
+    }));
   };
 
   type UpdateType = 'save' | 'archive' | 'activate';
@@ -67,6 +77,13 @@ export const InstitutionModal = ({
             onClose();
           }
         });
+        if (institutionUpdate.contactData?.length) {
+          for (let i = 0; i < institutionUpdate.contactData.length; i++) {
+            if (institutionUpdate.contactData[i].uuid) {
+              updateContact({ contactData: institutionUpdate.contactData[i] });
+            }
+          }
+        }
       } else {
         const createSuccesToastOptions: UseToastOptions = {
           title: 'Institution created.',
