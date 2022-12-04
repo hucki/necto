@@ -76,7 +76,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         {t('menu.personalCalendar')}
       </NavigationButton>
       <NavigationButton
-        hidden={!user?.isAdmin && !user?.isPlanner}
+        hidden={!user?.isAdmin && !user?.isPlanner && !user?.isEmployee}
         variant={currentView === '/teamcal' ? 'solid' : 'ghost'}
         colorScheme="teal"
         aria-label="Team Calendar"
@@ -108,7 +108,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
       </NavigationButton>
       <Divider />
       <NavigationButton
-        hidden={!user?.isAdmin && !user?.isPlanner}
+        hidden={!user?.isAdmin && !user?.isPlanner && !user?.isEmployee}
         colorScheme="blue"
         variant={currentView === '/patients' ? 'solid' : 'ghost'}
         aria-label="Patients"
