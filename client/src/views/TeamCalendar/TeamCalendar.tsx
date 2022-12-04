@@ -10,8 +10,10 @@ import { UserDateContext } from '../../providers/UserDate';
 import { useFilter } from '../../hooks/useFilter';
 import { Flex } from '@chakra-ui/react';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
+import { AuthContext } from '../../providers/AuthProvider';
 
 function TeamCalendar(): JSX.Element {
+  const { user } = useContext(AuthContext);
   const { currentTeam, setCalendarView } = useFilter();
   setCalendarView('day');
 
@@ -32,6 +34,7 @@ function TeamCalendar(): JSX.Element {
     }
   );
 
+  console.log({ teamMembers });
   interface TeamMemberMapProps {
     employee: Employee;
   }
@@ -63,7 +66,7 @@ function TeamCalendar(): JSX.Element {
         <FilterBar hasTeamsFilter hasEventTypeOption />
       </Flex>
       <CalendarContainer
-        readOnly={false}
+        readOnly={!user?.isAdmin && !user?.isAdmin ? true : false}
         events={rawEvents}
         ressources={ressources}
         daysRange={[calendarDate, calendarDate]}
