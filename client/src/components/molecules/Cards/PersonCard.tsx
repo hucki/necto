@@ -9,6 +9,7 @@ import { ContactDataDisplay } from '../DataDisplay/ContactData';
 
 interface PersonCardContainerProps {
   hasBorder: boolean;
+  type: 'doctor' | 'patient';
 }
 const PersonCardContainer = styled.div((p: PersonCardContainerProps) => ({
   display: 'grid',
@@ -16,7 +17,9 @@ const PersonCardContainer = styled.div((p: PersonCardContainerProps) => ({
   gridTemplateColumns: '42px auto auto',
   gridTemplateRows: '1fr 1fr',
   gridTemplateAreas: `"avatar name name phone phone"
-  "avatar address address birthday birthday"`,
+  "avatar address address ${
+    p.type === 'doctor' ? 'fax fax' : 'birthday birthday'
+  }"`,
   border: p.hasBorder ? '1px solid #3333' : 'none',
   borderRadius: '0.25rem',
   padding: '0.2rem',
@@ -52,6 +55,9 @@ export const PersonCard = ({
     person.contactData &&
     person.contactData.filter((c) => c.type === 'telephone');
 
+  const currentFaxes =
+    person.contactData && person.contactData.filter((c) => c.type === 'fax');
+
   const onClickedPerson = () => {
     handleClickPerson ? handleClickPerson({ person }) : console.log('');
   };
@@ -63,7 +69,11 @@ export const PersonCard = ({
 
   return (
     <>
-      <PersonCardContainer onClick={onClickedPerson} hasBorder={hasBorder}>
+      <PersonCardContainer
+        onClick={onClickedPerson}
+        type={!isPatient(person) ? 'doctor' : 'patient'}
+        hasBorder={hasBorder}
+      >
         <div
           className="name"
           style={{
@@ -125,6 +135,16 @@ export const PersonCard = ({
             }}
           >
             <ContactDataDisplay contactData={currentPhones} />
+          </div>
+        )}
+        {currentFaxes && (
+          <div
+            className="faxes"
+            style={{
+              gridArea: 'fax',
+            }}
+          >
+            <ContactDataDisplay contactData={currentFaxes} />
           </div>
         )}
         <AvatarContainer>
