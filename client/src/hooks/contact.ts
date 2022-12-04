@@ -51,6 +51,32 @@ export function useCreateDoctorContact(): UseMutationResult<
   });
 }
 
+export function useCreateInstitutionContact(): UseMutationResult<
+  ContactData,
+  Error,
+  { contactData: ContactData },
+  string
+> {
+  const queryClient = useQueryClient();
+  const createInstitutionContact = async ({
+    contactData,
+  }: {
+    contactData: ContactData;
+  }): Promise<ContactData> => {
+    return client<ContactData>(
+      `institutions/${contactData.institutionId}/contact`,
+      {
+        data: contactData,
+      }
+    );
+  };
+  return useMutation(createInstitutionContact, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['institutions']);
+    },
+  });
+}
+
 export function useUpdateContact(): UseMutationResult<
   ContactData,
   Error,
