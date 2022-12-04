@@ -11,6 +11,7 @@ import Doctors from '../../../views/Doctors/Doctors';
 import { AuthContext } from '../../../providers/AuthProvider';
 import Home from '../../../views/Home/Home';
 import Institutions from '../../../views/Institutions/Institutions';
+import RoomCalendar from '../../../views/RoomCalendar/RoomCalendar';
 
 interface DashboardInputProps {
   id: string;
@@ -38,6 +39,7 @@ const Dashboard = ({ id }: DashboardInputProps) => {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/rooms" element={<Rooms />} />
+          <Route path="/roomCalendar" element={<RoomCalendar />} />
           <Route
             path="/patients"
             element={
@@ -74,10 +76,7 @@ const Dashboard = ({ id }: DashboardInputProps) => {
               )
             }
           />
-          <Route
-            path="/teamcal"
-            element={user?.isAdmin ? <TeamCalendar /> : <RedirectHome />}
-          />
+          <Route path="/teamcal" element={<TeamCalendar />} />
           <Route path="/personalcal" element={<PersonalCalendar id={id} />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/home" />} />
