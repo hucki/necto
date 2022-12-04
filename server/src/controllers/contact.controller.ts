@@ -53,6 +53,30 @@ export const addDoctorContact = async (
   }
 };
 
+export const addInstitutionContact = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const institutionId = req.params.institutionId;
+  try {
+    const createdContact = await prisma.contactData.create({
+      data: {
+        institutionId,
+        type: req.body.type,
+        contact: req.body.contact?.length
+          ? encrypt(req.body.contact)
+          : req.body.contact,
+        tenantId: tenantId,
+      },
+    });
+    res.json(createdContact);
+    res.status(201);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateContact = async (
   req: Request,
   res: Response,
