@@ -9,7 +9,7 @@ import {
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CgAdd, CgMail, CgPhone } from 'react-icons/cg';
+import { CgAdd, CgMail } from 'react-icons/cg';
 import { contract } from '../../../helpers/docs';
 import {
   useCreateDoctorContact,
@@ -18,11 +18,13 @@ import {
 import { useAllDoctors } from '../../../hooks/doctor';
 import { useAllInstitutions } from '../../../hooks/institution';
 import { useFilter } from '../../../hooks/useFilter';
-import { ContactData } from '../../../types/ContactData';
+import { ContactData, ContactType } from '../../../types/ContactData';
 import { Doctor } from '../../../types/Doctor';
 import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
+import { ContactInput } from '../../atoms/ContactData/ContactInput';
+import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
 import {
   Input,
   FormLabel,
@@ -146,7 +148,7 @@ export const PersonForm = ({
     }
   }, [person.uuid]);
 
-  const createContact = (type: 'telephone' | 'email') => {
+  const createContact = (type: ContactType) => {
     if (currentPatient) {
       createPatientContact({
         contactData: { patientId: currentPatient.uuid, type, contact: '' },
@@ -224,53 +226,58 @@ export const PersonForm = ({
       </ModalFormGroup>
     );
   };
-  const NewTelephoneInput = () => {
-    return (
-      <ModalFormGroup>
-        <FormControl id="addPhone">
-          <IconButton
-            disabled={!currentPerson.uuid}
-            aria-label="add-phone"
-            icon={<CgAdd />}
-            onClick={() => createContact('telephone')}
-          />
-          <FormLabel>
-            <CgPhone />
-          </FormLabel>
-        </FormControl>
-      </ModalFormGroup>
-    );
-  };
 
   const phoneFromContact = () => {
     const currentPhones = currentContactDataCollection
       .filter((c) => c.type === 'telephone')
       .map((contact, index) => (
-        <ModalFormGroup key={index}>
-          <FormControl id={contact.type + '_' + contact.uuid}>
-            <Input
-              isDisabled={isReadOnly}
-              onChange={(e) =>
-                onContactChange({ event: e, id: contact.uuid || '' })
-              }
-              id={contact.uuid}
-              value={contact.contact}
-            />
-            <FormLabel>
-              <CgPhone />
-            </FormLabel>
-          </FormControl>
-        </ModalFormGroup>
+        <ContactInput
+          key={index}
+          isDisabled={isReadOnly}
+          contact={contact}
+          onChange={onContactChange}
+        />
       ));
 
     return (
       <>
-        {currentPhones.length && currentPhones}
-        {!currentPhones.length && !isReadOnly ? <NewTelephoneInput /> : null}
+        {(currentPhones.length && currentPhones) || null}
+        {!currentPhones.length && !isReadOnly ? (
+          <CreateContactButton
+            isDisabled={!currentPerson.uuid}
+            type="telephone"
+            onCreate={createContact}
+          />
+        ) : null}
       </>
     );
   };
 
+  const faxFromContact = () => {
+    const currentFaxes = currentContactDataCollection
+      .filter((c) => c.type === 'fax')
+      .map((contact, index) => (
+        <ContactInput
+          key={index}
+          isDisabled={isReadOnly}
+          contact={contact}
+          onChange={onContactChange}
+        />
+      ));
+
+    return (
+      <>
+        {(currentFaxes.length && currentFaxes) || null}
+        {!currentFaxes.length && !isReadOnly ? (
+          <CreateContactButton
+            isDisabled={!currentPerson.uuid}
+            type="fax"
+            onCreate={createContact}
+          />
+        ) : null}
+      </>
+    );
+  };
   const emailFromContact = () => {
     const currentEmails = currentContactDataCollection
       .filter((c) => c.type === 'email')
@@ -294,7 +301,7 @@ export const PersonForm = ({
 
     return (
       <>
-        {currentEmails.length && currentEmails}
+        {(currentEmails.length && currentEmails) || null}
         {!currentEmails.length && !isReadOnly ? (
           <ModalFormGroup>
             <FormControl id="addEmail">
@@ -391,6 +398,7 @@ export const PersonForm = ({
           {autoFormFields()}
           {personType !== 'doctor' && <BirthdayInput />}
           {phoneFromContact()}
+          {personType === 'doctor' && faxFromContact()}
           {emailFromContact()}
         </GridItem>
         <GridItem>
