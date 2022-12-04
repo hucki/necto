@@ -1,12 +1,15 @@
+export type ContactType = 'telephone' | 'fax' | 'email';
+
 export type ContactData = {
   uuid?: string;
-  type: 'telephone' | 'email';
+  type: ContactType;
   contact: string;
   createdAt?: Date;
   updatedAt?: Date;
   tenantId?: string;
   patientId?: string;
   doctorId?: string;
+  institutionId?: string;
 };
 
 export type UserContactData = ContactData & {
