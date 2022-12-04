@@ -1,5 +1,6 @@
 import React from 'react';
-import { CgMail, CgPhone } from 'react-icons/cg';
+import { CgPhone } from 'react-icons/cg';
+import { IoDocumentTextOutline, IoMailOutline } from 'react-icons/io5';
 import { ContactData } from '../../../types/ContactData';
 
 interface ContactDataDisplayProps {
@@ -15,7 +16,13 @@ export const ContactDataDisplay = ({
       key={index}
       style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
     >
-      {contactItem.type === 'telephone' ? <CgPhone /> : <CgMail />}{' '}
+      {contactItem.type === 'telephone' ? (
+        <CgPhone />
+      ) : contactItem.type === 'email' ? (
+        <IoMailOutline />
+      ) : (
+        <IoDocumentTextOutline />
+      )}{' '}
       {contactItem.contact}
     </div>
   ));
