@@ -197,6 +197,7 @@ export const getDaysEvents = async (
         parentEvent: { include: { childEvents: true } },
         childEvents: true,
         room: { include: { building: true } },
+        employee: { include: { contract: { where: { validUntil: null } } } },
       },
     });
     for (let i = 0; i < events.length; i++) {
@@ -288,6 +289,7 @@ export const getWeeksEvents = async (
         parentEvent: { include: { childEvents: true } },
         childEvents: true,
         room: { include: { building: true } },
+        employee: { include: { contract: { where: { validUntil: null } } } },
       },
     });
     for (let i = 0; i < events.length; i++) {
