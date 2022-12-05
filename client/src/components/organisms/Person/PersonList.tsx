@@ -219,6 +219,28 @@ function PersonList({ persons }: PersonListProps) {
     onOpenCreate();
   }
 
+  const diagnosticDisplay = (p: WaitingPatient) => {
+    const event =
+      p.events?.length && p.events.filter((event) => !event.isCancelled).length
+        ? p.events.filter((event) => !event.isCancelled)[0]
+        : null;
+    if (event) {
+      return (
+        <>
+          <b>
+            {dayjs(event.startTime).format('DD.MM.YY hh:mm')}
+            {event.isDone && (
+              <Icon as={RiCheckLine} w={5} h={5} color="green" />
+            )}
+          </b>
+          {' @'}
+          <i>{event.employee?.alias}</i>
+        </>
+      );
+    }
+    return null;
+  };
+
   const PersonRows = (): JSX.Element[] =>
     filteredPersons
       // pagination Filter
@@ -278,22 +300,7 @@ function PersonList({ persons }: PersonListProps) {
           ) : !isDoctor(p) ? (
             <Td textAlign="center">{dayjs(p.firstContactAt).format('ll')}</Td>
           ) : null}
-          {isWaitingPatient(p) &&
-          p.events?.length &&
-          p.events.filter((event) => !event.isCancelled).length ? (
-            <Td>
-              <b>
-                {
-                  p.events.filter((event) => !event.isCancelled)[0].employee
-                    ?.alias
-                }
-              </b>
-              :<br />
-              {dayjs(
-                p.events.filter((event) => !event.isCancelled)[0].startTime
-              ).format('llll')}
-            </Td>
-          ) : null}
+          <Td>{isWaitingPatient(p) && diagnosticDisplay(p)}</Td>
         </Tr>
       ));
 
