@@ -14,12 +14,18 @@ export const getAllTeams = async (
       where: { tenantId },
       include: {
         employees: {
-          select: {
+          where: {
+            employee: {
+              validUntil: null,
+            },
+          },
+          include: {
             employee: {
               select: {
                 uuid: true,
                 firstName: true,
                 lastName: true,
+                validUntil: true,
                 alias: true,
                 contract: {
                   where: {
