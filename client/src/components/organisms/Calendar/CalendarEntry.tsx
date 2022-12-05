@@ -87,10 +87,13 @@ export const CalendarEntry = ({
 
   const isNote = event.type === 'note';
   const isLeave = event.type === 'leave';
+  const isRoomBooking = event.type === 'roomBooking';
   const isFirstDay = event.rrule === '' || !event.parentEventId;
   const isApproved = event.leaveStatus === 'approved';
   const isDone = event.isDone;
-  const entryTitle = isLeave
+  const entryTitle = isRoomBooking
+    ? event.title
+    : isLeave
     ? t(`calendar.leave.type.${event.leaveType}`) +
       (event.leaveStatus === 'requested'
         ? ' (' + t(`calendar.leave.status.${event.leaveStatus}`) + ')'
@@ -110,7 +113,7 @@ export const CalendarEntry = ({
       style={styles}
     >
       <CalendarEntryContent strikeThrough={isNote && isDone}>
-        {event.patient && !event.patient.hasContract && (
+        {!isRoomBooking && event.patient && !event.patient.hasContract && (
           <FaExclamation key="noContractIcon" color="red" />
         )}
         {entryTitle}
@@ -119,7 +122,9 @@ export const CalendarEntry = ({
         {!isNote && !isLeave && showTime && (
           <CalendarEntryTime>{fullTimeString}</CalendarEntryTime>
         )}
-        <span style={{ display: 'flex', flexDirection: 'row' }}>{icons}</span>
+        {!isRoomBooking && (
+          <span style={{ display: 'flex', flexDirection: 'row' }}>{icons}</span>
+        )}
       </CalendarEntryIconContainer>
     </CalendarEntryContainer>
   );
