@@ -106,6 +106,21 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
       >
         {isOpen ? t('menu.roomCalendar') : null}
       </NavigationButton>
+      <NavigationButton
+        colorScheme="teal"
+        variant={currentView === '/roomCalendar' ? 'solid' : 'ghost'}
+        aria-label="Rooms"
+        leftIcon={
+          <>
+            <IoCalendarNumberOutline />
+            <IoStorefrontOutline />
+          </>
+        }
+        key="/roomCalendar"
+        onClick={() => onClickHandler('/roomCalendar')}
+      >
+        {isOpen ? t('menu.roomCalendarLive') : null}
+      </NavigationButton>
       <Divider />
       <NavigationButton
         hidden={!user?.isAdmin && !user?.isPlanner && !user?.isEmployee}
