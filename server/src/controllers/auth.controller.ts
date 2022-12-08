@@ -9,6 +9,7 @@ import { PermissionLevel, User, UserToPermissions } from '@prisma/client';
 import { transporter } from '../utils/nodemailer';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
+const environment = process.env.NODE_ENV;
 
 const generatePassword = () => {
   let password = '';
@@ -215,7 +216,7 @@ export const forgotPassword = async (
     await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: updatedUser.email,
-      subject: 'Password reset',
+      subject: environment === 'development' ? '[DEV] ' : '' + 'Password reset',
       text: `Hi ${updatedUser.firstName}, \n
               to reset your password please follow this link:\n
               ${resetUrl.toString()}\n
