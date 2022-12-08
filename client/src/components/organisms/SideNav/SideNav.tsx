@@ -20,6 +20,7 @@ import { SideNavContainer } from '../../Library';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../../providers/AuthProvider';
 import { IconButton, NavigationButton } from '../../atoms/Buttons';
+import { LiveIndicator } from '../../atoms/Indicator/Live';
 
 interface SideNavProps {
   isOpen: boolean;
@@ -119,7 +120,11 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
         key="/roomCalendar"
         onClick={() => onClickHandler('/roomCalendar')}
       >
-        {isOpen ? t('menu.roomCalendarLive') : null}
+        {isOpen ? (
+          <>
+            {t('menu.roomCalendarLive')} <LiveIndicator> live </LiveIndicator>
+          </>
+        ) : null}
       </NavigationButton>
       <Divider />
       <NavigationButton
