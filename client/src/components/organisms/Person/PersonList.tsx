@@ -43,13 +43,13 @@ type ListType = 'doctors' | 'patients' | 'waitingPatients';
 
 interface PersonListProps {
   persons: Doctor[] | Patient[] | WaitingPatient[];
+  listType: ListType;
 }
 
-function PersonList({ persons }: PersonListProps) {
+function PersonList({ persons, listType }: PersonListProps) {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
-  const [listType, setListType] = useState<ListType>('patients');
 
   const isWaitingPatientList = (
     persons: Person[]
@@ -64,18 +64,9 @@ function PersonList({ persons }: PersonListProps) {
   };
 
   const isDoctorList = (persons: Person[]): persons is Doctor[] => {
-    if (listType !== 'waitingPatients' && listType !== 'patients') return true;
+    if (listType === 'doctors') return true;
     return false;
   };
-
-  useEffect(() => {
-    const type: ListType = isWaitingPatientList(persons)
-      ? 'waitingPatients'
-      : isPatientList(persons)
-      ? 'patients'
-      : 'doctors';
-    if (type !== listType) setListType(type);
-  }, [persons]);
 
   const isWaitingPatient = (person: Person): person is WaitingPatient => {
     if ('numberInLine' in person) return true;
@@ -329,60 +320,64 @@ function PersonList({ persons }: PersonListProps) {
             w="15rem"
             mx="0.5rem"
           >
-            {`add ${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
+            {t('button.add')}
           </Button>
         )}
       </Flex>
-      <div
-        className="table-container"
-        style={{
-          height: '100%',
-          width: '100%',
-        }}
-      >
-        {/** had to add default prop values from https://chakra-ui.com/docs/components/table/usage#table-container
-         * to make horiz. scrolling working */}
-        <Table
-          variant="striped"
-          size="xs"
-          colorScheme="green"
-          display="block"
-          overflowX="auto"
-          overflowY="hidden"
-          maxWidth="100%"
-          whiteSpace="nowrap"
+      {persons.length ? (
+        <div
+          className="table-container"
+          style={{
+            height: '100%',
+            width: '100%',
+          }}
         >
-          <Thead>
-            <Tr>
-              {listType === 'waitingPatients' && <Th width={5}>Nr </Th>}
-              <Th></Th>
-              {listType !== 'doctors' && (
-                <>
-                  <Th width={5}>{t('label.isAddpayFreed')}</Th>
-                  <Th width={5}>{t('label.hasContract')}</Th>
-                  <Th width={2}>{t('label.gender')} </Th>
-                </>
-              )}
-              <Th>{t('label.mailAddress')} </Th>
-              {listType !== 'doctors' && (
-                <>
-                  <Th>{t('label.notices')} </Th>
-                  <Th>{t('label.doctor')} </Th>
-                </>
-              )}
-              {listType === 'waitingPatients' ? (
-                <Th width={7}>{t('label.isWaitingSince')}</Th>
-              ) : listType !== 'doctors' ? (
-                <Th width={7}>{t('label.firstContactAt')}</Th>
-              ) : null}
-              {listType === 'waitingPatients' && (
-                <Th width={5}>{t('label.diagnostic')}</Th>
-              )}
-            </Tr>
-          </Thead>
-          <Tbody>{PersonRows()}</Tbody>
-        </Table>
-      </div>
+          {/** had to add default prop values from https://chakra-ui.com/docs/components/table/usage#table-container
+           * to make horiz. scrolling working */}
+          <Table
+            variant="striped"
+            size="xs"
+            colorScheme="green"
+            display="block"
+            overflowX="auto"
+            overflowY="hidden"
+            maxWidth="100%"
+            whiteSpace="nowrap"
+          >
+            <Thead>
+              <Tr>
+                {listType === 'waitingPatients' && <Th width={5}>Nr </Th>}
+                <Th></Th>
+                {listType !== 'doctors' && (
+                  <>
+                    <Th width={5}>{t('label.isAddpayFreed')}</Th>
+                    <Th width={5}>{t('label.hasContract')}</Th>
+                    <Th width={2}>{t('label.gender')} </Th>
+                  </>
+                )}
+                <Th>{t('label.mailAddress')} </Th>
+                {listType !== 'doctors' && (
+                  <>
+                    <Th>{t('label.notices')} </Th>
+                    <Th>{t('label.doctor')} </Th>
+                  </>
+                )}
+                {listType === 'waitingPatients' ? (
+                  <Th width={7}>{t('label.isWaitingSince')}</Th>
+                ) : listType !== 'doctors' ? (
+                  <Th width={7}>{t('label.firstContactAt')}</Th>
+                ) : null}
+                {listType === 'waitingPatients' && (
+                  <Th width={5}>{t('label.diagnostic')}</Th>
+                )}
+              </Tr>
+            </Thead>
+            <Tbody>{PersonRows()}</Tbody>
+          </Table>
+        </div>
+      ) : (
+        <div>no persons in list</div>
+      )}
       {/* pagination controls START */}
       <Flex m={2} alignSelf="flex-end">
         <IconButton
