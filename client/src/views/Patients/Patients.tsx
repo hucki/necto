@@ -9,11 +9,9 @@ function Patients(): JSX.Element {
 
   return isLoading ? (
     <FullPageSpinner />
-  ) : !patients.length ? (
-    <div>no data available</div>
   ) : (
     <PersonListWrapper>
-      <PersonList persons={patients} />
+      <PersonList persons={patients} listType="patients" />
     </PersonListWrapper>
   );
 }

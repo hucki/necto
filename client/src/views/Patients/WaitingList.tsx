@@ -13,11 +13,9 @@ function WaitingList(): JSX.Element {
 
   return isLoading ? (
     <FullPageSpinner />
-  ) : !patients.length ? (
-    <div>no data available</div>
   ) : (
     <PersonListWrapper>
-      <PersonList persons={waitingPatients} />
+      <PersonList persons={waitingPatients} listType="waitingPatients" />
     </PersonListWrapper>
   );
 }
