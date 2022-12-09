@@ -83,6 +83,7 @@ const ModalFormGroup = styled.div({
   display: 'grid',
   alignItems: 'center',
   marginBottom: '0.75rem',
+  maxHeight: '70vh',
 });
 
 const RadioGroup = styled.div({
