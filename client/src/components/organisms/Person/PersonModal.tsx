@@ -1,7 +1,6 @@
 import {
   Button,
   ModalFooter,
-  ModalHeader,
   useToast,
   UseToastOptions,
 } from '@chakra-ui/react';
@@ -17,6 +16,7 @@ import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/Wrapper';
+import { ModalHeader } from '../../Library';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
 import { PersonForm } from './PersonForm';
 
@@ -37,10 +37,12 @@ export const PersonModal = ({
   const { t } = useTranslation();
 
   const { mutateAsync: updatePatient } = useUpdatePatient();
-  const { mutateAsync: createPatient } = useCreatePatient();
+  const { mutateAsync: createPatient, isIdle: createPatientIsIdle } =
+    useCreatePatient();
 
   const { mutateAsync: updateDoctor } = useUpdateDoctor();
-  const { mutateAsync: createDoctor } = useCreateDoctor();
+  const { mutateAsync: createDoctor, isIdle: createDoctorIsIdle } =
+    useCreateDoctor();
 
   const { mutateAsync: updateContact } = useUpdateContact();
 
@@ -48,7 +50,7 @@ export const PersonModal = ({
   const [currentPerson, setCurrentPerson] = useState<Person>(() => ({
     ...person,
   }));
-
+  const isIdle = createPatientIsIdle && createDoctorIsIdle;
   type ToastOptionsProps = {
     result: 'error' | 'success' | 'info' | 'warning' | undefined;
     title: string;
@@ -78,6 +80,7 @@ export const PersonModal = ({
       contactData: contactDataCollection,
     }));
     if (
+      isIdle &&
       !currentPerson.uuid &&
       currentPerson?.firstName &&
       currentPerson?.lastName
@@ -190,6 +193,7 @@ export const PersonModal = ({
         alignItems="center"
         display="flex"
         justifyContent="space-between"
+        bgColor="white"
       >
         <PersonCard person={currentPerson} hasBorder />
         <IconButton
@@ -199,7 +203,7 @@ export const PersonModal = ({
         />
       </ModalHeader>
       <PersonForm
-        isReadOnly={isReadOnly}
+        isReadOnly={isReadOnly && isIdle}
         person={currentPerson}
         onChange={handleCurrentPersonChange}
         personType={personType}
