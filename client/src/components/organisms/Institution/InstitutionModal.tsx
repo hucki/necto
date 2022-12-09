@@ -163,7 +163,7 @@ export const InstitutionModal = ({
             <Button
               leftIcon={<FaArchive />}
               aria-label="archive Institution"
-              colorScheme="red"
+              colorScheme={currentInstitution.archived ? 'orange' : 'red'}
               disabled={!currentInstitution.uuid}
               size="sm"
               type="button"
