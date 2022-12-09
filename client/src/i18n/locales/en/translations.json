@@ -59,7 +59,8 @@
     "edit": "edit",
     "delete": "delete",
     "archive": "archive",
-    "activate": "activate"
+    "activate": "activate",
+    "add": "add"
   },
   "time": {
     "ofDay": {
