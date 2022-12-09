@@ -13,7 +13,7 @@ interface PersonCardContainerProps {
 }
 const PersonCardContainer = styled.div((p: PersonCardContainerProps) => ({
   display: 'grid',
-  minWidth: '350px',
+  minWidth: '290px',
   gridTemplateColumns: '42px auto auto',
   gridTemplateRows: '1fr 1fr',
   gridTemplateAreas: `"avatar name name phone phone"
