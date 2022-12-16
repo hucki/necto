@@ -296,8 +296,8 @@ model ContactData {
 
 model Patient {
   uuid                String        @id @default(uuid()) @db.Uuid
-  firstName           String?       @db.VarChar(64)
-  lastName            String?       @db.VarChar(64)
+  firstName           String?       @db.VarChar(255)
+  lastName            String?       @db.VarChar(255)
   title               String?       @db.VarChar(64)
   gender              String?       @db.VarChar(10)
   street              String?       @db.VarChar(64)
