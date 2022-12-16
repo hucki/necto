@@ -166,29 +166,30 @@ export const getDaysEvents = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const startDate = dayjs(
+    const startOfDay = dayjs(
       `${req.params.year}-${req.params.month}-${req.params.day}`
     )
       .set('hour', 0)
       .set('minute', 0)
       .set('second', 0);
-    const endDate = startDate.add(24, 'h');
+    const endOfDay = startOfDay.add(24, 'h');
 
     const events = await prisma.event.findMany({
       where: {
-        AND: [
+        OR: [
           {
-            startTime: {
-              gte: startDate.toISOString(),
-            },
+            AND: [
+              { startTime: { gte: startOfDay.toISOString() } },
+              { startTime: { lte: endOfDay.toISOString() } },
+              { isDeleted: false },
+            ],
           },
           {
-            startTime: {
-              lt: endDate.toISOString(),
-            },
-          },
-          {
-            isDeleted: false,
+            AND: [
+              { endTime: { gte: startOfDay.toISOString() } },
+              { endTime: { lte: endOfDay.toISOString() } },
+              { isDeleted: false },
+            ],
           },
         ],
       },
@@ -278,10 +279,21 @@ export const getWeeksEvents = async (
     const lastOfWeek = firstOfWeek.endOf('isoWeek');
     const events = await prisma.event.findMany({
       where: {
-        AND: [
-          { startTime: { gte: firstOfWeek.toISOString() } },
-          { startTime: { lte: lastOfWeek.toISOString() } },
-          { isDeleted: false },
+        OR: [
+          {
+            AND: [
+              { startTime: { gte: firstOfWeek.toISOString() } },
+              { startTime: { lte: lastOfWeek.toISOString() } },
+              { isDeleted: false },
+            ],
+          },
+          {
+            AND: [
+              { endTime: { gte: firstOfWeek.toISOString() } },
+              { endTime: { lte: lastOfWeek.toISOString() } },
+              { isDeleted: false },
+            ],
+          },
         ],
       },
       include: {
