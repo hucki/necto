@@ -76,7 +76,7 @@ model Employee {
   street      String?          @db.VarChar(64)
   zip         String?          @db.VarChar(10)
   city        String?          @db.VarChar(64)
-  birthday    DateTime?        @db.Date
+  birthday    DateTime?        @db.Timestamptz(6)
   validUntil  DateTime?        @db.Timestamptz(6)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -303,7 +303,7 @@ model Patient {
   street              String?       @db.VarChar(64)
   zip                 String?       @db.VarChar(10)
   city                String?       @db.VarChar(64)
-  birthday            DateTime?     @db.Date
+  birthday            DateTime?     @db.Timestamptz(6)
   insurance           String?       @db.VarChar(64)
   insuranceNumber     String?       @db.VarChar(64)
   insuranceCardNumber String?       @db.VarChar(64)
@@ -314,9 +314,9 @@ model Patient {
   appointmentRequest  String?       @db.VarChar(64)
   medicalReport       String?       @db.VarChar(255) @default("")
   isAddpayFreed       Boolean
-  addPayFreedFrom     DateTime?     @db.Date
-  addPayFreedUntil    DateTime?     @db.Date
-  validUntil          DateTime?     @db.Date
+  addPayFreedFrom     DateTime?     @db.Timestamptz(6)
+  addPayFreedUntil    DateTime?     @db.Timestamptz(6)
+  validUntil          DateTime?     @db.Timestamptz(6)
   firstContactAt      DateTime      @default(now())
   isWaitingSince      DateTime      @default(now())
   createdAt           DateTime      @default(now())
