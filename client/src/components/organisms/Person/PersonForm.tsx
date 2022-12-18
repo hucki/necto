@@ -7,6 +7,8 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail } from 'react-icons/cg';
@@ -25,14 +27,11 @@ import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ContactInput } from '../../atoms/ContactData/ContactInput';
 import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
-import {
-  Input,
-  FormLabel,
-  ModalFormGroup,
-  Select,
-  DatePicker,
-} from '../../Library';
+import { Input, FormLabel, ModalFormGroup, Select } from '../../Library';
 import { EventList } from '../List/Events';
+dayjs.extend(LocalizedFormat);
+dayjs.extend(utc);
+dayjs.locale('de');
 
 interface PersonFormProps {
   person: Person;
@@ -66,6 +65,22 @@ export const PersonForm = ({
   const currentDoctor =
     personType === 'doctor' ? (currentPerson as Doctor) : undefined;
 
+  const [defaultValueBirthday, setDefaultValueBirthday] = useState(
+    () =>
+      currentPatient &&
+      dayjs(currentPatient.birthday).local().format('YYYY-MM-DD')
+  );
+
+  useEffect(() => {
+    if (currentPatient) {
+      const currentBirthday = dayjs(currentPatient.birthday)
+        .local()
+        .format('YYYY-MM-DD');
+      if (currentBirthday !== defaultValueBirthday) {
+        setDefaultValueBirthday(currentBirthday);
+      }
+    }
+  }, [currentPatient]);
   type PersonKey = keyof Patient;
 
   const sharedAutoFields: PersonKey[] = [
@@ -94,14 +109,12 @@ export const PersonForm = ({
     id: string;
   }
 
-  interface OnDateSelectProps {
-    date: ReactDatePickerReturnType;
-    key: PersonKey;
-  }
-
   function onInputChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
-    const currentValue = event.currentTarget.value;
+    const currentValue =
+      key === 'birthday'
+        ? dayjs(event.currentTarget.value).toDate()
+        : event.currentTarget.value;
     setCurrentPerson((person) => ({ ...person, [`${key}`]: currentValue }));
   }
 
@@ -115,9 +128,6 @@ export const PersonForm = ({
     );
   }
 
-  function onDateSelect({ date, key }: OnDateSelectProps) {
-    setCurrentPerson((person) => ({ ...person, [`${key}`]: date }));
-  }
   function onCheckboxChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
     const { checked } = event.currentTarget;
@@ -327,17 +337,15 @@ export const PersonForm = ({
     return (
       <ModalFormGroup>
         <FormControl id="birthday">
-          <DatePicker
+          <Input
+            type="date"
             disabled={isReadOnly}
             name="birthday"
-            locale="de"
-            dateFormat="P"
-            selected={
-              currentPatient.birthday && dayjs(currentPatient.birthday).toDate()
+            defaultValue={defaultValueBirthday}
+            onBlur={(e) =>
+              onInputChange({ event: e, key: 'birthday' as keyof Person })
             }
-            onChange={(date: ReactDatePickerReturnType) => {
-              if (date) onDateSelect({ date, key: 'birthday' });
-            }}
+            // onChange=
           />
           <FormLabel>{t('label.birthday')}</FormLabel>
         </FormControl>
