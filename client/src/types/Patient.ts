@@ -22,11 +22,11 @@ export type Patient = {
   medicalReport?: string;
   careFacility?: string;
   state?: string;
-  archived?: Boolean;
-  hasPrescritpion?: Boolean;
-  isWaitingAgain?: Boolean;
-  hasContract?: Boolean;
-  isAddpayFreed?: Boolean;
+  archived?: boolean;
+  hasPrescritpion?: boolean;
+  isWaitingAgain?: boolean;
+  hasContract?: boolean;
+  isAddpayFreed?: boolean;
   addPayFreedFrom?: Date;
   addPayFreedUntil?: Date;
   validUntil?: Date;
