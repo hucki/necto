@@ -26,7 +26,6 @@ const LoginForm = (): JSX.Element => {
     try {
       await logMeIn({ email: loginState.email, password: loginState.password });
     } catch (e) {
-      console.log('caught', { e });
       const error = e as Error;
       setMessage(error.message);
     }
