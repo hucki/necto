@@ -9,21 +9,15 @@ interface ErrorBoundaryProps {
 
 interface State {
   hasError: boolean;
-  errorInfo: ErrorInfo | undefined;
 }
 class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
   public state: State = {
     hasError: false,
-    errorInfo: undefined,
   };
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  public static getDerivedStateFromError(
-    _: Error,
-    errorInfo: ErrorInfo
-  ): State {
+  public static getDerivedStateFromError(_: Error): State {
     return {
       hasError: true,
-      errorInfo,
     };
   }
 
@@ -34,11 +28,23 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <>
-          <ErrorDisplay>{this.state.errorInfo?.componentStack}</ErrorDisplay>
-          <RefreshButton />
-          <LogoutButton />
-        </>
+        <div
+          style={{
+            display: 'grid',
+            gridAutoRows: 'auto',
+            margin: 'auto',
+            gap: '0.5rem',
+            justifyItems: 'center',
+          }}
+        >
+          <ErrorDisplay>
+            😯 Sorry, an error occured! Please refresh or logout + login again.
+          </ErrorDisplay>
+          <div className="controls">
+            <RefreshButton />
+            <LogoutButton />
+          </div>
+        </div>
       );
     }
     return this.props.children;
