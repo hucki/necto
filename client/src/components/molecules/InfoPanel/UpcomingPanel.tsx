@@ -5,10 +5,21 @@ import { PanelListItem } from './PanelListItem';
 
 interface UpcomingPanelProps {
   events: Event[];
+  maxEvents?: number;
 }
-const UpcomingPanel = ({ events }: UpcomingPanelProps) => {
+const UpcomingPanel = ({ events, maxEvents = 10 }: UpcomingPanelProps) => {
   const upcomingEvents = events ? (
-    events.map((event) => <PanelListItem key={event.uuid} event={event} />)
+    events
+      .sort((a, b) => a.startTime.valueOf() - b.startTime.valueOf())
+      .filter(
+        (event) =>
+          (event.type === 'leave' && !event.parentEventId) ||
+          event.type !== 'leave'
+      )
+      .map(
+        (event, index) =>
+          index < maxEvents && <PanelListItem key={event.uuid} event={event} />
+      )
   ) : (
     <div>no leave to approve</div>
   );
