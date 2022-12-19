@@ -66,28 +66,28 @@ export const PersonForm = ({
   const currentDoctor =
     personType === 'doctor' ? (currentPerson as Doctor) : undefined;
 
-  const [defaultValueBirthday, setDefaultValueBirthday] = useState(
-    () =>
-      currentPatient &&
-      dayjs(currentPatient.birthday).local().format('YYYY-MM-DD')
+  const [defaultValueBirthday, setDefaultValueBirthday] = useState(() =>
+    currentPatient && currentPatient.birthday
+      ? dayjs(currentPatient.birthday).local().format('YYYY-MM-DD')
+      : undefined
   );
   const [defaultValueIsWaitingSince, setDefaultValueIsWaitingSince] = useState(
     () =>
-      currentPatient &&
-      dayjs(currentPatient.isWaitingSince).local().format('YYYY-MM-DD')
+      currentPatient && currentPatient.isWaitingSince
+        ? dayjs(currentPatient.isWaitingSince).local().format('YYYY-MM-DD')
+        : undefined
   );
-
   useEffect(() => {
     if (currentPatient) {
-      const currentBirthday = dayjs(currentPatient.birthday)
-        .local()
-        .format('YYYY-MM-DD');
-      if (currentBirthday !== defaultValueBirthday) {
+      const currentBirthday = currentPatient.birthday
+        ? dayjs(currentPatient.birthday).local().format('YYYY-MM-DD')
+        : undefined;
+      if (currentBirthday && currentBirthday !== defaultValueBirthday) {
         setDefaultValueBirthday(currentBirthday);
       }
-      const currentIsWaitingSince = dayjs(currentPatient.isWaitingSince)
-        .local()
-        .format('YYYY-MM-DD');
+      const currentIsWaitingSince = currentPatient.isWaitingSince
+        ? dayjs(currentPatient.isWaitingSince).local().format('YYYY-MM-DD')
+        : undefined;
       if (currentIsWaitingSince !== defaultValueIsWaitingSince) {
         setDefaultValueIsWaitingSince(currentIsWaitingSince);
       }
