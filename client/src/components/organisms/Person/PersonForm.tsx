@@ -70,6 +70,11 @@ export const PersonForm = ({
       currentPatient &&
       dayjs(currentPatient.birthday).local().format('YYYY-MM-DD')
   );
+  const [defaultValueIsWaitingSince, setDefaultValueIsWaitingSince] = useState(
+    () =>
+      currentPatient &&
+      dayjs(currentPatient.isWaitingSince).local().format('YYYY-MM-DD')
+  );
 
   useEffect(() => {
     if (currentPatient) {
@@ -78,6 +83,12 @@ export const PersonForm = ({
         .format('YYYY-MM-DD');
       if (currentBirthday !== defaultValueBirthday) {
         setDefaultValueBirthday(currentBirthday);
+      }
+      const currentIsWaitingSince = dayjs(currentPatient.isWaitingSince)
+        .local()
+        .format('YYYY-MM-DD');
+      if (currentIsWaitingSince !== defaultValueIsWaitingSince) {
+        setDefaultValueIsWaitingSince(currentIsWaitingSince);
       }
     }
   }, [currentPatient]);
@@ -111,8 +122,9 @@ export const PersonForm = ({
 
   function onInputChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
+    const { type } = event.currentTarget;
     const currentValue =
-      key === 'birthday'
+      type === 'date'
         ? dayjs(event.currentTarget.value).toDate()
         : event.currentTarget.value;
     setCurrentPerson((person) => ({ ...person, [`${key}`]: currentValue }));
@@ -345,9 +357,27 @@ export const PersonForm = ({
             onBlur={(e) =>
               onInputChange({ event: e, key: 'birthday' as keyof Person })
             }
-            // onChange=
           />
           <FormLabel>{t('label.birthday')}</FormLabel>
+        </FormControl>
+      </ModalFormGroup>
+    );
+  };
+  const IsWaitingSinceInput = () => {
+    if (!currentPatient) return null;
+    return (
+      <ModalFormGroup>
+        <FormControl id="isWaitingSince">
+          <Input
+            type="date"
+            disabled={isReadOnly}
+            name="isWaitingSince"
+            defaultValue={defaultValueIsWaitingSince}
+            onBlur={(e) =>
+              onInputChange({ event: e, key: 'isWaitingSince' as keyof Person })
+            }
+          />
+          <FormLabel>{t('label.isWaitingSince')}</FormLabel>
         </FormControl>
       </ModalFormGroup>
     );
@@ -405,6 +435,7 @@ export const PersonForm = ({
           {personType !== 'doctor' && patientCheckboxes()}
           {autoFormFields()}
           {personType !== 'doctor' && <BirthdayInput />}
+          {personType !== 'doctor' && <IsWaitingSinceInput />}
           {phoneFromContact()}
           {personType === 'doctor' && faxFromContact()}
           {emailFromContact()}
