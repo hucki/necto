@@ -34,7 +34,6 @@ function TeamCalendar(): JSX.Element {
     }
   );
 
-  console.log({ teamMembers });
   interface TeamMemberMapProps {
     employee: Employee;
   }
