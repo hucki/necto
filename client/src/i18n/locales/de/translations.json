@@ -103,7 +103,8 @@
     "settings": "Einstellungen",
     "eventSettings": "Termine",
     "doctors": "Ärzt:in",
-    "institutions": "Einrichtungen"
+    "institutions": "Einrichtungen",
+    "refresh": "neu laden"
   },
   "label": {
     "user": "user",
