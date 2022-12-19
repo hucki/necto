@@ -45,6 +45,8 @@ export const addPatient = async (
     delete incomingPatient.availability;
     delete incomingPatient.doctor;
     delete incomingPatient.institution;
+    delete incomingPatient.createdAt;
+    delete incomingPatient.updatedAt;
 
     const encryptedPatient = encryptPatient(incomingPatient);
     const createdPatient = await prisma.patient.create({
@@ -80,6 +82,8 @@ export const updatePatient = async (
     delete incomingPatient.doctor;
     delete incomingPatient.institution;
     delete incomingPatient.numberInLine;
+    delete incomingPatient.createdAt;
+    delete incomingPatient.updatedAt;
 
     const encryptedPatient = encryptPatient(incomingPatient);
     const updatedPatient = await prisma.patient.update({
