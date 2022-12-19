@@ -28,6 +28,7 @@ import { IconButton } from '../../atoms/Buttons';
 import { ContactInput } from '../../atoms/ContactData/ContactInput';
 import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
 import { Input, FormLabel, ModalFormGroup, Select } from '../../Library';
+import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { EventList } from '../List/Events';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -436,6 +437,12 @@ export const PersonForm = ({
           {autoFormFields()}
           {personType !== 'doctor' && <BirthdayInput />}
           {personType !== 'doctor' && <IsWaitingSinceInput />}
+          {currentPatient && (
+            <PersonMetaData
+              createdAt={currentPatient?.createdAt}
+              updatedAt={currentPatient?.updatedAt}
+            />
+          )}
           {phoneFromContact()}
           {personType === 'doctor' && faxFromContact()}
           {emailFromContact()}
