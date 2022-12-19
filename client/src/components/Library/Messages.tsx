@@ -52,9 +52,12 @@ const NotificationCount = styled.div(({ count }: NotificationCountProps) => ({
   fontSize: '0.75rem',
   width: '1.1rem',
   height: '1.1rem',
+  lineHeight: '1.1rem',
   backgroundColor: count > 0 ? 'red' : 'grey',
   borderRadius: '50%',
   textAlign: 'center',
+  marginTop: '-0.2rem',
+  marginLeft: '-0.1rem',
 }));
 
 const Greeting = styled.div({
