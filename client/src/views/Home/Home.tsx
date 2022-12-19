@@ -26,21 +26,31 @@ interface EmployeeEventAccordionItemProps {
 const EmployeeEventAccordionItem = ({
   upcomingEvents,
 }: EmployeeEventAccordionItemProps) => {
+  const maxEvents = 10;
   return (
     <AccordionItem isDisabled={upcomingEvents.length < 1}>
       <h2>
         <AccordionButton>
           <Box flex="1" textAlign="left" display="flex" flexDirection="row">
-            <span>anstehende Ereignisse</span>
-            <NotificationCount count={upcomingEvents.length}>
-              {upcomingEvents.length}
-            </NotificationCount>
+            <span>anstehende Ereignisse </span>
+            <span
+              style={{
+                marginLeft: '0.2rem',
+                fontSize: 'small',
+              }}
+            >
+              (
+              {upcomingEvents.length > maxEvents
+                ? maxEvents + '+'
+                : upcomingEvents.length}
+              )
+            </span>
           </Box>
           <AccordionIcon />
         </AccordionButton>
       </h2>
       <AccordionPanel pb={4}>
-        <UpcomingPanel events={upcomingEvents} />
+        <UpcomingPanel events={upcomingEvents} maxEvents={maxEvents} />
       </AccordionPanel>
     </AccordionItem>
   );
