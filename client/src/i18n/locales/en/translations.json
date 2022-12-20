@@ -121,7 +121,8 @@
     "hasContract": "contract?",
     "notices": "notices",
     "firstContactAt": "Date of reception",
-    "isWaitingSince": "waiting since",
+    "isWaitingSince": "Date for Waiting List",
+    "isWaitingAgain": "Put on Waiting List",
     "telephoneNumber": "telephone",
     "mailAddress": "email",
     "actions": "Actions",
@@ -146,7 +147,8 @@
     "appointmentsPerWeek": "appointments per week",
     "birthday": "birthday",
     "room": "room",
-    "noRoom": "no room"
+    "noRoom": "no room",
+    "cancelled": "cancelled"
   },
   "auth": {
     "login": "login",

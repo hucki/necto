@@ -122,7 +122,8 @@
     "hasContract": "Vertrag?",
     "notices": "Notizen",
     "firstContactAt": "Anmeldedatum",
-    "isWaitingSince": "wartet seit",
+    "isWaitingSince": "Datum für Warteliste",
+    "isWaitingAgain": "Wieder auf Warteliste",
     "telephoneNumber": "Telefon",
     "mailAddress": "eMail",
     "actions": "Actions",
@@ -147,7 +148,8 @@
     "appointmentsPerWeek": "Therapien pro Woche",
     "birthday": "Geburtstag",
     "room": "Raum",
-    "noRoom": "kein Raum"
+    "noRoom": "kein Raum",
+    "cancelled": "abges."
   },
   "auth": {
     "login": "anmelden",
