@@ -212,8 +212,12 @@ function PersonList({ persons, listType }: PersonListProps) {
 
   const diagnosticDisplay = (p: WaitingPatient) => {
     const event =
-      p.events?.length && p.events.filter((event) => !event.isCancelled).length
-        ? p.events.filter((event) => !event.isCancelled)[0]
+      p.events?.length &&
+      p.events.filter((event) => !event.isCancelled && event.isDiagnostic)
+        .length
+        ? p.events.filter(
+            (event) => !event.isCancelled && event.isDiagnostic
+          )[0]
         : null;
     if (event) {
       return (
