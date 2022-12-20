@@ -26,13 +26,13 @@ export const EventList = ({ events }: EventListProps) => {
     textDecoration: 'line-through',
     color: 'gray',
   };
+
   const { t } = useTranslation();
 
   // pagination controls
   const rowsPerPage = 6;
   const numOfPages = Math.ceil(events.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
-
   const EventRows = (): JSX.Element[] =>
     events
       // pagination filter
@@ -41,8 +41,11 @@ export const EventList = ({ events }: EventListProps) => {
           i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
       )
       .map((event) => (
-        <Tr key={event.uuid} css={event.isCancelled ? cancelStyle : undefined}>
-          <Td>{dayjs(event.startTime).format('llll')}</Td>
+        <Tr key={event.uuid}>
+          <Td>{event.cancellationReasonId}</Td>
+          <Td css={event.isCancelled ? cancelStyle : undefined}>
+            {dayjs(event.startTime).format('llll')}
+          </Td>
           <Td>{event.employee?.alias}</Td>
           <Td>
             <Icon
@@ -59,6 +62,7 @@ export const EventList = ({ events }: EventListProps) => {
       <Table variant="striped" size="sm" colorScheme="blue">
         <Thead>
           <Tr>
+            <Th>{t('label.cancelled')}</Th>
             <Th>{t('label.date')}</Th>
             <Th>{t('label.therapist')}</Th>
             <Th>{t('label.diagnostic')}</Th>
