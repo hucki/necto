@@ -27,7 +27,13 @@ import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ContactInput } from '../../atoms/ContactData/ContactInput';
 import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
-import { Input, FormLabel, ModalFormGroup, Select } from '../../Library';
+import {
+  Input,
+  FormLabel,
+  ModalFormGroup,
+  Select,
+  FormGroup,
+} from '../../Library';
 import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { EventList } from '../List/Events';
 dayjs.extend(LocalizedFormat);
@@ -41,6 +47,19 @@ interface PersonFormProps {
   // eslint-disable-next-line no-unused-vars
   onChange: (person: Person, contactDataCollection: ContactData[]) => void;
 }
+
+const isWaitingPatient = (patient: Patient): boolean => {
+  if (patient.isWaitingAgain) return true;
+  if (patient.archived) return false;
+  if (!patient.events) return true;
+  if (!patient.events.length) return true;
+  if (
+    patient.events.filter((event) => !event.isCancelled && !event.isDiagnostic)
+      .length
+  )
+    return false;
+  return false;
+};
 
 export const PersonForm = ({
   person,
@@ -367,11 +386,11 @@ export const PersonForm = ({
   const IsWaitingSinceInput = () => {
     if (!currentPatient) return null;
     return (
-      <ModalFormGroup>
+      <FormGroup>
         <FormControl id="isWaitingSince">
           <Input
             type="date"
-            disabled={isReadOnly}
+            disabled={isReadOnly || !isWaitingPatient(currentPatient)}
             name="isWaitingSince"
             defaultValue={defaultValueIsWaitingSince}
             onBlur={(e) =>
@@ -380,7 +399,20 @@ export const PersonForm = ({
           />
           <FormLabel>{t('label.isWaitingSince')}</FormLabel>
         </FormControl>
-      </ModalFormGroup>
+        <FormControl id="isWaitingAgain">
+          <Checkbox
+            name="isWaitingAgain"
+            isDisabled={isReadOnly || isWaitingPatient(currentPatient)}
+            size="lg"
+            my={2}
+            isChecked={(currentPerson as Patient).isWaitingAgain ? true : false}
+            onChange={(e) =>
+              onCheckboxChange({ event: e, key: 'isWaitingAgain' })
+            }
+          />
+          <FormLabel>{t('label.isWaitingAgain')}</FormLabel>
+        </FormControl>
+      </FormGroup>
     );
   };
   const autoFormFields = () => {
