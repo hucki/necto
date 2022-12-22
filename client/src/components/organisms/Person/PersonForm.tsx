@@ -46,6 +46,7 @@ interface PersonFormProps {
   personType: 'doctor' | 'patient';
   // eslint-disable-next-line no-unused-vars
   onChange: (person: Person, contactDataCollection: ContactData[]) => void;
+  onCreate: () => void;
 }
 
 const isWaitingPatient = (patient: Patient): boolean => {
@@ -66,6 +67,7 @@ export const PersonForm = ({
   isReadOnly = true,
   personType = 'patient',
   onChange,
+  onCreate,
 }: PersonFormProps) => {
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
@@ -76,6 +78,7 @@ export const PersonForm = ({
   const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({
     ...person,
   }));
+  const personNotCreated = !currentPerson.uuid;
   const [currentContactDataCollection, setCurrentContactDataCollection] =
     useState<ContactData[]>(() => {
       return (person.contactData as ContactData[]) || [];
@@ -114,14 +117,7 @@ export const PersonForm = ({
   }, [currentPatient]);
   type PersonKey = keyof Patient;
 
-  const sharedAutoFields: PersonKey[] = [
-    'title',
-    'firstName',
-    'lastName',
-    'street',
-    'zip',
-    'city',
-  ];
+  const sharedAutoFields: PersonKey[] = ['title', 'street', 'zip', 'city'];
 
   const patientAutoFields: PersonKey[] = ['gender', 'notices', 'medicalReport'];
 
@@ -275,7 +271,7 @@ export const PersonForm = ({
       .map((contact, index) => (
         <ContactInput
           key={index}
-          isDisabled={isReadOnly}
+          isDisabled={isReadOnly || personNotCreated}
           contact={contact}
           onChange={onContactChange}
         />
@@ -284,9 +280,9 @@ export const PersonForm = ({
     return (
       <>
         {(currentPhones.length && currentPhones) || null}
-        {!currentPhones.length && !isReadOnly ? (
+        {!currentPhones.length && !isReadOnly && !personNotCreated ? (
           <CreateContactButton
-            isDisabled={!currentPerson.uuid}
+            isDisabled={personNotCreated}
             type="telephone"
             onCreate={createContact}
           />
@@ -301,7 +297,7 @@ export const PersonForm = ({
       .map((contact, index) => (
         <ContactInput
           key={index}
-          isDisabled={isReadOnly}
+          isDisabled={isReadOnly || personNotCreated}
           contact={contact}
           onChange={onContactChange}
         />
@@ -310,9 +306,9 @@ export const PersonForm = ({
     return (
       <>
         {(currentFaxes.length && currentFaxes) || null}
-        {!currentFaxes.length && !isReadOnly ? (
+        {!currentFaxes.length && !isReadOnly && !personNotCreated ? (
           <CreateContactButton
-            isDisabled={!currentPerson.uuid}
+            isDisabled={personNotCreated}
             type="fax"
             onCreate={createContact}
           />
@@ -327,7 +323,7 @@ export const PersonForm = ({
         <ModalFormGroup key={index}>
           <FormControl id={contact.type + '_' + contact.uuid}>
             <Input
-              isDisabled={isReadOnly}
+              isDisabled={isReadOnly || personNotCreated}
               onChange={(e) =>
                 onContactChange({ event: e, id: contact.uuid || '' })
               }
@@ -344,12 +340,12 @@ export const PersonForm = ({
     return (
       <>
         {(currentEmails.length && currentEmails) || null}
-        {!currentEmails.length && !isReadOnly ? (
+        {!currentEmails.length && !isReadOnly && !personNotCreated ? (
           <ModalFormGroup>
             <FormControl id="addEmail">
               <IconButton
                 id="addEmailButton"
-                disabled={!currentPerson.uuid}
+                disabled={personNotCreated}
                 aria-label="add-email"
                 icon={<CgAdd />}
                 onClick={() => createContact('email')}
@@ -371,7 +367,7 @@ export const PersonForm = ({
         <FormControl id="birthday">
           <Input
             type="date"
-            disabled={isReadOnly}
+            disabled={isReadOnly || personNotCreated}
             name="birthday"
             defaultValue={defaultValueBirthday}
             onBlur={(e) =>
@@ -390,7 +386,11 @@ export const PersonForm = ({
         <FormControl id="isWaitingSince">
           <Input
             type="date"
-            disabled={isReadOnly || !isWaitingPatient(currentPatient)}
+            disabled={
+              isReadOnly ||
+              personNotCreated ||
+              !isWaitingPatient(currentPatient)
+            }
             name="isWaitingSince"
             defaultValue={defaultValueIsWaitingSince}
             onBlur={(e) =>
@@ -402,7 +402,9 @@ export const PersonForm = ({
         <FormControl id="isWaitingAgain">
           <Checkbox
             name="isWaitingAgain"
-            isDisabled={isReadOnly || isWaitingPatient(currentPatient)}
+            isDisabled={
+              isReadOnly || personNotCreated || isWaitingPatient(currentPatient)
+            }
             size="lg"
             my={2}
             isChecked={(currentPerson as Patient).isWaitingAgain ? true : false}
@@ -429,7 +431,7 @@ export const PersonForm = ({
               {typeof currentPerson[key as keyof Person] === 'boolean' ? (
                 <Checkbox
                   name={key}
-                  isDisabled={isReadOnly}
+                  isDisabled={isReadOnly || personNotCreated}
                   size="lg"
                   my={2}
                   isChecked={currentPerson[key as keyof Person] ? true : false}
@@ -439,7 +441,7 @@ export const PersonForm = ({
                 />
               ) : (
                 <Input
-                  isDisabled={isReadOnly}
+                  isDisabled={isReadOnly || personNotCreated}
                   onChange={(e) =>
                     onInputChange({ event: e, key: key as keyof Person })
                   }
@@ -466,6 +468,46 @@ export const PersonForm = ({
       >
         <GridItem>
           {personType !== 'doctor' && patientCheckboxes()}
+          <ModalFormGroup>
+            <FormControl id="firstName" isRequired={true}>
+              <Input
+                isDisabled={isReadOnly}
+                onChange={(e) =>
+                  onInputChange({ event: e, key: 'firstName' as keyof Person })
+                }
+                name="firstName"
+                value={currentPerson['firstName' as keyof Person]?.toString()}
+              ></Input>
+              <FormLabel>{t('label.firstName')}</FormLabel>
+            </FormControl>
+          </ModalFormGroup>
+          <FormGroup gridColsUnit="auto" gridCols={personNotCreated ? 2 : 1}>
+            <FormControl id="lastName" isRequired={true}>
+              <Input
+                isDisabled={isReadOnly}
+                onChange={(e) =>
+                  onInputChange({ event: e, key: 'lastName' as keyof Person })
+                }
+                name="lastName"
+                value={currentPerson['lastName' as keyof Person]?.toString()}
+              ></Input>
+              <FormLabel>{t('label.lastName')}</FormLabel>
+            </FormControl>
+            {personNotCreated && (
+              <FormControl id="continue">
+                <Button
+                  disabled={
+                    currentPerson.firstName === '' ||
+                    currentPerson.lastName === ''
+                  }
+                  onClick={onCreate}
+                  colorScheme="teal"
+                >
+                  {t('label.continue')}
+                </Button>
+              </FormControl>
+            )}
+          </FormGroup>
           {autoFormFields()}
           {personType !== 'doctor' && <BirthdayInput />}
           {personType !== 'doctor' && <IsWaitingSinceInput />}
@@ -485,7 +527,7 @@ export const PersonForm = ({
               <ModalFormGroup>
                 <FormControl id="doctorId">
                   <Select
-                    isDisabled={isReadOnly}
+                    isDisabled={isReadOnly || personNotCreated}
                     name="employee"
                     value={currentPatient['doctorId'] || undefined}
                     onChange={(e) =>
@@ -505,7 +547,7 @@ export const PersonForm = ({
               <ModalFormGroup>
                 <FormControl id="institutionId">
                   <Select
-                    isDisabled={isReadOnly}
+                    isDisabled={isReadOnly || personNotCreated}
                     name="employee"
                     value={currentPatient['institutionId'] || undefined}
                     onChange={(e) =>
