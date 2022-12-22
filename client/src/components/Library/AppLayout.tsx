@@ -37,7 +37,7 @@ const SideNavContainer = styled.div(
     height: '100%' /* 100% Full-height */,
     width: '0' /* 0 width - change this with JavaScript */,
     position: 'fixed' /* Stay in place */,
-    zIndex: '1' /* Stay on top */,
+    zIndex: '2' /* Stay on top */,
     top: '0' /* Stay at the top */,
     left: '0',
     backgroundColor: '#fff',
@@ -52,6 +52,17 @@ const SideNavContainer = styled.div(
   ({ isOpen }: SideNavContainerProps) =>
     isOpen ? { width: '200px', zIndex: '10', position: 'absolute' } : null
 );
+
+const SideNavOverlay = styled.div({
+  position: 'absolute',
+  backgroundColor: '#3333',
+  top: '0',
+  left: '0',
+  height: '100%',
+  width: '100%',
+  zIndex: '1' /* Stay on top */,
+  backdropFilter: 'blur(0.2rem)',
+});
 
 const ContentContainer = styled(Box)({
   width: '100%',
@@ -87,6 +98,7 @@ export {
   AppContainer,
   Sidebar,
   SideNavContainer,
+  SideNavOverlay,
   Header,
   Content,
   ContentContainer,
