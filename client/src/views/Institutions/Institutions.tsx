@@ -21,6 +21,7 @@ import { InstitutionInput } from '../../types/Institution';
 import { InstitutionModal } from '../../components/organisms/Institution/InstitutionModal';
 import { useViewport } from '../../hooks/useViewport';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
+import { useTranslation } from 'react-i18next';
 
 const defaultInstitution: InstitutionInput = {
   name: '',
@@ -35,6 +36,7 @@ const defaultInstitution: InstitutionInput = {
 
 function Institutions(): JSX.Element {
   const { isMobile } = useViewport();
+  const { t } = useTranslation();
   const [showArchived, setShowArchived] = useState(false);
   const { isLoading, institutions } = useAllInstitutions();
   const {
@@ -77,11 +79,11 @@ function Institutions(): JSX.Element {
           w="15rem"
           mx="0.5rem"
         >
-          add Institution
+          {t('button.add')}
         </Button>
         <FormControl display="flex" alignItems="center">
           <FormLabel htmlFor="show-archived">
-            show archived institutions
+            {t('label.showArchivedData')}
           </FormLabel>
           <Switch
             id="show-archived"
