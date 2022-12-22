@@ -14,7 +14,7 @@ import NewUserPanel from '../../components/molecules/InfoPanel/NewUserPanel';
 import UpcomingPanel from '../../components/molecules/InfoPanel/UpcomingPanel';
 import { Greeting, NotificationCount } from '../../components/Library/Messages';
 import { useEmployeeEvents, useLeavesByStatus } from '../../hooks/events';
-import { useAllUsers, useUser } from '../../hooks/user';
+import { useAllUsers } from '../../hooks/user';
 import { AuthContext } from '../../providers/AuthProvider';
 import { Event } from '../../types/Event';
 
@@ -59,13 +59,10 @@ const EmployeeEventAccordionItem = ({
 const Home = () => {
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
-  const { user: maxUser } = useUser(user?.uuid || '');
   const { users } = useAllUsers();
-  const employeeId =
-    (maxUser?.userSettings && maxUser?.userSettings[0].employeeId) || '';
   const now = dayjs(new Date());
-  const { rawEvents: events } = useLeavesByStatus('requested');
-  const uniqueEvents = events.filter(
+  const { rawEvents: requestedLeaves } = useLeavesByStatus('requested');
+  const uniqueRequestedLeaves = requestedLeaves.filter(
     (event) => event.rrule === '' || !event.parentEventId
   );
   const newUsers = users.filter((user) => !user?.permissions?.length);
@@ -75,9 +72,8 @@ const Home = () => {
     ? 'day'
     : 'evening';
 
-  const employeeEventsResult = employeeId
-    ? useEmployeeEvents(employeeId)
-    : undefined;
+  const employeeEventsResult = useEmployeeEvents(user?.employeeId || '');
+
   const upcomingEvents = employeeEventsResult
     ? employeeEventsResult.employeeEvents.filter((e) =>
         dayjs(e.startTime).isAfter(now)
@@ -122,7 +118,7 @@ const Home = () => {
             </AccordionItem>
           )}
           {(user?.isAdmin || user?.isPlanner) && (
-            <AccordionItem isDisabled={uniqueEvents.length < 1}>
+            <AccordionItem isDisabled={uniqueRequestedLeaves.length < 1}>
               <h2>
                 <AccordionButton>
                   <Box
@@ -132,22 +128,22 @@ const Home = () => {
                     flexDirection="row"
                   >
                     <span>offene Anträge</span>
-                    <NotificationCount count={uniqueEvents.length}>
-                      {uniqueEvents.length}
+                    <NotificationCount count={uniqueRequestedLeaves.length}>
+                      {uniqueRequestedLeaves.length}
                     </NotificationCount>
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
               <AccordionPanel pb={4}>
-                <ApprovalPanel events={uniqueEvents} />
+                <ApprovalPanel events={uniqueRequestedLeaves} />
               </AccordionPanel>
             </AccordionItem>
           )}
-          {employeeId && (
+          {user?.employeeId && (
             <EmployeeEventAccordionItem
               upcomingEvents={upcomingEvents}
-              employeeId={employeeId}
+              employeeId={user.employeeId}
               now={now}
             />
           )}
