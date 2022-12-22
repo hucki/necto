@@ -199,6 +199,52 @@ export const getAllPatients = async (
     next(e);
   }
 };
+/**
+ * get all archived Patients
+ */
+export const getAllArchivedPatients = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const patients = await prisma.patient.findMany({
+      where: {
+        archived: true,
+      },
+      include: {
+        contactData: true,
+        events: {
+          include: {
+            employee: true,
+          },
+        },
+        doctor: true,
+        institution: true,
+      },
+      orderBy: {
+        lastName: 'asc',
+      },
+    });
+    for (let i = 0; i < patients.length; i++) {
+      patients[i] = {
+        ...patients[i],
+        ...decryptPatient({
+          patient: patients[i],
+          fields: encryptedPatientFields,
+        }),
+      };
+      if (patients[i].contactData) {
+        patients[i].contactData = decryptContactData(patients[i].contactData);
+      }
+    }
+    res.json(patients);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
 
 /**
  * get all Patients that are currently not scheduled
