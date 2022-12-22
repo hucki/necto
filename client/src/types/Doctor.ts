@@ -11,4 +11,5 @@ export type Doctor = {
   city?: string;
   contactData?: ContactData[];
   patients?: Patient[];
+  archived?: boolean;
 };
