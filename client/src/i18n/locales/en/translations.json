@@ -148,7 +148,8 @@
     "birthday": "birthday",
     "room": "room",
     "noRoom": "no room",
-    "cancelled": "cancelled"
+    "cancelled": "cancelled",
+    "continue": "continue"
   },
   "auth": {
     "login": "login",

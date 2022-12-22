@@ -149,7 +149,8 @@
     "birthday": "Geburtstag",
     "room": "Raum",
     "noRoom": "kein Raum",
-    "cancelled": "abges."
+    "cancelled": "abges.",
+    "continue": "weiter"
   },
   "auth": {
     "login": "anmelden",
