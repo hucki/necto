@@ -80,7 +80,8 @@ export const updateDoctor = async (
 ): Promise<void> => {
   try {
     const doctorId = req.params.doctorId;
-    const { firstName, lastName, title, street, zip, city } = req.body;
+    const { firstName, lastName, title, street, zip, city, archived } =
+      req.body;
     const updatedDoctor = await prisma.doctor.update({
       where: {
         uuid: doctorId,
@@ -92,6 +93,7 @@ export const updateDoctor = async (
         street,
         zip,
         city,
+        archived,
       },
     });
     res.json(updatedDoctor);
