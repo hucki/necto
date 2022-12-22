@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
+  Switch,
   Table,
   Tbody,
   Td,
@@ -32,7 +33,7 @@ import { useViewport } from '../../../hooks/useViewport';
 import { Doctor } from '../../../types/Doctor';
 import { Patient, WaitingPatient } from '../../../types/Patient';
 import * as colors from '../../../styles/colors';
-import { Input } from '../../Library';
+import { FormControl, Input, Label } from '../../Library';
 import { PersonModal } from './PersonModal';
 import { Person } from '../../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
@@ -44,9 +45,17 @@ type ListType = 'doctors' | 'patients' | 'waitingPatients';
 interface PersonListProps {
   persons: Doctor[] | Patient[] | WaitingPatient[];
   listType: ListType;
+  showArchived?: boolean;
+  // eslint-disable-next-line no-unused-vars
+  setShowArchived?: (value: boolean) => void;
 }
 
-function PersonList({ persons, listType }: PersonListProps) {
+function PersonList({
+  persons,
+  listType,
+  showArchived,
+  setShowArchived,
+}: PersonListProps) {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
@@ -315,17 +324,30 @@ function PersonList({ persons, listType }: PersonListProps) {
           />
         </InputGroup>
         {/* <FilterBar hasCompanyFilter /> */}
-        {listType !== 'waitingPatients' && (
-          <Button
-            aria-label={`add${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
-            leftIcon={<RiUserAddLine />}
-            onClick={() => showPersonCreate()}
-            colorScheme={'green'}
-            w="15rem"
-            mx="0.5rem"
-          >
-            {t('button.add')}
-          </Button>
+        {listType !== 'waitingPatients' && setShowArchived && (
+          <>
+            <Button
+              aria-label={`add${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
+              leftIcon={<RiUserAddLine />}
+              onClick={() => showPersonCreate()}
+              colorScheme={'green'}
+              w="15rem"
+              mx="0.5rem"
+            >
+              {t('button.add')}
+            </Button>
+            <FormControl>
+              <Label htmlFor="show-archived">
+                {t('label.showArchivedData')}
+              </Label>
+              <Switch
+                id="show-archived"
+                colorScheme="red"
+                isChecked={showArchived}
+                onChange={() => setShowArchived(!showArchived)}
+              />
+            </FormControl>
+          </>
         )}
       </Flex>
       {persons.length ? (
@@ -341,7 +363,7 @@ function PersonList({ persons, listType }: PersonListProps) {
           <Table
             variant="striped"
             size="xs"
-            colorScheme="green"
+            colorScheme={showArchived ? 'orange' : 'green'}
             display="block"
             overflowX="auto"
             overflowY="hidden"
@@ -376,7 +398,9 @@ function PersonList({ persons, listType }: PersonListProps) {
                 )}
               </Tr>
             </Thead>
-            <Tbody>{PersonRows()}</Tbody>
+            <Tbody textDecoration={showArchived ? 'line-through' : undefined}>
+              {PersonRows()}
+            </Tbody>
           </Table>
         </div>
       ) : (

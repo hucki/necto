@@ -81,6 +81,11 @@ export const PersonModal = ({
     }));
   };
 
+  const onArchive = () => {
+    updatePerson({ ...currentPerson, archived: !currentPerson.archived });
+    onClose();
+  };
+
   const createPerson = () => {
     if (!isIdle) return;
     if (!currentPerson?.firstName || !currentPerson?.lastName) {
@@ -129,10 +134,10 @@ export const PersonModal = ({
         });
   };
 
-  const updatePerson = () => {
+  const updatePerson = (updatePerson: Person) => {
     const toastType = 'updated';
     personType === 'patient'
-      ? updatePatient({ patient: currentPerson }).then((res: Patient) => {
+      ? updatePatient({ patient: updatePerson }).then((res: Patient) => {
           if (res?.uuid) {
             setCurrentPerson(res);
             toast(
@@ -140,15 +145,15 @@ export const PersonModal = ({
                 title: `${t(`toast.${personType}`)} ${t(
                   `toast.${toastType}`
                 )}.`,
-                description: `${currentPerson.lastName}, ${
-                  currentPerson.firstName
+                description: `${updatePerson.lastName}, ${
+                  updatePerson.firstName
                 } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
                 result: 'success',
               })
             );
           }
         })
-      : updateDoctor({ doctor: currentPerson }).then((res: Doctor) => {
+      : updateDoctor({ doctor: updatePerson }).then((res: Doctor) => {
           if (res?.uuid) {
             setCurrentPerson(res);
             toast(
@@ -156,25 +161,25 @@ export const PersonModal = ({
                 title: `${t(`toast.${personType}`)} ${t(
                   `toast.${toastType}`
                 )}.`,
-                description: `${currentPerson.lastName}, ${
-                  currentPerson.firstName
+                description: `${updatePerson.lastName}, ${
+                  updatePerson.firstName
                 } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
                 result: 'success',
               })
             );
           }
         });
-    if (currentPerson.contactData?.length) {
-      for (let i = 0; i < currentPerson.contactData.length; i++) {
-        if (currentPerson.contactData[i].uuid) {
-          updateContact({ contactData: currentPerson.contactData[i] });
+    if (updatePerson.contactData?.length) {
+      for (let i = 0; i < updatePerson.contactData.length; i++) {
+        if (updatePerson.contactData[i].uuid) {
+          updateContact({ contactData: updatePerson.contactData[i] });
         }
       }
     }
   };
 
   const onSaveChangesAndClose = () => {
-    updatePerson();
+    updatePerson(currentPerson);
     onClose();
   };
 
@@ -220,12 +225,13 @@ export const PersonModal = ({
             <Button
               leftIcon={<FaArchive />}
               aria-label={`archive ${personType}`}
-              colorScheme="red"
+              colorScheme={currentPerson.archived ? 'green' : 'red'}
+              disabled={!currentPerson.uuid}
               size="sm"
               type="button"
-              onClick={() => console.log(`archive ${personType}`)}
+              onClick={onArchive}
             >
-              {t('button.archive')}
+              {t(`button.${currentPerson.archived ? 'activate' : 'archive'}`)}
             </Button>
           </ControlWrapper>
           <ControlWrapper>
