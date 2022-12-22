@@ -95,10 +95,15 @@ const RadioGroup = styled.div({
 
 // pass props like seen here:
 // https://styled-components.com/docs/basics#passed-props
-const DatePicker = styled(ReactDatePicker)(inputStyles, {
-  padding: '0.4rem 0.2rem',
-  background: 'transparent',
-});
+const DatePicker = styled(ReactDatePicker)(
+  inputStyles,
+  ({ isMobile = false }: { isMobile?: boolean }) => ({
+    padding: '0.4rem 0.2rem',
+    background: 'transparent',
+    textAlign: 'center',
+    maxWidth: isMobile ? '4rem' : undefined,
+  })
+);
 
 type CommonLabelledFormElementProps = {
   isRequired?: boolean;
