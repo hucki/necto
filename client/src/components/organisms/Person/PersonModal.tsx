@@ -79,99 +79,11 @@ export const PersonModal = ({
       ...person,
       contactData: contactDataCollection,
     }));
-    if (
-      isIdle &&
-      !currentPerson.uuid &&
-      currentPerson?.firstName &&
-      currentPerson?.lastName
-    ) {
-      onSaveChanges();
-    }
   };
 
-  const onSaveChanges = () => {
-    let toastType: 'updated' | 'created' = 'updated';
-    if (currentPerson?.firstName && currentPerson?.lastName) {
-      if (currentPerson.uuid) {
-        // update
-        personType === 'patient'
-          ? updatePatient({ patient: currentPerson }).then((res: Patient) => {
-              if (res?.uuid) {
-                setCurrentPerson(res);
-                toast(
-                  toastOptions({
-                    title: `${t(`toast.${personType}`)} ${t(
-                      `toast.${toastType}`
-                    )}.`,
-                    description: `${currentPerson.lastName}, ${
-                      currentPerson.firstName
-                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
-                    result: 'success',
-                  })
-                );
-              }
-            })
-          : updateDoctor({ doctor: currentPerson }).then((res: Doctor) => {
-              if (res?.uuid) {
-                setCurrentPerson(res);
-                toast(
-                  toastOptions({
-                    title: `${t(`toast.${personType}`)} ${t(
-                      `toast.${toastType}`
-                    )}.`,
-                    description: `${currentPerson.lastName}, ${
-                      currentPerson.firstName
-                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
-                    result: 'success',
-                  })
-                );
-              }
-            });
-        if (currentPerson.contactData?.length) {
-          for (let i = 0; i < currentPerson.contactData.length; i++) {
-            if (currentPerson.contactData[i].uuid) {
-              updateContact({ contactData: currentPerson.contactData[i] });
-            }
-          }
-        }
-      } else {
-        // create
-        toastType = 'created';
-        personType === 'patient'
-          ? createPatient({ patient: currentPerson }).then((res: Patient) => {
-              if (res?.uuid) {
-                setCurrentPerson(res);
-                toast(
-                  toastOptions({
-                    title: `${t(`toast.${personType}`)} ${t(
-                      `toast.${toastType}`
-                    )}.`,
-                    description: `${currentPerson.lastName}, ${
-                      currentPerson.firstName
-                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
-                    result: 'success',
-                  })
-                );
-              }
-            })
-          : createDoctor({ doctor: currentPerson }).then((res: Doctor) => {
-              if (res?.uuid) {
-                setCurrentPerson(res);
-                toast(
-                  toastOptions({
-                    title: `${t(`toast.${personType}`)} ${t(
-                      `toast.${toastType}`
-                    )}.`,
-                    description: `${currentPerson.lastName}, ${
-                      currentPerson.firstName
-                    } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
-                    result: 'success',
-                  })
-                );
-              }
-            });
-      }
-    } else {
+  const createPerson = () => {
+    if (!isIdle) return;
+    if (!currentPerson?.firstName || !currentPerson?.lastName) {
       toast({
         title: 'Missing Data!',
         description: `Be sure to provide at least the full first and last name of the ${personType}`,
@@ -179,11 +91,90 @@ export const PersonModal = ({
         duration: 5000,
         isClosable: true,
       });
+      return;
+    }
+    const toastType = 'created';
+    personType === 'patient'
+      ? createPatient({ patient: currentPerson }).then((res: Patient) => {
+          if (res?.uuid) {
+            setCurrentPerson(res);
+            toast(
+              toastOptions({
+                title: `${t(`toast.${personType}`)} ${t(
+                  `toast.${toastType}`
+                )}.`,
+                description: `${currentPerson.lastName}, ${
+                  currentPerson.firstName
+                } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                result: 'success',
+              })
+            );
+          }
+        })
+      : createDoctor({ doctor: currentPerson }).then((res: Doctor) => {
+          if (res?.uuid) {
+            setCurrentPerson(res);
+            toast(
+              toastOptions({
+                title: `${t(`toast.${personType}`)} ${t(
+                  `toast.${toastType}`
+                )}.`,
+                description: `${currentPerson.lastName}, ${
+                  currentPerson.firstName
+                } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                result: 'success',
+              })
+            );
+          }
+        });
+  };
+
+  const updatePerson = () => {
+    const toastType = 'updated';
+    personType === 'patient'
+      ? updatePatient({ patient: currentPerson }).then((res: Patient) => {
+          if (res?.uuid) {
+            setCurrentPerson(res);
+            toast(
+              toastOptions({
+                title: `${t(`toast.${personType}`)} ${t(
+                  `toast.${toastType}`
+                )}.`,
+                description: `${currentPerson.lastName}, ${
+                  currentPerson.firstName
+                } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                result: 'success',
+              })
+            );
+          }
+        })
+      : updateDoctor({ doctor: currentPerson }).then((res: Doctor) => {
+          if (res?.uuid) {
+            setCurrentPerson(res);
+            toast(
+              toastOptions({
+                title: `${t(`toast.${personType}`)} ${t(
+                  `toast.${toastType}`
+                )}.`,
+                description: `${currentPerson.lastName}, ${
+                  currentPerson.firstName
+                } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+                result: 'success',
+              })
+            );
+          }
+        });
+    if (currentPerson.contactData?.length) {
+      for (let i = 0; i < currentPerson.contactData.length; i++) {
+        if (currentPerson.contactData[i].uuid) {
+          updateContact({ contactData: currentPerson.contactData[i] });
+        }
+      }
     }
   };
 
   const onSaveChangesAndClose = () => {
-    onSaveChanges();
+    updatePerson();
     onClose();
   };
 
@@ -206,6 +197,7 @@ export const PersonModal = ({
         isReadOnly={isReadOnly && isIdle}
         person={currentPerson}
         onChange={handleCurrentPersonChange}
+        onCreate={createPerson}
         personType={personType}
       />
       <ModalFooter
