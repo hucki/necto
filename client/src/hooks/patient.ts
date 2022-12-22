@@ -49,7 +49,8 @@ export function useUpdatePatient(): UseMutationResult<
   return useMutation(updatePatient, {
     onSuccess: () => {
       queryClient.invalidateQueries(['patients']);
-      queryClient.invalidateQueries(['waiting']);
+      queryClient.invalidateQueries(['waitingPatients']);
+      queryClient.invalidateQueries(['archivedPatients']);
     },
   });
 }
@@ -58,7 +59,7 @@ export function useAllPatients(): UseQueryResult<Patient[]> & {
   patients: Patient[];
 } {
   const patientsQuery = useQuery(['patients'], async () => {
-    return client<Patient[]>('patients');
+    return client<Patient[]>('patients/all');
   });
 
   const patients = patientsQuery.data ?? [];
@@ -69,11 +70,26 @@ export function useAllPatients(): UseQueryResult<Patient[]> & {
   };
 }
 
+export function useAllArchivedPatients(): UseQueryResult<Patient[]> & {
+  archivedPatients: Patient[];
+} {
+  const archivedPatientsQuery = useQuery(['archivedPatients'], async () => {
+    return client<Patient[]>('patients/archived');
+  });
+
+  const archivedPatients = archivedPatientsQuery.data ?? [];
+
+  return {
+    archivedPatients,
+    ...archivedPatientsQuery,
+  };
+}
+
 export function useAllWaitingPatients(): UseQueryResult<Patient[]> & {
   patients: Patient[];
 } {
-  const patientsQuery = useQuery(['waiting'], async () => {
-    return client<Patient[]>('waiting');
+  const patientsQuery = useQuery(['waitingPatients'], async () => {
+    return client<Patient[]>('patients/waiting');
   });
 
   const patients = patientsQuery.data ?? [];
