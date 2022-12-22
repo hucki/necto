@@ -73,6 +73,7 @@ const FormGroup = styled.div(
   {
     display: 'grid',
     alignItems: 'center',
+    marginBottom: '0.75rem',
   },
   ({ gridCols = 2, gridColsUnit = '1fr' }: FormGroupProps) => {
     return { gridTemplateColumns: `${(gridColsUnit + ' ').repeat(gridCols)}` };
