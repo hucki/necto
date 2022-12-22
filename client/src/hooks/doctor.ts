@@ -50,6 +50,7 @@ export function useUpdateDoctor(): UseMutationResult<
   return useMutation(updateDoctor, {
     onSuccess: () => {
       queryClient.invalidateQueries(['doctors']);
+      queryClient.invalidateQueries(['archivedDoctors']);
     },
   });
 }
@@ -58,7 +59,7 @@ export function useAllDoctors(): UseQueryResult<Doctor[]> & {
   doctors: Doctor[];
 } {
   const doctorsQuery = useQuery(['doctors'], async () => {
-    return client<Doctor[]>('doctors');
+    return client<Doctor[]>('doctors/all');
   });
 
   const doctors = doctorsQuery.data ?? [];
@@ -66,5 +67,20 @@ export function useAllDoctors(): UseQueryResult<Doctor[]> & {
   return {
     doctors,
     ...doctorsQuery,
+  };
+}
+
+export function useAllArchivedDoctors(): UseQueryResult<Doctor[]> & {
+  archivedDoctors: Doctor[];
+} {
+  const archivedDoctorsQuery = useQuery(['archivedDoctors'], async () => {
+    return client<Doctor[]>('doctors/archived');
+  });
+
+  const archivedDoctors = archivedDoctorsQuery.data ?? [];
+
+  return {
+    archivedDoctors,
+    ...archivedDoctorsQuery,
   };
 }

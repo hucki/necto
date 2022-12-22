@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PersonList from '../../components/organisms/Person/PersonList';
-import { useAllDoctors } from '../../hooks/doctor';
+import { useAllArchivedDoctors, useAllDoctors } from '../../hooks/doctor';
 import { PersonListWrapper } from '../../components/atoms/Wrapper';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 function Doctors(): JSX.Element {
   const { isLoading, doctors } = useAllDoctors();
-
-  return isLoading ? (
+  const { isLoading: isLoadingArchivedDoctors, archivedDoctors } =
+    useAllArchivedDoctors();
+  const [showArchived, setShowArchived] = useState(false);
+  const isPending = isLoading || isLoadingArchivedDoctors;
+  return isPending ? (
     <FullPageSpinner />
   ) : (
     <PersonListWrapper>
-      <PersonList persons={doctors} listType="doctors" />
+      <PersonList
+        persons={showArchived ? archivedDoctors : doctors}
+        listType="doctors"
+        showArchived={showArchived}
+        setShowArchived={setShowArchived}
+      />
     </PersonListWrapper>
   );
 }
