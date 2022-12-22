@@ -119,7 +119,7 @@ router.patch('/leaves/:leaveId', eventController.approveLeave);
 //router.get('/patients/:eventId', eventController.getPatients);
 router.get('/patients/all', patientController.getAllPatients);
 router.get('/patients/archived', patientController.getAllArchivedPatients);
-router.get('/patients/:patientId', patientController.getPatientsEvents);
+router.get('/patients/events/:patientId', patientController.getPatientsEvents);
 router.patch('/patients/:patientId', patientController.updatePatient);
 router.get('/patients/waiting', patientController.getWaitingPatients);
 router.post('/patients', patientController.addPatient);
@@ -134,7 +134,8 @@ router.patch('/contact/:contactId', contactController.updateContact);
 
 // doctor routes
 router.post('/doctors', doctorController.addDoctor);
-router.get('/doctors', doctorController.getAllDoctors);
+router.get('/doctors/all', doctorController.getAllDoctors);
+router.get('/doctors/archived', doctorController.getAllArchivedDoctors);
 router.patch('/doctors/:doctorId', doctorController.updateDoctor);
 
 // institution routes

@@ -13,7 +13,34 @@ export const getAllDoctors = async (
 ): Promise<void> => {
   try {
     const doctors = await prisma.doctor.findMany({
-      where: { tenantId },
+      where: { tenantId, archived: false },
+      include: {
+        patients: true,
+        contactData: true,
+      },
+    });
+    for (let i = 0; i < doctors.length; i++) {
+      if (doctors[i].contactData) {
+        doctors[i].contactData = decryptContactData(doctors[i].contactData);
+      }
+    }
+    res.json(doctors);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+// get all doctors
+export const getAllArchivedDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const doctors = await prisma.doctor.findMany({
+      where: { tenantId, archived: true },
       include: {
         patients: true,
         contactData: true,
