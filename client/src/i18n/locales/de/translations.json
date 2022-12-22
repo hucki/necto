@@ -150,7 +150,8 @@
     "room": "Raum",
     "noRoom": "kein Raum",
     "cancelled": "abges.",
-    "continue": "weiter"
+    "continue": "weiter",
+    "showArchivedData": "archivierte Daten anzeigen"
   },
   "auth": {
     "login": "anmelden",

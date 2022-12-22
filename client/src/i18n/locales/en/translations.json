@@ -149,7 +149,8 @@
     "room": "room",
     "noRoom": "no room",
     "cancelled": "cancelled",
-    "continue": "continue"
+    "continue": "continue",
+    "showArchivedData": "show archived data"
   },
   "auth": {
     "login": "login",
