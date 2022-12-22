@@ -11,10 +11,10 @@ import {
   CgChevronDoubleRight,
   CgChevronLeft,
   CgChevronRight,
-  CgMenuGridO,
 } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
 import { useFilter } from '../../../hooks/useFilter';
+import { IoMenu } from 'react-icons/io5';
 registerLocale('de', de);
 
 interface HeadaerBarProps {
@@ -40,8 +40,9 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
     <Grid m={2} gridTemplateColumns="auto auto" w="100%">
       <div className="menu-control">
         <IconButton
+          colorScheme="teal"
           aria-label="menu"
-          icon={<CgMenuGridO size="2rem" />}
+          icon={<IoMenu size="2rem" />}
           onClick={onSideNavOpen}
         />
       </div>
@@ -65,6 +66,7 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
         </Button>
         {calendarView === 'week' ? (
           <IconButton
+            colorScheme="teal"
             marginRight={2}
             aria-label="previous week"
             leftIcon={<CgChevronDoubleLeft size="2rem" />}
@@ -72,6 +74,7 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
           />
         ) : (
           <IconButton
+            colorScheme="teal"
             marginRight={2}
             aria-label="previous day"
             leftIcon={<CgChevronLeft size="2rem" />}
@@ -80,6 +83,7 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
         )}
         <div style={{ maxWidth: '100px' }}>
           <DatePicker
+            isMobile={isMobile}
             locale="de"
             onChange={onChangeHandler}
             dateFormat={isMobile ? 'dd.MM.' : 'dd.MM.y'}
@@ -88,6 +92,7 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
         </div>
         {calendarView === 'day' ? (
           <IconButton
+            colorScheme="teal"
             marginLeft={2}
             aria-label="next day"
             icon={<CgChevronRight size="2rem" />}
@@ -95,6 +100,7 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
           />
         ) : (
           <IconButton
+            colorScheme="teal"
             marginLeft={2}
             aria-label="next week"
             icon={<CgChevronDoubleRight size="2rem" />}
