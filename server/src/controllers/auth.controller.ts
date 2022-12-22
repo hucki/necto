@@ -5,7 +5,12 @@ import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator';
-import { PermissionLevel, User, UserToPermissions } from '@prisma/client';
+import {
+  PermissionLevel,
+  User,
+  UserToPermissions,
+  UserSettings,
+} from '@prisma/client';
 import { transporter } from '../utils/nodemailer';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
@@ -146,6 +151,8 @@ export const getMe = async (
 ): Promise<void> => {
   const user = req.user as User & {
     permissions: (UserToPermissions & { permission: PermissionLevel })[];
+  } & {
+    userSettings: UserSettings[];
   };
   res.json({
     uuid: user.uuid,
@@ -161,6 +168,7 @@ export const getMe = async (
     isEmployee: Boolean(
       user?.permissions?.find((p) => p.permission?.displayName === 'employee')
     ),
+    employeeId: (user?.userSettings && user?.userSettings[0].employeeId) || '',
   });
   return;
 };
