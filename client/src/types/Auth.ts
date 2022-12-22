@@ -42,4 +42,5 @@ export type MinimalUser = {
   isAdmin?: boolean;
   isPlanner?: boolean;
   isEmployee?: boolean;
+  employeeId?: string;
 };

@@ -82,6 +82,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
           isAdmin: thisIsMe.isAdmin,
           isPlanner: thisIsMe.isPlanner,
           isEmployee: thisIsMe.isEmployee,
+          employeeId: thisIsMe.employeeId,
         });
         if (thisIsMe.isAdmin || thisIsMe.isEmployee || thisIsMe.isPlanner) {
           setIsAuthorized(true);
