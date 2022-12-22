@@ -31,6 +31,7 @@ passport.deserializeUser(async (id: string, done) => {
             permission: true,
           },
         },
+        userSettings: true,
       },
     });
     return done(null, user);
