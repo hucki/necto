@@ -9,6 +9,7 @@ import {
   MenuList,
   MenuItem,
   Icon,
+  Badge,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, useState } from 'react';
 import {
@@ -105,6 +106,7 @@ function CalendarEventEdit({
       bgColor: event.bgColor,
     });
   };
+  const patientIsArchived = Boolean(changedEvent.patient?.archived);
 
   function handleSubmit() {
     if (checkOverlap({ eventToCheck: changedEvent, eventList: rawEvents })) {
@@ -183,6 +185,7 @@ function CalendarEventEdit({
                 <IconButton
                   aria-label="set isDone"
                   disabled={
+                    patientIsArchived ||
                     dayjs(changedEvent.endTime).isAfter(dayjs()) ||
                     changedEvent.isDone
                   }
@@ -255,6 +258,9 @@ function CalendarEventEdit({
               />
             </ModalHeader>
             <ModalBody bgColor={isNote ? 'note' : undefined}>
+              {patientIsArchived && (
+                <Badge colorScheme="orange">patient archiviert</Badge>
+              )}
               {isReadOnly && (
                 <CalendarEventView
                   isNote={isNote}
@@ -295,7 +301,7 @@ function CalendarEventEdit({
                         leftIcon={<FaTimes />}
                         aria-label="cancel event"
                         colorScheme="orange"
-                        disabled={changedEvent.isDone}
+                        disabled={patientIsArchived || changedEvent.isDone}
                         size="sm"
                         type="button"
                         as={Button}
@@ -309,6 +315,7 @@ function CalendarEventEdit({
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
                     disabled={
+                      patientIsArchived ||
                       dayjs(changedEvent.endTime).isBefore(dayjs()) ||
                       changedEvent.isDone
                     }
@@ -326,6 +333,7 @@ function CalendarEventEdit({
                       leftIcon={<FaEdit />}
                       aria-label="edit event"
                       type="button"
+                      disabled={patientIsArchived}
                       onClick={() => setIsReadOnly(!isReadOnly)}
                       colorScheme="blue"
                       size="sm"
