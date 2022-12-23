@@ -42,7 +42,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
   const { t } = useTranslation();
   return (
     <>
-      {isOpen && <SideNavOverlay onClick={onClose} />}
+      <SideNavOverlay isOpen={isOpen} onClick={onClose} />
       <SideNavContainer isOpen={isOpen}>
         {/* Menu Button */}
         <IconButton
