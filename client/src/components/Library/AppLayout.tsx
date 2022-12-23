@@ -60,7 +60,7 @@ const SideNavOverlay = styled.div({
   left: '0',
   height: '100%',
   width: '100%',
-  zIndex: '1' /* Stay on top */,
+  zIndex: '2' /* Stay on top */,
   backdropFilter: 'blur(0.2rem)',
 });
 
