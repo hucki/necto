@@ -316,7 +316,9 @@ function CalendarEventEdit({
                     aria-label="delete event"
                     disabled={
                       patientIsArchived ||
-                      dayjs(changedEvent.endTime).isBefore(dayjs()) ||
+                      dayjs(changedEvent.endTime).isBefore(
+                        dayjs().hour(0).subtract(3, 'days')
+                      ) ||
                       changedEvent.isDone
                     }
                     colorScheme="red"
