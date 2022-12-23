@@ -53,16 +53,17 @@ const SideNavContainer = styled.div(
     isOpen ? { width: '200px', zIndex: '10', position: 'absolute' } : null
 );
 
-const SideNavOverlay = styled.div({
+const SideNavOverlay = styled.div(({ isOpen }: { isOpen: boolean }) => ({
   position: 'absolute',
   backgroundColor: '#3333',
   top: '0',
-  left: '0',
+  right: '0',
   height: '100%',
-  width: '100%',
+  width: isOpen ? '100%' : '0%',
   zIndex: '2' /* Stay on top */,
   backdropFilter: 'blur(0.2rem)',
-});
+  transition: 'all 0.25s ease-in',
+}));
 
 const ContentContainer = styled(Box)({
   width: '100%',
