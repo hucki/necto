@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
+import { FormControl, GridItem, SimpleGrid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCreateInstitutionContact } from '../../../hooks/contact';
@@ -6,7 +6,7 @@ import { ContactData, ContactType } from '../../../types/ContactData';
 import { Institution, InstitutionInput } from '../../../types/Institution';
 import { ContactInput } from '../../atoms/ContactData/ContactInput';
 import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
-import { FormLabel, Input } from '../../Library';
+import { FormLabel, Input, Checkbox } from '../../Library';
 
 interface InstitutionFormProps {
   institution: Institution;
