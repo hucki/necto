@@ -4,6 +4,7 @@ import {
   Select as ChakraSelect,
   FormLabel as ChakraFormLabel,
   FormControl as ChakraFormControl,
+  Checkbox as ChakraCheckbox,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import ReactDatePicker from 'react-datepicker';
@@ -134,6 +135,10 @@ const FormControl = styled(ChakraFormControl)({
   width: '100%',
 });
 
+const Checkbox = styled(ChakraCheckbox)({
+  borderColor: 'grey',
+});
+
 const LabelledSelect = ({
   id,
   isRequired = false,
@@ -206,6 +211,7 @@ export {
   FormControl,
   Label,
   Select,
+  Checkbox,
   DatePicker,
   RadioGroup,
   ModalFormGroup,
