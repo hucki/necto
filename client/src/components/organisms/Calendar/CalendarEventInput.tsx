@@ -13,7 +13,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useCreateEvent } from '../../../hooks/events';
 import { NewEvent } from '../../../types/Event';
 import { EmployeeRessource } from '../../../types/Ressource';
-import { FaCommentMedical, FaHouseUser, FaLink, FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import de from 'date-fns/locale/de';
 import CalendarEventForm from './CalendarEventForm';
 import { checkOverlap } from '../../../helpers/eventChecker';
@@ -24,6 +24,7 @@ import CalendarItemModal from './CalendarItemModal';
 import { ModalFooterControls } from './ModalFooterControls';
 import { Room } from '../../../types/Rooms';
 import { isEmployeeRessource } from './CalendarColumn';
+import { EventIcon } from '../../molecules/DataDisplay/Icons';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -181,30 +182,9 @@ function CalendarEventInput({
             {newEvent.startTime.format('llll')}
           </div>
         </div>
-        {newEvent.isHomeVisit && (
-          <FaHouseUser
-            style={{
-              width: '2rem',
-              height: '2rem',
-            }}
-          />
-        )}
-        {newEvent.isRecurring && (
-          <FaLink
-            style={{
-              width: '2rem',
-              height: '2rem',
-            }}
-          />
-        )}
-        {newEvent.isDiagnostic && (
-          <FaCommentMedical
-            style={{
-              width: '2rem',
-              height: '2rem',
-            }}
-          />
-        )}
+        {newEvent.isHomeVisit && <EventIcon type="homeVisit" size="l" />}
+        {newEvent.isRecurring && <EventIcon type="recurring" size="l" />}
+        {newEvent.isDiagnostic && <EventIcon type="diagnostic" size="l" />}
         <IconButton
           aria-label="close modal"
           icon={<FaTimes />}

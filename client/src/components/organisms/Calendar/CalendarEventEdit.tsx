@@ -31,15 +31,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CancellationReason, Event, NewEvent } from '../../../types/Event';
-import {
-  FaHouseUser,
-  FaLink,
-  FaEdit,
-  FaTimes,
-  FaTrash,
-  FaCommentMedical,
-  FaExclamation,
-} from 'react-icons/fa';
+import { FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
 
 import CalendarEventView from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
@@ -53,6 +45,7 @@ import {
   RiCheckFill,
 } from 'react-icons/ri';
 import { ControlWrapper } from '../../atoms/Wrapper';
+import { EventIcon } from '../../molecules/DataDisplay/Icons';
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
@@ -219,37 +212,16 @@ function CalendarEventEdit({
                 </div>
               </div>
               {changedEvent.patient && !changedEvent.patient.hasContract && (
-                <FaExclamation
-                  color="red"
-                  style={{
-                    width: '1rem',
-                    height: '1rem',
-                  }}
-                />
+                <EventIcon type="noContract" size="m" />
               )}
               {changedEvent.isHomeVisit && (
-                <FaHouseUser
-                  style={{
-                    width: '1rem',
-                    height: '1rem',
-                  }}
-                />
+                <EventIcon type="homeVisit" size="m" />
               )}
               {changedEvent.isRecurring && (
-                <FaLink
-                  style={{
-                    width: '1rem',
-                    height: '1rem',
-                  }}
-                />
+                <EventIcon type="recurring" size="m" />
               )}
               {changedEvent.isDiagnostic && (
-                <FaCommentMedical
-                  style={{
-                    width: '1rem',
-                    height: '1rem',
-                  }}
-                />
+                <EventIcon type="diagnostic" size="m" />
               )}
               <IconButton
                 aria-label="close modal"

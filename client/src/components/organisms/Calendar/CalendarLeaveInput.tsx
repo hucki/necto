@@ -2,7 +2,7 @@ import { Button, FormControl } from '@chakra-ui/react';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaCommentMedical, FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import { Options, RRule, rrulestr } from 'rrule';
 import { useCreateEvent } from '../../../hooks/events';
 import { LeaveType, NewEvent } from '../../../types/Event';
@@ -18,6 +18,7 @@ import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { IconButton } from '../../atoms/Buttons';
 import { Room } from '../../../types/Rooms';
 import { isEmployeeRessource } from './CalendarColumn';
+import { EventIcon } from '../../molecules/DataDisplay/Icons';
 
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
@@ -175,14 +176,7 @@ const CalendarLeaveInput = ({
             {newLeave.startTime.format('llll')}
           </div>
         </div>
-        {newLeave.leaveType === 'sick' && (
-          <FaCommentMedical
-            style={{
-              width: '2rem',
-              height: '2rem',
-            }}
-          />
-        )}
+        {newLeave.leaveType === 'sick' && <EventIcon type="sick" size="l" />}
         <IconButton
           aria-label="close modal"
           icon={<FaTimes />}

@@ -1,14 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Event } from '../../../types/Event';
-import {
-  FaCommentMedical,
-  FaExclamation,
-  FaHouseUser,
-  FaLink,
-  FaPlane,
-  FaPlaneDeparture,
-} from 'react-icons/fa';
 import dayjs from 'dayjs';
 import {
   CalendarEntryContainer,
@@ -19,6 +11,7 @@ import {
 import { t } from 'i18next';
 import { useViewport } from '../../../hooks/useViewport';
 import { ItemStyle, OnClickCalendarEventProps } from './CalendarColumn';
+import { EventIcon } from '../../molecules/DataDisplay/Icons';
 
 interface CalendarEntryProps {
   event: Event;
@@ -41,29 +34,38 @@ export const CalendarEntry = ({
   useEffect(() => {
     setIcons([]);
     if (event.isHomeVisit) {
-      setIcons((icons) => [...icons, <FaHouseUser key="homeVisitIcon" />]);
+      setIcons((icons) => [
+        ...icons,
+        <EventIcon type="homeVisit" size="s" key="homeVisitIcon" />,
+      ]);
     }
     if (!isLeave && event.rrule !== '') {
-      setIcons((icons) => [...icons, <FaLink key="rruleIcon" />]);
+      setIcons((icons) => [
+        ...icons,
+        <EventIcon type="recurring" size="s" key="rruleIcon" />,
+      ]);
     }
     if (event.isDiagnostic) {
-      setIcons((icons) => [...icons, <FaCommentMedical key="isDiagnostic" />]);
+      setIcons((icons) => [
+        ...icons,
+        <EventIcon type="diagnostic" size="s" key="diagnosticIcon" />,
+      ]);
     }
     if (event.type === 'leave') {
       if (event.leaveType === 'paidVacation') {
         setIcons((icons) => [
           ...icons,
-          isFirstDay ? (
-            <FaPlaneDeparture key="isVacation" color="green" />
-          ) : (
-            <FaPlane key="isVacation" color="green" />
-          ),
+          <EventIcon
+            type={`vacation${isFirstDay ? 'FirstDay' : ''}`}
+            size="s"
+            key="vacation"
+          />,
         ]);
       }
       if (event.leaveType === 'sick' || event.leaveType === 'sickChild') {
         setIcons((icons) => [
           ...icons,
-          <FaCommentMedical key="isSick" color="blue" />,
+          <EventIcon type="sick" key="isSick" size="s" />,
         ]);
       }
       if (!isMobile && event.rrule !== '' && !event.parentEventId) {
@@ -114,7 +116,7 @@ export const CalendarEntry = ({
     >
       <CalendarEntryContent strikeThrough={isNote && isDone}>
         {!isRoomBooking && event.patient && !event.patient.hasContract && (
-          <FaExclamation key="noContractIcon" color="red" />
+          <EventIcon type="noContract" size="s" />
         )}
         {entryTitle}
       </CalendarEntryContent>

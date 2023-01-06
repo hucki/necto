@@ -1,11 +1,12 @@
 import styled from '@emotion/styled/macro';
 import dayjs from 'dayjs';
 import React from 'react';
-import { FaBirthdayCake, FaExclamation } from 'react-icons/fa';
+import { FaBirthdayCake } from 'react-icons/fa';
 import { getDisplayName } from '../../../helpers/displayNames';
 import { Patient } from '../../../types/Patient';
 import { Person } from '../../../types/Person';
 import { ContactDataDisplay } from '../DataDisplay/ContactData';
+import { EventIcon } from '../DataDisplay/Icons';
 
 interface PersonCardContainerProps {
   hasBorder: boolean;
@@ -84,7 +85,7 @@ export const PersonCard = ({
           }}
         >
           {isPatient(person) && !person.hasContract && (
-            <FaExclamation key="noContractIcon" color="red" />
+            <EventIcon type="noContract" size="s" />
           )}
           {getDisplayName({ person, type: 'full' })}
         </div>
