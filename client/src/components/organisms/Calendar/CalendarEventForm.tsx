@@ -504,9 +504,6 @@ function CalendarEventForm({
         <div>
           <hr></hr>
           <FormGroup>
-            <Label htmlFor="isRecurring">
-              {t('calendar.event.recurringAppointment')}
-            </Label>
             <Checkbox
               id="isRecurring"
               name="isRecurring"
@@ -515,11 +512,13 @@ function CalendarEventForm({
               isChecked={currentEvent.isRecurring}
               onChange={onCheckboxChange}
               isDisabled={!isNewEvent}
-            />
+            >
+              {t('calendar.event.recurringAppointment')}
+            </Checkbox>
           </FormGroup>
           <div
             style={{
-              display: 'flex',
+              display: currentEvent.isRecurring ? 'flex' : 'none',
               justifyContent: 'space-between',
             }}
           >
@@ -555,7 +554,7 @@ function CalendarEventForm({
               <FormLabel>{t('calendar.event.interval')}</FormLabel>
             </FormControl>
           </div>
-          {isNewEvent && (
+          {isNewEvent && currentEvent.isRecurring && (
             <>
               <Popover>
                 <PopoverTrigger>
