@@ -8,7 +8,6 @@ import {
   PopoverCloseButton,
   PopoverHeader,
   PopoverBody,
-  Checkbox,
   Switch,
   Textarea,
   FormControl,
@@ -25,6 +24,7 @@ import {
   DatePicker,
   Select,
   FormLabel,
+  Checkbox,
 } from '../../Library';
 import { RRule, Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
