@@ -1,6 +1,5 @@
 import {
   Button,
-  Checkbox,
   Divider,
   FormControl,
   GridItem,
@@ -20,6 +19,7 @@ import {
 import { useAllDoctors } from '../../../hooks/doctor';
 import { useAllInstitutions } from '../../../hooks/institution';
 import { useFilter } from '../../../hooks/useFilter';
+import { useViewport } from '../../../hooks/useViewport';
 import { ContactData, ContactType } from '../../../types/ContactData';
 import { Doctor } from '../../../types/Doctor';
 import { Patient } from '../../../types/Patient';
@@ -33,6 +33,7 @@ import {
   ModalFormGroup,
   Select,
   FormGroup,
+  Checkbox,
 } from '../../Library';
 import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { EventList } from '../List/Events';
@@ -70,6 +71,7 @@ export const PersonForm = ({
   onCreate,
 }: PersonFormProps) => {
   const { t } = useTranslation();
+  const { isMobile } = useViewport();
   const { currentCompany } = useFilter();
   const { doctors } = useAllDoctors();
   const { mutateAsync: createPatientContact } = useCreatePatientContact();
@@ -399,11 +401,14 @@ export const PersonForm = ({
           />
           <FormLabel>{t('label.isWaitingSince')}</FormLabel>
         </FormControl>
-        <FormControl id="isWaitingAgain">
+        <FormControl id="isWaitingAgain" style={{ textAlign: 'center' }}>
           <Checkbox
             name="isWaitingAgain"
             isDisabled={
-              isReadOnly || personNotCreated || isWaitingPatient(currentPatient)
+              isReadOnly ||
+              personNotCreated ||
+              (!(currentPerson as Patient).isWaitingAgain &&
+                isWaitingPatient(currentPatient))
             }
             size="lg"
             my={2}
@@ -462,12 +467,12 @@ export const PersonForm = ({
         columns={[1, null, 2]}
         gap={6}
         py={2}
-        height="100%"
+        maxHeight={isMobile ? '100%' : '70vh'}
         overflowY="scroll"
         overflowX="hidden"
       >
         <GridItem>
-          {personType !== 'doctor' && patientCheckboxes()}
+          {!personNotCreated && personType !== 'doctor' && patientCheckboxes()}
           <ModalFormGroup>
             <FormControl id="firstName" isRequired={true}>
               <Input
@@ -494,7 +499,7 @@ export const PersonForm = ({
               <FormLabel>{t('label.lastName')}</FormLabel>
             </FormControl>
             {personNotCreated && (
-              <FormControl id="continue">
+              <FormControl id="continue" style={{ textAlign: 'center' }}>
                 <Button
                   disabled={
                     currentPerson.firstName === '' ||
@@ -508,21 +513,25 @@ export const PersonForm = ({
               </FormControl>
             )}
           </FormGroup>
-          {autoFormFields()}
-          {personType !== 'doctor' && <BirthdayInput />}
-          {personType !== 'doctor' && <IsWaitingSinceInput />}
-          {currentPatient && (
-            <PersonMetaData
-              createdAt={currentPatient?.createdAt}
-              updatedAt={currentPatient?.updatedAt}
-            />
+          {!personNotCreated && (
+            <>
+              {autoFormFields()}
+              {personType !== 'doctor' && <BirthdayInput />}
+              {personType !== 'doctor' && <IsWaitingSinceInput />}
+              {currentPatient && (
+                <PersonMetaData
+                  createdAt={currentPatient?.createdAt}
+                  updatedAt={currentPatient?.updatedAt}
+                />
+              )}
+              {phoneFromContact()}
+              {personType === 'doctor' && faxFromContact()}
+              {emailFromContact()}
+            </>
           )}
-          {phoneFromContact()}
-          {personType === 'doctor' && faxFromContact()}
-          {emailFromContact()}
         </GridItem>
         <GridItem>
-          {personType !== 'doctor' && currentPatient && (
+          {!personNotCreated && personType !== 'doctor' && currentPatient && (
             <>
               <ModalFormGroup>
                 <FormControl id="doctorId">
