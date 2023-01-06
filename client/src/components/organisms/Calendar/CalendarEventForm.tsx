@@ -8,18 +8,19 @@ import {
   PopoverCloseButton,
   PopoverHeader,
   PopoverBody,
-  Switch,
   Textarea,
   FormControl,
   Button,
   InputGroup,
   InputLeftElement,
+  Stack,
+  Radio,
+  RadioGroup,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event, NewEvent } from '../../../types/Event';
 import {
   FormGroup,
-  Label,
   Input,
   DatePicker,
   Select,
@@ -87,17 +88,20 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
             />
           </InputGroup>
         </PopoverTrigger>
-        <PopoverContent>
-          {filteredPersons.length && (
-            <ul
-              style={{
-                paddingLeft: '0.2rem',
-                paddingRight: '0.2rem',
-                display: 'grid',
-                gap: '0.2rem',
-                boxShadow: '0 0 15px #3333',
-              }}
-            >
+        <PopoverContent
+          style={{
+            paddingLeft: '0.2rem',
+            paddingRight: '0.2rem',
+            display: 'grid',
+            gap: '0.2rem',
+            boxShadow: '3px 3px 2px #3333',
+            backgroundColor: 'oldlace',
+          }}
+        >
+          {!filteredPersons.length ? (
+            <>{`keine Ergebinsse zu "${search}"`}</>
+          ) : (
+            <ul>
               {filteredPersons.map((p) => (
                 <li key={p.uuid}>
                   <PersonCard person={p} handleClickPerson={onSelectPerson} />
@@ -183,11 +187,10 @@ function CalendarEventForm({
     setMessage(undefined);
   }
 
-  function onIsNoteChange(event: React.FormEvent<HTMLInputElement>) {
-    event.preventDefault();
+  function onEventTypeSelect(value: Event['type']) {
     setCurrentEvent((cur) => ({
       ...cur,
-      type: event.currentTarget.checked ? 'note' : 'appointment',
+      type: value,
     }));
     setMessage(undefined);
   }
@@ -343,21 +346,21 @@ function CalendarEventForm({
   ]);
 
   const isNote = currentEvent.type === 'note';
-  const isDone = currentEvent.isDone;
   const isNewEvent = !currentEvent.hasOwnProperty('uuid');
 
   return (
     <div>
       <FormGroup gridColsUnit="auto" gridCols={4}>
-        <Label htmlFor="isNote">Notiz</Label>
-        <Switch
-          id="isNote"
-          name="isNote"
-          isDisabled={isDone}
-          colorScheme="yellow"
-          isChecked={isNote}
-          onChange={onIsNoteChange}
-        />
+        <RadioGroup onChange={onEventTypeSelect} value={currentEvent.type}>
+          <Stack direction="row">
+            <Radio value="appointment" style={{ borderColor: 'grey' }}>
+              Termin
+            </Radio>
+            <Radio value="note" style={{ borderColor: 'grey' }}>
+              Notiz
+            </Radio>
+          </Stack>
+        </RadioGroup>
       </FormGroup>
       {!isNote && (
         <FormControl id="patient" mb="0.75rem" mt="0.5rem">
