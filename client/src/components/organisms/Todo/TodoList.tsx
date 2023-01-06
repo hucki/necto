@@ -1,6 +1,7 @@
-import { Box, Checkbox, Heading, IconButton, VStack } from '@chakra-ui/react';
+import { Box, Heading, IconButton, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { FaTrash } from 'react-icons/fa';
+import { Checkbox } from '../../Library';
 import Drag from '../../molecules/DragDrop/Drag';
 import DropTarget from '../../molecules/DragDrop/DropTarget';
 // import { IconButton } from '../Library';
