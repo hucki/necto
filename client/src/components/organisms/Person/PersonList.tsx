@@ -39,6 +39,7 @@ import { Person } from '../../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
+import { AddpayTags, getAddpayForTags } from '../Patients/AddpayForm';
 
 type ListType = 'doctors' | 'patients' | 'waitingPatients';
 
@@ -265,11 +266,13 @@ function PersonList({
           {!isDoctor(p) && (
             <>
               <Td textAlign="center">
-                <Icon
-                  as={p.isAddpayFreed ? RiCheckLine : RiCheckboxBlankLine}
-                  w={5}
-                  h={5}
-                  color={p.isAddpayFreed ? 'indigo' : 'gray.400'}
+                <AddpayTags
+                  isInteractive={false}
+                  addpayState={getAddpayForTags({
+                    addpayFreedom: p.addpayFreedom || [],
+                    currentYear: 2023,
+                    onlyCurrentYear: true,
+                  })}
                 />
               </Td>
               <Td textAlign="center">
