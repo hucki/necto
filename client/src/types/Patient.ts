@@ -3,6 +3,13 @@ import { Doctor } from './Doctor';
 import { Event } from './Event';
 import { Institution } from './Institution';
 
+export type AddpayFreedom = {
+  uuid?: string;
+  pid: string;
+  freedFrom: Date;
+  freedUntil: Date;
+};
+
 export type Patient = {
   uuid?: string;
   firstName: string;
@@ -42,6 +49,7 @@ export type Patient = {
   events?: Event[];
   doctor?: Doctor;
   institution?: Institution;
+  addpayFreedom?: AddpayFreedom[];
 };
 
 export type WaitingPatient = { numberInLine: number } & Patient;
