@@ -30,8 +30,7 @@ const Migrations = (): JSX.Element => {
   }
   useEffect(() => {
     setMessage(
-      (m) =>
-        'no of Patients: ' + patients.length + ', updateSuccess: ' + isSuccess
+      'no of Patients: ' + patients.length + ', updateSuccess: ' + isSuccess
     );
   }, [patients, isSuccess]);
   const convertIsAddPayFreedToAddpayFreedom = ({
