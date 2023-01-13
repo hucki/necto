@@ -84,6 +84,7 @@ export const updatePatient = async (
     delete incomingPatient.numberInLine;
     delete incomingPatient.createdAt;
     delete incomingPatient.updatedAt;
+    delete incomingPatient.addpayFreedom;
 
     const encryptedPatient = encryptPatient(incomingPatient);
     const updatedPatient = await prisma.patient.update({
@@ -175,6 +176,7 @@ export const getAllPatients = async (
         },
         doctor: true,
         institution: true,
+        addpayFreedom: true,
       },
       orderBy: {
         lastName: 'asc',
@@ -221,6 +223,7 @@ export const getAllArchivedPatients = async (
         },
         doctor: true,
         institution: true,
+        addpayFreedom: true,
       },
       orderBy: {
         lastName: 'asc',
@@ -265,6 +268,7 @@ export const getWaitingPatients = async (
         contactData: true,
         doctor: true,
         institution: true,
+        addpayFreedom: true,
       },
       where: {
         OR: [
