@@ -37,6 +37,7 @@ import {
 } from '../../Library';
 import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { EventList } from '../List/Events';
+import { AddpayForm } from '../Patients/AddpayForm';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -221,49 +222,63 @@ export const PersonForm = ({
   ).replace(' ', '')}.pdf`;
   const patientCheckboxes = () => {
     return (
-      <ModalFormGroup
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <FormControl id="isAddpayFreed" maxWidth="30%" isRequired>
-          <Checkbox
-            name="isAddpayFreed"
-            isDisabled={isReadOnly}
-            size="lg"
-            my={2}
-            isChecked={(currentPerson as Patient).isAddpayFreed ? true : false}
-            onChange={(e) =>
-              onCheckboxChange({ event: e, key: 'isAddpayFreed' })
-            }
-          />
-          <FormLabel>{t('label.isAddpayFreed')}</FormLabel>
-        </FormControl>
-        <FormControl id="hasContract" maxWidth="30%" isRequired>
-          <Checkbox
-            isInvalid={
-              (currentPerson as Patient).hasContract ? undefined : true
-            }
-            name="hasContract"
-            isDisabled={isReadOnly}
-            size="lg"
-            my={2}
-            isChecked={(currentPerson as Patient).hasContract ? true : false}
-            onChange={(e) => onCheckboxChange({ event: e, key: 'hasContract' })}
-          />
-          <FormLabel>{t('label.hasContract')}</FormLabel>
-        </FormControl>
-        {patientContract && (
-          <Button
-            onClick={() => {
-              patientContract.save(contractFileName);
+      <SimpleGrid columns={1} gap={2} py={2}>
+        <GridItem>
+          {currentPerson.uuid && (
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.5rem',
+                justifyContent: 'space-evenly',
+              }}
+            >
+              <div className="addpayFreedom">{t('label.addPayFreedUntil')}</div>
+              <AddpayForm
+                isReadOnly={isReadOnly}
+                patientId={currentPerson.uuid}
+              />
+            </div>
+          )}
+        </GridItem>
+        <GridItem>
+          <ModalFormGroup
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: '0.5rem',
             }}
           >
-            PDF
-          </Button>
-        )}
-      </ModalFormGroup>
+            <FormControl id="hasContract" isRequired>
+              <Checkbox
+                isInvalid={
+                  (currentPerson as Patient).hasContract ? undefined : true
+                }
+                name="hasContract"
+                isDisabled={isReadOnly}
+                size="lg"
+                my={2}
+                isChecked={
+                  (currentPerson as Patient).hasContract ? true : false
+                }
+                onChange={(e) =>
+                  onCheckboxChange({ event: e, key: 'hasContract' })
+                }
+              />
+              {patientContract && (
+                <Button
+                  marginLeft="0.5rem"
+                  onClick={() => {
+                    patientContract.save(contractFileName);
+                  }}
+                >
+                  PDF
+                </Button>
+              )}
+              <FormLabel>{t('label.hasContract')}</FormLabel>
+            </FormControl>
+          </ModalFormGroup>
+        </GridItem>
+      </SimpleGrid>
     );
   };
 
