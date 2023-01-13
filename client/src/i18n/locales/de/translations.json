@@ -119,6 +119,7 @@
     "street": "Straße",
     "city": "Ort",
     "isAddpayFreed": "befreit?",
+    "addPayFreedUntil": "befreit für",
     "hasContract": "Vertrag?",
     "notices": "Notizen",
     "firstContactAt": "Anmeldedatum",
