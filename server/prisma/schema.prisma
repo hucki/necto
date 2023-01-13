@@ -29,10 +29,10 @@ model AppSettings {
 model Company {
   uuid       String   @id @default(uuid()) @db.Uuid
   name       String   @db.VarChar(255)
-  name2      String   @db.VarChar(255) @default("")
-  street     String?  @db.VarChar(64) @default("")
-  zip        String?  @db.VarChar(10) @default("")
-  city       String?  @db.VarChar(64) @default("")
+  name2      String   @default("") @db.VarChar(255)
+  street     String?  @default("") @db.VarChar(64)
+  zip        String?  @default("") @db.VarChar(10)
+  city       String?  @default("") @db.VarChar(64)
   tenantId   String   @db.Uuid
   validUntil DateTime @db.Timestamptz(6)
   createdAt  DateTime @default(now())
@@ -69,25 +69,25 @@ model Room {
 }
 
 model Employee {
-  uuid        String           @id @default(uuid()) @db.Uuid
-  firstName   String?          @db.VarChar(64)
-  lastName    String?          @db.VarChar(64)
-  alias       String?          @db.VarChar(64)
-  street      String?          @db.VarChar(64)
-  zip         String?          @db.VarChar(10)
-  city        String?          @db.VarChar(64)
-  birthday    DateTime?        @db.Timestamptz(6)
-  validUntil  DateTime?        @db.Timestamptz(6)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  companyId   String           @db.Uuid
-  tenantId    String           @db.Uuid
-  contract    Contract[]       @relation("contracts_employeeIdToemployees")
-  user        UserSettings?    @relation("userSettings_employeeIdToemployees")
-  contactData ContactData[]    @relation("contactData_referenceIdToemployees")
-  teams       EmployeeToTeam[]
-  events      Event[]          @relation("event_referenceIdToEmployee")
-  availability Availability[] @relation("availability_referenceIdToEmployee")
+  uuid         String           @id @default(uuid()) @db.Uuid
+  firstName    String?          @db.VarChar(64)
+  lastName     String?          @db.VarChar(64)
+  alias        String?          @db.VarChar(64)
+  street       String?          @db.VarChar(64)
+  zip          String?          @db.VarChar(10)
+  city         String?          @db.VarChar(64)
+  birthday     DateTime?        @db.Timestamptz(6)
+  validUntil   DateTime?        @db.Timestamptz(6)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  companyId    String           @db.Uuid
+  tenantId     String           @db.Uuid
+  contract     Contract[]       @relation("contracts_employeeIdToemployees")
+  user         UserSettings?    @relation("userSettings_employeeIdToemployees")
+  contactData  ContactData[]    @relation("contactData_referenceIdToemployees")
+  teams        EmployeeToTeam[]
+  events       Event[]          @relation("event_referenceIdToEmployee")
+  availability Availability[]   @relation("availability_referenceIdToEmployee")
 
   @@map("employees")
 }
@@ -148,8 +148,8 @@ model Event {
   ressourceId             String?                  @db.Uuid
   title                   String?                  @db.VarChar
   type                    String?                  @db.VarChar
-  leaveStatus             String?                  @db.VarChar(64) @default("")
-  leaveType               String?                  @db.VarChar(64) @default("")
+  leaveStatus             String?                  @default("") @db.VarChar(64)
+  leaveType               String?                  @default("") @db.VarChar(64)
   isDiagnostic            Boolean                  @default(false)
   isHomeVisit             Boolean?
   isDone                  Boolean?                 @default(false)
@@ -192,14 +192,14 @@ model EventInstanceException {
 }
 
 model Availability {
-  uuid        String      @id @default(uuid()) @db.Uuid
-  dayOfWeek   String?     @db.VarChar(20)
-  startTime   DateTime?   @db.Timestamp(6)
-  endTime     DateTime?   @db.Timestamp(6)
-  patientId   String?     @db.Uuid
-  patient     Patient?    @relation("availability_referenceIdToPatient", fields: [patientId], references: [uuid])
-  employeeId  String?     @db.Uuid
-  employee    Employee?   @relation("availability_referenceIdToEmployee", fields: [employeeId], references: [uuid])
+  uuid       String    @id @default(uuid()) @db.Uuid
+  dayOfWeek  String?   @db.VarChar(20)
+  startTime  DateTime? @db.Timestamp(6)
+  endTime    DateTime? @db.Timestamp(6)
+  patientId  String?   @db.Uuid
+  patient    Patient?  @relation("availability_referenceIdToPatient", fields: [patientId], references: [uuid])
+  employeeId String?   @db.Uuid
+  employee   Employee? @relation("availability_referenceIdToEmployee", fields: [employeeId], references: [uuid])
 }
 
 model Tenant {
@@ -232,22 +232,22 @@ model UserSettings {
 }
 
 model User {
-  uuid                                    String              @id @default(uuid()) @db.Uuid
-  tenantId                                String              @db.Uuid
-  email                                   String              @unique
-  password                                String
-  firstName                               String?             @db.VarChar(64)
-  lastName                                String?             @db.VarChar(64)
-  a0Id                                    String?             @db.VarChar
-  validUntil                              DateTime?           @db.Timestamptz(6)
-  isBlocked                               Boolean             @default(false)
-  passwordResetToken                      String?
-  passwordResetAt                         DateTime?
-  createdAt                               DateTime            @default(now())
-  updatedAt                               DateTime            @updatedAt
-  userSettings                            UserSettings[]      @relation("userSettings_userIdTousers")
-  contactData                             ContactData[]       @relation("contactData_referenceIdTousers")
-  permissions                             UserToPermissions[]
+  uuid               String              @id @default(uuid()) @db.Uuid
+  tenantId           String              @db.Uuid
+  email              String              @unique
+  password           String
+  firstName          String?             @db.VarChar(64)
+  lastName           String?             @db.VarChar(64)
+  a0Id               String?             @db.VarChar
+  validUntil         DateTime?           @db.Timestamptz(6)
+  isBlocked          Boolean             @default(false)
+  passwordResetToken String?
+  passwordResetAt    DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  userSettings       UserSettings[]      @relation("userSettings_userIdTousers")
+  contactData        ContactData[]       @relation("contactData_referenceIdTousers")
+  permissions        UserToPermissions[]
 
   @@map("users")
 }
@@ -274,81 +274,95 @@ model PermissionLevel {
 }
 
 model ContactData {
-  uuid           String       @id @default(uuid()) @db.Uuid
-  userId         String?      @db.Uuid
-  employeeId     String?      @db.Uuid
-  patientId      String?      @db.Uuid
-  doctorId       String?      @db.Uuid
-  institutionId  String?      @db.Uuid
-  type           String       @db.VarChar(64)
-  contact        String       @db.VarChar(255)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  tenantId       String       @db.Uuid
-  user           User?        @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
-  employee       Employee?    @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
-  patient        Patient?     @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
-  doctor         Doctor?      @relation("contactData_referenceIdToDoctor", fields: [doctorId], references: [uuid])
-  institution    Institution? @relation("contactData_referenceIdToInstitution", fields: [institutionId], references: [uuid])
+  uuid          String       @id @default(uuid()) @db.Uuid
+  userId        String?      @db.Uuid
+  employeeId    String?      @db.Uuid
+  patientId     String?      @db.Uuid
+  doctorId      String?      @db.Uuid
+  institutionId String?      @db.Uuid
+  type          String       @db.VarChar(64)
+  contact       String       @db.VarChar(255)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  tenantId      String       @db.Uuid
+  user          User?        @relation("contactData_referenceIdTousers", fields: [userId], references: [uuid])
+  employee      Employee?    @relation("contactData_referenceIdToemployees", fields: [employeeId], references: [uuid])
+  patient       Patient?     @relation("contactData_referenceIdTopatient", fields: [patientId], references: [uuid])
+  doctor        Doctor?      @relation("contactData_referenceIdToDoctor", fields: [doctorId], references: [uuid])
+  institution   Institution? @relation("contactData_referenceIdToInstitution", fields: [institutionId], references: [uuid])
 
   @@map("contactData")
 }
 
 model Patient {
-  uuid                String        @id @default(uuid()) @db.Uuid
-  firstName           String?       @db.VarChar(255)
-  lastName            String?       @db.VarChar(255)
-  title               String?       @db.VarChar(64)
-  gender              String?       @db.VarChar(10)
-  street              String?       @db.VarChar(64)
-  zip                 String?       @db.VarChar(10)
-  city                String?       @db.VarChar(64)
-  birthday            DateTime?     @db.Timestamptz(6)
-  insurance           String?       @db.VarChar(64)
-  insuranceNumber     String?       @db.VarChar(64)
-  insuranceCardNumber String?       @db.VarChar(64)
-  insuranceCardValid  String?       @db.VarChar(64)
-  notices             String?       @db.VarChar(255) @default("")
-  careFacility        String?       @db.VarChar(64)
-  state               String?       @db.VarChar(64)
-  appointmentRequest  String?       @db.VarChar(64)
-  medicalReport       String?       @db.VarChar(255) @default("")
-  isAddpayFreed       Boolean
-  addPayFreedFrom     DateTime?     @db.Timestamptz(6)
-  addPayFreedUntil    DateTime?     @db.Timestamptz(6)
-  validUntil          DateTime?     @db.Timestamptz(6)
-  firstContactAt      DateTime      @default(now())
-  isWaitingSince      DateTime      @default(now())
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  companyId           String        @db.Uuid
-  tenantId            String        @db.Uuid
-  doctorId            String?       @db.Uuid
-  institutionId       String?       @db.Uuid
-  archived            Boolean       @default(false)
-  hasPrescription     Boolean       @default(false)
-  hasContract         Boolean       @default(false)
-  isWaitingAgain      Boolean       @default(false)
-  contactData         ContactData[]  @relation("contactData_referenceIdTopatient")
-  events              Event[]        @relation("event_referenceIdTopatient")
-  availability        Availability[] @relation("availability_referenceIdToPatient")
-  doctor              Doctor?        @relation("doctor_referenceIdToPatient", fields: [doctorId], references: [uuid])
-  institution         Institution?   @relation("institution_referenceIdToPatient", fields: [institutionId], references: [uuid])
+  uuid                String          @id @default(uuid()) @db.Uuid
+  firstName           String?         @db.VarChar(255)
+  lastName            String?         @db.VarChar(255)
+  title               String?         @db.VarChar(64)
+  gender              String?         @db.VarChar(10)
+  street              String?         @db.VarChar(64)
+  zip                 String?         @db.VarChar(10)
+  city                String?         @db.VarChar(64)
+  birthday            DateTime?       @db.Timestamptz(6)
+  insurance           String?         @db.VarChar(64)
+  insuranceNumber     String?         @db.VarChar(64)
+  insuranceCardNumber String?         @db.VarChar(64)
+  insuranceCardValid  String?         @db.VarChar(64)
+  notices             String?         @default("") @db.VarChar(255)
+  careFacility        String?         @db.VarChar(64)
+  state               String?         @db.VarChar(64)
+  appointmentRequest  String?         @db.VarChar(64)
+  medicalReport       String?         @default("") @db.VarChar(255)
+  isAddpayFreed       Boolean // deprecated
+  addPayFreedFrom     DateTime?       @db.Timestamptz(6) // deprecated
+  addPayFreedUntil    DateTime?       @db.Timestamptz(6) // deprecated
+  validUntil          DateTime?       @db.Timestamptz(6)
+  firstContactAt      DateTime        @default(now())
+  isWaitingSince      DateTime        @default(now())
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  companyId           String          @db.Uuid
+  tenantId            String          @db.Uuid
+  doctorId            String?         @db.Uuid
+  institutionId       String?         @db.Uuid
+  archived            Boolean         @default(false)
+  hasPrescription     Boolean         @default(false)
+  hasContract         Boolean         @default(false)
+  isWaitingAgain      Boolean         @default(false)
+  contactData         ContactData[]   @relation("contactData_referenceIdTopatient")
+  events              Event[]         @relation("event_referenceIdTopatient")
+  availability        Availability[]  @relation("availability_referenceIdToPatient")
+  doctor              Doctor?         @relation("doctor_referenceIdToPatient", fields: [doctorId], references: [uuid])
+  institution         Institution?    @relation("institution_referenceIdToPatient", fields: [institutionId], references: [uuid])
+  addpayFreedom       AddpayFreedom[]
+
   @@map("patients")
 }
 
+model AddpayFreedom {
+  uuid       String    @id @default(uuid()) @db.Uuid
+  pid        String?   @db.Uuid
+  freedFrom  DateTime? @db.Timestamptz(6)
+  freedUntil DateTime? @db.Timestamptz(6)
+  createdAt  DateTime  @default(now())
+  createdBy  String    @db.Uuid
+  updatedAt  DateTime  @updatedAt
+  updatedBy  String    @db.Uuid
+  patient    Patient?  @relation(fields: [pid], references: [uuid])
+}
+
 model Doctor {
-  uuid                String        @id @default(uuid()) @db.Uuid
-  firstName           String?       @db.VarChar(64)
-  lastName            String?       @db.VarChar(64)
-  title               String?       @db.VarChar(64)
-  street              String?       @db.VarChar(64)
-  zip                 String?       @db.VarChar(10)
-  city                String?       @db.VarChar(64)
-  tenantId            String        @db.Uuid
-  archived            Boolean       @default(false)
-  patients            Patient[]     @relation("doctor_referenceIdToPatient")
-  contactData         ContactData[] @relation("contactData_referenceIdToDoctor")
+  uuid        String        @id @default(uuid()) @db.Uuid
+  firstName   String?       @db.VarChar(64)
+  lastName    String?       @db.VarChar(64)
+  title       String?       @db.VarChar(64)
+  street      String?       @db.VarChar(64)
+  zip         String?       @db.VarChar(10)
+  city        String?       @db.VarChar(64)
+  tenantId    String        @db.Uuid
+  archived    Boolean       @default(false)
+  patients    Patient[]     @relation("doctor_referenceIdToPatient")
+  contactData ContactData[] @relation("contactData_referenceIdToDoctor")
 }
 
 model CancellationReason {
@@ -359,14 +373,14 @@ model CancellationReason {
 }
 
 model Institution {
-  uuid                String        @id @default(uuid()) @db.Uuid
-  name                String?       @db.VarChar(64)
-  description         String?       @db.VarChar(64)
-  street              String?       @db.VarChar(64)
-  zip                 String?       @db.VarChar(10)
-  city                String?       @db.VarChar(64)
-  tenantId            String        @db.Uuid
-  archived            Boolean       @default(false)
-  patients            Patient[]     @relation("institution_referenceIdToPatient")
-  contactData         ContactData[] @relation("contactData_referenceIdToInstitution")
+  uuid        String        @id @default(uuid()) @db.Uuid
+  name        String?       @db.VarChar(64)
+  description String?       @db.VarChar(64)
+  street      String?       @db.VarChar(64)
+  zip         String?       @db.VarChar(10)
+  city        String?       @db.VarChar(64)
+  tenantId    String        @db.Uuid
+  archived    Boolean       @default(false)
+  patients    Patient[]     @relation("institution_referenceIdToPatient")
+  contactData ContactData[] @relation("contactData_referenceIdToInstitution")
 }
