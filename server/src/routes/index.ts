@@ -10,6 +10,7 @@ import * as contractController from '../controllers/contract.controller';
 import * as contactController from '../controllers/contact.controller';
 import * as eventController from '../controllers/event.controller';
 import * as patientController from '../controllers/patient.controller';
+import * as addpayController from '../controllers/addpay.controller';
 import * as doctorController from '../controllers/doctor.controller';
 import * as institutionController from '../controllers/institution.controller';
 import * as teamMemberController from '../controllers/teamMember.controller';
@@ -120,6 +121,7 @@ router.patch('/leaves/:leaveId', eventController.approveLeave);
 router.get('/patients/all', patientController.getAllPatients);
 router.get('/patients/archived', patientController.getAllArchivedPatients);
 router.get('/patients/events/:patientId', patientController.getPatientsEvents);
+
 router.patch('/patients/:patientId', patientController.updatePatient);
 router.get('/patients/waiting', patientController.getWaitingPatients);
 router.post('/patients', patientController.addPatient);
@@ -131,6 +133,11 @@ router.post(
 router.post('/doctors/:doctorId/contact', contactController.addDoctorContact);
 router.patch('/contact/:contactId', contactController.updateContact);
 // router.delete('/patients/:patientId', patientController.deletePatient);
+
+// addpay routes
+router.get('/addpay/:patientId', addpayController.getPatientsAddpayFreedom);
+router.post('/addpay', addpayController.addAddpayFreedom);
+router.delete('/addpay/:addpayId', addpayController.deleteAddpayFreedom);
 
 // doctor routes
 router.post('/doctors', doctorController.addDoctor);
