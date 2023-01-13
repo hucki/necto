@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FaTimes } from 'react-icons/fa';
 
 interface ModalFooterControlsProps {
+  isDisabled?: boolean;
   onSubmit?: () => void;
   onClose?: () => void;
 }
@@ -11,6 +12,7 @@ interface ModalFooterControlsProps {
 export const ModalFooterControls = ({
   onSubmit,
   onClose,
+  isDisabled = false,
 }: ModalFooterControlsProps) => {
   const { t } = useTranslation();
 
@@ -29,7 +31,7 @@ export const ModalFooterControls = ({
           leftIcon={<FaTimes />}
           aria-label="cancel modal"
           type="button"
-          disabled={!onClose}
+          disabled={isDisabled || !onClose}
           onClick={onClose ? onClose : () => console.log('not implemented')}
           size="sm"
         >
@@ -40,7 +42,7 @@ export const ModalFooterControls = ({
           type="button"
           size="sm"
           colorScheme="blue"
-          disabled={!onSubmit}
+          disabled={isDisabled || !onSubmit}
           onClick={onSubmit ? onSubmit : () => console.log('not implemented')}
         >
           {t('button.save')}

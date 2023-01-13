@@ -84,7 +84,10 @@ function CalendarEventInput({
   const [newEvent, setNewEvent] = useState<NewEvent>(defaultEvent);
   const { rawEvents } = useDaysEvents(dateTime);
 
-  const { mutateAsync: createEvent } = useCreateEvent();
+  const { mutateAsync: createEvent, isIdle } = useCreateEvent();
+  const [isCreatingRecurringEvents, setIsCreatingRecurringEvents] =
+    useState(false);
+  const isPending = !isIdle || isCreatingRecurringEvents;
   const [message, setMessage] = useState<string | undefined>();
 
   useEffect(() => {
@@ -140,6 +143,7 @@ function CalendarEventInput({
           'm'
         );
         if (rruleList && rruleList.length > 1) {
+          setIsCreatingRecurringEvents(true);
           const currentTZHour = dayjs.utc(rruleList[0]).local().hour();
           for (let i = 1; i < rruleList.length; i++) {
             const dt = dayjs(rruleList[i]).hour(currentTZHour);
@@ -151,6 +155,7 @@ function CalendarEventInput({
               event: nextEvent,
             });
           }
+          setIsCreatingRecurringEvents(false);
         }
         onClose();
       } catch (error) {
@@ -214,7 +219,11 @@ function CalendarEventInput({
       }
       bodyBgColor={newEvent.type === 'note' ? 'note' : undefined}
       modalFooter={
-        <ModalFooterControls onClose={onClose} onSubmit={handleSubmit} />
+        <ModalFooterControls
+          isDisabled={isPending}
+          onClose={onClose}
+          onSubmit={handleSubmit}
+        />
       }
       size={isMobile ? 'full' : undefined}
     />
