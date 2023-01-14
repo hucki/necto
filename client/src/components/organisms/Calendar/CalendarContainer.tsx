@@ -59,11 +59,10 @@ function CalendarContainer({
   );
   const [currentHoursInterval, setCurrentHoursInterval] =
     useState(hoursInterval);
-  const [numOfHours] = useState(
+  const numOfHours =
     currentHoursInterval === undefined
       ? 0
-      : currentHoursInterval[1] - currentHoursInterval[0] + 1
-  );
+      : currentHoursInterval[1] - currentHoursInterval[0] + 1;
   const scaleWidth = '1rem';
   const handleCloseEventInput = () => {
     setClickedId(undefined);
@@ -106,6 +105,7 @@ function CalendarContainer({
   events.forEach((event) => {
     // FIXME: this resets only the scale but not the CalendarColumns
     if (event.isAllDay) return;
+    if (event.isCancelled) return;
     const newStart = dayjs(event.startTime).hour();
     const newEnd = dayjs(event.endTime).hour();
     if (currentHoursInterval === undefined) {
