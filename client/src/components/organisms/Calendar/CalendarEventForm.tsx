@@ -520,7 +520,7 @@ function CalendarEventForm({
               my={2}
               isChecked={currentEvent.isRecurring}
               onChange={onCheckboxChange}
-              isDisabled={!isNewEvent}
+              isDisabled={!isNewEvent(currentEvent)}
             >
               {t('calendar.event.recurringAppointment')}
             </Checkbox>
@@ -535,7 +535,9 @@ function CalendarEventForm({
               <Select
                 name="frequency"
                 value={undefined}
-                disabled={!isNewEvent || !currentEvent.isRecurring}
+                disabled={
+                  !isNewEvent(currentEvent) || !currentEvent.isRecurring
+                }
                 onChange={onSelectChange}
               >
                 <option value="WEEKLY">
@@ -556,7 +558,9 @@ function CalendarEventForm({
                 type="number"
                 min={1}
                 max={20}
-                disabled={!isNewEvent || !currentEvent.isRecurring}
+                disabled={
+                  !isNewEvent(currentEvent) || !currentEvent.isRecurring
+                }
                 defaultValue={recurringInterval}
                 onChange={handleRecurringIntervalChange}
               />
