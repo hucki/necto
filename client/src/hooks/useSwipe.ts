@@ -16,7 +16,6 @@ export const useSwipe = () => {
   >();
   const [touchStart, setTouchStart] = useState<TouchEvent | undefined>();
   const [touchEnd, setTouchEnd] = useState<TouchEvent | undefined>();
-
   useEffect(() => {
     if (!touchStart || !touchEnd) {
       setVerticalDirection(undefined);
@@ -36,10 +35,14 @@ export const useSwipe = () => {
         touchStart.changedTouches[0].clientY;
       const unsignedChangedX = Math.sign(changedX) * changedX;
       const unsignedChangedY = Math.sign(changedY) * changedY;
-      if (unsignedChangedX > 10)
+      if (unsignedChangedX > 10) {
         setHorizontalDirection(changedX < 0 ? 'left' : 'right');
-      if (unsignedChangedY > 10)
+        setTimeout(() => setHorizontalDirection(undefined), 300);
+      }
+      if (unsignedChangedY > 10) {
         setVerticalDirection(changedY < 0 ? 'up' : 'down');
+        setTimeout(() => setVerticalDirection(undefined), 300);
+      }
     }
   }, [touchStart, touchEnd]);
 
