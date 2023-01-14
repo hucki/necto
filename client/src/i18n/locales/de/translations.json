@@ -29,7 +29,9 @@
       "interval": "Intervall",
       "start": "Start",
       "end": "Ende",
-      "previewRecurringApointments": "Vorschau Terminserie"
+      "previewRecurringApointments": "Vorschau Terminserie",
+      "thisEvent": "nur diesen Termin",
+      "thisAndAllFutureEvents": "diesen + zukünftige Termine der Serie"
     },
     "leave": {
       "type": {

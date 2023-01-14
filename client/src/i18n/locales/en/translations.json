@@ -28,7 +28,9 @@
       "interval": "interval",
       "start": "start",
       "end": "end",
-      "previewRecurringApointments": "preview recurring appointments"
+      "previewRecurringApointments": "preview recurring appointments",
+      "thisEvent": "only this event",
+      "thisAndAllFutureEvents": "this and all future events of this series"
     },
     "leave": {
       "type": {
