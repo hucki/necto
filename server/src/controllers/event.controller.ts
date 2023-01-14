@@ -191,7 +191,7 @@ export const updateCurrentAndFutureEvents = async (
           ? dayjs(futureEvents[i].startTime).add(startTimeDiff).toISOString()
           : undefined;
         const newEndTime = endTimeDiff
-          ? dayjs(futureEvents[i].startTime).add(startTimeDiff).toISOString()
+          ? dayjs(futureEvents[i].endTime).add(endTimeDiff).toISOString()
           : undefined;
         await prisma.event.update({
           where: {
