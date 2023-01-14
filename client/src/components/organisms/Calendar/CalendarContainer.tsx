@@ -51,6 +51,7 @@ function CalendarContainer({
   const { setTouchStart, setTouchEnd, horizontalDirection } = useSwipe();
   const eventModal = useDisclosure();
   const leaveModal = useDisclosure();
+  const isOpenModal = eventModal.isOpen || leaveModal.isOpen;
   const [clickedId, setClickedId] = useState<string | undefined>(undefined);
   const [clickedDateTime, setClickedDateTime] = useState(dayjs());
   const [numOfDays] = useState(
@@ -74,7 +75,7 @@ function CalendarContainer({
   };
   useEffect(() => {
     if (horizontalDirection) {
-      if (!clickedId) {
+      if (!isOpenModal) {
         const target = `${
           horizontalDirection === 'left' ? 'next' : 'previous'
         }${calendarView[0].toUpperCase() + calendarView.substring(1)}`;
@@ -82,6 +83,16 @@ function CalendarContainer({
       }
     }
   }, [horizontalDirection, clickedId]);
+
+  useEffect(() => {
+    if (clickedId) {
+      if (currentEventType === 'appointments') {
+        eventModal.onOpen();
+      } else {
+        leaveModal.onOpen();
+      }
+    }
+  }, [clickedId]);
 
   useEffect(() => {
     if (daysRange[0].isSame(daysRangeRef.current[0])) {
@@ -181,7 +192,7 @@ function CalendarContainer({
       </CalendarScale>
       {calendarDays}
       {clickedId ? (
-        currentEventType === 'appointments' ? (
+        <>
           <CalendarEventInput
             uuid={clickedId}
             ressource={ressources.filter((r) => r.uuid === clickedId)[0]}
@@ -189,7 +200,6 @@ function CalendarContainer({
             isOpen={eventModal.isOpen}
             onClose={handleCloseEventInput}
           />
-        ) : (
           <CalendarLeaveInput
             uuid={clickedId}
             ressource={ressources.filter((r) => r.uuid === clickedId)[0]}
@@ -197,7 +207,7 @@ function CalendarContainer({
             isOpen={leaveModal.isOpen}
             onClose={handleCloseLeaveInput}
           />
-        )
+        </>
       ) : null}
       {horizontalDirection && (
         <SwipeIndicator direction={horizontalDirection} />
