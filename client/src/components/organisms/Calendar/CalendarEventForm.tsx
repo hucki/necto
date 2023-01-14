@@ -132,6 +132,11 @@ function CalendarEventForm({
   const { patients } = useAllPatients();
   const { rooms } = useAllRooms();
 
+  // Typeguard
+  const isNewEvent = (event: Event | NewEvent): event is NewEvent => {
+    return !event.hasOwnProperty('uuid');
+  };
+
   // Form state
   const [currentEvent, setCurrentEvent] = useState<Event | NewEvent>(() => ({
     ...event,
@@ -254,6 +259,7 @@ function CalendarEventForm({
   }
 
   useEffect(() => {
+    if (!isNewEvent(currentEvent)) return;
     if (currentEvent.isRecurring) {
       setRruleOptions((cur) => ({
         ...cur,
@@ -276,6 +282,7 @@ function CalendarEventForm({
   ]);
 
   useEffect(() => {
+    if (!isNewEvent(currentEvent)) return;
     const rrule = new RRule(rruleOptions);
     if (currentEvent.isRecurring) {
       setCurrentEvent((cur) => ({ ...cur, rrule: rrule.toString() }));
@@ -346,7 +353,6 @@ function CalendarEventForm({
   ]);
 
   const isNote = currentEvent.type === 'note';
-  const isNewEvent = !currentEvent.hasOwnProperty('uuid');
 
   return (
     <div>
@@ -557,7 +563,7 @@ function CalendarEventForm({
               <FormLabel>{t('calendar.event.interval')}</FormLabel>
             </FormControl>
           </div>
-          {isNewEvent && currentEvent.isRecurring && (
+          {isNewEvent(currentEvent) && currentEvent.isRecurring && (
             <>
               <Popover>
                 <PopoverTrigger>
