@@ -105,6 +105,117 @@ export const updateEvent = async (
 };
 
 /**
+ * update one Event and all future events of the same series
+ *  @param {Event} req.body
+ */
+export const updateCurrentAndFutureEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const eventId = req.params.eventId;
+
+    const updatableFieldsEvent = [
+      'userId',
+      'ressourceId',
+      'title',
+      'type: req.body.type',
+      'leaveType',
+      'leaveStatus',
+      'isDiagnostic',
+      'isHomeVisit',
+      'isAllDay',
+      'isRecurring',
+      'isCancelled',
+      'isDeleted',
+      'isDone',
+      'isCancelledReason',
+      'cancellationReasonId',
+      'rrule',
+      'startTime',
+      'endTime',
+      'bgColor',
+      'tenantId',
+      'roomId',
+      'patientId',
+      'parentEventId',
+    ];
+
+    const currentEventData = await prisma.event.findUnique({
+      where: {
+        uuid: eventId,
+      },
+    });
+    const finalUpdateData = updatableFieldsEvent
+      .map((field) =>
+        !req.body[field]
+          ? null
+          : req.body[field] === currentEventData[field]
+          ? null
+          : { [field]: req.body[field] }
+      )
+      .filter((item) => !!item)
+      .reduce((prev, cur, _i, _arr) => {
+        return Object.assign(prev, cur);
+      });
+
+    const updatedEvent = await prisma.event.update({
+      where: {
+        uuid: eventId,
+      },
+      data: finalUpdateData,
+    });
+    const parentEventId = updatedEvent.parentEventId || eventId;
+
+    const futureEvents = await prisma.event.findMany({
+      where: {
+        AND: [
+          { parentEventId },
+          { startTime: { gte: updatedEvent.endTime.toISOString() } },
+        ],
+      },
+    });
+
+    const startTimeDiff = finalUpdateData.startTime
+      ? dayjs(finalUpdateData.startTime).diff(currentEventData.startTime)
+      : undefined;
+    const endTimeDiff = finalUpdateData.endTime
+      ? dayjs(finalUpdateData.endTime).diff(currentEventData.endTime)
+      : undefined;
+
+    const foundFutureEvents = futureEvents.length;
+    if (foundFutureEvents) {
+      for (let i = 0; i < foundFutureEvents; i++) {
+        const newStartTime = startTimeDiff
+          ? dayjs(futureEvents[i].startTime).add(startTimeDiff).toISOString()
+          : undefined;
+        const newEndTime = endTimeDiff
+          ? dayjs(futureEvents[i].startTime).add(startTimeDiff).toISOString()
+          : undefined;
+        await prisma.event.update({
+          where: {
+            uuid: futureEvents[i].uuid,
+          },
+          data: {
+            ...finalUpdateData,
+            parentEventId,
+            startTime: newStartTime,
+            endTime: newEndTime,
+          },
+        });
+      }
+    }
+
+    res.json(updatedEvent);
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
  * delete one Event by eventId
  *  @param {string} req.params.eventId
  */
@@ -144,6 +255,39 @@ export const deleteEventWithChildren = async (
     });
     await prisma.event.updateMany({
       where: { parentEventId: eventId },
+      data: { isDeleted: true },
+    });
+    res.json(deletedEvent);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * delete one Event and all future events of the same series
+ *  @param {string} req.params.eventId
+ */
+export const deleteCurrentAndFutureEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const eventId = req.params.eventId;
+    const deletedEvent = await prisma.event.update({
+      where: { uuid: eventId },
+      data: { isDeleted: true },
+    });
+    const parentEventId = deletedEvent.parentEventId || eventId;
+    await prisma.event.updateMany({
+      where: {
+        AND: [
+          { parentEventId },
+          { startTime: { gte: deletedEvent.endTime.toISOString() } },
+        ],
+      },
       data: { isDeleted: true },
     });
     res.json(deletedEvent);
