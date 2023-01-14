@@ -19,6 +19,7 @@ import { IconButton } from '../../atoms/Buttons';
 import { Room } from '../../../types/Rooms';
 import { isEmployeeRessource } from './CalendarColumn';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
+import { useViewport } from '../../../hooks/useViewport';
 
 registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
@@ -41,6 +42,7 @@ const CalendarLeaveInput = ({
   onClose,
 }: CalendarLeaveInputProps) => {
   const { t } = useTranslation();
+  const { isMobile } = useViewport();
 
   const defaultLeave: NewEvent = {
     userId: uuid.toString(),
@@ -238,6 +240,7 @@ const CalendarLeaveInput = ({
       <CalendarItemModal
         isOpen={isOpen}
         onClose={onClose}
+        size={isMobile ? 'full' : undefined}
         modalHeader={<ModalHeaderContent />}
         headerBgColor={newLeave.bgColor || 'green'}
         modalBody={<ModalBodyContent />}
