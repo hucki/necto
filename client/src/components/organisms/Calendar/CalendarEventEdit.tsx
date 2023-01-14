@@ -326,11 +326,11 @@ function CalendarEventEdit({
                         {t('button.delete')}
                       </MenuButton>
                       <MenuList borderColor="orange.500">
-                        <MenuItem onClick={handleDelete}>
-                          ❌ {t('calendar.event.thisEvent')}
-                        </MenuItem>
                         <MenuItem onClick={handleDeleteCurrentAndFuture}>
                           ❌ {t('calendar.event.thisAndAllFutureEvents')}
+                        </MenuItem>
+                        <MenuItem onClick={handleDelete}>
+                          ❌ {t('calendar.event.thisEvent')}
                         </MenuItem>
                       </MenuList>
                     </Menu>
@@ -375,11 +375,11 @@ function CalendarEventEdit({
                         {t('button.save')}
                       </MenuButton>
                       <MenuList borderColor="orange.500">
-                        <MenuItem onClick={handleSubmit}>
-                          💾 {t('calendar.event.thisEvent')}
-                        </MenuItem>
                         <MenuItem onClick={handleSubmitCurrentAndFuture}>
                           💾 {t('calendar.event.thisAndAllFutureEvents')}
+                        </MenuItem>
+                        <MenuItem onClick={handleSubmit}>
+                          💾 {t('calendar.event.thisEvent')}
                         </MenuItem>
                       </MenuList>
                     </Menu>
