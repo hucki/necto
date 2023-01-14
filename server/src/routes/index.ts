@@ -109,7 +109,15 @@ router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 router.get('/events/e/:employeeId', eventController.getEmployeeEvents);
 
 router.post('/events', eventController.addEvent);
+router.patch(
+  '/events/cf/:eventId',
+  eventController.updateCurrentAndFutureEvents
+);
 router.patch('/events/:eventId', eventController.updateEvent);
+router.delete(
+  '/events/cf/:eventId',
+  eventController.deleteCurrentAndFutureEvents
+);
 router.delete('/events/c/:eventId', eventController.deleteEventWithChildren);
 router.delete('/events/:eventId', eventController.deleteEvent);
 
