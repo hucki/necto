@@ -73,6 +73,30 @@ export function useDeleteEventWithChildren(): UseMutationResult<
   });
 }
 
+export function useDeleteCurrentAndFutureEvents(): UseMutationResult<
+  { message: string },
+  Error,
+  { uuid: string },
+  string
+> {
+  const queryClient = useQueryClient();
+  const deleteCurrentAndFutureEvents = async ({
+    uuid,
+  }: {
+    uuid: string;
+  }): Promise<{ message: string }> => {
+    return client<{ message: string }>(`events/cf/${uuid}`, {
+      method: 'DELETE',
+    });
+  };
+
+  return useMutation(deleteCurrentAndFutureEvents, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['events']);
+    },
+  });
+}
+
 export function useAllEvents(): UseQueryResult<Event[]> & { events: Event[] } {
   const eventsQuery = useQuery(['events'], async () => {
     return client<Event[]>('events/a');
@@ -181,6 +205,30 @@ export function useUpdateEvent(): UseMutationResult<
     });
   };
   return useMutation(updateEvent, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['events']);
+    },
+  });
+}
+
+export function useUpdateCurrentAndFutureEvent(): UseMutationResult<
+  Event,
+  Error,
+  { event: Event },
+  string
+> {
+  const queryClient = useQueryClient();
+  const updateCurrentAndFutureEvent = async ({
+    event,
+  }: {
+    event: Event;
+  }): Promise<Event> => {
+    return client<Event>(`events/cf/${event.uuid}`, {
+      data: event,
+      method: 'PATCH',
+    });
+  };
+  return useMutation(updateCurrentAndFutureEvent, {
     onSuccess: () => {
       queryClient.invalidateQueries(['events']);
     },
