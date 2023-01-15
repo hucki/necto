@@ -34,6 +34,7 @@ import {
   RadioGroup,
   LabelledInput,
   LabelledSelect,
+  LabelledDataDisplay,
   Checkbox,
 } from './FormElements';
 import { ErrorMessage } from './Messages';
@@ -76,6 +77,7 @@ export {
   Checkbox,
   LabelledInput,
   LabelledSelect,
+  LabelledDataDisplay,
   Select,
   ErrorMessage,
   DatePicker,

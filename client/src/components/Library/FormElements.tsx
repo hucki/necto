@@ -203,6 +203,29 @@ const LabelledInput = ({
   );
 };
 
+type LabelledDataDisplayProps = {
+  id: string;
+  label?: string;
+  value: string;
+};
+
+const DataDisplay = styled.div({
+  borderRadius: '3px',
+  padding: '0.5rem',
+});
+const LabelledDataDisplay = ({
+  id,
+  label,
+  value,
+}: LabelledDataDisplayProps) => {
+  return (
+    <FormControl id={id}>
+      <DataDisplay className="data-display"> {value}</DataDisplay>
+      {label && <FormLabel>{label}</FormLabel>}
+    </FormControl>
+  );
+};
+
 export {
   Input,
   Textarea,
@@ -218,4 +241,5 @@ export {
   TextDisplay,
   LabelledInput,
   LabelledSelect,
+  LabelledDataDisplay,
 };
