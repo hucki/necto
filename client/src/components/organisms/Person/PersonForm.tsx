@@ -340,6 +340,7 @@ export const PersonForm = ({
         <ModalFormGroup key={index}>
           <FormControl id={contact.type + '_' + contact.uuid}>
             <Input
+              autocomplete="off"
               isDisabled={isReadOnly || personNotCreated}
               onChange={(e) =>
                 onContactChange({ event: e, id: contact.uuid || '' })
@@ -383,6 +384,7 @@ export const PersonForm = ({
       <ModalFormGroup>
         <FormControl id="birthday">
           <Input
+            autocomplete="off"
             type="date"
             disabled={isReadOnly || personNotCreated}
             name="birthday"
@@ -402,6 +404,7 @@ export const PersonForm = ({
       <FormGroup>
         <FormControl id="isWaitingSince">
           <Input
+            autocomplete="off"
             type="date"
             disabled={
               isReadOnly ||
@@ -461,6 +464,7 @@ export const PersonForm = ({
                 />
               ) : (
                 <Input
+                  autocomplete="off"
                   isDisabled={isReadOnly || personNotCreated}
                   onChange={(e) =>
                     onInputChange({ event: e, key: key as keyof Person })
@@ -491,6 +495,7 @@ export const PersonForm = ({
           <ModalFormGroup>
             <FormControl id="firstName" isRequired={true}>
               <Input
+                autocomplete="off"
                 isDisabled={isReadOnly}
                 onChange={(e) =>
                   onInputChange({ event: e, key: 'firstName' as keyof Person })
@@ -504,6 +509,7 @@ export const PersonForm = ({
           <FormGroup gridColsUnit="auto" gridCols={personNotCreated ? 2 : 1}>
             <FormControl id="lastName" isRequired={true}>
               <Input
+                autocomplete="off"
                 isDisabled={isReadOnly}
                 onChange={(e) =>
                   onInputChange({ event: e, key: 'lastName' as keyof Person })

@@ -107,6 +107,7 @@ export const PatientForm = ({
               </TextDisplay>
             ) : (
               <Input
+                autocomplete="off"
                 onChange={(e) =>
                   onInputChange({ event: e, key: key as PatientKey })
                 }

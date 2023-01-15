@@ -178,6 +178,7 @@ export const InstitutionForm = ({
               />
             ) : (
               <Input
+                autocomplete="off"
                 name={key}
                 onChange={(e) =>
                   onInputChange({ event: e, key: key as keyof Institution })
