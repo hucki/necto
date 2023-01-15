@@ -32,19 +32,19 @@ const CalendarEventView = ({
           {isDiagnostic && (
             <LabelledDataDisplay
               id="isDiagnostic"
-              value={t('calendar.event.diagnostic') + ': ✅'}
+              value={'✅ ' + t('calendar.event.diagnostic')}
             />
           )}
           {isHomeVisit && (
             <LabelledDataDisplay
               id="isHomeVisit"
-              value={t('calendar.event.homeVisit') + ': ✅'}
+              value={'✅ ' + t('calendar.event.homeVisit')}
             />
           )}
           {isRecurring && (
             <LabelledDataDisplay
               id="isRecurringAppointment"
-              value={t('calendar.event.recurringAppointment') + ': ✅'}
+              value={'✅ ' + t('calendar.event.recurringAppointment')}
             />
           )}
           <LabelledDataDisplay
