@@ -1,10 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
-import { LabelledInput } from '../../Library';
-import { Icon } from '@chakra-ui/react';
-import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
+import { LabelledDataDisplay, LabelledInput } from '../../Library';
 import { CalendarEventViewWrapper } from '../../atoms/Wrapper';
+import { PersonCard } from '../../molecules/Cards/PersonCard';
 
 const CalendarEventView = ({
   eventTitle,
@@ -20,92 +19,45 @@ const CalendarEventView = ({
   const { t } = useTranslation();
   return (
     <CalendarEventViewWrapper>
-      {!isNote && (
-        <>
-          <LabelledInput
-            disabled
-            id="patient"
-            name="patient"
-            label={t('calendar.event.patient')}
-            value={
-              eventPatient
-                ? eventPatient.lastName + ', ' + eventPatient.firstName
-                : 'no Patient'
-            }
-            onChangeHandler={() => undefined}
-          />
-        </>
+      {!isNote && eventPatient && <PersonCard person={eventPatient} />}
+      {eventTitle && (
+        <LabelledDataDisplay
+          id="eventTitle"
+          label={t(`calendar.event.${isNote ? 'text' : 'title'}`)}
+          value={eventTitle}
+        />
       )}
-      <LabelledInput
-        disabled
-        id="eventTitle"
-        name="eventTitle"
-        label={t(`calendar.event.${isNote ? 'text' : 'title'}`)}
-        value={eventTitle}
-        onChangeHandler={() => undefined}
-      />
       {!isNote && (
         <>
-          <span
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            {t('calendar.event.diagnostic') + ': '}
-            <Icon
-              as={isDiagnostic ? RiCheckLine : RiCheckboxBlankLine}
-              w={5}
-              h={5}
-              color={isDiagnostic ? 'indigo' : 'gray.400'}
+          {isDiagnostic && (
+            <LabelledDataDisplay
+              id="isDiagnostic"
+              value={t('calendar.event.diagnostic') + ': ✅'}
             />
-          </span>
-          <span
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            {t('calendar.event.homeVisit') + ': '}
-            <Icon
-              as={isHomeVisit ? RiCheckLine : RiCheckboxBlankLine}
-              w={5}
-              h={5}
-              color={isHomeVisit ? 'indigo' : 'gray.400'}
+          )}
+          {isHomeVisit && (
+            <LabelledDataDisplay
+              id="isHomeVisit"
+              value={t('calendar.event.homeVisit') + ': ✅'}
             />
-          </span>
-          <span
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            {t('calendar.event.recurringAppointment') + ': '}
-            <Icon
-              as={isRecurring ? RiCheckLine : RiCheckboxBlankLine}
-              w={5}
-              h={5}
-              color={isRecurring ? 'indigo' : 'gray.400'}
+          )}
+          {isRecurring && (
+            <LabelledDataDisplay
+              id="isRecurringAppointment"
+              value={t('calendar.event.recurringAppointment') + ': ✅'}
             />
-          </span>
-          <LabelledInput
-            disabled
+          )}
+          <LabelledDataDisplay
             id="eventStartTime"
-            name="eventStartTime"
             label={t('calendar.event.start')}
-            type="datetime-local"
-            value={dayjs(eventStartTime).format('YYYY-MM-DDThh:mm')}
-            onChangeHandler={() => undefined}
+            value={dayjs(eventStartTime).format('llll')}
           />
-          <LabelledInput
-            disabled
+          <LabelledDataDisplay
             id="eventEndTime"
-            name="eventEndTime"
             label={t('calendar.event.end')}
-            type="datetime-local"
-            value={dayjs(eventEndTime).format('YYYY-MM-DDThh:mm')}
-            onChangeHandler={() => undefined}
+            value={dayjs(eventEndTime).format('llll')}
           />
+
           {eventRoom && (
             <LabelledInput
               disabled
