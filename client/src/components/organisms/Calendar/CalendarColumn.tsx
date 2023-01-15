@@ -21,6 +21,7 @@ import { DayHeaderLabel, HolidayLabel } from '../../Library/Calendar';
 import CalendarLeaveEdit from './CalendarLeaveEdit';
 import CalendarChooseEntryModal from './CalendarChooseEntryModal';
 import { Room } from '../../../types/Rooms';
+import { CounterOfDone } from '../../molecules/DataDisplay/CounterOfDone';
 dayjs.locale('de');
 
 // Typeguard
@@ -80,6 +81,11 @@ function CalendarColumn({
     Event[] | undefined
   >();
 
+  const noOfAppointments = {
+    total: events.filter((event) => event.type === 'appointment').length,
+    done: events.filter((event) => event.type === 'appointment' && event.isDone)
+      .length,
+  };
   function onClickCalendarEvent({ e, event }: OnClickCalendarEventProps) {
     const clickedEventElements = allClickedElements(e.pageX, e.pageY);
     if (clickedEventElements.length > 1) {
@@ -191,6 +197,12 @@ function CalendarColumn({
       index={index}
       onClick={readOnly ? () => null : getPosition}
     >
+      {Boolean(noOfAppointments.total) && (
+        <CounterOfDone
+          done={noOfAppointments.done}
+          total={noOfAppointments.total}
+        />
+      )}
       {isPublicHolidayToday && (
         <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
       )}
