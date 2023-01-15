@@ -240,9 +240,6 @@ function CalendarEventEdit({
                   {dayjs(event.startTime).format('llll')}
                 </div>
               </div>
-              {changedEvent.patient && !changedEvent.patient.hasContract && (
-                <EventIcon type="noContract" size="m" />
-              )}
               {changedEvent.isHomeVisit && (
                 <EventIcon type="homeVisit" size="m" />
               )}
