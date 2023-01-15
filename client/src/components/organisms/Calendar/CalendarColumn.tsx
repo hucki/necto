@@ -73,7 +73,7 @@ function CalendarColumn({
   const isToday = dayjs().isSame(dateInput, 'day');
 
   const date = dateInput.locale('de');
-  const { onOpen, onClose } = useDisclosure();
+  const { onClose } = useDisclosure();
 
   const [clickedEvent, setClickedEvent] = useState<Event | null>(null);
   const [clickedMultiEvents, setClickedMultiEvents] = useState<
@@ -214,9 +214,7 @@ function CalendarColumn({
       <CalendarLeaveEdit
         leave={clickedEvent}
         isOpen={true}
-        readOnly={true}
         onClose={closeClickedEventHandler}
-        onOpen={onOpen}
       />
     )
   ) : undefined;
