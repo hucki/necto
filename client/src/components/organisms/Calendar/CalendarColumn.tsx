@@ -81,15 +81,6 @@ function CalendarColumn({
     Event[] | undefined
   >();
 
-  const noOfAppointments = {
-    total: events.filter(
-      (event) => event.type === 'appointment' && !event.isCancelled
-    ).length,
-    done: events.filter(
-      (event) =>
-        event.type === 'appointment' && event.isDone && !event.isCancelled
-    ).length,
-  };
   function onClickCalendarEvent({ e, event }: OnClickCalendarEventProps) {
     const clickedEventElements = allClickedElements(e.pageX, e.pageY);
     if (clickedEventElements.length > 1) {
@@ -190,31 +181,45 @@ function CalendarColumn({
       </CalendarColumnRessourceHeader>
     );
   });
-  const ressourceColsBody = ressources.map((ressource, index) => (
-    <CalendarColumnRessourceBody
-      id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
-      key={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
-      numOfHours={numOfHours}
-      numOfRessources={ressources.length}
-      isPublicHoliday={Boolean(isPublicHolidayToday)}
-      isWeekend={isWeekend({ date: dayjs(date) })}
-      index={index}
-      onClick={readOnly ? () => null : getPosition}
-    >
-      {Boolean(noOfAppointments.total) && (
-        <CounterOfDone
-          done={noOfAppointments.done}
-          total={noOfAppointments.total}
-        />
-      )}
-      {isPublicHolidayToday && (
-        <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
-      )}
-      {events
+  const ressourceColsBody = ressources.map((ressource, index) => {
+    const noOfAppointments = {
+      total: events
         .filter((event) => event.ressourceId === ressource.uuid)
-        .map((event) => renderCustomEvent(event, getItemStyle(event)))}
-    </CalendarColumnRessourceBody>
-  ));
+        .filter((event) => event.type === 'appointment' && !event.isCancelled)
+        .length,
+      done: events
+        .filter((event) => event.ressourceId === ressource.uuid)
+        .filter(
+          (event) =>
+            event.type === 'appointment' && event.isDone && !event.isCancelled
+        ).length,
+    };
+    return (
+      <CalendarColumnRessourceBody
+        id={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
+        key={`rcolBody_d${date.format('YYYYMMDD')}_r${ressource.uuid}`}
+        numOfHours={numOfHours}
+        numOfRessources={ressources.length}
+        isPublicHoliday={Boolean(isPublicHolidayToday)}
+        isWeekend={isWeekend({ date: dayjs(date) })}
+        index={index}
+        onClick={readOnly ? () => null : getPosition}
+      >
+        {Boolean(noOfAppointments.total) && (
+          <CounterOfDone
+            done={noOfAppointments.done}
+            total={noOfAppointments.total}
+          />
+        )}
+        {isPublicHolidayToday && (
+          <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
+        )}
+        {events
+          .filter((event) => event.ressourceId === ressource.uuid)
+          .map((event) => renderCustomEvent(event, getItemStyle(event)))}
+      </CalendarColumnRessourceBody>
+    );
+  });
 
   const columnHeader = date.format(columnHeaderFormat);
 
