@@ -1,6 +1,6 @@
 import { Icon, Modal, Button } from '@chakra-ui/react';
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTimes, FaTrash } from 'react-icons/fa';
 import { RiCheckFill } from 'react-icons/ri';
@@ -21,24 +21,15 @@ import {
 interface CalendarLeaveEditProps {
   leave: Event;
   isOpen: boolean;
-  readOnly: boolean;
-  onOpen: () => void;
   onClose: () => void;
 }
 
-function CalendarLeaveEdit({
-  leave,
-  isOpen,
-  readOnly = false,
-  onOpen,
-  onClose,
-}: CalendarLeaveEditProps) {
+function CalendarLeaveEdit({ leave, isOpen, onClose }: CalendarLeaveEditProps) {
   const { t } = useTranslation();
   const { isMobile } = useViewport();
 
-  const [changedLeave, setChangedLeave] = useState<Event>(() => leave);
   const { mutateAsync: deleteEventWithChildren } = useDeleteEventWithChildren();
-  const { startTime, endTime, parentEventId } = getEventSeries(changedLeave);
+  const { startTime, endTime, parentEventId } = getEventSeries(leave);
 
   const handleDelete = () => {
     if (!parentEventId) return;
@@ -46,7 +37,7 @@ function CalendarLeaveEdit({
     onClose();
   };
 
-  const isApproved = changedLeave.leaveStatus === 'approved';
+  const isApproved = leave.leaveStatus === 'approved';
   return (
     <>
       <Modal
@@ -57,13 +48,13 @@ function CalendarLeaveEdit({
       >
         <ModalOverlay>
           <ModalContent>
-            <ModalHeader bgColor={changedLeave?.bgColor || 'green'}>
+            <ModalHeader bgColor={leave?.bgColor || 'green'}>
               {!isApproved ? null : (
                 <Icon as={RiCheckFill} w={8} h={8} fill="green" />
               )}
               <div>
                 <div className="modal-title">
-                  {t(`calendar.leave.type.${changedLeave.leaveType}`)}
+                  {t(`calendar.leave.type.${leave.leaveType}`)}
                 </div>
                 <div
                   className="modal-subtitle"
@@ -100,11 +91,7 @@ function CalendarLeaveEdit({
                   <Button
                     leftIcon={<FaTrash />}
                     aria-label="delete event"
-                    disabled={
-                      isApproved ||
-                      !parentEventId ||
-                      dayjs(changedLeave.endTime).isBefore(dayjs())
-                    }
+                    disabled={isApproved || !parentEventId}
                     colorScheme="red"
                     size="sm"
                     type="button"
