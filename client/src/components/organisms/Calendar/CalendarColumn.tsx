@@ -82,9 +82,13 @@ function CalendarColumn({
   >();
 
   const noOfAppointments = {
-    total: events.filter((event) => event.type === 'appointment').length,
-    done: events.filter((event) => event.type === 'appointment' && event.isDone)
-      .length,
+    total: events.filter(
+      (event) => event.type === 'appointment' && !event.isCancelled
+    ).length,
+    done: events.filter(
+      (event) =>
+        event.type === 'appointment' && event.isDone && !event.isCancelled
+    ).length,
   };
   function onClickCalendarEvent({ e, event }: OnClickCalendarEventProps) {
     const clickedEventElements = allClickedElements(e.pageX, e.pageY);
