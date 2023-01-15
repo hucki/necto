@@ -455,6 +455,11 @@ function CalendarEventForm({
       )}
       <FormControl id="eventStartDatePicker" mb="0.75rem">
         <DatePicker
+          popperPlacement="top"
+          popperModifiers={[
+            { name: 'preventOverflow', enabled: true },
+            { name: 'flip', enabled: true },
+          ]}
           name="startDate"
           showTimeSelect
           locale="de"
@@ -490,6 +495,11 @@ function CalendarEventForm({
       )}
       <FormControl id="eventEndDatePicker" mb="0.75rem">
         <DatePicker
+          popperPlacement="top"
+          popperModifiers={[
+            { name: 'preventOverflow', enabled: true },
+            { name: 'flip', enabled: true },
+          ]}
           name="endDate"
           showTimeSelect
           locale="de"
