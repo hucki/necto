@@ -10,6 +10,40 @@ export type AddpayFreedom = {
   freedUntil: Date;
 };
 
+export const patientUpdateKeys = [
+  'uuid',
+  'firstName',
+  'lastName',
+  'title',
+  'gender',
+  'street',
+  'zip',
+  'city',
+  'birthday',
+  'insurance',
+  'insuranceNumber',
+  'insuranceCardNumber',
+  'insuranceCardValid',
+  'notices',
+  'appointmentRequest',
+  'medicalReport',
+  'state',
+  'archived',
+  'hasPrescritpion',
+  'isWaitingAgain',
+  'hasContract',
+  'isAddpayFreed',
+  'validUntil',
+  'firstContactAt',
+  'isWaitingSince',
+  'companyId',
+  'tenantId',
+  'doctorId',
+  'institutionId',
+] as const;
+
+export type PatientUpdate = typeof patientUpdateKeys[number];
+
 export type Patient = {
   uuid?: string;
   firstName: string;
