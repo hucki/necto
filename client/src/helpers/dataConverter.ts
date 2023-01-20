@@ -1,5 +1,6 @@
 import { Event } from '../types/Event';
 import dayjs, { Dayjs } from 'dayjs';
+import { Patient, patientUpdateKeys } from '../types/Patient';
 
 export const getNewUTCDate = (dateTime: Dayjs) => {
   const dt = dayjs.utc(dateTime);
@@ -23,4 +24,10 @@ export const getEventSeries = (event: Event) => {
     startTime,
     endTime,
   };
+};
+
+export const sanitizePatient = (patient: Patient): Patient => {
+  return patientUpdateKeys.reduce((prev, cur) => {
+    return { ...prev, [cur]: (patient as Patient)[cur] };
+  }, {}) as Patient;
 };
