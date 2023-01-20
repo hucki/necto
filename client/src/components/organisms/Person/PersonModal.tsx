@@ -7,6 +7,7 @@ import {
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaArchive, FaEdit, FaTimes } from 'react-icons/fa';
+import { sanitizePatient } from '../../../helpers/dataConverter';
 import { useUpdateContact } from '../../../hooks/contact';
 import { useCreateDoctor, useUpdateDoctor } from '../../../hooks/doctor';
 import { useCreatePatient, useUpdatePatient } from '../../../hooks/patient';
@@ -137,7 +138,9 @@ export const PersonModal = ({
   const updatePerson = (updatePerson: Person) => {
     const toastType = 'updated';
     personType === 'patient'
-      ? updatePatient({ patient: updatePerson }).then((res: Patient) => {
+      ? updatePatient({
+          patient: sanitizePatient(updatePerson),
+        }).then((res: Patient) => {
           if (res?.uuid) {
             setCurrentPerson(res);
             toast(
