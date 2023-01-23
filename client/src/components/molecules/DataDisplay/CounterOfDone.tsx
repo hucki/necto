@@ -3,10 +3,10 @@ import React from 'react';
 
 interface CounterOfDoneWrapperProps {
   allDone: boolean;
-  width: 'wide' | 'narrow';
+  isWide: boolean;
 }
 const CounterOfDoneWrapper = styled.div(
-  ({ allDone = false, width = 'wide' }: CounterOfDoneWrapperProps) => ({
+  ({ allDone = false, isWide = false }: CounterOfDoneWrapperProps) => ({
     backgroundColor: allDone ? 'mediumseagreen' : 'orange',
     color: 'white',
     fontSize: 'x-small',
@@ -15,7 +15,7 @@ const CounterOfDoneWrapper = styled.div(
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: width === 'wide' ? '2rem' : '1.5rem',
+    width: isWide ? '2.5rem' : '1.5rem',
     height: '1rem',
     lineHeight: '1rem',
     zIndex: 1,
@@ -27,11 +27,12 @@ interface CounterOfDoneProps {
   total: number;
 }
 export const CounterOfDone = ({ done, total }: CounterOfDoneProps) => {
+  console.log({ done, total });
   const allDone = done === total;
   return (
     <CounterOfDoneWrapper
       allDone={allDone}
-      width={!allDone && total > 10 ? 'wide' : 'narrow'}
+      isWide={Boolean(!allDone && total > 10)}
     >
       {allDone ? done : done + ' / ' + total}
     </CounterOfDoneWrapper>
