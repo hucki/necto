@@ -267,6 +267,7 @@ function PersonList({
             <>
               <Td textAlign="center">
                 <AddpayTags
+                  size="md"
                   isInteractive={false}
                   addpayState={getAddpayForTags({
                     addpayFreedom: p.addpayFreedom || [],

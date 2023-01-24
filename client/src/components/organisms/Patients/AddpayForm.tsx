@@ -17,6 +17,7 @@ const TagWrapper = styled.div({
 interface AddpayFormProps {
   patientId: string;
   isReadOnly: boolean;
+  size?: 'lg' | 'sm' | 'md';
 }
 interface AddpayState {
   year: number;
@@ -51,6 +52,7 @@ export const getAddpayForTags = ({
 interface AddpayTagsProps {
   addpayState: AddpayState[];
   isInteractive: boolean;
+  size?: 'lg' | 'sm' | 'md';
   onAddHandler?: (year: number) => void;
   onRemoveHandler?: (year: number) => void;
 }
@@ -60,11 +62,12 @@ export const AddpayTags = ({
   isInteractive,
   onAddHandler,
   onRemoveHandler,
+  size = 'md',
 }: AddpayTagsProps) => {
   const tags = addpayState.map((yearsState) => (
     <Tag
       key={yearsState.year}
-      size="md"
+      size={size}
       variant={yearsState.addpayFreed ? 'solid' : 'subtle'}
       colorScheme={yearsState.addpayFreed ? 'green' : 'gray'}
     >
@@ -94,6 +97,7 @@ export const AddpayTags = ({
 export const AddpayForm = ({
   patientId,
   isReadOnly = false,
+  size = 'lg',
 }: AddpayFormProps) => {
   const currentYear = new Date().getFullYear();
   const defaultAddpayState = [
@@ -149,6 +153,7 @@ export const AddpayForm = ({
   return (
     <>
       <AddpayTags
+        size={size}
         isInteractive={!isReadOnly}
         addpayState={addpayState}
         onAddHandler={handleCreateAddpayFreedom}

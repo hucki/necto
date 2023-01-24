@@ -228,12 +228,14 @@ export const PersonForm = ({
             <div
               style={{
                 display: 'flex',
+                flexDirection: isMobile && !isReadOnly ? 'column' : 'row',
                 gap: '0.5rem',
-                justifyContent: 'space-evenly',
+                justifyContent: isMobile ? 'space-evenly' : 'flex-start',
               }}
             >
               <div className="addpayFreedom">{t('label.addPayFreedUntil')}</div>
               <AddpayForm
+                size={isReadOnly ? 'sm' : 'lg'}
                 isReadOnly={isReadOnly}
                 patientId={currentPerson.uuid}
               />
@@ -248,6 +250,7 @@ export const PersonForm = ({
               gap: '0.5rem',
             }}
           >
+            {t('label.hasContract')}
             <FormControl id="hasContract" isRequired>
               <Checkbox
                 isInvalid={
@@ -274,7 +277,6 @@ export const PersonForm = ({
                   PDF
                 </Button>
               )}
-              <FormLabel>{t('label.hasContract')}</FormLabel>
             </FormControl>
           </ModalFormGroup>
         </GridItem>
