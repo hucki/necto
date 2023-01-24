@@ -130,18 +130,9 @@ type LabelledInputProps = CommonLabelledFormElementProps & {
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-interface CustomFormControlProps {
-  hasLabel?: boolean;
-}
-
-const FormControl = styled(ChakraFormControl)(
-  ({ hasLabel = true }: CustomFormControlProps) => ({
-    margin: `${hasLabel ? '15px' : '5px'} auto ${
-      hasLabel ? '10px' : '5px'
-    } auto`,
-    width: '100%',
-  })
-);
+const FormControl = styled(ChakraFormControl)({
+  width: '100%',
+});
 
 const Checkbox = styled(ChakraCheckbox)({
   borderColor: 'grey',
@@ -197,7 +188,7 @@ const LabelledInput = ({
   type = 'text',
 }: LabelledInputProps) => {
   return (
-    <FormControl id={id} isRequired={isRequired}>
+    <FormControl id={id} isRequired={isRequired} m={'15px auto 10px auto'}>
       <Input
         disabled={disabled}
         type={type}
@@ -227,7 +218,10 @@ const LabelledDataDisplay = ({
   value,
 }: LabelledDataDisplayProps) => {
   return (
-    <FormControl id={id} hasLabel={Boolean(label)}>
+    <FormControl
+      id={id}
+      m={`${label ? '15px' : '5px'} auto ${label ? '10px' : '5px'} auto`}
+    >
       <DataDisplay className="data-display"> {value}</DataDisplay>
       {label && <FormLabel>{label}</FormLabel>}
     </FormControl>
