@@ -130,12 +130,12 @@ type LabelledInputProps = CommonLabelledFormElementProps & {
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-interface FormControlProps {
+interface CustomFormControlProps {
   hasLabel?: boolean;
 }
 
 const FormControl = styled(ChakraFormControl)(
-  ({ hasLabel = true }: FormControlProps) => ({
+  ({ hasLabel = true }: CustomFormControlProps) => ({
     margin: `${hasLabel ? '15px' : '5px'} auto ${
       hasLabel ? '10px' : '5px'
     } auto`,
