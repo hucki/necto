@@ -54,6 +54,16 @@ export type Event = {
   employee?: Employee;
   room?: Room;
 };
+export type Leave = Event & {
+  leaveStatus: LeaveStatus;
+  leaveType: LeaveType;
+};
+
+// Typeguard
+export const isLeave = (event: Event | Leave): event is Leave => {
+  return event.type === 'leave';
+};
+
 export type NewEvent = Pick<
   Event,
   | 'userId'

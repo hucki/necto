@@ -11,11 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useViewport } from '../../../hooks/useViewport';
-import { Event } from '../../../types/Event';
+import { Event, isLeave, Leave } from '../../../types/Event';
 import dayjs from 'dayjs';
 
 interface CalendarChooseEntryModalProps {
-  events: Event[];
+  events: (Event | Leave)[];
   // eslint-disable-next-line no-unused-vars
   handleChosenEvent: (e: Event) => void;
 }
@@ -31,9 +31,8 @@ function CalendarChooseEntryModal({
   const eventButtons =
     events &&
     events.map((e) => {
-      const isLeave = e.type === 'leave';
       const startTimeString = `${dayjs(e.startTime).format('HH:mm')}`;
-      const entryTitle = isLeave
+      const entryTitle = isLeave(e)
         ? t(`calendar.leave.type.${e.leaveType}`) +
           (e.leaveStatus === 'requested'
             ? ' (' + t(`calendar.leave.status.${e.leaveStatus}`) + ')'
@@ -43,7 +42,7 @@ function CalendarChooseEntryModal({
         : e.title;
       return (
         <Button key={e.uuid} onClick={() => handleChosenEvent(e)}>
-          {isLeave ? (
+          {isLeave(e) ? (
             <>
               <Tag
                 size="lg"

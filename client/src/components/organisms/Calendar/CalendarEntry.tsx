@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Event } from '../../../types/Event';
+import { Event, isLeave } from '../../../types/Event';
 import dayjs from 'dayjs';
 import {
   CalendarEntryContainer,
@@ -39,7 +39,7 @@ export const CalendarEntry = ({
         <EventIcon type="homeVisit" size="s" key="homeVisitIcon" />,
       ]);
     }
-    if (!isLeave && event.rrule !== '') {
+    if (!isLeave(event) && event.rrule !== '') {
       setIcons((icons) => [
         ...icons,
         <EventIcon type="recurring" size="s" key="rruleIcon" />,
@@ -88,14 +88,13 @@ export const CalendarEntry = ({
   ).format('HH:mm')}`;
 
   const isNote = event.type === 'note';
-  const isLeave = event.type === 'leave';
   const isRoomBooking = event.type === 'roomBooking';
   const isFirstDay = event.rrule === '' || !event.parentEventId;
   const isApproved = event.leaveStatus === 'approved';
   const isDone = event.isDone;
   const entryTitle = isRoomBooking
     ? event.title
-    : isLeave
+    : isLeave(event)
     ? t(`calendar.leave.type.${event.leaveType}`) +
       (event.leaveStatus === 'requested'
         ? ' (' + t(`calendar.leave.status.${event.leaveStatus}`) + ')'
@@ -105,9 +104,9 @@ export const CalendarEntry = ({
     : event.title;
   return (
     <CalendarEntryContainer
-      checked={(isLeave && isApproved) || (!isLeave && isDone)}
-      bgColor={isLeave ? 'leave' : isNote ? 'note' : event.bgColor}
-      title={!isLeave ? fullTimeString + ' ' + entryTitle : entryTitle}
+      checked={(isLeave(event) && isApproved) || (!isLeave(event) && isDone)}
+      bgColor={isLeave(event) ? 'leave' : isNote ? 'note' : event.bgColor}
+      title={!isLeave(event) ? fullTimeString + ' ' + entryTitle : entryTitle}
       key={event.uuid?.toString()}
       id={'calEntry-' + event.uuid?.toString()}
       onClick={readOnly ? undefined : (e) => onClickHandler({ e, event })}
@@ -121,7 +120,7 @@ export const CalendarEntry = ({
         {entryTitle}
       </CalendarEntryContent>
       <CalendarEntryIconContainer>
-        {!isNote && !isLeave && showTime && (
+        {!isNote && !isLeave(event) && showTime && (
           <CalendarEntryTime>{fullTimeString}</CalendarEntryTime>
         )}
         {!isRoomBooking && (

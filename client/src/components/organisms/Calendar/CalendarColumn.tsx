@@ -1,6 +1,6 @@
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { Event } from '../../../types/Event';
+import { Event, isLeave } from '../../../types/Event';
 import { EmployeeRessource } from '../../../types/Ressource';
 import { CalendarEntry } from './CalendarEntry';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -224,7 +224,7 @@ function CalendarColumn({
   const columnHeader = date.format(columnHeaderFormat);
 
   const editModal = clickedEvent ? (
-    clickedEvent?.type !== 'leave' ? (
+    !isLeave(clickedEvent) ? (
       <CalendarEventEdit
         event={clickedEvent}
         isOpen={true}
