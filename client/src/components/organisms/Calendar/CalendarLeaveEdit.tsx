@@ -7,7 +7,7 @@ import { RiCheckFill } from 'react-icons/ri';
 import { getEventSeries } from '../../../helpers/dataConverter';
 import { useDeleteEventWithChildren } from '../../../hooks/events';
 import { useViewport } from '../../../hooks/useViewport';
-import { Event } from '../../../types/Event';
+import { Leave } from '../../../types/Event';
 import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import {
@@ -19,7 +19,7 @@ import {
 } from '../../Library';
 
 interface CalendarLeaveEditProps {
-  leave: Event;
+  leave: Leave;
   isOpen: boolean;
   onClose: () => void;
 }
