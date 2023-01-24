@@ -162,12 +162,14 @@ const CalendarLeaveInput = ({
       <>
         <div>
           <div className="modal-title">
-            {chosenLeaveType
-              ? t(`calendar.leave.type.${newLeave.leaveType}`)
-              : '?'}{' '}
-            {ressource?.displayName
-              ? t('dict.for') + ' ' + ressource.displayName
-              : ''}
+            <>
+              {chosenLeaveType && newLeave.leaveType
+                ? t(`calendar.leave.type.${newLeave.leaveType}`)
+                : '?'}{' '}
+              {ressource?.displayName
+                ? t('dict.for') + ' ' + ressource.displayName
+                : ''}
+            </>
           </div>
           <div
             className="modal-subtitle"
