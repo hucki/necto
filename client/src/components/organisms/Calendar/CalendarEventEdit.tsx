@@ -285,7 +285,10 @@ function CalendarEventEdit({
               {message && <ErrorMessage error={{ message }} />}
             </ModalBody>
 
-            <ModalFooter bgColor={isNote ? 'note' : undefined}>
+            <ModalFooter
+              mb={isMobile ? '1rem' : undefined}
+              bgColor={isNote ? 'note' : undefined}
+            >
               <div
                 className="row"
                 style={{

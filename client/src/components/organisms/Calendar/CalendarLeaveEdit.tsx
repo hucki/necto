@@ -80,7 +80,7 @@ function CalendarLeaveEdit({ leave, isOpen, onClose }: CalendarLeaveEditProps) {
             </ModalHeader>
             <ModalBody></ModalBody>
 
-            <ModalFooter>
+            <ModalFooter mb={isMobile ? '1rem' : undefined}>
               <div
                 className="row"
                 style={{

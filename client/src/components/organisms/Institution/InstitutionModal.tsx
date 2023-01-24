@@ -20,6 +20,7 @@ import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import { ContactData } from '../../../types/ContactData';
 import { useUpdateContact } from '../../../hooks/contact';
+import { useViewport } from '../../../hooks/useViewport';
 
 interface InstitutionModalProps {
   institution: Institution;
@@ -32,6 +33,7 @@ export const InstitutionModal = ({
 }: InstitutionModalProps) => {
   const toast = useToast();
   const { t } = useTranslation();
+  const { isMobile } = useViewport();
 
   const { mutateAsync: updateInstitution } = useUpdateInstitution();
   const { mutateAsync: createInstitution } = useCreateInstitution();
@@ -147,6 +149,7 @@ export const InstitutionModal = ({
         css={{
           padding: '0.5rem',
           display: 'flex',
+          marginBottom: isMobile ? '1rem' : undefined,
           flexDirection: 'column',
         }}
       >

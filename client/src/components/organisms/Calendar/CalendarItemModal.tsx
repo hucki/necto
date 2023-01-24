@@ -1,5 +1,6 @@
 import { Modal, ModalOverlay } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
+import { useViewport } from '../../../hooks/useViewport';
 import { ModalBody, ModalContent, ModalHeader } from '../../Library';
 import { ModalFooter } from '../../Library/Modal';
 
@@ -28,6 +29,7 @@ const CalendarItemModal = ({
   scrollBehavior = 'inside',
   size,
 }: CalendarItemModalProps) => {
+  const { isMobile } = useViewport();
   return (
     <>
       <Modal
@@ -43,7 +45,12 @@ const CalendarItemModal = ({
           <ModalContent>
             <ModalHeader bgColor={headerBgColor}>{modalHeader}</ModalHeader>
             <ModalBody bgColor={bodyBgColor}>{modalBody}</ModalBody>
-            <ModalFooter bgColor={footerBgColor}>{modalFooter}</ModalFooter>
+            <ModalFooter
+              mb={isMobile ? '1rem' : undefined}
+              bgColor={footerBgColor}
+            >
+              {modalFooter}
+            </ModalFooter>
           </ModalContent>
         </ModalOverlay>
       </Modal>
