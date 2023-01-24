@@ -175,8 +175,8 @@ function CalendarContainer({
     <CalendarWrapper
       id="containerDiv"
       key="containerDiv"
-      onTouchStart={(e) => setTouchStart(e)}
-      onTouchEnd={(e) => setTouchEnd(e)}
+      onTouchStart={setTouchStart}
+      onTouchEnd={setTouchEnd}
     >
       <CalendarScale
         scaleWidth={scaleWidth}
