@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { Input, FormControl, FormLabel } from '../../Library';
+import { LabelledInput } from '../../Library';
 import { requestResetPassword } from '../../../services/Auth';
 import { ResetResponse } from '../../../types/Auth';
 
@@ -82,16 +82,14 @@ const ForgotPassword = ({ onSubmit }: ResetPasswordProps): JSX.Element => {
           alignItems: 'stretch',
         }}
       >
-        <FormControl id="email">
-          <Input
-            type="text"
-            name="email"
-            autoComplete="username"
-            value={resetState.email}
-            onChange={onChangeHandler}
-          />
-          <FormLabel>{t('auth.email')}</FormLabel>
-        </FormControl>
+        <LabelledInput
+          label={t('auth.email')}
+          id="email"
+          name="email"
+          autoComplete="username"
+          value={resetState.email}
+          onChangeHandler={onChangeHandler}
+        />
         <Button
           aria-label="resetPassword"
           type="submit"

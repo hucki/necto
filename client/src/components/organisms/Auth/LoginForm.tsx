@@ -1,7 +1,7 @@
 import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { Input, FormLabel, FormControl } from '../../Library';
+import { LabelledInput } from '../../Library';
 import { AuthContext } from '../../../providers/AuthProvider';
 
 const LoginForm = (): JSX.Element => {
@@ -46,26 +46,24 @@ const LoginForm = (): JSX.Element => {
           marginTop: '10px',
         }}
       >
-        <FormControl id="email">
-          <Input
-            type="text"
-            name="email"
-            autoComplete="username"
-            value={loginState.email}
-            onChange={onChangeHandler}
-          />
-          <FormLabel>{t('auth.email')}</FormLabel>
-        </FormControl>
-        <FormControl id="password">
-          <Input
-            type="password"
-            name="password"
-            autoComplete="current-password"
-            value={loginState.password}
-            onChange={onChangeHandler}
-          />
-          <FormLabel>{t('auth.password')}</FormLabel>
-        </FormControl>
+        <LabelledInput
+          label={t('auth.email')}
+          type="email"
+          name="email"
+          id="email"
+          autoComplete="username"
+          value={loginState.email}
+          onChangeHandler={onChangeHandler}
+        />
+        <LabelledInput
+          label={t('auth.password')}
+          type="password"
+          name="password"
+          id="password"
+          autoComplete="current-password"
+          value={loginState.password}
+          onChangeHandler={onChangeHandler}
+        />
 
         <Button
           aria-label="login"
