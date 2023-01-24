@@ -198,7 +198,10 @@ function CalendarEventEdit({
         scrollBehavior="inside"
         size={isMobile ? 'full' : undefined}
       >
-        <ModalOverlay>
+        <ModalOverlay
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+        >
           <ModalContent>
             <ModalHeader
               bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}

@@ -73,6 +73,8 @@ function CalendarChooseEntryModal({
         size={isMobile ? 'full' : undefined}
       >
         <ModalOverlay
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
           css={{
             backgroundColor: 'rgba(0,0,0,0.3)',
           }}

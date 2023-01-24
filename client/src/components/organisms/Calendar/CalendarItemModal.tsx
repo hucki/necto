@@ -36,7 +36,10 @@ const CalendarItemModal = ({
         scrollBehavior={scrollBehavior}
         size={size}
       >
-        <ModalOverlay>
+        <ModalOverlay
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+        >
           <ModalContent>
             <ModalHeader bgColor={headerBgColor}>{modalHeader}</ModalHeader>
             <ModalBody bgColor={bodyBgColor}>{modalBody}</ModalBody>

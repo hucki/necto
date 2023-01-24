@@ -46,7 +46,10 @@ function CalendarLeaveEdit({ leave, isOpen, onClose }: CalendarLeaveEditProps) {
         scrollBehavior="inside"
         size={isMobile ? 'full' : undefined}
       >
-        <ModalOverlay>
+        <ModalOverlay
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+        >
           <ModalContent>
             <ModalHeader bgColor={leave?.bgColor || 'green'}>
               {!isApproved ? null : (
