@@ -22,10 +22,10 @@ import { Event, NewEvent } from '../../../types/Event';
 import {
   FormGroup,
   Input,
-  DatePicker,
   Select,
   FormLabel,
   Checkbox,
+  LabelledInput,
 } from '../../Library';
 import { RRule, Options } from 'rrule';
 import { registerLocale } from 'react-datepicker';
@@ -141,16 +141,20 @@ function CalendarEventForm({
   const [currentEvent, setCurrentEvent] = useState<Event | NewEvent>(() => ({
     ...event,
   }));
-  const [currentStartTime, setCurrentStartTime] = useState<
-    dayjs.Dayjs | undefined
-  >(() => currentEvent.startTime);
+  const [currentStartTime, setCurrentStartTime] = useState<dayjs.Dayjs>(
+    () => currentEvent.startTime
+  );
+
+  const [currentEndTime, setCurrentEndTime] = useState<dayjs.Dayjs>(
+    () => currentEvent.endTime
+  );
 
   const currentPerson =
     patients.length && currentEvent
       ? patients.find((p) => p.uuid === currentEvent.patientId)
       : undefined;
 
-  const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
+  const [rruleOptions, setRruleOptions] = useState<Partial<Options>>(() => ({
     freq: RRule.WEEKLY,
     interval: 1,
     // FIXME: current version of rrule.all() yields invalid dates
@@ -158,11 +162,11 @@ function CalendarEventForm({
     // https://github.com/jakubroztocil/rrule/issues/523
     // tzid: 'Europe/Amsterdam',
     count: 10,
-    dtstart: getNewUTCDate(currentEvent.startTime),
-  });
+    dtstart: getNewUTCDate(currentStartTime),
+  }));
 
   const [eventDuration, setEventDuration] = useState(
-    dayjs(event.endTime).diff(dayjs(event.startTime), 'm')
+    dayjs(currentEndTime).diff(dayjs(currentStartTime), 'm')
   );
   const [recurringFrequency, setRecurringFrequency] =
     useState<RecurringFrequency>('WEEKLY');
@@ -204,26 +208,6 @@ function CalendarEventForm({
     setMessage(undefined);
   }
 
-  type TimeChangeProps = {
-    date: ReactDatePickerReturnType;
-    key: 'startTime' | 'endTime';
-  };
-
-  function handleTimeChange({ date, key }: TimeChangeProps) {
-    if (date) {
-      setCurrentEvent((cur) => ({
-        ...cur,
-        [`${key}`]: dayjs(date.toString()),
-      }));
-      if (key === 'startTime')
-        setCurrentEvent((cur) => ({
-          ...cur,
-          endTime: dayjs(date.toString()).add(eventDuration, 'm'),
-        }));
-    }
-    setMessage(undefined);
-  }
-
   function onSelectChange(event: React.FormEvent<HTMLSelectElement>) {
     event.preventDefault();
     if (event.currentTarget.name === 'frequency') {
@@ -244,10 +228,9 @@ function CalendarEventForm({
   }
   function handleEventDurationChange(event: BaseSyntheticEvent) {
     setEventDuration(event.target.value);
-    setCurrentEvent((cur) => ({
-      ...cur,
-      endTime: dayjs(cur.startTime.toString()).add(event.target.value, 'm'),
-    }));
+    setCurrentEndTime(
+      dayjs(currentStartTime.toString()).add(event.target.value, 'm')
+    );
     setMessage(undefined);
   }
 
@@ -273,7 +256,7 @@ function CalendarEventForm({
             : RRule.MONTHLY,
         interval: recurringFrequency === 'BIWEEKLY' ? 2 : 1,
         count: recurringInterval,
-        dtstart: getNewUTCDate(currentEvent.startTime),
+        dtstart: getNewUTCDate(currentStartTime),
       }));
     } else {
       setCurrentEvent((cur) => ({ ...cur, rrule: '' }));
@@ -282,7 +265,7 @@ function CalendarEventForm({
     currentEvent.isRecurring,
     recurringFrequency,
     recurringInterval,
-    currentEvent.startTime,
+    currentStartTime,
   ]);
 
   useEffect(() => {
@@ -295,7 +278,7 @@ function CalendarEventForm({
 
   function onBuildTimelineHandler() {
     const rrule = new RRule(rruleOptions);
-    const dt = dayjs.utc(currentEvent.startTime);
+    const dt = dayjs.utc(currentStartTime);
     setTimeline(
       <ul>
         {rrule.all().map((date) => {
@@ -335,7 +318,7 @@ function CalendarEventForm({
       isCancelledReason: currentEvent.isCancelledReason,
       rrule: currentEvent.rrule,
       startTime: dayjs(currentStartTime),
-      endTime: currentEvent.endTime,
+      endTime: dayjs(currentEndTime),
       patientId: currentEvent.patientId,
       roomId: currentEvent.roomId,
       bgColor: currentEvent.bgColor,
@@ -350,15 +333,19 @@ function CalendarEventForm({
     currentEvent.isCancelled,
     currentEvent.isCancelledReason,
     currentEvent.rrule,
-    currentEvent.startTime,
-    currentEvent.endTime,
     currentEvent.patientId,
     currentEvent.roomId,
     currentStartTime,
+    currentEndTime,
   ]);
   const handleStartTimeChange = (e: React.FormEvent<HTMLInputElement>) => {
-    console.log({ newDate: e.currentTarget.value });
     setCurrentStartTime(dayjs(e.currentTarget.value));
+    setCurrentEndTime(dayjs(e.currentTarget.value).add(eventDuration, 'm'));
+    setMessage(undefined);
+  };
+  const handleEndTimeChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setCurrentEndTime(dayjs(e.currentTarget.value));
+    setMessage(undefined);
   };
   const isNote = currentEvent.type === 'note';
 
@@ -461,46 +448,15 @@ function CalendarEventForm({
           </FormGroup>
         </div>
       )}
-      <FormControl id="isWaitingSince">
-        <Input
-          autocomplete="off"
-          type="datetime-local"
-          name="isWaitingSince"
-          value={dayjs(currentStartTime).format('YYYY-MM-DDThh:mm:ss')}
-          onChange={
-            handleStartTimeChange
-            // (e) =>
-            // onInputChange({ event: e, key: 'isWaitingSince' as keyof Person })
-          }
-        />
-        <FormLabel>{t('label.isWaitingSince')}</FormLabel>
-      </FormControl>
-      <FormControl id="eventStartDatePicker" mb="0.75rem">
-        <DatePicker
-          popperPlacement="top"
-          popperModifiers={[
-            { name: 'preventOverflow', enabled: true },
-            { name: 'flip', enabled: true },
-          ]}
-          name="startDate"
-          showTimeSelect
-          locale="de"
-          timeFormat="p"
-          timeIntervals={15}
-          dateFormat="Pp"
-          selected={dayjs(currentEvent.startTime).toDate()}
-          onChange={(date: ReactDatePickerReturnType) => {
-            if (date) handleTimeChange({ date, key: 'startTime' });
-          }}
-        />
-        <FormLabel
-          style={{
-            background: isNote ? 'khaki' : undefined,
-          }}
-        >
-          {t('calendar.event.start')}
-        </FormLabel>
-      </FormControl>
+      <LabelledInput
+        label={t('calendar.event.start')}
+        id="startTime"
+        autoComplete="off"
+        type="datetime-local"
+        name="startTime"
+        value={dayjs(currentStartTime).format('YYYY-MM-DDTHH:mm:ss')}
+        onChangeHandler={handleStartTimeChange}
+      />
       {!isNote && (
         <FormControl id="duration" mb="0.75rem" maxWidth="25%">
           <Select
@@ -515,32 +471,15 @@ function CalendarEventForm({
           <FormLabel>{t('calendar.event.duration')}</FormLabel>
         </FormControl>
       )}
-      <FormControl id="eventEndDatePicker" mb="0.75rem">
-        <DatePicker
-          popperPlacement="top"
-          popperModifiers={[
-            { name: 'preventOverflow', enabled: true },
-            { name: 'flip', enabled: true },
-          ]}
-          name="endDate"
-          showTimeSelect
-          locale="de"
-          timeFormat="p"
-          timeIntervals={15}
-          dateFormat="Pp"
-          selected={dayjs(currentEvent.endTime).toDate()}
-          onChange={(date: ReactDatePickerReturnType) => {
-            if (date) handleTimeChange({ date, key: 'endTime' });
-          }}
-        />
-        <FormLabel
-          style={{
-            background: isNote ? 'khaki' : undefined,
-          }}
-        >
-          {t('calendar.event.end')}
-        </FormLabel>
-      </FormControl>
+      <LabelledInput
+        label={t('calendar.event.end')}
+        id="endTime"
+        autoComplete="off"
+        type="datetime-local"
+        name="endTime"
+        value={dayjs(currentEndTime).format('YYYY-MM-DDTHH:mm:ss')}
+        onChangeHandler={handleEndTimeChange}
+      />
       {!isNote && (
         <div>
           <hr></hr>
