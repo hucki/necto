@@ -141,6 +141,10 @@ function CalendarEventForm({
   const [currentEvent, setCurrentEvent] = useState<Event | NewEvent>(() => ({
     ...event,
   }));
+  const [currentStartTime, setCurrentStartTime] = useState<
+    dayjs.Dayjs | undefined
+  >(() => currentEvent.startTime);
+
   const currentPerson =
     patients.length && currentEvent
       ? patients.find((p) => p.uuid === currentEvent.patientId)
@@ -330,7 +334,7 @@ function CalendarEventForm({
       isCancelled: currentEvent.isCancelled,
       isCancelledReason: currentEvent.isCancelledReason,
       rrule: currentEvent.rrule,
-      startTime: currentEvent.startTime,
+      startTime: dayjs(currentStartTime),
       endTime: currentEvent.endTime,
       patientId: currentEvent.patientId,
       roomId: currentEvent.roomId,
@@ -350,8 +354,12 @@ function CalendarEventForm({
     currentEvent.endTime,
     currentEvent.patientId,
     currentEvent.roomId,
+    currentStartTime,
   ]);
-
+  const handleStartTimeChange = (e: React.FormEvent<HTMLInputElement>) => {
+    console.log({ newDate: e.currentTarget.value });
+    setCurrentStartTime(dayjs(e.currentTarget.value));
+  };
   const isNote = currentEvent.type === 'note';
 
   return (
@@ -453,6 +461,20 @@ function CalendarEventForm({
           </FormGroup>
         </div>
       )}
+      <FormControl id="isWaitingSince">
+        <Input
+          autocomplete="off"
+          type="datetime-local"
+          name="isWaitingSince"
+          value={dayjs(currentStartTime).format('YYYY-MM-DDThh:mm:ss')}
+          onChange={
+            handleStartTimeChange
+            // (e) =>
+            // onInputChange({ event: e, key: 'isWaitingSince' as keyof Person })
+          }
+        />
+        <FormLabel>{t('label.isWaitingSince')}</FormLabel>
+      </FormControl>
       <FormControl id="eventStartDatePicker" mb="0.75rem">
         <DatePicker
           popperPlacement="top"
