@@ -1,11 +1,7 @@
 import React, { useContext } from 'react';
 import dayjs from 'dayjs';
-import { DatePicker } from '../../Library';
-import { Button, Flex, Grid } from '@chakra-ui/react';
+import { Button, Flex, Grid, Input } from '@chakra-ui/react';
 import { UserDateContext } from '../../../providers/UserDate';
-import { useViewport } from '../../../hooks/useViewport';
-import { registerLocale } from 'react-datepicker';
-import de from 'date-fns/locale/de';
 import {
   CgChevronDoubleLeft,
   CgChevronDoubleRight,
@@ -15,7 +11,6 @@ import {
 import { IconButton } from '../../atoms/Buttons';
 import { useFilter } from '../../../hooks/useFilter';
 import { IoMenu } from 'react-icons/io5';
-registerLocale('de', de);
 
 interface HeadaerBarProps {
   isSideNavOpen: boolean;
@@ -25,13 +20,11 @@ interface HeadaerBarProps {
 const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
   const { calendarView } = useFilter();
   const { currentDate, setCurrentDate, goTo } = useContext(UserDateContext);
-  const { isMobile } = useViewport();
 
-  function onChangeHandler(date: ReactDatePickerReturnType) {
-    if (date) {
-      setCurrentDate(dayjs(date.toString()));
-    }
-  }
+  const dateChangeHandler = (e: React.FormEvent<HTMLInputElement>) => {
+    setCurrentDate(dayjs(e.currentTarget.value));
+  };
+
   function todayClickHandler() {
     setCurrentDate(dayjs());
   }
@@ -81,13 +74,14 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
             onClick={() => goTo('previousDay')}
           />
         )}
-        <div style={{ maxWidth: '100px' }}>
-          <DatePicker
-            isMobile={isMobile}
-            locale="de"
-            onChange={onChangeHandler}
-            dateFormat={isMobile ? 'dd.MM.' : 'dd.MM.y'}
-            selected={currentDate?.toDate()}
+        <div style={{ maxWidth: '150px' }}>
+          <Input
+            id="startDate"
+            autoComplete="off"
+            type="date"
+            name="startDate"
+            value={dayjs(currentDate).format('YYYY-MM-DD')}
+            onChange={dateChangeHandler}
           />
         </div>
         {calendarView === 'day' ? (
