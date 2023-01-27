@@ -30,14 +30,11 @@ import {
   useUpdateCurrentAndFutureEvent,
 } from '../../../hooks/events';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
-import { registerLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { CancellationReason, Event, NewEvent } from '../../../types/Event';
 import { FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
 
 import CalendarEventView from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
-import de from 'date-fns/locale/de';
 import { checkOverlap } from '../../../helpers/eventChecker';
 import { useViewport } from '../../../hooks/useViewport';
 import { ModalFooter } from '../../Library/Modal';
@@ -48,7 +45,6 @@ import {
 } from 'react-icons/ri';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
-registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
 

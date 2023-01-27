@@ -1,4 +1,4 @@
-import { Button, FormControl } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,13 +7,11 @@ import { Options, RRule, rrulestr } from 'rrule';
 import { useCreateEvent } from '../../../hooks/events';
 import { LeaveType, NewEvent } from '../../../types/Event';
 import { EmployeeRessource } from '../../../types/Ressource';
-import { DatePicker, FormLabel } from '../../Library';
+import { LabelledInput } from '../../Library';
 import CalendarItemModal from './CalendarItemModal';
 import { ModalFooterControls } from './ModalFooterControls';
-import { registerLocale } from 'react-datepicker';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
-import de from 'date-fns/locale/de';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { IconButton } from '../../atoms/Buttons';
 import { Room } from '../../../types/Rooms';
@@ -21,7 +19,6 @@ import { isEmployeeRessource } from './CalendarColumn';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
 import { useViewport } from '../../../hooks/useViewport';
 
-registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -43,13 +40,18 @@ const CalendarLeaveInput = ({
 }: CalendarLeaveInputProps) => {
   const { t } = useTranslation();
   const { isMobile } = useViewport();
-
+  const [currentStartTime, setCurrentStartTime] = useState<dayjs.Dayjs>(() =>
+    dayjs(dateTime).hour(0).minute(0)
+  );
+  const [currentEndTime, setCurrentEndTime] = useState<dayjs.Dayjs>(() =>
+    dayjs(dateTime).hour(23).minute(59)
+  );
   const defaultLeave: NewEvent = {
     userId: uuid.toString(),
     ressourceId: uuid,
     title: '',
-    startTime: dayjs(dateTime).hour(0).minute(0),
-    endTime: dayjs(dateTime).hour(23).minute(59),
+    startTime: currentStartTime,
+    endTime: currentEndTime,
     isAllDay: true,
     type: 'leave',
     leaveType: 'paidVacation',
@@ -77,21 +79,8 @@ const CalendarLeaveInput = ({
     // https://github.com/jakubroztocil/rrule/issues/523
     // tzid: 'Europe/Amsterdam',
     count: 1,
-    dtstart: getNewUTCDate(newLeave.startTime),
+    dtstart: getNewUTCDate(currentStartTime),
   });
-
-  type TimeChangeProps = {
-    date: ReactDatePickerReturnType;
-    key: 'startTime' | 'endTime';
-  };
-  function handleTimeChange({ date, key }: TimeChangeProps) {
-    if (date) {
-      setNewLeave((cur) => ({
-        ...cur,
-        [`${key}`]: dayjs(date.toString()),
-      }));
-    }
-  }
 
   async function handleSubmit() {
     if (newLeave) {
@@ -127,17 +116,21 @@ const CalendarLeaveInput = ({
   }
 
   useEffect(() => {
-    if (!dayjs(newLeave.startTime).isSame(newLeave.endTime, 'day')) {
-      const count = 1 + newLeave.endTime.diff(newLeave.startTime, 'day');
+    if (dayjs(currentStartTime).isAfter(currentEndTime, 'day')) {
+      setCurrentEndTime(currentStartTime);
+      return;
+    }
+    if (!dayjs(currentStartTime).isSame(currentEndTime, 'day')) {
+      const count = 1 + currentEndTime.diff(currentStartTime, 'day');
       setRruleOptions((cur) => ({
         ...cur,
         count,
-        dtstart: getNewUTCDate(newLeave.startTime),
+        dtstart: getNewUTCDate(currentStartTime),
       }));
     } else {
       setNewLeave((cur) => ({ ...cur, rrule: '' }));
     }
-  }, [newLeave.startTime, newLeave.endTime]);
+  }, [currentStartTime, currentEndTime]);
 
   useEffect(() => {
     const rrule = new RRule(rruleOptions);
@@ -156,7 +149,12 @@ const CalendarLeaveInput = ({
       }));
     }
   }, [chosenLeaveType]);
-
+  const handleStartDateChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setCurrentStartTime(dayjs(e.currentTarget.value));
+  };
+  const handleEndDateChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setCurrentEndTime(dayjs(e.currentTarget.value));
+  };
   const ModalHeaderContent = () => {
     return (
       <>
@@ -177,7 +175,7 @@ const CalendarLeaveInput = ({
               fontSize: '0.8rem',
             }}
           >
-            {newLeave.startTime.format('llll')}
+            {currentStartTime.format('llll')}
           </div>
         </div>
         {newLeave.leaveType === 'sick' && <EventIcon type="sick" size="l" />}
@@ -206,33 +204,26 @@ const CalendarLeaveInput = ({
         <ChooseLeave />
       ) : (
         <>
-          <FormControl id="eventStartDatePicker" mb="0.75rem">
-            <DatePicker
-              name="startDate"
-              disabled={!chosenLeaveType}
-              locale="de"
-              dateFormat="E dd.MM.yyyy"
-              selected={dayjs(newLeave.startTime).toDate()}
-              onChange={(date: ReactDatePickerReturnType) => {
-                if (date) handleTimeChange({ date, key: 'startTime' });
-              }}
-            />
-            <FormLabel>{t('calendar.event.start')}</FormLabel>
-          </FormControl>
-
-          <FormControl id="eventEndDatePicker" mb="0.75rem">
-            <DatePicker
-              name="endDate"
-              disabled={!chosenLeaveType}
-              locale="de"
-              dateFormat="E dd.MM.yyyy"
-              selected={dayjs(newLeave.endTime).toDate()}
-              onChange={(date: ReactDatePickerReturnType) => {
-                if (date) handleTimeChange({ date, key: 'endTime' });
-              }}
-            />
-            <FormLabel>{t('calendar.event.end')}</FormLabel>
-          </FormControl>
+          <LabelledInput
+            disabled={!chosenLeaveType}
+            label={t('calendar.event.start')}
+            id="startDate"
+            autoComplete="off"
+            type="date"
+            name="startDate"
+            value={dayjs(currentStartTime).format('YYYY-MM-DD')}
+            onChangeHandler={handleStartDateChange}
+          />
+          <LabelledInput
+            disabled={!chosenLeaveType}
+            label={t('calendar.event.start')}
+            id="endDate"
+            autoComplete="off"
+            type="date"
+            name="endDate"
+            value={dayjs(currentEndTime).format('YYYY-MM-DD')}
+            onChangeHandler={handleEndDateChange}
+          />
         </>
       )}
     </>

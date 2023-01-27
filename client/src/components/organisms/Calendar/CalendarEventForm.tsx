@@ -28,18 +28,15 @@ import {
   LabelledInput,
 } from '../../Library';
 import { RRule, Options } from 'rrule';
-import { registerLocale } from 'react-datepicker';
 import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
-import de from 'date-fns/locale/de';
 import { useAllPatients } from '../../../hooks/patient';
 import { useAllRooms } from '../../../hooks/rooms';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { RiSearchLine } from 'react-icons/ri';
 import { Patient } from '../../../types/Patient';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
-registerLocale('de', de);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
