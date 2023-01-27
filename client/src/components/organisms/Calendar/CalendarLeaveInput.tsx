@@ -116,11 +116,14 @@ const CalendarLeaveInput = ({
   }
 
   useEffect(() => {
+    const currentLeave = {
+      ...newLeave,
+      startTime: currentStartTime,
+      endTime: currentEndTime,
+    };
     if (dayjs(currentStartTime).isAfter(currentEndTime, 'day')) {
       setCurrentEndTime(currentStartTime);
-      return;
-    }
-    if (!dayjs(currentStartTime).isSame(currentEndTime, 'day')) {
+    } else if (!dayjs(currentStartTime).isSame(currentEndTime, 'day')) {
       const count = 1 + currentEndTime.diff(currentStartTime, 'day');
       setRruleOptions((cur) => ({
         ...cur,
@@ -128,8 +131,9 @@ const CalendarLeaveInput = ({
         dtstart: getNewUTCDate(currentStartTime),
       }));
     } else {
-      setNewLeave((cur) => ({ ...cur, rrule: '' }));
+      currentLeave.rrule = '';
     }
+    setNewLeave(currentLeave);
   }, [currentStartTime, currentEndTime]);
 
   useEffect(() => {
