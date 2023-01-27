@@ -7,7 +7,6 @@ import {
   Checkbox as ChakraCheckbox,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
-import ReactDatePicker from 'react-datepicker';
 import { User } from '../../types/User';
 
 const inputStyles = {
@@ -94,18 +93,6 @@ const RadioGroup = styled.div({
   justifyContent: 'space-between',
   alignItems: 'center',
 });
-
-// pass props like seen here:
-// https://styled-components.com/docs/basics#passed-props
-const DatePicker = styled(ReactDatePicker)(
-  inputStyles,
-  ({ isMobile = false }: { isMobile?: boolean }) => ({
-    padding: '0.4rem 0.2rem',
-    background: 'transparent',
-    textAlign: 'center',
-    maxWidth: isMobile ? '4rem' : undefined,
-  })
-);
 
 type CommonLabelledFormElementProps = {
   isRequired?: boolean;
@@ -237,7 +224,6 @@ export {
   Label,
   Select,
   Checkbox,
-  DatePicker,
   RadioGroup,
   ModalFormGroup,
   TextDisplay,

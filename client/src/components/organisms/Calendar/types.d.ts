@@ -10,8 +10,6 @@ type CalenderEventViewProps = {
   eventRoom: Event['room'];
 };
 
-type ReactDatePickerReturnType = Date | [Date | null, Date | null] | null;
-
 type RecurringFrequency = 'WEEKLY' | 'MONTHLY' | 'BIWEEKLY';
 type RecurringInterval =
   | 1
