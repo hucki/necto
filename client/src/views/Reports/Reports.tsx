@@ -10,11 +10,15 @@ const Reports = () => {
     currentDate.year(),
     currentDate.week()
   );
+  const dateRange =
+    currentDate.startOf('week').format('DD.MM.') +
+    ' - ' +
+    currentDate.endOf('week').format('DD.MM.YY');
   return (
     <>
-      current week: {currentDate.week() + '/' + currentDate.year()}
+      current week: {dateRange + ' (KW ' + currentDate.week() + ')'}
       {(!data || isLoading) && <FullPageSpinner />}
-      {data && <EmployeeReport employees={data} />}
+      {data && <EmployeeReport employees={data} dateRange={dateRange} />}
     </>
   );
 };
