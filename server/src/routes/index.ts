@@ -78,6 +78,10 @@ router.patch('/users', userController.updateUser);
 // employee routes
 router.get('/employees/all', employeeController.getAllEmployees);
 router.get('/employees/active', employeeController.getAllActiveEmployees);
+router.get(
+  '/employees/w/:year/:week',
+  employeeController.getAllActiveEmployeesWithEventsPerWeek
+);
 router.post('/employees', employeeController.addEmployee);
 router.patch('/employees', employeeController.updateEmployee);
 
