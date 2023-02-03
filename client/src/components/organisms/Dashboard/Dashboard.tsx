@@ -12,6 +12,7 @@ import { AuthContext } from '../../../providers/AuthProvider';
 import Home from '../../../views/Home/Home';
 import Institutions from '../../../views/Institutions/Institutions';
 import RoomCalendar from '../../../views/RoomCalendar/RoomCalendar';
+import Reports from '../../../views/Reports/Reports';
 
 interface DashboardInputProps {
   id: string;
@@ -78,6 +79,7 @@ const Dashboard = ({ id }: DashboardInputProps) => {
           />
           <Route path="/teamcal" element={<TeamCalendar />} />
           <Route path="/personalcal" element={<PersonalCalendar id={id} />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
