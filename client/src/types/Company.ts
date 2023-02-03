@@ -5,6 +5,8 @@ export type Company = {
   street: string;
   zip: string;
   city: string;
+  bankIban?: string;
+  bankBic?: string;
   tenantId: string;
   validUntil: Date;
   createdAt?: Date;
