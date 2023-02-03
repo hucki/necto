@@ -18,14 +18,14 @@ export type GoToTarget =
   | 'nextWeek';
 
 type UserDateContextType = {
-  currentDate: Dayjs | undefined;
+  currentDate: Dayjs;
   setCurrentDate: Dispatch<SetStateAction<Dayjs>>;
   // eslint-disable-next-line no-unused-vars
   goTo: (target: GoToTarget) => void;
 };
 
 const UserDateContext = createContext<UserDateContextType>({
-  currentDate: undefined,
+  currentDate: dayjs(),
   setCurrentDate: () => undefined,
   goTo: () => undefined,
 });
