@@ -4,14 +4,16 @@ import {
   FormControl,
   GridItem,
   SimpleGrid,
+  Icon,
 } from '@chakra-ui/react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail } from 'react-icons/cg';
-import { contract } from '../../../helpers/docs';
+import { RiPrinterLine } from 'react-icons/ri';
 import {
   useCreateDoctorContact,
   useCreatePatientContact,
@@ -36,6 +38,7 @@ import {
   Checkbox,
 } from '../../Library';
 import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
+import { Contract } from '../Documents/Contract';
 import { EventList } from '../List/Events';
 import { AddpayForm } from '../Patients/AddpayForm';
 dayjs.extend(LocalizedFormat);
@@ -72,8 +75,8 @@ export const PersonForm = ({
   onCreate,
 }: PersonFormProps) => {
   const { t } = useTranslation();
-  const { isMobile } = useViewport();
   const { currentCompany } = useFilter();
+  const { isMobile } = useViewport();
   const { doctors } = useAllDoctors();
   const { mutateAsync: createPatientContact } = useCreatePatientContact();
   const { mutateAsync: createDoctorContact } = useCreateDoctorContact();
@@ -210,16 +213,11 @@ export const PersonForm = ({
     }
   };
 
-  const patientContract = (person as Patient).hasContract
-    ? undefined
-    : contract(person, currentCompany);
-  // const contractOutput = personContract.output('datauristring');
-
-  const contractFileName = `contract_${(
+  const contractFileName = `vertrag_${(
     person.lastName +
     '_' +
     person.firstName
-  ).replace(' ', '')}.pdf`;
+  ).replace(' ', '')}_${dayjs().format('YYYYMMDD')}.pdf`;
   const patientCheckboxes = () => {
     return (
       <SimpleGrid columns={1} gap={2} py={2}>
@@ -251,7 +249,7 @@ export const PersonForm = ({
             }}
           >
             {t('label.hasContract')}
-            <FormControl id="hasContract" isRequired>
+            <FormControl id="hasContract" isRequired w="15%">
               <Checkbox
                 isInvalid={
                   (currentPerson as Patient).hasContract ? undefined : true
@@ -267,17 +265,34 @@ export const PersonForm = ({
                   onCheckboxChange({ event: e, key: 'hasContract' })
                 }
               />
-              {patientContract && (
-                <Button
-                  marginLeft="0.5rem"
-                  onClick={() => {
-                    patientContract.save(contractFileName);
+            </FormControl>
+            {currentPatient &&
+              currentCompany &&
+              !currentPatient.hasContract && (
+                <div
+                  style={{
+                    padding: 5,
+                    margin: '0 auto',
+                    borderRadius: '5px',
+                    backgroundColor: 'lightblue',
                   }}
                 >
-                  PDF
-                </Button>
+                  <PDFDownloadLink
+                    document={
+                      <Contract p={currentPatient} c={currentCompany} />
+                    }
+                    fileName={contractFileName}
+                  >
+                    {({ loading }) => {
+                      return loading ? (
+                        'Loading document...'
+                      ) : (
+                        <Icon w={5} h={5} as={RiPrinterLine} />
+                      );
+                    }}
+                  </PDFDownloadLink>
+                </div>
               )}
-            </FormControl>
           </ModalFormGroup>
         </GridItem>
       </SimpleGrid>
@@ -342,7 +357,7 @@ export const PersonForm = ({
         <ModalFormGroup key={index}>
           <FormControl id={contact.type + '_' + contact.uuid}>
             <Input
-              autocomplete="off"
+              autoComplete="off"
               isDisabled={isReadOnly || personNotCreated}
               onChange={(e) =>
                 onContactChange({ event: e, id: contact.uuid || '' })
@@ -386,7 +401,7 @@ export const PersonForm = ({
       <ModalFormGroup>
         <FormControl id="birthday">
           <Input
-            autocomplete="off"
+            autoComplete="off"
             type="date"
             disabled={isReadOnly || personNotCreated}
             name="birthday"
@@ -406,7 +421,7 @@ export const PersonForm = ({
       <FormGroup>
         <FormControl id="isWaitingSince">
           <Input
-            autocomplete="off"
+            autoComplete="off"
             type="date"
             disabled={
               isReadOnly ||
@@ -466,7 +481,7 @@ export const PersonForm = ({
                 />
               ) : (
                 <Input
-                  autocomplete="off"
+                  autoComplete="off"
                   isDisabled={isReadOnly || personNotCreated}
                   onChange={(e) =>
                     onInputChange({ event: e, key: key as keyof Person })
@@ -497,7 +512,7 @@ export const PersonForm = ({
           <ModalFormGroup>
             <FormControl id="firstName" isRequired={true}>
               <Input
-                autocomplete="off"
+                autoComplete="off"
                 isDisabled={isReadOnly}
                 onChange={(e) =>
                   onInputChange({ event: e, key: 'firstName' as keyof Person })
@@ -511,7 +526,7 @@ export const PersonForm = ({
           <FormGroup gridColsUnit="auto" gridCols={personNotCreated ? 2 : 1}>
             <FormControl id="lastName" isRequired={true}>
               <Input
-                autocomplete="off"
+                autoComplete="off"
                 isDisabled={isReadOnly}
                 onChange={(e) =>
                   onInputChange({ event: e, key: 'lastName' as keyof Person })
@@ -599,7 +614,6 @@ export const PersonForm = ({
                 </FormControl>
               </ModalFormGroup>
               <Divider m="1" />
-              {/* <iframe src={contractOutput} style={{width:'100%', height:'100%'}}/> */}
               {currentPatient.events?.length ? (
                 <>
                   <b style={{ marginLeft: '0.5rem' }}>
