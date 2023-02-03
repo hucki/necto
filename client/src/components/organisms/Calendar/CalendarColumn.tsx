@@ -22,6 +22,7 @@ import CalendarLeaveEdit from './CalendarLeaveEdit';
 import CalendarChooseEntryModal from './CalendarChooseEntryModal';
 import { Room } from '../../../types/Rooms';
 import { CounterOfDone } from '../../molecules/DataDisplay/CounterOfDone';
+import styled from '@emotion/styled/macro';
 dayjs.locale('de');
 
 // Typeguard
@@ -35,6 +36,13 @@ export type OnClickCalendarEventProps = {
   e: React.MouseEvent<HTMLDivElement, MouseEvent>;
   event: Event;
 };
+
+const CounterOfDoneContainer = styled.div({
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+  zIndex: 1,
+});
 
 interface CalendarColumnInputProps {
   date: Dayjs;
@@ -206,10 +214,12 @@ function CalendarColumn({
         onClick={readOnly ? () => null : getPosition}
       >
         {Boolean(noOfAppointments.total) && (
-          <CounterOfDone
-            done={noOfAppointments.done}
-            total={noOfAppointments.total}
-          />
+          <CounterOfDoneContainer>
+            <CounterOfDone
+              done={noOfAppointments.done}
+              total={noOfAppointments.total}
+            />
+          </CounterOfDoneContainer>
         )}
         {isPublicHolidayToday && (
           <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
