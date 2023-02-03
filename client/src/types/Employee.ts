@@ -1,5 +1,6 @@
 import { BgColor } from './Colors';
 import { Company } from './Company';
+import { Event } from './Event';
 import { UserSettings } from './UserSettings';
 
 export type Team = {
@@ -21,6 +22,7 @@ export type Employee = {
   updatedAt?: Date;
   user?: UserSettings;
   companyId: Company['uuid'];
+  events?: Event[];
 };
 
 export type NewEmployee = Pick<
