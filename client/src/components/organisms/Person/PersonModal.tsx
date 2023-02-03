@@ -187,7 +187,7 @@ export const PersonModal = ({
     updatePerson(currentPerson);
     onClose();
   };
-
+  const personNotCreated = !currentPerson.uuid;
   return (
     <>
       <ModalHeader
@@ -262,16 +262,17 @@ export const PersonModal = ({
                 >
                   {t('button.cancel')}
                 </Button>
-                <Button
-                  aria-label="save changes"
-                  type="button"
-                  disabled={isReadOnly}
-                  onClick={onSaveChangesAndClose}
-                  size="sm"
-                  colorScheme="blue"
-                >
-                  {t('button.save')}
-                </Button>
+                {!personNotCreated && (
+                  <Button
+                    aria-label="save changes"
+                    type="button"
+                    onClick={onSaveChangesAndClose}
+                    size="sm"
+                    colorScheme="blue"
+                  >
+                    {t('button.save')}
+                  </Button>
+                )}
               </>
             )}
           </ControlWrapper>
