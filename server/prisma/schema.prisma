@@ -33,6 +33,8 @@ model Company {
   street     String?  @default("") @db.VarChar(64)
   zip        String?  @default("") @db.VarChar(10)
   city       String?  @default("") @db.VarChar(64)
+  bankIban   String?  @default("") @db.VarChar(64)
+  bankBic    String?  @default("") @db.VarChar(64)
   tenantId   String   @db.Uuid
   validUntil DateTime @db.Timestamptz(6)
   createdAt  DateTime @default(now())
