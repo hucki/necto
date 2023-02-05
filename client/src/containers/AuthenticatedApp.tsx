@@ -16,12 +16,16 @@ import SideNav from '../components/organisms/SideNav/SideNav';
 import HeaderBar from '../components/organisms/HeaderBar/HeaderBar';
 import { useDispatch } from 'react-redux';
 import { NavToggle } from '../components/molecules/Nav/NavToggle';
+import { useLocation } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 interface AuthenticatedAppInputProps {
   id: string;
 }
 
 function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
+  const { pathname: currentView } = useLocation();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { setIsAuthenticated, isLoading } = useContext(AuthContext);
@@ -58,7 +62,10 @@ function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
             </Content>
             <Footer>
               <p>
-                made with{' '}
+                {' '}
+                <i>/ {t(`menu.${currentView.toString().substring(1)}`)}</i>
+              </p>
+              <p>
                 <span role="img" aria-label="pineapple">
                   🍍
                 </span>
