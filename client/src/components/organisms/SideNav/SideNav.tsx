@@ -68,7 +68,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/personalcal"
           onClick={() => onClickHandler('/personalcal')}
         >
-          {t('menu.personalCalendar')}
+          {t('menu.personalcal')}
         </NavigationButton>
         <NavigationButton
           hidden={!user?.isAdmin && !user?.isPlanner && !user?.isEmployee}
@@ -84,7 +84,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/teamcal"
           onClick={() => onClickHandler('/teamcal')}
         >
-          {t('menu.teamCalendar')}
+          {t('menu.teamcal')}
         </NavigationButton>
         <NavigationButton
           colorScheme="teal"
@@ -99,7 +99,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/rooms"
           onClick={() => onClickHandler('/rooms')}
         >
-          {isOpen ? t('menu.roomCalendar') : null}
+          {isOpen ? t('menu.rooms') : null}
         </NavigationButton>
         <NavigationButton
           colorScheme="teal"
@@ -114,7 +114,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/roomCalendar"
           onClick={() => onClickHandler('/roomCalendar')}
         >
-          {isOpen ? <>{t('menu.roomCalendarLive')}</> : null}
+          {isOpen ? <>{t('menu.roomCalendar')}</> : null}
         </NavigationButton>
         <Divider />
         <NavigationButton
@@ -142,7 +142,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/waiting"
           onClick={() => onClickHandler('/waiting')}
         >
-          {isOpen ? t('menu.waitingList') : null}
+          {isOpen ? t('menu.waiting') : null}
         </NavigationButton>
         <NavigationButton
           hidden={!user?.isAdmin && !user?.isPlanner}
