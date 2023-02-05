@@ -33,7 +33,7 @@ interface SideNavContainerProps {
 }
 const SideNavContainer = styled.div(
   {
-    paddingTop: '0.5rem',
+    paddingTop: '3.5rem',
     height: '100%' /* 100% Full-height */,
     width: '0' /* 0 width - change this with JavaScript */,
     position: 'fixed' /* Stay in place */,
@@ -59,7 +59,8 @@ const SideNavOverlay = styled.div(({ isOpen }: { isOpen: boolean }) => ({
   top: '0',
   right: '0',
   height: '100%',
-  width: isOpen ? '100%' : '0%',
+  width: '100%',
+  display: isOpen ? 'initial' : 'none',
   zIndex: '5' /* Stay on top */,
   backdropFilter: 'blur(0.2rem)',
   transition: 'all 0.25s ease-in',
