@@ -40,7 +40,7 @@ const SideNavContainer = styled.div(
     zIndex: '2' /* Stay on top */,
     top: '0' /* Stay at the top */,
     left: '0',
-    backgroundColor: '#fff',
+    backgroundColor: 'linen',
     overflowX: 'hidden' /* Disable horizontal scroll */,
     transition:
       '0.5s' /* 0.5 second transition effect to slide in the sidenav */,
@@ -82,6 +82,7 @@ const Header = styled(Box)({
   width: '100%',
   height: 'clamp(52px, 5vh)',
   backgroundColor: 'linen',
+  boxShadow: '-2px 0 15px #3333 inset',
 });
 
 const Content = styled(Box)({
@@ -93,14 +94,15 @@ const Content = styled(Box)({
 
 const Footer = styled.div({
   gridArea: 'footer',
+  fontSize: 'small',
   width: '100%',
-  height: '5vh',
   padding: '10px',
   textAlign: 'right',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   backgroundColor: 'linen',
+  boxShadow: '2px 0 15px #3333 inset',
 });
 
 export {
