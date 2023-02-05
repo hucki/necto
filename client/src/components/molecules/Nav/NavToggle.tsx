@@ -28,7 +28,7 @@ export const NavToggle = ({ isOpen, onOpen, onClose }: NavToggleProps) => {
         aria-label={isOpen ? 'close-nav' : 'open-nav'}
         w={10}
         h={10}
-        colorScheme={isOpen ? 'orange' : 'teal'}
+        colorScheme={isOpen ? 'orange' : 'blackAlpha'}
         onClick={isOpen ? onClose : onOpen}
         icon={isOpen ? <RiCloseFill size="2rem" /> : <RiMenuFill size="2rem" />}
       />
