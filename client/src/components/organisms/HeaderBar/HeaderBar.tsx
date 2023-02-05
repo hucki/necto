@@ -31,6 +31,7 @@ const HeaderBar = () => {
           disabled={dayjs().isSame(dayjs(currentDate), 'day')}
           onClick={todayClickHandler}
           variant="outline"
+          backgroundColor="white"
         >
           <div>
             <div
@@ -45,7 +46,7 @@ const HeaderBar = () => {
         </Button>
         {calendarView === 'week' ? (
           <IconButton
-            colorScheme="teal"
+            colorScheme="blackAlpha"
             marginRight={2}
             aria-label="previous week"
             leftIcon={<CgChevronDoubleLeft size="2rem" />}
@@ -53,7 +54,7 @@ const HeaderBar = () => {
           />
         ) : (
           <IconButton
-            colorScheme="teal"
+            colorScheme="blackAlpha"
             marginRight={2}
             aria-label="previous day"
             leftIcon={<CgChevronLeft size="2rem" />}
@@ -68,11 +69,12 @@ const HeaderBar = () => {
             name="startDate"
             value={dayjs(currentDate).format('YYYY-MM-DD')}
             onChange={dateChangeHandler}
+            backgroundColor="white"
           />
         </div>
         {calendarView === 'day' ? (
           <IconButton
-            colorScheme="teal"
+            colorScheme="blackAlpha"
             marginLeft={2}
             aria-label="next day"
             icon={<CgChevronRight size="2rem" />}
@@ -80,7 +82,7 @@ const HeaderBar = () => {
           />
         ) : (
           <IconButton
-            colorScheme="teal"
+            colorScheme="blackAlpha"
             marginLeft={2}
             aria-label="next week"
             icon={<CgChevronDoubleRight size="2rem" />}
