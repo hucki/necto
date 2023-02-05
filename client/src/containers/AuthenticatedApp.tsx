@@ -63,7 +63,7 @@ function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
             <Footer>
               <p>
                 {' '}
-                <i>/ {t(`menu.${currentView.toString().substring(1)}`)}</i>
+                <b>/ {t(`menu.${currentView.toString().substring(1)}`)}</b>
               </p>
               <p>
                 <span role="img" aria-label="pineapple">
