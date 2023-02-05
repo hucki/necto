@@ -3,7 +3,6 @@ import { Divider } from '@chakra-ui/react';
 import {
   IoBusinessOutline,
   IoCalendarNumberOutline,
-  IoClose,
   IoConstructOutline,
   IoFileTrayFullOutline,
   IoHomeOutline,
@@ -19,7 +18,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { SideNavContainer } from '../../Library';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../../providers/AuthProvider';
-import { IconButton, NavigationButton } from '../../atoms/Buttons';
+import { NavigationButton } from '../../atoms/Buttons';
 import { SideNavOverlay } from '../../Library/AppLayout';
 
 interface SideNavProps {
@@ -44,13 +43,6 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
     <>
       <SideNavOverlay isOpen={isOpen} onClick={onClose} />
       <SideNavContainer isOpen={isOpen}>
-        {/* Menu Button */}
-        <IconButton
-          aria-label="Close Menu"
-          icon={<IoClose />}
-          onClick={onClose}
-          fontSize="2xl"
-        />
         {/* Basics */}
         <NavigationButton
           variant={currentView === '/home' ? 'solid' : 'ghost'}
