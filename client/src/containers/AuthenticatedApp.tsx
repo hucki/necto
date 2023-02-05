@@ -15,6 +15,7 @@ import ErrorBoundary from '../components/molecules/Error/ErrorBoundary';
 import SideNav from '../components/organisms/SideNav/SideNav';
 import HeaderBar from '../components/organisms/HeaderBar/HeaderBar';
 import { useDispatch } from 'react-redux';
+import { NavToggle } from '../components/molecules/Nav/NavToggle';
 
 interface AuthenticatedAppInputProps {
   id: string;
@@ -37,14 +38,16 @@ function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
   return (
     <>
       <AppContainer id="app">
+        <NavToggle
+          isOpen={isNavOpen}
+          onClose={() => setIsNavOpen(false)}
+          onOpen={() => setIsNavOpen(true)}
+        />
         <SideNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
         <ErrorBoundary>
           <ContentContainer>
             <Header>
-              <HeaderBar
-                isSideNavOpen={isNavOpen}
-                onSideNavOpen={() => setIsNavOpen(true)}
-              />
+              <HeaderBar />
             </Header>
             <Content id="Content" pr={1}>
               {isError ? (
