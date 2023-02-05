@@ -89,13 +89,13 @@
   },
   "menu": {
     "home": "home",
-    "personalCalendar": "You",
+    "personalcal": "You",
     "personalData": "Personal Data",
-    "teamCalendar": "Team",
-    "roomCalendar": "Rooms (fixed)",
-    "roomCalendarLive": "Rooms per Week",
+    "teamcal": "Team",
+    "rooms": "Rooms (fixed)",
+    "roomCalendar": "Rooms per Week",
     "patients": "Patients",
-    "waitingList": "Waiting List",
+    "waitings": "Waiting List",
     "teamSettings": "Team",
     "employeeSettings": "Employees",
     "userSettings": "User",
@@ -105,7 +105,8 @@
     "eventSettings": "events",
     "doctors": "Doctors",
     "institutions": "Institutions",
-    "refresh": "refresh"
+    "refresh": "refresh",
+    "reports": "reports"
   },
   "label": {
     "name": "name",

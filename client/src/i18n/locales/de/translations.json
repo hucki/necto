@@ -90,13 +90,13 @@
   },
   "menu": {
     "home": "home",
-    "personalCalendar": "Du",
+    "personalcal": "Du",
     "personalData": "Persönliche Daten",
-    "teamCalendar": "Team",
-    "roomCalendar": "Räume (fix)",
-    "roomCalendarLive": "Räume/Woche",
+    "teamcal": "Team",
+    "rooms": "Räume (fix)",
+    "roomCalendar": "Räume/Woche",
     "patients": "Patient:in",
-    "waitingList": "Warteliste",
+    "waiting": "Warteliste",
     "teamSettings": "Teamübersicht",
     "employeeSettings": "Mitarbeiter:in",
     "userSettings": "User",
@@ -106,7 +106,8 @@
     "eventSettings": "Termine",
     "doctors": "Ärzt:in",
     "institutions": "Einrichtungen",
-    "refresh": "neu laden"
+    "refresh": "neu laden",
+    "reports": "Auswertungen"
   },
   "label": {
     "user": "user",
