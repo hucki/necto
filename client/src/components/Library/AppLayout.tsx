@@ -72,6 +72,7 @@ const ContentContainer = styled(Box)({
   display: 'grid',
   gridTemplateRows: 'auto minmax(0, 1fr) auto',
   gridTemplateAreas: '"header" "content" "footer"',
+  backgroundColor: 'linen',
 });
 
 const Header = styled(Box)({
@@ -90,6 +91,7 @@ const Content = styled(Box)({
   height: '100%',
   padding: '0.25rem',
   overflow: 'auto',
+  backgroundColor: 'white',
 });
 
 const Footer = styled.div({

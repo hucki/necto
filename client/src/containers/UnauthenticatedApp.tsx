@@ -80,6 +80,7 @@ function UnauthenticatedApp(): JSX.Element {
     <AppContainer id="App">
       <ContentContainer alignItems="center" justifyContent="center">
         <Box
+          style={{ gridArea: 'content', backgroundColor: 'white' }}
           rounded="lg"
           boxShadow="lg"
           p="8"
