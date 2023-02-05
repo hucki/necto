@@ -69,31 +69,38 @@ const SideNavOverlay = styled.div(({ isOpen }: { isOpen: boolean }) => ({
 const ContentContainer = styled(Box)({
   width: '100%',
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
+  display: 'grid',
+  gridTemplateRows: 'auto minmax(0, 1fr) auto',
+  gridTemplateAreas: '"header" "content" "footer"',
 });
 
 const Header = styled(Box)({
+  gridArea: 'header',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-end',
   width: '100%',
   height: 'clamp(52px, 5vh)',
-  backgroundColor: 'white',
+  backgroundColor: 'linen',
 });
 
 const Content = styled(Box)({
   width: '100%',
   height: '100%',
-  padding: '0 0.25rem 0 0.25rem',
+  padding: '0.25rem',
+  overflow: 'auto',
 });
 
 const Footer = styled.div({
+  gridArea: 'footer',
   width: '100%',
   height: '5vh',
   padding: '10px',
   textAlign: 'right',
-  boxShadow: '0 0 15px #3333',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  backgroundColor: 'linen',
 });
 
 export {
