@@ -99,7 +99,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/rooms"
           onClick={() => onClickHandler('/rooms')}
         >
-          {isOpen ? t('menu.rooms') : null}
+          {t('menu.rooms')}
         </NavigationButton>
         <NavigationButton
           colorScheme="teal"
@@ -114,7 +114,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/roomCalendar"
           onClick={() => onClickHandler('/roomCalendar')}
         >
-          {isOpen ? <>{t('menu.roomCalendar')}</> : null}
+          {t('menu.roomCalendar')}
         </NavigationButton>
         <Divider />
         <NavigationButton
@@ -131,7 +131,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/patients"
           onClick={() => onClickHandler('/patients')}
         >
-          {isOpen ? t('menu.patients') : null}
+          {t('menu.patients')}
         </NavigationButton>
         <NavigationButton
           hidden={!user?.isAdmin && !user?.isPlanner}
@@ -142,7 +142,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/waiting"
           onClick={() => onClickHandler('/waiting')}
         >
-          {isOpen ? t('menu.waiting') : null}
+          {t('menu.waiting')}
         </NavigationButton>
         <NavigationButton
           hidden={!user?.isAdmin && !user?.isPlanner}
@@ -153,7 +153,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/doctors"
           onClick={() => onClickHandler('/doctors')}
         >
-          {isOpen ? t('menu.doctors') : null}
+          {t('menu.doctors')}
         </NavigationButton>
         <NavigationButton
           hidden={!user?.isAdmin && !user?.isPlanner}
@@ -164,7 +164,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/institutions"
           onClick={() => onClickHandler('/institutions')}
         >
-          {isOpen ? t('menu.institutions') : null}
+          {t('menu.institutions')}
         </NavigationButton>
         <Divider />
         {/* Settings */}
@@ -176,7 +176,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           key="/settings"
           onClick={() => onClickHandler('/settings')}
         >
-          {isOpen ? t('menu.settings') : null}
+          {t('menu.settings')}
         </NavigationButton>
         <Divider />
         {/* Logout */}
@@ -188,7 +188,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           aria-label="Logout"
           leftIcon={<IoLogOutOutline />}
         >
-          {isOpen ? t('menu.logout') : null}
+          {t('menu.logout')}
         </NavigationButton>
       </SideNavContainer>
     </>
