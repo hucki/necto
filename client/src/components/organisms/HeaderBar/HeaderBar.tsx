@@ -10,14 +10,8 @@ import {
 } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
 import { useFilter } from '../../../hooks/useFilter';
-import { IoMenu } from 'react-icons/io5';
 
-interface HeadaerBarProps {
-  isSideNavOpen: boolean;
-  onSideNavOpen: () => void;
-}
-
-const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
+const HeaderBar = () => {
   const { calendarView } = useFilter();
   const { currentDate, setCurrentDate, goTo } = useContext(UserDateContext);
 
@@ -30,15 +24,7 @@ const HeaderBar = ({ onSideNavOpen }: HeadaerBarProps) => {
   }
 
   return (
-    <Grid m={2} gridTemplateColumns="auto auto" w="100%">
-      <div className="menu-control">
-        <IconButton
-          colorScheme="teal"
-          aria-label="menu"
-          icon={<IoMenu size="2rem" />}
-          onClick={onSideNavOpen}
-        />
-      </div>
+    <Grid m={2} gridTemplateColumns="auto" w="100%">
       <Flex className="calendar-control" justifySelf="end">
         <Button
           marginX={2}
