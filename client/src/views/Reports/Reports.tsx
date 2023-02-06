@@ -5,6 +5,7 @@ import { IoPeople } from 'react-icons/io5';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { TabPanel } from '../../components/Library';
 import EmployeeDashboard from '../../components/organisms/Dashboard/EmployeeDashboard';
+import EmployeeReport from '../../components/organisms/List/EmployeeReport';
 import { useAllEmployeesWithWeeksEvents } from '../../hooks/employees';
 import { UserDateContext } from '../../providers/UserDate';
 
@@ -15,14 +16,14 @@ const Reports = () => {
     currentDate.year(),
     currentDate.week()
   );
-  const dateRange =
+  const dateRangeLabel =
     currentDate.startOf('week').format('DD.MM.') +
     ' - ' +
     currentDate.endOf('week').format('DD.MM.YY');
 
   const tabData = [
     {
-      allowedRoles: ['admin', 'planner', 'employee'],
+      allowedRoles: ['admin'],
       name: 'teamSettings',
       label: (
         <>
@@ -31,9 +32,34 @@ const Reports = () => {
       ),
       content: (
         <>
-          current week: {dateRange + ' (KW ' + currentDate.week() + ')'}
+          current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
           {(!data || isLoading) && <FullPageSpinner />}
           {data && <EmployeeDashboard employees={data} />}
+        </>
+      ),
+    },
+    {
+      allowedRoles: ['admin'],
+      name: 'weekReport',
+      label: (
+        <>
+          <IoPeople /> {t('menu.weekReport')}
+        </>
+      ),
+      content: (
+        <>
+          current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
+          {(!data || isLoading) && <FullPageSpinner />}
+          {data && (
+            <EmployeeReport
+              employees={data}
+              dateRangeLabel={dateRangeLabel}
+              dateRange={{
+                start: currentDate.startOf('week'),
+                end: currentDate.endOf('week'),
+              }}
+            />
+          )}
         </>
       ),
     },
