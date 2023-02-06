@@ -107,7 +107,8 @@
     "doctors": "Ärzt:in",
     "institutions": "Einrichtungen",
     "refresh": "neu laden",
-    "reports": "Auswertungen"
+    "reports": "Auswertungen",
+    "weekReport": "Wochenbericht"
   },
   "label": {
     "user": "user",

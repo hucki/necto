@@ -106,7 +106,8 @@
     "doctors": "Doctors",
     "institutions": "Institutions",
     "refresh": "refresh",
-    "reports": "reports"
+    "reports": "reports",
+    "weekReport": "week report"
   },
   "label": {
     "name": "name",
