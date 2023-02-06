@@ -4,8 +4,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Employee } from '../../../types/Employee';
 import { TableRow } from '../../Library/Table';
 import EventReport from '../../molecules/DataDisplay/EventReport';
@@ -16,7 +16,11 @@ type ReportEmployee = Pick<
 >;
 interface EmployeeReportProps {
   employees: ReportEmployee[];
-  dateRange: string;
+  dateRangeLabel: string;
+  dateRange: {
+    start: Dayjs;
+    end: Dayjs;
+  };
 }
 /**
  * Report for Event states of Employees
@@ -24,46 +28,88 @@ interface EmployeeReportProps {
  * @param employees
  * @returns JSX.Element
  */
-const EmployeeReport = ({ employees, dateRange }: EmployeeReportProps) => {
-  const { t } = useTranslation();
+const EmployeeReport = ({
+  employees,
+  dateRangeLabel,
+  dateRange,
+}: EmployeeReportProps) => {
+  const numberOfDays = dateRange.end.diff(dateRange.start, 'days');
+  const days = new Array(numberOfDays + 1)
+    .fill(null)
+    .map((_, index) => dateRange.start.add(index, 'day'));
+  console.table(days);
   const columnHelper =
     createColumnHelper<
       Pick<Employee, 'firstName' | 'lastName' | 'alias' | 'contract' | 'events'>
     >();
+
   const columns = [
+    // Accessor Column
     columnHelper.accessor('firstName', {
-      header: () => <span>{t('label.firstName')}</span>,
+      header: 'Name',
       cell: (info) => info.getValue(),
-      footer: (info) => info.column.id,
     }),
+    // Accessor Column
     columnHelper.accessor((row) => row.lastName, {
+      header: '',
       id: 'lastName',
-      header: () => <span>{t('label.lastName')}</span>,
-      cell: (info) => <i>{info.getValue()}</i>,
-      footer: (info) => info.column.id,
+      cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('alias', {
-      header: () => t('label.alias'),
+      header: '',
       cell: (info) => info.renderValue(),
       footer: (info) => info.column.id,
     }),
-    // columnHelper.accessor('contract', {
-    //   header: () => 'hours per week',
-    //   cell: (info) => <span>{info.getValue()[0].hoursPerWeek}</span>,
-    //   footer: (info) => info.column.id,
-    // }),
     columnHelper.accessor('events', {
-      header: () => 'done / cancelled',
+      header: () => {
+        return (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+            }}
+          >
+            {days.map((day) => (
+              <div
+                style={{
+                  gridColumnStart: dayjs(day).day(),
+                  border: '1px solid #333',
+                }}
+              >
+                {day.format('ddd')}
+              </div>
+            ))}
+          </div>
+        );
+      },
       cell: (info) => {
         const events = info.getValue();
+        if (!events) return null;
         return (
-          events && (
-            <EventReport
-              useStatGroup={true}
-              events={events}
-              dateRange={dateRange}
-            />
-          )
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+            }}
+          >
+            {days.map((day) => (
+              <div
+                style={{
+                  gridColumnStart: dayjs(day).day(),
+                  border: '1px solid #333',
+                }}
+              >
+                <EventReport
+                  key={day.format('YYYY-MM-DD')}
+                  useStatGroup={false}
+                  events={events.filter(
+                    (event) => dayjs(event.startTime).day() === day.day()
+                  )}
+                  dateRangeLabel={dateRangeLabel}
+                />
+              </div>
+            ))}
+          </div>
         );
       },
       footer: (info) => info.column.id,
@@ -78,7 +124,7 @@ const EmployeeReport = ({ employees, dateRange }: EmployeeReportProps) => {
     <>
       <div className="report-wrapper">
         <table>
-          {/* <thead>
+          <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -93,7 +139,7 @@ const EmployeeReport = ({ employees, dateRange }: EmployeeReportProps) => {
                 ))}
               </tr>
             ))}
-          </thead> */}
+          </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
