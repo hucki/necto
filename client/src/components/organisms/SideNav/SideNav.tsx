@@ -4,6 +4,7 @@ import {
   IoBusinessOutline,
   IoCalendarNumberOutline,
   IoConstructOutline,
+  IoDocumentText,
   IoFileTrayFullOutline,
   IoHomeOutline,
   IoLogOutOutline,
@@ -165,6 +166,18 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
           onClick={() => onClickHandler('/institutions')}
         >
           {t('menu.institutions')}
+        </NavigationButton>
+        <Divider />
+        <NavigationButton
+          hidden={!user?.isAdmin}
+          colorScheme="whatsapp"
+          variant={currentView === '/reports' ? 'solid' : 'ghost'}
+          aria-label="Reports"
+          leftIcon={<IoDocumentText />}
+          key="/reports"
+          onClick={() => onClickHandler('/reports')}
+        >
+          {t('menu.reports')}
         </NavigationButton>
         <Divider />
         {/* Settings */}
