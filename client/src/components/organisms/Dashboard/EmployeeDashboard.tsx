@@ -19,11 +19,7 @@ interface EmployeeDashboardProps {
  */
 const EmployeeDashboard = ({ employees }: EmployeeDashboardProps) => {
   const employeeCards = employees.map((employee) => {
-    return (
-      <>
-        <EmployeeCard employee={employee} />
-      </>
-    );
+    return <EmployeeCard key={employee.uuid} employee={employee} />;
   });
 
   return <DashboardWrapper>{employeeCards}</DashboardWrapper>;
