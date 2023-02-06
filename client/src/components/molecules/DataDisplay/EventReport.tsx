@@ -7,13 +7,13 @@ import StatTile from './StatTile';
 interface EventReportProps {
   events: Event[];
   useStatGroup?: boolean;
-  dateRange: string;
+  dateRangeLabel: string;
 }
 
 const EventReport = ({
   events,
   useStatGroup = false,
-  dateRange,
+  dateRangeLabel,
 }: EventReportProps) => {
   type EventStats = {
     total: number;
@@ -60,7 +60,7 @@ const EventReport = ({
     <>
       {useStatGroup ? (
         <StatGroup w="250px">
-          <StatTile label="done" stats={stats} helpText={dateRange} />
+          <StatTile label="done" stats={stats} helpText={dateRangeLabel} />
           <StatTile
             label="cancelled"
             stats={{ total: stats.cancelled }}

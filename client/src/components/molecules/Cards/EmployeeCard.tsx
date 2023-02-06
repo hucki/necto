@@ -99,7 +99,7 @@ export const EmployeeCard = ({
             <EventReport
               useStatGroup={true}
               events={employee.events}
-              dateRange=""
+              dateRangeLabel=""
             />
           </EventReportContainer>
         ) : null}
