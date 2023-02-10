@@ -321,12 +321,19 @@ model Patient {
   validUntil          DateTime?       @db.Timestamptz(6)
   firstContactAt      DateTime        @default(now())
   isWaitingSince      DateTime        @default(now())
+  waitingPreference   String?         @default("") @db.VarChar(255)
   createdAt           DateTime        @default(now())
+  createdBy           String?         @db.Uuid
   updatedAt           DateTime        @updatedAt
+  updatedBy           String?         @db.Uuid
   companyId           String          @db.Uuid
   tenantId            String          @db.Uuid
   doctorId            String?         @db.Uuid
   institutionId       String?         @db.Uuid
+  finishedTherapy     Boolean         @default(false)
+  finishedReason      String?         @default("") @db.VarChar(255)
+  deceased            Boolean         @default(false)
+  privatelyInsured    Boolean         @default(false)
   archived            Boolean         @default(false)
   hasPrescription     Boolean         @default(false)
   hasContract         Boolean         @default(false)
