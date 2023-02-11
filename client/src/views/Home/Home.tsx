@@ -17,6 +17,7 @@ import { useEmployeeEvents, useLeavesByStatus } from '../../hooks/events';
 import { useAllUsers } from '../../hooks/user';
 import { AuthContext } from '../../providers/AuthProvider';
 import { Event } from '../../types/Event';
+import { isAuthorized } from '../../config/home';
 
 interface EmployeeEventAccordionItemProps {
   employeeId: string;
@@ -94,7 +95,7 @@ const Home = () => {
           allowMultiple
           defaultIndex={upcomingEvents.length ? [2] : undefined}
         >
-          {(user?.isAdmin || user?.isPlanner) && (
+          {user && isAuthorized(user, 'newUsers') && (
             <AccordionItem isDisabled={newUsers.length < 1}>
               <h2>
                 <AccordionButton>
@@ -117,7 +118,7 @@ const Home = () => {
               </AccordionPanel>
             </AccordionItem>
           )}
-          {(user?.isAdmin || user?.isPlanner) && (
+          {user && isAuthorized(user, 'openRequests') && (
             <AccordionItem isDisabled={uniqueRequestedLeaves.length < 1}>
               <h2>
                 <AccordionButton>
@@ -140,7 +141,7 @@ const Home = () => {
               </AccordionPanel>
             </AccordionItem>
           )}
-          {user?.employeeId && (
+          {user?.employeeId && isAuthorized(user, 'employeeEvents') && (
             <EmployeeEventAccordionItem
               upcomingEvents={upcomingEvents}
               employeeId={user.employeeId}
