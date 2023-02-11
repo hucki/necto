@@ -29,12 +29,6 @@ const generatePassword = () => {
   return password;
 };
 
-type UserRoles = {
-  isAdmin: boolean;
-  isEmployee: boolean;
-  isPlanner: boolean;
-};
-
 // TODO:
 // renew token regularly upon interaction
 
@@ -154,22 +148,15 @@ export const getMe = async (
   } & {
     userSettings: UserSettings[];
   };
-  res.json({
+  const minimalUser = {
     uuid: user.uuid,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
-    isAdmin: Boolean(
-      user?.permissions?.find((p) => p.permission?.displayName === 'admin')
-    ),
-    isPlanner: Boolean(
-      user?.permissions?.find((p) => p.permission?.displayName === 'planner')
-    ),
-    isEmployee: Boolean(
-      user?.permissions?.find((p) => p.permission?.displayName === 'employee')
-    ),
+    roles: user.permissions.map((p) => p.permission.displayName),
     employeeId: (user?.userSettings && user?.userSettings[0].employeeId) || '',
-  });
+  };
+  res.json(minimalUser);
   return;
 };
 
