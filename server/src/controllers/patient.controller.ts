@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import { encrypt, decryptContactData, decryptPatient } from '../utils/crypto';
-import { Patient } from '@prisma/client';
+import { Patient, User } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
@@ -13,9 +13,26 @@ export const encryptedPatientFields: (keyof Patient)[] = [
   'notices',
   'firstName',
   'lastName',
+  /**
+   * TODO: 'medicalReport'
+   */
 ];
 
-const encryptPatient = (patient) => {
+const getSanitizedPatient = (patient) => {
+  const sanitizedPatient = { ...patient };
+  delete sanitizedPatient.contactData;
+  delete sanitizedPatient.events;
+  delete sanitizedPatient.availability;
+  delete sanitizedPatient.doctor;
+  delete sanitizedPatient.institution;
+  delete sanitizedPatient.numberInLine;
+  delete sanitizedPatient.createdAt;
+  delete sanitizedPatient.updatedAt;
+  delete sanitizedPatient.addpayFreedom;
+  return sanitizedPatient;
+};
+
+const getEncryptedPatient = (patient) => {
   let encryptedPatient = {
     ...patient,
   };
@@ -39,20 +56,15 @@ export const addPatient = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const incomingPatient = { ...req.body };
-    delete incomingPatient.contactData;
-    delete incomingPatient.events;
-    delete incomingPatient.availability;
-    delete incomingPatient.doctor;
-    delete incomingPatient.institution;
-    delete incomingPatient.createdAt;
-    delete incomingPatient.updatedAt;
-
-    const encryptedPatient = encryptPatient(incomingPatient);
+    const user = req.user as User;
+    const incomingPatient = getSanitizedPatient(req.body);
+    const encryptedPatient = getEncryptedPatient(incomingPatient);
     const createdPatient = await prisma.patient.create({
       data: {
         ...encryptedPatient,
         tenantId: tenantId,
+        updatedBy: user.uuid,
+        createdBy: user.uuid,
       },
     });
 
@@ -74,25 +86,17 @@ export const updatePatient = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    const user = req.user as User;
     const patientId = req.params.patientId;
-    const incomingPatient = { ...req.body };
-    delete incomingPatient.contactData;
-    delete incomingPatient.events;
-    delete incomingPatient.availability;
-    delete incomingPatient.doctor;
-    delete incomingPatient.institution;
-    delete incomingPatient.numberInLine;
-    delete incomingPatient.createdAt;
-    delete incomingPatient.updatedAt;
-    delete incomingPatient.addpayFreedom;
-
-    const encryptedPatient = encryptPatient(incomingPatient);
+    const incomingPatient = getSanitizedPatient(req.body);
+    const encryptedPatient = getEncryptedPatient(incomingPatient);
     const updatedPatient = await prisma.patient.update({
       where: {
         uuid: patientId,
       },
       data: {
         ...encryptedPatient,
+        updatedBy: user.uuid,
       },
     });
     res.json(updatedPatient);
