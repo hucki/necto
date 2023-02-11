@@ -1,6 +1,9 @@
 import {
   Button,
   Flex,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   Table,
   Tbody,
   Td,
@@ -8,10 +11,13 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import * as colors from '../../../styles/colors';
+import React, { useEffect, useState } from 'react';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
+import { RiCloseLine, RiSearchLine } from 'react-icons/ri';
 import { Institution } from '../../../types/Institution';
 import { IconButton } from '../../atoms/Buttons';
+import { Input } from '../../Library';
 
 interface InstitutionListProps {
   institutions: Institution[];
@@ -24,6 +30,28 @@ const InstitutionList = ({
   onClickRow,
   showArchived,
 }: InstitutionListProps) => {
+  const [search, setSearch] = useState('');
+  useEffect(() => {
+    if (search) {
+      setCurrentPage(1);
+    }
+  }, [search]);
+  const filteredInstitutions: Institution[] = institutions.filter(
+    (institution: Institution) =>
+      institution.name.toLowerCase().includes(search.toLowerCase()) ||
+      institution.description.toLowerCase().includes(search.toLowerCase()) ||
+      institution.street?.toLowerCase().includes(search.toLowerCase()) ||
+      institution.city?.toLowerCase().includes(search.toLowerCase()) ||
+      institution.contactData
+        ?.filter((contact) => contact.type === 'telephone')
+        .findIndex((contact) =>
+          contact.contact.toLowerCase().includes(search.toLowerCase())
+        ) !== -1
+  ) as Institution[];
+  const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
+    setSearch(event.currentTarget.value);
+  };
+
   const rowsPerPage = 6;
   const numOfPages = Math.ceil(institutions.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +69,7 @@ const InstitutionList = ({
       ))}
     </Tr>
   );
-  const tableBody = institutions.map((institution, index) => (
+  const tableBody = filteredInstitutions.map((institution, index) => (
     <Tr key={index} id={institution.uuid} onClick={onClickRow}>
       {tableColumns.map((key, index) => (
         <Td key={index}>{institution[key] as string}</Td>
@@ -51,6 +79,26 @@ const InstitutionList = ({
 
   return (
     <>
+      <Flex flexDirection={'row'} p="0.5rem">
+        <InputGroup>
+          <InputLeftElement pointerEvents="none">
+            <RiSearchLine color={colors.indigoLighten80} />
+          </InputLeftElement>
+          <Input
+            id="search"
+            name="search"
+            type="text"
+            value={search}
+            onChange={handleSearch}
+            pl="2rem"
+          />
+          <InputRightElement cursor="pointer" onClick={() => setSearch('')}>
+            <RiCloseLine
+              color={search ? colors.indigo : colors.indigoLighten80}
+            />
+          </InputRightElement>
+        </InputGroup>
+      </Flex>
       <Table
         size="sm"
         colorScheme={showArchived ? 'orange' : 'green'}
