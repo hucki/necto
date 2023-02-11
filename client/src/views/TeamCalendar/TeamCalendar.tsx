@@ -11,12 +11,19 @@ import { useFilter } from '../../hooks/useFilter';
 import { Flex } from '@chakra-ui/react';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { AuthContext } from '../../providers/AuthProvider';
+import { MinimalUser } from '../../types/Auth';
 
 function TeamCalendar(): JSX.Element {
   const { user } = useContext(AuthContext);
   const { currentTeam, setCalendarView } = useFilter();
   setCalendarView('day');
 
+  const isAuthorized = (user: MinimalUser) => {
+    if (!user.roles) return false;
+    if (user.roles?.find((role) => role === 'admin' || role === 'planner'))
+      return true;
+    return false;
+  };
   const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
@@ -65,7 +72,7 @@ function TeamCalendar(): JSX.Element {
         <FilterBar hasTeamsFilter hasEventTypeOption />
       </Flex>
       <CalendarContainer
-        readOnly={!user?.isAdmin && !user?.isPlanner ? true : false}
+        readOnly={user && isAuthorized(user) ? true : false}
         events={rawEvents}
         ressources={ressources}
         daysRange={[calendarDate, calendarDate]}
