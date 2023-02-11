@@ -14,7 +14,7 @@ export const encryptedPatientFields: (keyof Patient)[] = [
   'firstName',
   'lastName',
   /**
-   * TODO: 'medicalReport'
+   * TODO: encrypt 'medicalReport'
    */
 ];
 
