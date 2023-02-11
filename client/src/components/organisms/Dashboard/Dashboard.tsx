@@ -13,6 +13,7 @@ import Home from '../../../views/Home/Home';
 import Institutions from '../../../views/Institutions/Institutions';
 import RoomCalendar from '../../../views/RoomCalendar/RoomCalendar';
 import Reports from '../../../views/Reports/Reports';
+import { isAuthorized } from '../../../config/navigation';
 
 interface DashboardInputProps {
   id: string;
@@ -44,7 +45,7 @@ const Dashboard = ({ id }: DashboardInputProps) => {
           <Route
             path="/patients"
             element={
-              user?.isPlanner || user?.isAdmin || user?.isEmployee ? (
+              user && isAuthorized(user, 'patients') ? (
                 <Patients />
               ) : (
                 <RedirectHome />
@@ -54,13 +55,17 @@ const Dashboard = ({ id }: DashboardInputProps) => {
           <Route
             path="/doctors"
             element={
-              user?.isPlanner || user?.isAdmin ? <Doctors /> : <RedirectHome />
+              user && isAuthorized(user, 'doctors') ? (
+                <Doctors />
+              ) : (
+                <RedirectHome />
+              )
             }
           />
           <Route
             path="/institutions"
             element={
-              user?.isPlanner || user?.isAdmin ? (
+              user && isAuthorized(user, 'institutions') ? (
                 <Institutions />
               ) : (
                 <RedirectHome />
@@ -70,17 +75,53 @@ const Dashboard = ({ id }: DashboardInputProps) => {
           <Route
             path="/waiting"
             element={
-              user?.isPlanner || user?.isAdmin ? (
+              user && isAuthorized(user, 'waiting') ? (
                 <WaitingList />
               ) : (
                 <RedirectHome />
               )
             }
           />
-          <Route path="/teamcal" element={<TeamCalendar />} />
-          <Route path="/personalcal" element={<PersonalCalendar id={id} />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route
+            path="/teamcal"
+            element={
+              user && isAuthorized(user, 'teamcal') ? (
+                <TeamCalendar />
+              ) : (
+                <RedirectHome />
+              )
+            }
+          />
+          <Route
+            path="/personalcal"
+            element={
+              user && isAuthorized(user, 'personalcal') ? (
+                <PersonalCalendar id={id} />
+              ) : (
+                <RedirectHome />
+              )
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              user && isAuthorized(user, 'reports') ? (
+                <Reports />
+              ) : (
+                <RedirectHome />
+              )
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              user && isAuthorized(user, 'settings') ? (
+                <Settings />
+              ) : (
+                <RedirectHome />
+              )
+            }
+          />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </div>
