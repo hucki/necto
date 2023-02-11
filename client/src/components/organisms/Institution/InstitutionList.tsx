@@ -4,32 +4,76 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Modal,
+  Switch,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from '@chakra-ui/react';
 import * as colors from '../../../styles/colors';
-import React, { useEffect, useState } from 'react';
-import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { CgAddR, CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { RiCloseLine, RiSearchLine } from 'react-icons/ri';
-import { Institution } from '../../../types/Institution';
+import { Institution, InstitutionInput } from '../../../types/Institution';
 import { IconButton } from '../../atoms/Buttons';
-import { Input } from '../../Library';
+import {
+  FormControl,
+  Input,
+  Label,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+} from '../../Library';
+import { InstitutionModal } from './InstitutionModal';
+import { useViewport } from '../../../hooks/useViewport';
+import { useTranslation } from 'react-i18next';
+
+const defaultInstitution: InstitutionInput = {
+  name: '',
+  description: '',
+  street: '',
+  zip: '',
+  city: '',
+  telephoneNumber: '',
+  mailAddress: '',
+  archived: false,
+};
 
 interface InstitutionListProps {
   institutions: Institution[];
-  // eslint-disable-next-line no-unused-vars
-  onClickRow: (event: React.MouseEvent<HTMLTableRowElement>) => void;
   showArchived: boolean;
+  setShowArchived: Dispatch<SetStateAction<boolean>>;
 }
 const InstitutionList = ({
   institutions,
-  onClickRow,
   showArchived,
+  setShowArchived,
 }: InstitutionListProps) => {
+  const { isMobile } = useViewport();
+  const { t } = useTranslation();
+  const { isOpen: isOpenCreate, onOpen, onClose } = useDisclosure();
+  const [currentInstitution, setCurrentInstitution] =
+    useState<InstitutionInput>(() => defaultInstitution);
+
+  const showInstitutionEdit = (
+    event: React.MouseEvent<HTMLTableRowElement>
+  ) => {
+    const { id } = event.currentTarget;
+
+    const clickedInstitution = institutions.find(
+      (institution) => institution.uuid === id
+    );
+    if (clickedInstitution) setCurrentInstitution(clickedInstitution);
+    onOpen();
+  };
+  function showInstitutionCreate() {
+    setCurrentInstitution(defaultInstitution);
+    onOpen();
+  }
   const [search, setSearch] = useState('');
   useEffect(() => {
     if (search) {
@@ -70,7 +114,7 @@ const InstitutionList = ({
     </Tr>
   );
   const tableBody = filteredInstitutions.map((institution, index) => (
-    <Tr key={index} id={institution.uuid} onClick={onClickRow}>
+    <Tr key={index} id={institution.uuid} onClick={showInstitutionEdit}>
       {tableColumns.map((key, index) => (
         <Td key={index}>{institution[key] as string}</Td>
       ))}
@@ -98,6 +142,25 @@ const InstitutionList = ({
             />
           </InputRightElement>
         </InputGroup>
+        <Button
+          aria-label="addInstitution"
+          leftIcon={<CgAddR />}
+          onClick={() => showInstitutionCreate()}
+          colorScheme={'green'}
+          w="15rem"
+          mx="0.5rem"
+        >
+          {t('button.add')}
+        </Button>
+        <FormControl>
+          <Label htmlFor="show-archived">{t('label.showArchivedData')}</Label>
+          <Switch
+            id="show-archived"
+            colorScheme="red"
+            isChecked={showArchived}
+            onChange={() => setShowArchived((cur) => !cur)}
+          />
+        </FormControl>
       </Flex>
       <Table
         size="sm"
@@ -134,6 +197,29 @@ const InstitutionList = ({
         />
       </Flex>
       {/* pagination controls END */}
+      <Modal
+        isOpen={isOpenCreate}
+        onClose={onClose}
+        scrollBehavior="inside"
+        size={isMobile ? 'full' : undefined}
+      >
+        <ModalOverlay
+          css={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+          }}
+        >
+          <ModalContent minW="80vw">
+            <ModalBody>
+              {currentInstitution ? (
+                <InstitutionModal
+                  onClose={onClose}
+                  institution={currentInstitution}
+                />
+              ) : null}
+            </ModalBody>
+          </ModalContent>
+        </ModalOverlay>
+      </Modal>
     </>
   );
 };
