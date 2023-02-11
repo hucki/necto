@@ -34,13 +34,13 @@ export type LogoutOptions = {
   returnTo?: string;
 };
 
+export type Role = 'employee' | 'planner' | 'admin' | 'user';
+
 export type MinimalUser = {
   uuid: string;
   email: string;
   firstName?: string;
   lastName?: string;
-  isAdmin?: boolean;
-  isPlanner?: boolean;
-  isEmployee?: boolean;
+  roles?: Role[];
   employeeId?: string;
 };
