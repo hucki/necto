@@ -60,8 +60,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [user, setUser] = useState<MinimalUser | undefined>(undefined);
+  const isNotOnlyUser = (user?: MinimalUser) =>
+    user?.roles && user.roles.filter((role) => role !== 'user').length > 1;
   const [isAuthorized, setIsAuthorized] = useState<boolean>(() =>
-    user?.isAdmin || user?.isEmployee || user?.isPlanner ? true : false
+    isNotOnlyUser(user) ? true : false
   );
   window.addEventListener('storage', () => {
     const newValue = window.localStorage.getItem(tokenKey);
@@ -79,12 +81,10 @@ function AuthProvider({ children }: { children: ReactNode }) {
           email: thisIsMe.email,
           firstName: thisIsMe.firstName,
           lastName: thisIsMe.lastName,
-          isAdmin: thisIsMe.isAdmin,
-          isPlanner: thisIsMe.isPlanner,
-          isEmployee: thisIsMe.isEmployee,
+          roles: thisIsMe.roles,
           employeeId: thisIsMe.employeeId,
         });
-        if (thisIsMe.isAdmin || thisIsMe.isEmployee || thisIsMe.isPlanner) {
+        if (isNotOnlyUser(thisIsMe)) {
           setIsAuthorized(true);
         } else {
           setIsAuthorized(false);
