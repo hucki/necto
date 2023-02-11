@@ -1,7 +1,7 @@
 import { Box, Tag, TagLeftIcon, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { CgAdd, CgBlock } from 'react-icons/cg';
-import { MinimalUser } from '../../../types/Auth';
+import { MinimalUser, Role } from '../../../types/Auth';
 import { User } from '../../../types/User';
 import { IconButton } from '../../atoms/Buttons';
 
@@ -13,15 +13,9 @@ const minimizeUser = (
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
-    isAdmin: Boolean(
-      user?.permissions?.find((p) => p.permission?.displayName === 'admin')
-    ),
-    isPlanner: Boolean(
-      user?.permissions?.find((p) => p.permission?.displayName === 'planner')
-    ),
-    isEmployee: Boolean(
-      user?.permissions?.find((p) => p.permission?.displayName === 'employee')
-    ),
+    roles: user.permissions
+      ? user.permissions.map((p) => (p.permission?.displayName as Role) || '')
+      : [],
   };
 };
 type ListItemProps = {
@@ -55,26 +49,48 @@ const ListItem = ({ user }: ListItemProps) => {
         >
           <Tag
             size="sm"
-            variant={user.isEmployee ? 'solid' : undefined}
-            colorScheme={user.isEmployee ? 'teal' : 'gray'}
+            variant={
+              user.roles?.find((role) => role === 'employee')
+                ? 'solid'
+                : undefined
+            }
+            colorScheme={
+              user.roles?.find((role) => role === 'employee') ? 'teal' : 'gray'
+            }
           >
-            {!user.isEmployee && <TagLeftIcon as={CgAdd} />}
+            {!user.roles?.find((role) => role === 'employee') && (
+              <TagLeftIcon as={CgAdd} />
+            )}
             Employee
           </Tag>
           <Tag
             size="sm"
-            variant={user.isPlanner ? 'solid' : undefined}
-            colorScheme={user.isPlanner ? 'teal' : 'gray'}
+            variant={
+              user.roles?.find((role) => role === 'planner')
+                ? 'solid'
+                : undefined
+            }
+            colorScheme={
+              user.roles?.find((role) => role === 'planner') ? 'teal' : 'gray'
+            }
           >
-            {!user.isPlanner && <TagLeftIcon as={CgAdd} />}
+            {!user.roles?.find((role) => role === 'planner') && (
+              <TagLeftIcon as={CgAdd} />
+            )}
             Planner
           </Tag>
           <Tag
             size="sm"
-            variant={user.isAdmin ? 'solid' : undefined}
-            colorScheme={user.isAdmin ? 'teal' : 'gray'}
+            variant={
+              user.roles?.find((role) => role === 'admin') ? 'solid' : undefined
+            }
+            colorScheme={
+              user.roles?.find((role) => role === 'admin') ? 'teal' : 'gray'
+            }
           >
-            {!user.isAdmin && <TagLeftIcon as={CgAdd} />}
+            {!user.roles?.find((role) => role === 'admin') && (
+              <TagLeftIcon as={CgAdd} />
+            )}
             Admin
           </Tag>
         </div>
