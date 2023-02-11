@@ -19,6 +19,7 @@ import { useViewport } from '../../hooks/useViewport';
 import { TabPanel } from '../../components/Library';
 import { useAllPatients } from '../../hooks/patient';
 import { useCreateAddpayFreedom } from '../../hooks/addpay';
+import { Role } from '../../types/Auth';
 
 const Migrations = (): JSX.Element => {
   const { patients } = useAllPatients();
@@ -75,8 +76,6 @@ const Migrations = (): JSX.Element => {
     </>
   );
 };
-
-type AllowedRoles = ('employee' | 'planner' | 'admin' | 'user')[];
 
 const Settings = (): JSX.Element => {
   const { user } = useContext(AuthContext);
@@ -145,15 +144,24 @@ const Settings = (): JSX.Element => {
     },
   ];
 
-  const hasSufficientRole = (allowedRoles: AllowedRoles) => {
-    if (user?.isEmployee && Boolean(allowedRoles.find((r) => r === 'employee')))
+  const hasSufficientRole = (allowedRoles: Role[]) => {
+    if (
+      Boolean(user?.roles?.find((r) => r === 'employee')) &&
+      Boolean(allowedRoles.find((r) => r === 'employee'))
+    )
       return true;
-    if (user?.isPlanner && Boolean(allowedRoles.find((r) => r === 'planner')))
+    if (
+      Boolean(user?.roles?.find((r) => r === 'planner')) &&
+      Boolean(allowedRoles.find((r) => r === 'planner'))
+    )
       return true;
-    if (user?.isAdmin && Boolean(allowedRoles.find((r) => r === 'admin')))
+    if (
+      Boolean(user?.roles?.find((r) => r === 'admin')) &&
+      Boolean(allowedRoles.find((r) => r === 'admin'))
+    )
       return true;
     if (allowedRoles.find((r) => r === 'user')) return true;
-    if (user?.isAdmin) return true;
+    if (Boolean(user?.roles?.find((r) => r === 'admin'))) return true;
     return false;
   };
 
@@ -164,7 +172,7 @@ const Settings = (): JSX.Element => {
           if (isMobile) {
             if (tab.name === 'userProfile')
               return <Tab key={index}>{tab.label}</Tab>;
-          } else if (hasSufficientRole(tab.allowedRoles as AllowedRoles)) {
+          } else if (hasSufficientRole(tab.allowedRoles as Role[])) {
             return <Tab key={index}>{tab.label}</Tab>;
           }
         })}
@@ -174,7 +182,7 @@ const Settings = (): JSX.Element => {
           if (isMobile) {
             if (tab.name === 'userProfile')
               return <TabPanel key={index}>{tab.content}</TabPanel>;
-          } else if (hasSufficientRole(tab.allowedRoles as AllowedRoles)) {
+          } else if (hasSufficientRole(tab.allowedRoles as Role[])) {
             return <TabPanel key={index}>{tab.content}</TabPanel>;
           }
         })}
