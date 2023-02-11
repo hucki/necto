@@ -31,6 +31,10 @@ export const patientUpdateKeys = [
   'archived',
   'hasPrescritpion',
   'isWaitingAgain',
+  'waitingPreference',
+  'finishedTherapy',
+  'deceased',
+  'privatelyInsured',
   'hasContract',
   'isAddpayFreed',
   'validUntil',
@@ -42,7 +46,7 @@ export const patientUpdateKeys = [
   'institutionId',
 ] as const;
 
-export type PatientUpdate = typeof patientUpdateKeys[number];
+export type PatientUpdate = (typeof patientUpdateKeys)[number];
 
 export type Patient = {
   uuid?: string;
@@ -74,6 +78,10 @@ export type Patient = {
   createdAt?: Date;
   firstContactAt?: Date;
   isWaitingSince?: Date;
+  waitingPreference?: string;
+  finishedTherapy: boolean;
+  deceased: boolean;
+  privatelyInsured: boolean;
   updatedAt?: Date;
   companyId?: string;
   tenantId?: string;
