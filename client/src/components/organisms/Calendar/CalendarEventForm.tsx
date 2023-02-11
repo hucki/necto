@@ -35,16 +35,16 @@ import { useAllPatients } from '../../../hooks/patient';
 import { useAllRooms } from '../../../hooks/rooms';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { RiSearchLine } from 'react-icons/ri';
-import { Patient } from '../../../types/Patient';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
+import { Person } from '../../../types/Person';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
 
 interface PersonFilterProps {
-  persons: Patient[];
+  persons: Person[];
   // eslint-disable-next-line no-unused-vars
-  handleSelectPerson: ({ person }: { person: Patient }) => void;
+  handleSelectPerson: ({ person }: { person: Person }) => void;
 }
 
 const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
@@ -58,13 +58,14 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
-  const onSelectPerson = ({ person }: { person: Patient }) => {
+  const onSelectPerson = ({ person }: { person: Person }) => {
     setSearch('');
     handleSelectPerson({ person });
   };
   return (
     <>
       <Popover
+        matchWidth={true}
         isOpen={Boolean(search.length)}
         placement="bottom-start"
         initialFocusRef={inputRef}
@@ -78,6 +79,7 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
               id="search"
               name="search"
               type="text"
+              autoComplete="off"
               value={search}
               onChange={handleSearch}
               pl="2rem"
@@ -89,18 +91,25 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
           style={{
             paddingLeft: '0.2rem',
             paddingRight: '0.2rem',
-            display: 'grid',
+            margin: 'auto 0',
             gap: '0.2rem',
             boxShadow: '3px 3px 2px #3333',
-            backgroundColor: 'oldlace',
+            backgroundColor: 'linen',
+            width: '100%',
           }}
         >
           {!filteredPersons.length ? (
             <>{`keine Ergebinsse zu "${search}"`}</>
           ) : (
             <ul>
-              {filteredPersons.map((p) => (
-                <li key={p.uuid}>
+              {filteredPersons.map((p, i) => (
+                <li
+                  key={p.uuid}
+                  style={{
+                    borderTop: i > 0 ? '1px solid #3333' : undefined,
+                    listStyle: 'none',
+                  }}
+                >
                   <PersonCard person={p} handleClickPerson={onSelectPerson} />
                 </li>
               ))}
