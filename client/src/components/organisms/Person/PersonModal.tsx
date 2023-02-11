@@ -102,8 +102,9 @@ export const PersonModal = ({
       return;
     }
     const toastType = 'created';
-    personType === 'patient'
-      ? createPatient({ patient: currentPerson }).then((res: Patient) => {
+    if (personType === 'patient') {
+      createPatient({ patient: currentPerson as Patient }).then(
+        (res: Patient) => {
           if (res?.uuid) {
             setCurrentPerson(res);
             toast(
@@ -118,30 +119,31 @@ export const PersonModal = ({
               })
             );
           }
-        })
-      : createDoctor({ doctor: currentPerson }).then((res: Doctor) => {
-          if (res?.uuid) {
-            setCurrentPerson(res);
-            toast(
-              toastOptions({
-                title: `${t(`toast.${personType}`)} ${t(
-                  `toast.${toastType}`
-                )}.`,
-                description: `${currentPerson.lastName}, ${
-                  currentPerson.firstName
-                } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
-                result: 'success',
-              })
-            );
-          }
-        });
+        }
+      );
+    } else {
+      createDoctor({ doctor: currentPerson }).then((res: Doctor) => {
+        if (res?.uuid) {
+          setCurrentPerson(res);
+          toast(
+            toastOptions({
+              title: `${t(`toast.${personType}`)} ${t(`toast.${toastType}`)}.`,
+              description: `${currentPerson.lastName}, ${
+                currentPerson.firstName
+              } ${t('dict.hasBeen')} ${t(`toast.${toastType}`)}`,
+              result: 'success',
+            })
+          );
+        }
+      });
+    }
   };
 
   const updatePerson = (updatePerson: Person) => {
     const toastType = 'updated';
     personType === 'patient'
       ? updatePatient({
-          patient: sanitizePatient(updatePerson),
+          patient: sanitizePatient(updatePerson as Patient),
         }).then((res: Patient) => {
           if (res?.uuid) {
             setCurrentPerson(res);
