@@ -4,6 +4,7 @@ import {
   Icon,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   Modal,
   ModalBody,
   ModalContent,
@@ -24,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import {
   RiCheckboxBlankLine,
   RiCheckLine,
+  RiCloseLine,
   RiSearchLine,
   RiUserAddLine,
 } from 'react-icons/ri';
@@ -323,9 +325,15 @@ function PersonList({
             id="search"
             name="search"
             type="text"
+            value={search}
             onChange={handleSearch}
             pl="2rem"
           />
+          <InputRightElement cursor="pointer" onClick={() => setSearch('')}>
+            <RiCloseLine
+              color={search ? colors.indigo : colors.indigoLighten80}
+            />
+          </InputRightElement>
         </InputGroup>
         {/* <FilterBar hasCompanyFilter /> */}
         {listType !== 'waitingPatients' && setShowArchived && (
