@@ -62,6 +62,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<MinimalUser | undefined>(undefined);
   const isNotOnlyUser = (user?: MinimalUser) =>
     user?.roles && user.roles.filter((role) => role !== 'user').length > 1;
+  console.table({ roles: user?.roles });
   const [isAuthorized, setIsAuthorized] = useState<boolean>(() =>
     isNotOnlyUser(user) ? true : false
   );
@@ -105,8 +106,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
       if (!user) {
         setIsLoading(true);
         fetchMe().finally(() => setIsLoading(false));
-      } else {
-        setUser(undefined);
       }
     }
     return () => setUser(undefined);
