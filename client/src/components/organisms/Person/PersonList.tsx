@@ -327,6 +327,7 @@ function PersonList({
             type="text"
             value={search}
             onChange={handleSearch}
+            onKeyDown={(e) => e.code === 'Escape' && setSearch('')}
             pl="2rem"
           />
           <InputRightElement cursor="pointer" onClick={() => setSearch('')}>
