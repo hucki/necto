@@ -61,8 +61,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [user, setUser] = useState<MinimalUser | undefined>(undefined);
   const isNotOnlyUser = (user?: MinimalUser) =>
-    user?.roles && user.roles.filter((role) => role !== 'user').length > 1;
-  console.table({ roles: user?.roles });
+    user?.roles && user.roles.filter((role) => role !== 'user').length >= 1;
   const [isAuthorized, setIsAuthorized] = useState<boolean>(() =>
     isNotOnlyUser(user) ? true : false
   );
