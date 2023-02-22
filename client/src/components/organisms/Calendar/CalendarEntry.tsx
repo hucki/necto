@@ -12,6 +12,7 @@ import { t } from 'i18next';
 import { useViewport } from '../../../hooks/useViewport';
 import { ItemStyle, OnClickCalendarEventProps } from './CalendarColumn';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
+import { BgColor } from '../../../types/Colors';
 
 interface CalendarEntryProps {
   event: Event;
@@ -20,6 +21,7 @@ interface CalendarEntryProps {
   // eslint-disable-next-line no-unused-vars
   onClickHandler: ({ e, event }: OnClickCalendarEventProps) => void;
   styles: ItemStyle;
+  bgColor?: BgColor;
 }
 
 export const CalendarEntry = ({
@@ -28,6 +30,7 @@ export const CalendarEntry = ({
   showTime = false,
   onClickHandler,
   styles,
+  bgColor,
 }: CalendarEntryProps) => {
   const { isMobile } = useViewport();
   const [icons, setIcons] = useState<JSX.Element[] | []>([]);
@@ -105,7 +108,9 @@ export const CalendarEntry = ({
   return (
     <CalendarEntryContainer
       checked={(isLeave(event) && isApproved) || (!isLeave(event) && isDone)}
-      bgColor={isLeave(event) ? 'leave' : isNote ? 'note' : event.bgColor}
+      bgColor={
+        isLeave(event) ? 'leave' : isNote ? 'note' : bgColor || event.bgColor
+      }
       title={!isLeave(event) ? fullTimeString + ' ' + entryTitle : entryTitle}
       key={event.uuid?.toString()}
       id={'calEntry-' + event.uuid?.toString()}
