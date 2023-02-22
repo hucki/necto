@@ -181,11 +181,14 @@ function CalendarEventEdit({
     );
   };
 
+  const isFutureEvent = dayjs(changedEvent.endTime).isAfter(dayjs());
+  const disableDone = isFutureEvent || patientIsArchived || changedEvent.isDone;
   const disableCancel = patientIsArchived || changedEvent.isDone;
   const disableDelete =
     patientIsArchived ||
     dayjs(changedEvent.endTime).isBefore(dayjs().hour(0).subtract(3, 'days')) ||
     changedEvent.isDone;
+
   return (
     <>
       <Modal
@@ -205,11 +208,7 @@ function CalendarEventEdit({
               {changedEvent.isDone !== true ? (
                 <IconButton
                   aria-label="set isDone"
-                  disabled={
-                    patientIsArchived ||
-                    dayjs(changedEvent.endTime).isAfter(dayjs()) ||
-                    changedEvent.isDone
-                  }
+                  isDisabled={disableDone}
                   icon={
                     changedEvent.isDone ? (
                       <RiCheckboxLine />
