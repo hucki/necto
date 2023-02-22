@@ -23,6 +23,7 @@ import CalendarChooseEntryModal from './CalendarChooseEntryModal';
 import { Room } from '../../../types/Rooms';
 import { CounterOfDone } from '../../molecules/DataDisplay/CounterOfDone';
 import styled from '@emotion/styled/macro';
+import { BgColor } from '../../../types/Colors';
 dayjs.locale('de');
 
 // Typeguard
@@ -122,7 +123,16 @@ function CalendarColumn({
     onClose();
   }
 
-  const renderCustomEvent = (event: Event, styles: ItemStyle) => {
+  interface RenderCustomEventProps {
+    event: Event;
+    styles: ItemStyle;
+    bgColor?: BgColor;
+  }
+  const renderCustomEvent = ({
+    event,
+    styles,
+    bgColor,
+  }: RenderCustomEventProps) => {
     if (!event.uuid) event.uuid = uuid();
     return (
       <CalendarEntry
@@ -132,6 +142,7 @@ function CalendarColumn({
         onClickHandler={onClickCalendarEvent}
         styles={styles}
         showTime
+        bgColor={bgColor}
       />
     );
   };
@@ -226,7 +237,15 @@ function CalendarColumn({
         )}
         {events
           .filter((event) => event.ressourceId === ressource.uuid)
-          .map((event) => renderCustomEvent(event, getItemStyle(event)))}
+          .map((event) =>
+            renderCustomEvent({
+              event,
+              styles: getItemStyle(event),
+              bgColor: isEmployeeRessource(ressource)
+                ? ressource.bgColor
+                : undefined,
+            })
+          )}
       </CalendarColumnRessourceBody>
     );
   });
