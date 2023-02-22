@@ -72,7 +72,7 @@ function TeamCalendar(): JSX.Element {
         <FilterBar hasTeamsFilter hasEventTypeOption />
       </Flex>
       <CalendarContainer
-        readOnly={user && isAuthorized(user) ? true : false}
+        readOnly={!user || !isAuthorized(user) ? true : false}
         events={rawEvents}
         ressources={ressources}
         daysRange={[calendarDate, calendarDate]}
