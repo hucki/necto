@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useContext, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { Event, isLeave } from '../../../types/Event';
+import { Event } from '../../../types/Event';
 import { AppState } from '../../../types/AppState';
 import { EmployeeRessource } from '../../../types/Ressource';
 import { CalendarColumn } from './CalendarColumn';
@@ -142,10 +142,7 @@ function CalendarContainer({
   let curCalendarDay = daysRange[0];
 
   const isSameDay = (event: Event) => {
-    return (
-      !isLeave(event) &&
-      dayjs(event.startTime).isSame(dayjs(curCalendarDay), 'date')
-    );
+    return dayjs(event.startTime).isSame(dayjs(curCalendarDay), 'date');
   };
 
   for (let i = 0; i < numOfDays; i++) {
