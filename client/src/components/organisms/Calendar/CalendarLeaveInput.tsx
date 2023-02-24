@@ -157,7 +157,7 @@ const CalendarLeaveInput = ({
     setCurrentStartTime(dayjs(e.currentTarget.value));
   };
   const handleEndDateChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setCurrentEndTime(dayjs(e.currentTarget.value));
+    setCurrentEndTime(dayjs(e.currentTarget.value).hour(23).minute(59));
   };
   const ModalHeaderContent = () => {
     return (
@@ -220,7 +220,7 @@ const CalendarLeaveInput = ({
           />
           <LabelledInput
             disabled={!chosenLeaveType}
-            label={t('calendar.event.start')}
+            label={t('calendar.event.end')}
             id="endDate"
             autoComplete="off"
             type="date"
