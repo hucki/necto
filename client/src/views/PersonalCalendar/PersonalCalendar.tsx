@@ -35,10 +35,11 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
-  const { isLoading: isLoadingDaysEvents, rawEvents: daysEvents } =
+  const { isLoading: isLoadingDaysEvents, rawEvents: daysEventsUnfiltered } =
     useDaysEvents(calendarDate);
-  const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } =
+  const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEventsUnfiltered } =
     useWeeksEvents(calendarDate.year(), calendarDate.week());
+
   const { user, isLoading: isLoadingUser } = useUser(id);
   const isLoading =
     isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
@@ -65,6 +66,12 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
     return <FullPageSpinner />;
 
   const thisEmployee = user?.userSettings[0].employee;
+  const daysEvents = daysEventsUnfiltered.filter(
+    (e) => e.ressourceId === thisEmployee.uuid
+  );
+  const weeksEvents = weeksEventsUnfiltered.filter(
+    (e) => e.ressourceId === thisEmployee.uuid
+  );
   const ressources: EmployeeRessource[] = [
     {
       userId: user.uuid,
