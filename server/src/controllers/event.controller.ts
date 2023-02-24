@@ -299,7 +299,7 @@ export const deleteCurrentAndFutureEvents = async (
 };
 
 /**
- * get all Events that are taking place in the given year/week combination
+ * get all Events that are taking place in the given year/month/day combination
  *  @param {string} req.params.year
  *  @param {string} req.params.month
  *  @param {string} req.params.day
@@ -323,15 +323,15 @@ export const getDaysEvents = async (
         OR: [
           {
             AND: [
-              { startTime: { gte: startOfDay.toISOString() } },
-              { startTime: { lte: endOfDay.toISOString() } },
+              { startTime: { gte: startOfDay.toDate() } },
+              { startTime: { lte: endOfDay.toDate() } },
               { isDeleted: false },
             ],
           },
           {
             AND: [
-              { endTime: { gte: startOfDay.toISOString() } },
-              { endTime: { lte: endOfDay.toISOString() } },
+              { endTime: { gte: startOfDay.toDate() } },
+              { endTime: { lte: endOfDay.toDate() } },
               { isDeleted: false },
             ],
           },
@@ -426,15 +426,15 @@ export const getWeeksEvents = async (
         OR: [
           {
             AND: [
-              { startTime: { gte: firstOfWeek.toISOString() } },
-              { startTime: { lte: lastOfWeek.toISOString() } },
+              { startTime: { gte: firstOfWeek.toDate() } },
+              { startTime: { lte: lastOfWeek.toDate() } },
               { isDeleted: false },
             ],
           },
           {
             AND: [
-              { endTime: { gte: firstOfWeek.toISOString() } },
-              { endTime: { lte: lastOfWeek.toISOString() } },
+              { endTime: { gte: firstOfWeek.toDate() } },
+              { endTime: { lte: lastOfWeek.toDate() } },
               { isDeleted: false },
             ],
           },
