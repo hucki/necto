@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useContext, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { Event } from '../../../types/Event';
+import { Event, isLeave } from '../../../types/Event';
 import { AppState } from '../../../types/AppState';
 import { EmployeeRessource } from '../../../types/Ressource';
 import { CalendarColumn } from './CalendarColumn';
@@ -140,12 +140,23 @@ function CalendarContainer({
   }
   const calendarDays = [];
   let curCalendarDay = daysRange[0];
+
+  const isSameDay = (event: Event) => {
+    // FIXME: handle all day events with TZ taken in account.
+    // until then we just add some hours to avoid UTC conflicts
+    return (
+      (isLeave(event) &&
+        dayjs(event.startTime)
+          .add(3, 'hour')
+          .isSame(dayjs(curCalendarDay), 'date')) ||
+      (!isLeave(event) &&
+        dayjs(event.startTime).isSame(dayjs(curCalendarDay), 'date'))
+    );
+  };
+
   for (let i = 0; i < numOfDays; i++) {
     const daysEvents = events.filter((event) =>
-      !event.isCancelled &&
-      dayjs(event.startTime).isSame(dayjs(curCalendarDay), 'date')
-        ? event
-        : undefined
+      !event.isCancelled && isSameDay(event) ? event : undefined
     );
     calendarDays.push(
       <CalendarColumn
