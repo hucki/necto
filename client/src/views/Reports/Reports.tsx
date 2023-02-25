@@ -24,22 +24,6 @@ const Reports = () => {
   const tabData = [
     {
       allowedRoles: ['admin'],
-      name: 'teamSettings',
-      label: (
-        <>
-          <IoPeople /> {t('menu.teamSettings')}
-        </>
-      ),
-      content: (
-        <>
-          current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
-          {(!data || isLoading) && <FullPageSpinner />}
-          {data && <EmployeeDashboard employees={data} />}
-        </>
-      ),
-    },
-    {
-      allowedRoles: ['admin'],
       name: 'weekReport',
       label: (
         <>
@@ -60,6 +44,22 @@ const Reports = () => {
               }}
             />
           )}
+        </>
+      ),
+    },
+    {
+      allowedRoles: ['admin'],
+      name: 'teamSettings',
+      label: (
+        <>
+          <IoPeople /> {t('menu.teamSettings')}
+        </>
+      ),
+      content: (
+        <>
+          current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
+          {(!data || isLoading) && <FullPageSpinner />}
+          {data && <EmployeeDashboard employees={data} />}
         </>
       ),
     },
