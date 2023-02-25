@@ -40,6 +40,14 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEventsUnfiltered } =
     useWeeksEvents(calendarDate.year(), calendarDate.week());
 
+  console.log({
+    events: weeksEventsUnfiltered.map((e) => ({
+      start: e.startTime,
+      end: e.endTime,
+      type: e.type,
+      isCancelled: e.isCancelled,
+    })),
+  });
   const { user, isLoading: isLoadingUser } = useUser(id);
   const isLoading =
     isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
