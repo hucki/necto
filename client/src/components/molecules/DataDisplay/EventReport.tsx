@@ -40,7 +40,7 @@ const EventReport = ({
     }
     const next = {
       cancelledPerReason: previousCancelledPerReason,
-      total: prev.total + 1,
+      total: prev.total + (cur.isCancelled ? 1 : 0),
       done: prev.done + (cur.isDone ? 1 : 0),
       cancelled: prev.cancelled + (cur.isCancelled ? 1 : 0),
     };
