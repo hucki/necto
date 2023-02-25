@@ -103,7 +103,9 @@ const EmployeeReport = ({
                   key={day.format('YYYY-MM-DD')}
                   useStatGroup={false}
                   events={events.filter(
-                    (event) => dayjs(event.startTime).day() === day.day()
+                    (event) =>
+                      dayjs(event.startTime).day() === day.day() &&
+                      event.type === 'appointment'
                   )}
                   dateRangeLabel={dateRangeLabel}
                 />
