@@ -426,7 +426,7 @@ export const getWeeksEvents = async (
         OR: [
           {
             AND: [
-              { startTime: { gte: firstOfWeek.subtract(1, 'day').toDate() } },
+              { startTime: { gte: firstOfWeek.toDate() } },
               { startTime: { lte: lastOfWeek.toDate() } },
               { isDeleted: false },
             ],
