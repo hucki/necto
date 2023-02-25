@@ -448,12 +448,7 @@ export const getWeeksEvents = async (
         employee: { include: { contract: { where: { validUntil: null } } } },
       },
     });
-    console.log({ firstOfWeek, lastOfWeek });
     for (let i = 0; i < events.length; i++) {
-      console.log({
-        eventStart: events[i].startTime,
-        eventEnd: events[i].endTime,
-      });
       if (events[i].patient) {
         events[i].patient = decryptPatient({
           patient: events[i].patient,
