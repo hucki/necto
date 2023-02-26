@@ -13,7 +13,13 @@ export const getAllCancellationReasons = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const cancellationReasons = await prisma.cancellationReason.findMany();
+    const cancellationReasons = await prisma.cancellationReason.findMany({
+      include: {
+        _count: {
+          select: { events: true },
+        },
+      },
+    });
     res.json(cancellationReasons);
     res.status(200);
     return;
@@ -68,6 +74,29 @@ export const updateCancellationReason = async (
     });
     res.json(updatedCancellationReason);
     res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * delete Cancellation Reason
+ *  @param {string} req.params.crid
+ */
+export const deleteCancellationReason = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const deletedCancellationReason = await prisma.cancellationReason.delete({
+      where: {
+        id: req.params.crid,
+      },
+    });
+    res.json(deletedCancellationReason);
+    res.status(200);
     return;
   } catch (e) {
     next(e);
