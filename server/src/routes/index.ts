@@ -21,6 +21,7 @@ import * as permissionsController from '../controllers/permissions.controller';
 import * as tenantController from '../controllers/tenant.controller';
 import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
+import * as waitingPreferenceController from '../controllers/waitingPreference.controller';
 // import * as seedController from '../controllers/seed.controller';
 // import expressjwt from 'express-jwt';
 import passport from 'passport';
@@ -195,6 +196,25 @@ router.post(
 router.patch(
   '/settings/event/cr',
   eventSettingsController.updateCancellationReason
+);
+router.delete(
+  '/settings/event/cr/:crid',
+  eventSettingsController.deleteCancellationReason
+);
+
+// waiting preference settings
+router.get(
+  '/settings/wp',
+  waitingPreferenceController.getAllWaitingPreferences
+);
+router.post('/settings/wp', waitingPreferenceController.addWaitingPreference);
+router.patch(
+  '/settings/wp',
+  waitingPreferenceController.updateWaitingPreference
+);
+router.delete(
+  '/settings/wp/:key',
+  waitingPreferenceController.deleteWaitingPreference
 );
 
 //router.get('/appsettings', settingsController.getAppSettings);
