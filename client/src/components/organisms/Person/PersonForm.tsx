@@ -657,7 +657,7 @@ export const PersonForm = ({
                               }
                             />
                           )}
-                          <TagLabel>{wp.key}</TagLabel>
+                          <TagLabel>{wp.label}</TagLabel>
                         </Tag>
                       </>
                     );

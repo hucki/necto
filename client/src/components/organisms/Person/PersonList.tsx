@@ -320,7 +320,7 @@ function PersonList({
               <Td>
                 {p.waitingPreferences?.map((wp) => (
                   <Tag colorScheme="orange" variant="solid">
-                    <TagLabel>{wp.key}</TagLabel>
+                    <TagLabel>{wp.label}</TagLabel>
                   </Tag>
                 ))}
               </Td>
