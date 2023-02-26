@@ -5,6 +5,9 @@ import {
   GridItem,
   SimpleGrid,
   Icon,
+  TagLeftIcon,
+  Tag,
+  TagLabel,
 } from '@chakra-ui/react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import dayjs from 'dayjs';
@@ -13,6 +16,7 @@ import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail } from 'react-icons/cg';
+import { FaPlus } from 'react-icons/fa';
 import { RiPrinterLine } from 'react-icons/ri';
 import {
   useCreateDoctorContact,
@@ -20,6 +24,7 @@ import {
 } from '../../../hooks/contact';
 import { useAllDoctors } from '../../../hooks/doctor';
 import { useAllInstitutions } from '../../../hooks/institution';
+import { useAllWaitingPreferences } from '../../../hooks/settings';
 import { useFilter } from '../../../hooks/useFilter';
 import { useViewport } from '../../../hooks/useViewport';
 import { ContactData, ContactType } from '../../../types/ContactData';
@@ -36,8 +41,8 @@ import {
   Select,
   FormGroup,
   Checkbox,
+  Label,
 } from '../../Library';
-import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { Contract } from '../Documents/Contract';
 import { EventList } from '../List/Events';
 import { AddpayForm } from '../Patients/AddpayForm';
@@ -81,6 +86,7 @@ export const PersonForm = ({
   const { mutateAsync: createPatientContact } = useCreatePatientContact();
   const { mutateAsync: createDoctorContact } = useCreateDoctorContact();
   const { institutions } = useAllInstitutions();
+  const { waitingPreferences } = useAllWaitingPreferences();
   const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({
     ...person,
   }));
@@ -555,13 +561,6 @@ export const PersonForm = ({
             <>
               {autoFormFields()}
               {personType !== 'doctor' && <BirthdayInput />}
-              {personType !== 'doctor' && <IsWaitingSinceInput />}
-              {currentPatient && (
-                <PersonMetaData
-                  createdAt={currentPatient?.createdAt}
-                  updatedAt={currentPatient?.updatedAt}
-                />
-              )}
               {phoneFromContact()}
               {personType === 'doctor' && faxFromContact()}
               {emailFromContact()}
@@ -612,6 +611,59 @@ export const PersonForm = ({
                   </Select>
                   <FormLabel>{t('label.institution')}</FormLabel>
                 </FormControl>
+              </ModalFormGroup>
+              <Divider m="1" />
+              <ModalFormGroup>
+                <Label>{t('label.waitingPreference')}</Label>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: isMobile && !isReadOnly ? 'column' : 'row',
+                    gap: '0.5rem',
+                    justifyContent: isMobile ? 'space-evenly' : 'flex-start',
+                    marginBottom: '1.5rem',
+                  }}
+                >
+                  {waitingPreferences.map((wp) => {
+                    const hasCurrentWaitingPreference =
+                      currentPatient.waitingPreferences?.find(
+                        (patientsWP) => patientsWP.key === wp.key
+                      );
+
+                    return (
+                      <>
+                        <Tag
+                          size={isReadOnly ? 'md' : 'lg'}
+                          variant={
+                            hasCurrentWaitingPreference ? 'solid' : 'subtle'
+                          }
+                          colorScheme={
+                            hasCurrentWaitingPreference ? 'green' : 'gray'
+                          }
+                        >
+                          {!isReadOnly && !hasCurrentWaitingPreference && (
+                            <TagLeftIcon
+                              as={FaPlus}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() =>
+                                setCurrentPerson((person) => ({
+                                  ...person,
+                                  waitingPreferences: [
+                                    ...((person as Patient)
+                                      .waitingPreferences || []),
+                                    wp,
+                                  ],
+                                }))
+                              }
+                            />
+                          )}
+                          <TagLabel>{wp.key}</TagLabel>
+                        </Tag>
+                      </>
+                    );
+                  })}
+                </div>
+                <IsWaitingSinceInput />
               </ModalFormGroup>
               <Divider m="1" />
               {currentPatient.events?.length ? (
