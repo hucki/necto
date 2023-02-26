@@ -91,4 +91,12 @@ export type CancellationReason = {
   id: string;
   description: string;
   tenantId?: string;
+  _count: {
+    events: number;
+  };
 };
+
+export type CancellationReasonCreate = Pick<
+  CancellationReason,
+  'id' | 'description'
+>;
