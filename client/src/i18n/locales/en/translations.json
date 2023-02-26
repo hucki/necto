@@ -155,7 +155,8 @@
     "noRoom": "no room",
     "cancelled": "cancelled",
     "continue": "continue",
-    "showArchivedData": "show archived data"
+    "showArchivedData": "show archived data",
+    "waitingPreference": "prefers"
   },
   "auth": {
     "login": "login",

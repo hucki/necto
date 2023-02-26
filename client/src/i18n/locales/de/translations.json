@@ -156,7 +156,8 @@
     "noRoom": "kein Raum",
     "cancelled": "abges.",
     "continue": "weiter",
-    "showArchivedData": "archivierte Daten anzeigen"
+    "showArchivedData": "archivierte Daten anzeigen",
+    "waitingPreference": "bevorzugt"
   },
   "auth": {
     "login": "anmelden",
