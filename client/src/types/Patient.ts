@@ -2,6 +2,7 @@ import { ContactData } from './ContactData';
 import { Doctor } from './Doctor';
 import { Event } from './Event';
 import { Institution } from './Institution';
+import { WaitingPreference } from './Settings';
 
 export type AddpayFreedom = {
   uuid?: string;
@@ -32,6 +33,7 @@ export const patientUpdateKeys = [
   'hasPrescritpion',
   'isWaitingAgain',
   'waitingPreference',
+  'waitingPreferences',
   'finishedTherapy',
   'deceased',
   'privatelyInsured',
@@ -79,6 +81,7 @@ export type Patient = {
   firstContactAt?: Date;
   isWaitingSince?: Date;
   waitingPreference?: string;
+  waitingPreferences?: WaitingPreference[];
   finishedTherapy: boolean;
   deceased: boolean;
   privatelyInsured: boolean;
