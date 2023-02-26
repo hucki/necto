@@ -38,7 +38,7 @@ export const addAddpayFreedom = async (
 
 /**
  * delete one AddpayFreedom
- *  @param {string} req.params.uuid
+ *  @param {string} req.params.addpayId
  */
 export const deleteAddpayFreedom = async (
   req: Request,
