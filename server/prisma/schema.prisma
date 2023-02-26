@@ -321,7 +321,7 @@ model Patient {
   validUntil          DateTime?       @db.Timestamptz(6)
   firstContactAt      DateTime        @default(now())
   isWaitingSince      DateTime        @default(now())
-  waitingPreference   String?         @default("") @db.VarChar(255)
+  waitingPreference   String?         @default("") @db.VarChar(255) // deprecated
   createdAt           DateTime        @default(now())
   createdBy           String?         @db.Uuid
   updatedAt           DateTime        @updatedAt
@@ -340,6 +340,7 @@ model Patient {
   isWaitingAgain      Boolean         @default(false)
   contactData         ContactData[]   @relation("contactData_referenceIdTopatient")
   events              Event[]         @relation("event_referenceIdTopatient")
+  waitingPreferences  WaitingPreference[]
   availability        Availability[]  @relation("availability_referenceIdToPatient")
   doctor              Doctor?         @relation("doctor_referenceIdToPatient", fields: [doctorId], references: [uuid])
   institution         Institution?    @relation("institution_referenceIdToPatient", fields: [institutionId], references: [uuid])
@@ -379,6 +380,13 @@ model CancellationReason {
   description String  @db.VarChar(64)
   tenantId    String? @db.Uuid
   events      Event[] @relation("event_referenceIdToCancellationReason")
+}
+
+model WaitingPreference {
+  key       String  @id @db.VarChar(10)
+  label     String  @db.VarChar(64)
+  tenantId  String? @db.Uuid
+  patients  Patient[]
 }
 
 model Institution {
