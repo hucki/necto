@@ -97,6 +97,11 @@ export const updatePatient = async (
       data: {
         ...encryptedPatient,
         updatedBy: user.uuid,
+        waitingPreferences: {
+          connect: encryptedPatient.waitingPreferences.map((wp) => ({
+            key: wp.key,
+          })),
+        },
       },
     });
     res.json(updatedPatient);
@@ -148,6 +153,7 @@ export const getPatientsEvents = async (
       },
       include: {
         events: true,
+        waitingPreferences: true,
       },
     });
     res.json(patientsEvents);
@@ -173,6 +179,7 @@ export const getAllPatients = async (
       },
       include: {
         contactData: true,
+        waitingPreferences: true,
         events: {
           include: {
             employee: true,
@@ -220,6 +227,7 @@ export const getAllArchivedPatients = async (
       },
       include: {
         contactData: true,
+        waitingPreferences: true,
         events: {
           include: {
             employee: true,
@@ -270,6 +278,7 @@ export const getWaitingPatients = async (
           },
         },
         contactData: true,
+        waitingPreferences: true,
         doctor: true,
         institution: true,
         addpayFreedom: true,
