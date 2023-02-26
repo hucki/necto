@@ -10,10 +10,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RiArrowDropRightLine } from 'react-icons/ri';
-import {
-  EmployeeSettingsWrapper,
-  SettingsGrid,
-} from '../../components/atoms/Wrapper';
+import { SettingsWrapper, SettingsGrid } from '../../components/atoms/Wrapper';
 import {
   FormLabel,
   LabelledInput,
@@ -107,7 +104,7 @@ export const UserSettings = () => {
         options={users}
       />
       <SettingsGrid>
-        <EmployeeSettingsWrapper>
+        <SettingsWrapper>
           <Heading as="h2" size="sm" mb="2" mt="5">
             {t('menu.personalData')}
           </Heading>
@@ -141,8 +138,8 @@ export const UserSettings = () => {
             onChangeHandler={onChangeHandler}
             label={t('label.lastName')}
           />
-        </EmployeeSettingsWrapper>
-        <EmployeeSettingsWrapper>
+        </SettingsWrapper>
+        <SettingsWrapper>
           <Heading as="h2" size="sm" mb="2" mt="5">
             {t('label.currentPermissions')}
           </Heading>
@@ -181,7 +178,7 @@ export const UserSettings = () => {
               </Button>
             </>
           )}
-        </EmployeeSettingsWrapper>
+        </SettingsWrapper>
       </SettingsGrid>
     </>
   );
