@@ -30,7 +30,7 @@ const ViewWrapper = styled.div(wrapperStyles, {
   justifyContent: 'center',
 });
 
-const EmployeeSettingsWrapper = styled.div({
+const SettingsWrapper = styled.div({
   marginTop: '0.5rem',
   paddingLeft: '0.5rem',
   paddingRight: '0.5rem',
@@ -60,6 +60,6 @@ export {
   PersonListWrapper,
   ViewWrapper,
   CalendarEventViewWrapper,
-  EmployeeSettingsWrapper,
+  SettingsWrapper,
   SettingsGrid,
 };

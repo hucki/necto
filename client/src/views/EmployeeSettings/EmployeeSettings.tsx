@@ -35,7 +35,7 @@ import { colors } from '../../config/colors';
 import { useFilter } from '../../hooks/useFilter';
 import {
   ControlWrapper,
-  EmployeeSettingsWrapper,
+  SettingsWrapper,
   SettingsGrid,
 } from '../../components/atoms/Wrapper';
 import { IconButton } from '../../components/atoms/Buttons';
@@ -426,7 +426,7 @@ const EmployeeSettings = () => {
         )}
       </ControlWrapper>
       <SettingsGrid>
-        <EmployeeSettingsWrapper>
+        <SettingsWrapper>
           <Heading as="h2" size="sm" mb="2" mt="5">
             {t('menu.personalData')}
           </Heading>
@@ -485,8 +485,8 @@ const EmployeeSettings = () => {
             label={t('label.user')}
             options={users}
           />
-        </EmployeeSettingsWrapper>
-        <EmployeeSettingsWrapper>
+        </SettingsWrapper>
+        <SettingsWrapper>
           {currentContract ? (
             <ContractOverview
               disabled={state === 'view'}
@@ -496,9 +496,9 @@ const EmployeeSettings = () => {
           ) : (
             <b>no Contract!</b>
           )}
-        </EmployeeSettingsWrapper>
+        </SettingsWrapper>
 
-        <EmployeeSettingsWrapper>
+        <SettingsWrapper>
           {currentEmployee.teams?.length ? (
             <>
               <Heading as="h3" size="sm" mb="2" mt="5">
@@ -550,7 +550,7 @@ const EmployeeSettings = () => {
               />
             </ControlWrapper>
           )}
-        </EmployeeSettingsWrapper>
+        </SettingsWrapper>
       </SettingsGrid>
     </>
   );
