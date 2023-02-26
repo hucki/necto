@@ -9,6 +9,7 @@ import {
 import { client } from '../services/ApiClient';
 import {
   CancellationReason,
+  CancellationReasonCreate,
   Event,
   LeaveStatus,
   NewEvent,
@@ -257,18 +258,20 @@ export function useApproveLeave(): UseMutationResult<
 const cancellationReasonsRoute = 'settings/event/cr';
 
 export function useCreateCancellationReason(): UseMutationResult<
-  CancellationReason,
+  CancellationReasonCreate,
   Error,
-  { cr: CancellationReason },
+  { cr: CancellationReasonCreate },
   string
 > {
   const queryClient = useQueryClient();
   const createCancellationReason = async ({
     cr,
   }: {
-    cr: CancellationReason;
-  }): Promise<CancellationReason> => {
-    return client<CancellationReason>(cancellationReasonsRoute, { data: cr });
+    cr: CancellationReasonCreate;
+  }): Promise<CancellationReasonCreate> => {
+    return client<CancellationReasonCreate>(cancellationReasonsRoute, {
+      data: cr,
+    });
   };
   return useMutation(createCancellationReason, {
     onSuccess: () => {
@@ -314,4 +317,28 @@ export function useAllCancellationReasons(): UseQueryResult<
     cancellationReasons,
     ...usersQuery,
   };
+}
+
+export function useDeleteCancellationReason(): UseMutationResult<
+  { message: string },
+  Error,
+  { id: string },
+  string
+> {
+  const queryClient = useQueryClient();
+  const deleteCancellationReason = async ({
+    id,
+  }: {
+    id: string;
+  }): Promise<{ message: string }> => {
+    return client<{ message: string }>(`${cancellationReasonsRoute}/${id}`, {
+      method: 'DELETE',
+    });
+  };
+
+  return useMutation(deleteCancellationReason, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([cancellationReasonsRoute]);
+    },
+  });
 }
