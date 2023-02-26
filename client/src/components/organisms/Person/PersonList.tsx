@@ -11,6 +11,8 @@ import {
   ModalOverlay,
   Switch,
   Table,
+  Tag,
+  TagLabel,
   Tbody,
   Td,
   Th,
@@ -235,7 +237,7 @@ function PersonList({
       return (
         <>
           <b>
-            {dayjs(event.startTime).format('DD.MM.YY hh:mm')}
+            {dayjs(event.startTime).format('DD.MM.YY HH:mm')}
             {event.isDone && (
               <Icon as={RiCheckLine} w={5} h={5} color="green" />
             )}
@@ -278,14 +280,16 @@ function PersonList({
                   })}
                 />
               </Td>
-              <Td textAlign="center">
-                <Icon
-                  as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
-                  w={5}
-                  h={5}
-                  color={p.hasContract ? 'green' : 'red'}
-                />
-              </Td>
+              {!isWaitingPatient(p) && (
+                <Td textAlign="center">
+                  <Icon
+                    as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
+                    w={5}
+                    h={5}
+                    color={p.hasContract ? 'green' : 'red'}
+                  />
+                </Td>
+              )}
               <Td textAlign="center">{p.gender}</Td>
             </>
           )}
@@ -310,7 +314,18 @@ function PersonList({
           ) : !isDoctor(p) ? (
             <Td textAlign="center">{dayjs(p.firstContactAt).format('ll')}</Td>
           ) : null}
-          <Td>{isWaitingPatient(p) && diagnosticDisplay(p)}</Td>
+          {isWaitingPatient(p) && (
+            <>
+              <Td>{diagnosticDisplay(p)}</Td>
+              <Td>
+                {p.waitingPreferences?.map((wp) => (
+                  <Tag colorScheme="orange" variant="solid">
+                    <TagLabel>{wp.key}</TagLabel>
+                  </Tag>
+                ))}
+              </Td>
+            </>
+          )}
         </Tr>
       ));
 
@@ -390,7 +405,9 @@ function PersonList({
                 {listType !== 'doctors' && (
                   <>
                     <Th width={5}>{t('label.isAddpayFreed')}</Th>
-                    <Th width={5}>{t('label.hasContract')}</Th>
+                    {listType !== 'waitingPatients' && (
+                      <Th width={5}>{t('label.hasContract')}</Th>
+                    )}
                     <Th width={2}>{t('label.gender')} </Th>
                   </>
                 )}
@@ -407,7 +424,10 @@ function PersonList({
                   <Th width={7}>{t('label.firstContactAt')}</Th>
                 ) : null}
                 {listType === 'waitingPatients' && (
-                  <Th width={5}>{t('label.diagnostic')}</Th>
+                  <>
+                    <Th width={5}>{t('label.diagnostic')}</Th>
+                    <Th width={5}>{t('label.waitingPreference')}</Th>
+                  </>
                 )}
               </Tr>
             </Thead>
