@@ -20,6 +20,7 @@ import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import { ModalHeader } from '../../Library';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
+import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { PersonForm } from './PersonForm';
 
 interface PersonModalProps {
@@ -199,6 +200,12 @@ export const PersonModal = ({
         bgColor="white"
       >
         <PersonCard person={currentPerson} hasBorder />
+        {!isMobile && personType === 'patient' && (
+          <PersonMetaData
+            createdAt={(currentPerson as Patient)?.createdAt}
+            updatedAt={(currentPerson as Patient)?.updatedAt}
+          />
+        )}
         <IconButton
           aria-label="close modal"
           icon={<FaTimes />}
