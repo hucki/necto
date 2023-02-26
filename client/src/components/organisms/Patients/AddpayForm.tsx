@@ -53,7 +53,9 @@ interface AddpayTagsProps {
   addpayState: AddpayState[];
   isInteractive: boolean;
   size?: 'lg' | 'sm' | 'md';
+  // eslint-disable-next-line no-unused-vars
   onAddHandler?: (year: number) => void;
+  // eslint-disable-next-line no-unused-vars
   onRemoveHandler?: (year: number) => void;
 }
 
