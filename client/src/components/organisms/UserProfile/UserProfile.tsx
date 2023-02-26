@@ -19,7 +19,7 @@ import {
 import { updatePassword } from '../../../services/Auth';
 import {
   ControlWrapper,
-  EmployeeSettingsWrapper,
+  SettingsWrapper,
   SettingsGrid,
 } from '../../atoms/Wrapper';
 import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
@@ -203,7 +203,7 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
       </ControlWrapper>
       <form onSubmit={onSubmitHandler}>
         <SettingsGrid>
-          <EmployeeSettingsWrapper>
+          <SettingsWrapper>
             <Heading as="h2" size="md">
               {t('menu.personalData')}
             </Heading>
@@ -227,8 +227,8 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
               value={userState.lastName}
               onChangeHandler={onChangeHandler}
             />
-          </EmployeeSettingsWrapper>
-          <EmployeeSettingsWrapper>
+          </SettingsWrapper>
+          <SettingsWrapper>
             <Heading as="h2" size="md">
               {t('auth.password')}
             </Heading>
@@ -276,7 +276,7 @@ const UserProfile = ({ id }: UserProfileProps): JSX.Element => {
                 <FormErrorMessage>new password has to match</FormErrorMessage>
               )}
             </FormControl>
-          </EmployeeSettingsWrapper>
+          </SettingsWrapper>
         </SettingsGrid>
       </form>
     </div>
