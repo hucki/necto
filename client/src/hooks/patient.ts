@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
 import { Patient } from '../types/Patient';
+import { WaitingPreference } from '../types/Settings';
 
 export function useCreatePatient(): UseMutationResult<
   Patient,
@@ -51,6 +52,63 @@ export function useUpdatePatient(): UseMutationResult<
       queryClient.invalidateQueries(['patients']);
       queryClient.invalidateQueries(['waitingPatients']);
       queryClient.invalidateQueries(['archivedPatients']);
+    },
+  });
+}
+
+type PatientWaitingPreferenceData = {
+  patientId: Patient['uuid'];
+  waitingPreferenceKey: WaitingPreference['key'];
+};
+
+export function useConnectWaitingPreference(): UseMutationResult<
+  PatientWaitingPreferenceData,
+  Error,
+  PatientWaitingPreferenceData,
+  string
+> {
+  const queryClient = useQueryClient();
+  const updatePatient = async ({
+    patientId,
+    waitingPreferenceKey,
+  }: PatientWaitingPreferenceData): Promise<PatientWaitingPreferenceData> => {
+    return client<PatientWaitingPreferenceData>('patients/connect/wp', {
+      data: {
+        patientId,
+        waitingPreferenceKey,
+      },
+      method: 'PATCH',
+    });
+  };
+  return useMutation(updatePatient, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['settings/wp']);
+    },
+  });
+}
+
+export function useDisconnectWaitingPreference(): UseMutationResult<
+  PatientWaitingPreferenceData,
+  Error,
+  PatientWaitingPreferenceData,
+  string
+> {
+  const queryClient = useQueryClient();
+  const updatePatient = async ({
+    patientId,
+    waitingPreferenceKey,
+  }: PatientWaitingPreferenceData): Promise<PatientWaitingPreferenceData> => {
+    return client<PatientWaitingPreferenceData>('patients/disconnect/wp', {
+      data: {
+        patientId,
+        waitingPreferenceKey,
+      },
+      method: 'PATCH',
+    });
+  };
+  return useMutation(updatePatient, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['settings/wp']);
     },
   });
 }
