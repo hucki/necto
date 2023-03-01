@@ -44,6 +44,10 @@ import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
 import { AddpayTags, getAddpayForTags } from '../Patients/AddpayForm';
+import { WaitingPreference } from '../../../types/Settings';
+import { useAllWaitingPreferences } from '../../../hooks/settings';
+import { WaitingPreferenceTagWrapper } from '../Patients/WaitingPreferenceForm';
+import { FaTimes } from 'react-icons/fa';
 
 type ListType = 'doctors' | 'patients' | 'waitingPatients';
 
@@ -64,7 +68,49 @@ function PersonList({
   const { isMobile } = useViewport();
   const { t } = useTranslation();
   const { currentCompany } = useFilter();
+  const { waitingPreferences } = useAllWaitingPreferences();
+  const [waitingPreferenceFilter, setWaitingPreferenceFilter] = useState<
+    WaitingPreference['key'][]
+  >([]);
 
+  const removeWaitingPreferenceFilter = (removeKey: string) => {
+    setWaitingPreferenceFilter((current) => [
+      ...current.filter((key) => key !== removeKey),
+    ]);
+  };
+  const addWaitingPreferenceFilter = (addKey: string) => {
+    setWaitingPreferenceFilter((current) => [...current, addKey]);
+  };
+  const WaitingPreferenceFilter = () => {
+    return (
+      <WaitingPreferenceTagWrapper isReadOnly={true} isMobile={isMobile}>
+        {waitingPreferences?.map((wp) => {
+          const isActive = waitingPreferenceFilter.includes(wp.key);
+          return (
+            <Tag
+              colorScheme={isActive ? 'orange' : 'blackAlpha'}
+              variant={isActive ? 'solid' : 'subtle'}
+              onClick={
+                isActive
+                  ? () => removeWaitingPreferenceFilter(wp.key)
+                  : () => addWaitingPreferenceFilter(wp.key)
+              }
+            >
+              <TagLabel>{wp.label}</TagLabel>
+            </Tag>
+          );
+        })}
+        <IconButton
+          aria-label="close modal"
+          variant="subtle"
+          colorScheme={waitingPreferenceFilter.length ? 'red' : 'blackAlpha'}
+          isDisabled={waitingPreferenceFilter.length ? false : true}
+          icon={<FaTimes />}
+          onClick={() => setWaitingPreferenceFilter([])}
+        />
+      </WaitingPreferenceTagWrapper>
+    );
+  };
   const isWaitingPatientList = (
     persons: Person[]
   ): persons is WaitingPatient[] => {
@@ -106,23 +152,33 @@ function PersonList({
   }, [search]);
   const filteredPatients: Patient[] | WaitingPatient[] =
     isWaitingPatientList(persons) || isPatientList(persons)
-      ? (persons.filter(
-          (person: Patient | WaitingPatient) =>
-            ((isPatient(person) || isWaitingPatient(person)) &&
-              person.firstName.toLowerCase().includes(search.toLowerCase())) ||
-            person.lastName.toLowerCase().includes(search.toLowerCase()) ||
-            person.street?.toLowerCase().includes(search.toLowerCase()) ||
-            person.city?.toLowerCase().includes(search.toLowerCase()) ||
-            person.institution?.name
-              ?.toLowerCase()
-              .includes(search.toLowerCase()) ||
-            person.notices?.toLowerCase().includes(search.toLowerCase()) ||
-            person.contactData
-              ?.filter((contact) => contact.type === 'telephone')
-              .findIndex((contact) =>
-                contact.contact.toLowerCase().includes(search.toLowerCase())
-              ) !== -1
-        ) as Patient[] | WaitingPatient[])
+      ? (persons
+          .filter(
+            (person: Patient | WaitingPatient) =>
+              ((isPatient(person) || isWaitingPatient(person)) &&
+                person.firstName
+                  .toLowerCase()
+                  .includes(search.toLowerCase())) ||
+              person.lastName.toLowerCase().includes(search.toLowerCase()) ||
+              person.street?.toLowerCase().includes(search.toLowerCase()) ||
+              person.city?.toLowerCase().includes(search.toLowerCase()) ||
+              person.institution?.name
+                ?.toLowerCase()
+                .includes(search.toLowerCase()) ||
+              person.notices?.toLowerCase().includes(search.toLowerCase()) ||
+              person.contactData
+                ?.filter((contact) => contact.type === 'telephone')
+                .findIndex((contact) =>
+                  contact.contact.toLowerCase().includes(search.toLowerCase())
+                ) !== -1
+          )
+          .filter((person) => {
+            return !waitingPreferenceFilter.length
+              ? true
+              : person.waitingPreferences?.filter((wp) =>
+                  waitingPreferenceFilter.includes(wp.key)
+                ).length;
+          }) as Patient[] | WaitingPatient[])
       : ([] as Patient[] | WaitingPatient[]);
 
   const allDoctors = isDoctorList(persons) ? persons : [];
@@ -331,7 +387,12 @@ function PersonList({
 
   return (
     <>
-      <Flex flexDirection={'row'} p="0.5rem">
+      <Flex
+        flexDirection={isMobile ? 'column' : 'row'}
+        p="0.5rem"
+        gap="0.5rem"
+        maxWidth="100%"
+      >
         <InputGroup>
           <InputLeftElement pointerEvents="none">
             <RiSearchLine color={colors.indigoLighten80} />
@@ -351,7 +412,6 @@ function PersonList({
             />
           </InputRightElement>
         </InputGroup>
-        {/* <FilterBar hasCompanyFilter /> */}
         {listType !== 'waitingPatients' && setShowArchived && (
           <>
             <Button
@@ -377,6 +437,7 @@ function PersonList({
             </FormControl>
           </>
         )}
+        {listType === 'waitingPatients' && <WaitingPreferenceFilter />}
       </Flex>
       {persons.length ? (
         <div
