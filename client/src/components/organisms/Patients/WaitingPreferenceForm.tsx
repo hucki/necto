@@ -1,4 +1,5 @@
 import { Tag, TagCloseButton, TagLabel, TagLeftIcon } from '@chakra-ui/react';
+import styled from '@emotion/styled/macro';
 import React from 'react';
 import { FaPlus } from 'react-icons/fa';
 import {
@@ -8,6 +9,22 @@ import {
 import { useAllWaitingPreferences } from '../../../hooks/settings';
 import { useViewport } from '../../../hooks/useViewport';
 import { Patient } from '../../../types/Patient';
+
+export const WaitingPreferenceTagWrapper = styled.div(
+  ({
+    isMobile = true,
+    isReadOnly = true,
+  }: {
+    isMobile: boolean;
+    isReadOnly: boolean;
+  }) => ({
+    display: 'flex',
+    flexDirection: isMobile && !isReadOnly ? 'column' : 'row',
+    gap: '0.5rem',
+    justifyContent: isMobile ? 'space-evenly' : 'flex-start',
+    marginBottom: '1.5rem',
+  })
+);
 
 export type WaitingPreferenceFormProps = {
   isReadOnly: boolean;
@@ -25,15 +42,7 @@ export const WaitingPreferenceForm = ({
     useDisconnectWaitingPreference();
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: isMobile && !isReadOnly ? 'column' : 'row',
-        gap: '0.5rem',
-        justifyContent: isMobile ? 'space-evenly' : 'flex-start',
-        marginBottom: '1.5rem',
-      }}
-    >
+    <WaitingPreferenceTagWrapper isMobile={isMobile} isReadOnly={isReadOnly}>
       {waitingPreferences.map((wp) => {
         const hasWaitingPreference = wp.patients.find(
           (p) => p.uuid === patientId
@@ -73,6 +82,6 @@ export const WaitingPreferenceForm = ({
           </>
         );
       })}
-    </div>
+    </WaitingPreferenceTagWrapper>
   );
 };
