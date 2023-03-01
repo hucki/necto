@@ -19,6 +19,7 @@ export const getAllWaitingPreferences = async (
         _count: {
           select: { patients: true },
         },
+        patients: { select: { uuid: true } },
       },
     });
     res.json(waitingPreferences);

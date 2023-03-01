@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import { encrypt, decryptContactData, decryptPatient } from '../utils/crypto';
-import { Patient, User } from '@prisma/client';
+import { Patient, User, WaitingPreference } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
@@ -331,6 +331,74 @@ export const getWaitingPatients = async (
     }
     res.json(waitingPatients);
     res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * connect one Patient to a waitingPreference
+ *  @param {Patient['uuid']} req.body.patientId
+ *  @param {WaitingPreference['key']} req.body.waitingPreferenceKey
+ */
+export const connectToWaitingPreference = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user = req.user as User;
+    const { patientId, waitingPreferenceKey } = req.body;
+    const updatedPatient = await prisma.patient.update({
+      where: {
+        uuid: patientId,
+      },
+      data: {
+        updatedBy: user.uuid,
+        waitingPreferences: {
+          connect: {
+            key: waitingPreferenceKey,
+          },
+        },
+      },
+    });
+    res.json(updatedPatient);
+    res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * connect one Patient to a waitingPreference
+ *  @param {Patient['uuid']} req.body.patientId
+ *  @param {WaitingPreference['key']} req.body.waitingPreferenceKey
+ */
+export const disconnectFromWaitingPreference = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user = req.user as User;
+    const { patientId, waitingPreferenceKey } = req.body;
+    const updatedPatient = await prisma.patient.update({
+      where: {
+        uuid: patientId,
+      },
+      data: {
+        updatedBy: user.uuid,
+        waitingPreferences: {
+          disconnect: {
+            key: waitingPreferenceKey,
+          },
+        },
+      },
+    });
+    res.json(updatedPatient);
+    res.status(201);
     return;
   } catch (e) {
     next(e);

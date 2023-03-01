@@ -135,6 +135,14 @@ router.get('/patients/all', patientController.getAllPatients);
 router.get('/patients/archived', patientController.getAllArchivedPatients);
 router.get('/patients/events/:patientId', patientController.getPatientsEvents);
 
+router.patch(
+  '/patients/connect/wp',
+  patientController.connectToWaitingPreference
+);
+router.patch(
+  '/patients/disconnect/wp',
+  patientController.disconnectFromWaitingPreference
+);
 router.patch('/patients/:patientId', patientController.updatePatient);
 router.get('/patients/waiting', patientController.getWaitingPatients);
 router.post('/patients', patientController.addPatient);
