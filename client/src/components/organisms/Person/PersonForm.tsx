@@ -5,9 +5,6 @@ import {
   GridItem,
   SimpleGrid,
   Icon,
-  TagLeftIcon,
-  Tag,
-  TagLabel,
 } from '@chakra-ui/react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import dayjs from 'dayjs';
@@ -16,7 +13,6 @@ import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail } from 'react-icons/cg';
-import { FaPlus } from 'react-icons/fa';
 import { RiPrinterLine } from 'react-icons/ri';
 import {
   useCreateDoctorContact,
@@ -24,7 +20,6 @@ import {
 } from '../../../hooks/contact';
 import { useAllDoctors } from '../../../hooks/doctor';
 import { useAllInstitutions } from '../../../hooks/institution';
-import { useAllWaitingPreferences } from '../../../hooks/settings';
 import { useFilter } from '../../../hooks/useFilter';
 import { useViewport } from '../../../hooks/useViewport';
 import { ContactData, ContactType } from '../../../types/ContactData';
@@ -46,6 +41,7 @@ import {
 import { Contract } from '../Documents/Contract';
 import { EventList } from '../List/Events';
 import { AddpayForm } from '../Patients/AddpayForm';
+import { WaitingPreferenceForm } from '../Patients/WaitingPreferenceForm';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -86,7 +82,6 @@ export const PersonForm = ({
   const { mutateAsync: createPatientContact } = useCreatePatientContact();
   const { mutateAsync: createDoctorContact } = useCreateDoctorContact();
   const { institutions } = useAllInstitutions();
-  const { waitingPreferences } = useAllWaitingPreferences();
   const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({
     ...person,
   }));
@@ -615,54 +610,10 @@ export const PersonForm = ({
               <Divider m="1" />
               <ModalFormGroup>
                 <Label>{t('label.waitingPreference')}</Label>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: isMobile && !isReadOnly ? 'column' : 'row',
-                    gap: '0.5rem',
-                    justifyContent: isMobile ? 'space-evenly' : 'flex-start',
-                    marginBottom: '1.5rem',
-                  }}
-                >
-                  {waitingPreferences.map((wp) => {
-                    const hasCurrentWaitingPreference =
-                      currentPatient.waitingPreferences?.find(
-                        (patientsWP) => patientsWP.key === wp.key
-                      );
-
-                    return (
-                      <>
-                        <Tag
-                          size={isReadOnly ? 'md' : 'lg'}
-                          variant={
-                            hasCurrentWaitingPreference ? 'solid' : 'subtle'
-                          }
-                          colorScheme={
-                            hasCurrentWaitingPreference ? 'green' : 'gray'
-                          }
-                        >
-                          {!isReadOnly && !hasCurrentWaitingPreference && (
-                            <TagLeftIcon
-                              as={FaPlus}
-                              style={{ cursor: 'pointer' }}
-                              onClick={() =>
-                                setCurrentPerson((person) => ({
-                                  ...person,
-                                  waitingPreferences: [
-                                    ...((person as Patient)
-                                      .waitingPreferences || []),
-                                    wp,
-                                  ],
-                                }))
-                              }
-                            />
-                          )}
-                          <TagLabel>{wp.label}</TagLabel>
-                        </Tag>
-                      </>
-                    );
-                  })}
-                </div>
+                <WaitingPreferenceForm
+                  patientId={currentPatient.uuid}
+                  isReadOnly={isReadOnly}
+                />
                 <IsWaitingSinceInput />
               </ModalFormGroup>
               <Divider m="1" />
