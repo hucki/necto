@@ -165,9 +165,14 @@ const CalendarLeaveInput = ({
         <div>
           <div className="modal-title">
             <>
-              {chosenLeaveType && newLeave.leaveType
-                ? t(`calendar.leave.type.${newLeave.leaveType}`)
-                : '?'}{' '}
+              {chosenLeaveType && newLeave.leaveType ? (
+                <>
+                  <EventIcon type={newLeave.leaveType} size="s" />{' '}
+                  {t(`calendar.leave.type.${newLeave.leaveType}`)}
+                </>
+              ) : (
+                '?'
+              )}{' '}
               {ressource?.displayName
                 ? t('dict.for') + ' ' + ressource.displayName
                 : ''}
@@ -193,15 +198,28 @@ const CalendarLeaveInput = ({
   };
 
   const ChooseLeave = () => {
+    const currentLeaveTypes: LeaveType[] = [
+      'paidVacation',
+      'sick',
+      'sickChild',
+      'training',
+    ];
     return (
       <>
-        <Button onClick={() => setChosenLeaveType('paidVacation')}>
-          UrlaubsAntrag
-        </Button>
-        <Button onClick={() => setChosenLeaveType('sick')}>Krankmeldung</Button>
+        {currentLeaveTypes.map((leaveType) => (
+          <Button
+            m="1"
+            onClick={() => setChosenLeaveType(leaveType)}
+            style={{ display: 'flex', gap: '0.5rem' }}
+          >
+            <EventIcon type={leaveType} size="s" />
+            {t(`calendar.leave.type.${leaveType}`)}
+          </Button>
+        ))}
       </>
     );
   };
+
   const ModalBodyContent = () => (
     <>
       {!chosenLeaveType ? (
