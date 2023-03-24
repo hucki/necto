@@ -17,6 +17,7 @@ export type LeaveType =
   | 'paidVacation'
   | 'unpaidLeave'
   | 'parentalLeave'
+  | 'training'
   | 'special';
 
 export type LeaveStatus = 'requested' | 'cancelled' | 'approved';
