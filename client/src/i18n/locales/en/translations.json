@@ -39,6 +39,7 @@
         "paidVacation": "paid vacation",
         "unpaidLeave": "unpaid leave",
         "parentalLeave": "parental leave",
+        "training": "training",
         "special": "special leave"
       },
       "status": {
