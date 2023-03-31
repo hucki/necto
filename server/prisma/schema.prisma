@@ -120,6 +120,7 @@ model Contract {
   id                  Int       @id @default(autoincrement())
   employeeId          String    @db.Uuid
   tenantId            String    @db.Uuid
+  workdaysPerWeek     Int       @default(5)
   hoursPerWeek        Int?
   appointmentsPerWeek Int?
   bgColor             String?   @db.VarChar(64)
