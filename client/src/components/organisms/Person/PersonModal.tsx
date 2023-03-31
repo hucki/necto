@@ -40,21 +40,27 @@ export const PersonModal = ({
   const { t } = useTranslation();
   const { isMobile } = useViewport();
 
-  const { mutateAsync: updatePatient } = useUpdatePatient();
+  const { mutateAsync: updatePatient, isIdle: updatePatientIsIdle } =
+    useUpdatePatient();
   const { mutateAsync: createPatient, isIdle: createPatientIsIdle } =
     useCreatePatient();
 
-  const { mutateAsync: updateDoctor } = useUpdateDoctor();
+  const { mutateAsync: updateDoctor, isIdle: updateDoctorIsIdle } =
+    useUpdateDoctor();
   const { mutateAsync: createDoctor, isIdle: createDoctorIsIdle } =
     useCreateDoctor();
 
-  const { mutateAsync: updateContact } = useUpdateContact();
+  const { mutateAsync: updateContact, isIdle: updateContactIsIdle } =
+    useUpdateContact();
 
   const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'edit');
   const [currentPerson, setCurrentPerson] = useState<Person>(() => ({
     ...person,
   }));
-  const isIdle = createPatientIsIdle && createDoctorIsIdle;
+  const isIdleCreate = createPatientIsIdle && createDoctorIsIdle;
+  const isIdleUpdate =
+    updatePatientIsIdle && updateDoctorIsIdle && updateContactIsIdle;
+  const isIdle = isIdleCreate && isIdleUpdate;
   type ToastOptionsProps = {
     result: 'error' | 'success' | 'info' | 'warning' | undefined;
     title: string;
@@ -91,7 +97,7 @@ export const PersonModal = ({
   };
 
   const createPerson = () => {
-    if (!isIdle) return;
+    if (!isIdleCreate) return;
     if (!currentPerson?.firstName || !currentPerson?.lastName) {
       toast({
         title: 'Missing Data!',
@@ -213,7 +219,8 @@ export const PersonModal = ({
         />
       </ModalHeader>
       <PersonForm
-        isReadOnly={isReadOnly && isIdle}
+        isReadOnly={isReadOnly}
+        isPending={!isIdle}
         person={currentPerson}
         onChange={handleCurrentPersonChange}
         onCreate={createPerson}
@@ -241,7 +248,7 @@ export const PersonModal = ({
               leftIcon={<FaArchive />}
               aria-label={`archive ${personType}`}
               colorScheme={currentPerson.archived ? 'green' : 'red'}
-              disabled={!currentPerson.uuid}
+              disabled={!isIdle || !currentPerson.uuid}
               size="sm"
               type="button"
               onClick={onArchive}
@@ -255,6 +262,7 @@ export const PersonModal = ({
                 leftIcon={<FaEdit />}
                 aria-label={`edit ${personType}`}
                 type="button"
+                disabled={!isIdle}
                 onClick={() => setIsReadOnly(!isReadOnly)}
                 colorScheme="blue"
                 size="sm"
@@ -275,6 +283,7 @@ export const PersonModal = ({
                   <Button
                     aria-label="save changes"
                     type="button"
+                    disabled={!isIdle}
                     onClick={onSaveChangesAndClose}
                     size="sm"
                     colorScheme="blue"
