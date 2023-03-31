@@ -29,6 +29,7 @@ import { Person } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ContactInput } from '../../atoms/ContactData/ContactInput';
 import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
+import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 import {
   Input,
   FormLabel,
@@ -49,6 +50,7 @@ dayjs.locale('de');
 interface PersonFormProps {
   person: Person;
   isReadOnly: boolean;
+  isPending: boolean;
   personType: 'doctor' | 'patient';
   // eslint-disable-next-line no-unused-vars
   onChange: (person: Person, contactDataCollection: ContactData[]) => void;
@@ -71,6 +73,7 @@ const isWaitingPatient = (patient: Patient): boolean => {
 export const PersonForm = ({
   person,
   isReadOnly = true,
+  isPending = false,
   personType = 'patient',
   onChange,
   onCreate,
@@ -500,139 +503,148 @@ export const PersonForm = ({
 
   return (
     <>
-      <SimpleGrid
-        columns={[1, null, 2]}
-        gap={6}
-        py={2}
-        maxHeight={isMobile ? '100%' : '70vh'}
-        overflowY="scroll"
-        overflowX="hidden"
-      >
-        <GridItem>
-          {!personNotCreated && personType !== 'doctor' && patientCheckboxes()}
-          <ModalFormGroup>
-            <FormControl id="firstName" isRequired={true}>
-              <Input
-                autoComplete="off"
-                isDisabled={isReadOnly}
-                onChange={(e) =>
-                  onInputChange({ event: e, key: 'firstName' as keyof Person })
-                }
-                name="firstName"
-                value={currentPerson['firstName' as keyof Person]?.toString()}
-              ></Input>
-              <FormLabel>{t('label.firstName')}</FormLabel>
-            </FormControl>
-          </ModalFormGroup>
-          <FormGroup gridColsUnit="auto" gridCols={personNotCreated ? 2 : 1}>
-            <FormControl id="lastName" isRequired={true}>
-              <Input
-                autoComplete="off"
-                isDisabled={isReadOnly}
-                onChange={(e) =>
-                  onInputChange({ event: e, key: 'lastName' as keyof Person })
-                }
-                name="lastName"
-                value={currentPerson['lastName' as keyof Person]?.toString()}
-              ></Input>
-              <FormLabel>{t('label.lastName')}</FormLabel>
-            </FormControl>
-            {personNotCreated && (
-              <FormControl id="continue" style={{ textAlign: 'center' }}>
-                <Button
-                  disabled={
-                    currentPerson.firstName === '' ||
-                    currentPerson.lastName === ''
+      {isPending ? (
+        <FullPageSpinner />
+      ) : (
+        <SimpleGrid
+          columns={[1, null, 2]}
+          gap={6}
+          py={2}
+          maxHeight={isMobile ? '100%' : '70vh'}
+          overflowY="scroll"
+          overflowX="hidden"
+        >
+          <GridItem>
+            {!personNotCreated &&
+              personType !== 'doctor' &&
+              patientCheckboxes()}
+            <ModalFormGroup>
+              <FormControl id="firstName" isRequired={true}>
+                <Input
+                  autoComplete="off"
+                  isDisabled={isReadOnly}
+                  onChange={(e) =>
+                    onInputChange({
+                      event: e,
+                      key: 'firstName' as keyof Person,
+                    })
                   }
-                  onClick={onCreate}
-                  colorScheme="teal"
-                >
-                  {t('label.continue')}
-                </Button>
+                  name="firstName"
+                  value={currentPerson['firstName' as keyof Person]?.toString()}
+                ></Input>
+                <FormLabel>{t('label.firstName')}</FormLabel>
               </FormControl>
-            )}
-          </FormGroup>
-          {!personNotCreated && (
-            <>
-              {autoFormFields()}
-              {personType !== 'doctor' && <BirthdayInput />}
-              {phoneFromContact()}
-              {personType === 'doctor' && faxFromContact()}
-              {emailFromContact()}
-            </>
-          )}
-        </GridItem>
-        <GridItem>
-          {!personNotCreated && personType !== 'doctor' && currentPatient && (
-            <>
-              <ModalFormGroup>
-                <FormControl id="doctorId">
-                  <Select
-                    isDisabled={isReadOnly || personNotCreated}
-                    name="employee"
-                    value={currentPatient['doctorId'] || undefined}
-                    onChange={(e) =>
-                      onSelectChange({ event: e, key: 'doctorId' })
+            </ModalFormGroup>
+            <FormGroup gridColsUnit="auto" gridCols={personNotCreated ? 2 : 1}>
+              <FormControl id="lastName" isRequired={true}>
+                <Input
+                  autoComplete="off"
+                  isDisabled={isReadOnly}
+                  onChange={(e) =>
+                    onInputChange({ event: e, key: 'lastName' as keyof Person })
+                  }
+                  name="lastName"
+                  value={currentPerson['lastName' as keyof Person]?.toString()}
+                ></Input>
+                <FormLabel>{t('label.lastName')}</FormLabel>
+              </FormControl>
+              {personNotCreated && (
+                <FormControl id="continue" style={{ textAlign: 'center' }}>
+                  <Button
+                    disabled={
+                      currentPerson.firstName === '' ||
+                      currentPerson.lastName === ''
                     }
+                    onClick={onCreate}
+                    colorScheme="teal"
                   >
-                    <option value={'remove'}>No Doctor</option>
-                    {doctors.map((t, i) => (
-                      <option key={i} value={t.uuid}>
-                        {t.firstName + ' ' + t.lastName}
-                      </option>
-                    ))}
-                  </Select>
-                  <FormLabel>{t('label.doctor')}</FormLabel>
+                    {t('label.continue')}
+                  </Button>
                 </FormControl>
-              </ModalFormGroup>
-              <ModalFormGroup>
-                <FormControl id="institutionId">
-                  <Select
-                    isDisabled={isReadOnly || personNotCreated}
-                    name="employee"
-                    value={currentPatient['institutionId'] || undefined}
-                    onChange={(e) =>
-                      onSelectChange({ event: e, key: 'institutionId' })
-                    }
-                  >
-                    <option value={'remove'}>No Institution</option>
-                    {institutions.map((t, i) => (
-                      <option key={i} value={t.uuid}>
-                        {t.name +
-                          ' ' +
-                          (t.description ? `(${t.description})` : undefined)}
-                      </option>
-                    ))}
-                  </Select>
-                  <FormLabel>{t('label.institution')}</FormLabel>
-                </FormControl>
-              </ModalFormGroup>
-              <Divider m="1" />
-              <ModalFormGroup>
-                <Label>{t('label.waitingPreference')}</Label>
-                <WaitingPreferenceForm
-                  patientId={currentPatient.uuid}
-                  isReadOnly={isReadOnly}
-                />
-                <IsWaitingSinceInput />
-              </ModalFormGroup>
-              <Divider m="1" />
-              {currentPatient.events?.length ? (
-                <>
-                  <b style={{ marginLeft: '0.5rem' }}>
-                    {t('label.appointments')}:
-                  </b>
-                  <EventList events={currentPatient.events} />
-                </>
-              ) : (
-                <b style={{ marginLeft: '0.5rem' }}>
-                  {t('label.no') + ' ' + t('label.appointments')}
-                </b>
               )}
-            </>
-          )}
-        </GridItem>
-      </SimpleGrid>
+            </FormGroup>
+            {!personNotCreated && (
+              <>
+                {autoFormFields()}
+                {personType !== 'doctor' && <BirthdayInput />}
+                {phoneFromContact()}
+                {personType === 'doctor' && faxFromContact()}
+                {emailFromContact()}
+              </>
+            )}
+          </GridItem>
+          <GridItem>
+            {!personNotCreated && personType !== 'doctor' && currentPatient && (
+              <>
+                <ModalFormGroup>
+                  <FormControl id="doctorId">
+                    <Select
+                      isDisabled={isReadOnly || personNotCreated}
+                      name="employee"
+                      value={currentPatient['doctorId'] || undefined}
+                      onChange={(e) =>
+                        onSelectChange({ event: e, key: 'doctorId' })
+                      }
+                    >
+                      <option value={'remove'}>No Doctor</option>
+                      {doctors.map((t, i) => (
+                        <option key={i} value={t.uuid}>
+                          {t.firstName + ' ' + t.lastName}
+                        </option>
+                      ))}
+                    </Select>
+                    <FormLabel>{t('label.doctor')}</FormLabel>
+                  </FormControl>
+                </ModalFormGroup>
+                <ModalFormGroup>
+                  <FormControl id="institutionId">
+                    <Select
+                      isDisabled={isReadOnly || personNotCreated}
+                      name="employee"
+                      value={currentPatient['institutionId'] || undefined}
+                      onChange={(e) =>
+                        onSelectChange({ event: e, key: 'institutionId' })
+                      }
+                    >
+                      <option value={'remove'}>No Institution</option>
+                      {institutions.map((t, i) => (
+                        <option key={i} value={t.uuid}>
+                          {t.name +
+                            ' ' +
+                            (t.description ? `(${t.description})` : undefined)}
+                        </option>
+                      ))}
+                    </Select>
+                    <FormLabel>{t('label.institution')}</FormLabel>
+                  </FormControl>
+                </ModalFormGroup>
+                <Divider m="1" />
+                <ModalFormGroup>
+                  <Label>{t('label.waitingPreference')}</Label>
+                  <WaitingPreferenceForm
+                    patientId={currentPatient.uuid}
+                    isReadOnly={isReadOnly}
+                  />
+                  <IsWaitingSinceInput />
+                </ModalFormGroup>
+                <Divider m="1" />
+                {currentPatient.events?.length ? (
+                  <>
+                    <b style={{ marginLeft: '0.5rem' }}>
+                      {t('label.appointments')}:
+                    </b>
+                    <EventList events={currentPatient.events} />
+                  </>
+                ) : (
+                  <b style={{ marginLeft: '0.5rem' }}>
+                    {t('label.no') + ' ' + t('label.appointments')}
+                  </b>
+                )}
+              </>
+            )}
+          </GridItem>
+        </SimpleGrid>
+      )}
     </>
   );
 };
