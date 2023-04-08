@@ -89,6 +89,11 @@
       "could_not_update_user": "user konnte nicht aktualisiert werden"
     }
   },
+  "warning": {
+    "employeeSettings": {
+      "noTeamSelected": "kein Team zugeordnet!"
+    }
+  },
   "menu": {
     "home": "home",
     "personalcal": "Du",
@@ -152,6 +157,7 @@
     "bgColor": "Farbe",
     "hoursPerWeek": "Std. pro Woche",
     "appointmentsPerWeek": "Therapien pro Woche",
+    "workdaysPerWeek": "Arbeitstage pro Woche",
     "birthday": "Geburtstag",
     "room": "Raum",
     "noRoom": "kein Raum",

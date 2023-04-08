@@ -88,6 +88,11 @@
       "could_not_update_user": "could not update user"
     }
   },
+  "warning": {
+    "employeeSettings": {
+      "noTeamSelected": "no teams found. Please add the employee to at least one team!"
+    }
+  },
   "menu": {
     "home": "home",
     "personalcal": "You",
@@ -151,6 +156,7 @@
     "bgColor": "color",
     "hoursPerWeek": "hours per week",
     "appointmentsPerWeek": "appointments per week",
+    "workdaysPerWeek": "workdays per week",
     "birthday": "birthday",
     "room": "room",
     "noRoom": "no room",
