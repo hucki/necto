@@ -36,6 +36,7 @@ export type Contract = {
   roomId?: string;
   hoursPerWeek?: number;
   appointmentsPerWeek?: number;
+  workdaysPerWeek: number;
   bgColor?: BgColor;
   validUntil?: null | Date;
   createdAt?: Date;
@@ -44,7 +45,12 @@ export type Contract = {
 
 export type NewContract = Pick<
   Contract,
-  'employeeId' | 'hoursPerWeek' | 'appointmentsPerWeek' | 'bgColor' | 'roomId'
+  | 'employeeId'
+  | 'hoursPerWeek'
+  | 'appointmentsPerWeek'
+  | 'workdaysPerWeek'
+  | 'bgColor'
+  | 'roomId'
 >;
 
 export type Employee2Team = {
