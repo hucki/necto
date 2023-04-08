@@ -37,7 +37,6 @@ const EmployeeReport = ({
   const days = new Array(numberOfDays + 1)
     .fill(null)
     .map((_, index) => dateRange.start.add(index, 'day'));
-  console.table(days);
   const columnHelper =
     createColumnHelper<
       Pick<Employee, 'firstName' | 'lastName' | 'alias' | 'contract' | 'events'>
@@ -71,6 +70,7 @@ const EmployeeReport = ({
           >
             {days.map((day) => (
               <div
+                key={day.toISOString()}
                 style={{
                   gridColumnStart: dayjs(day).day(),
                   border: '1px solid #333',
@@ -94,6 +94,7 @@ const EmployeeReport = ({
           >
             {days.map((day) => (
               <div
+                key={day.toISOString()}
                 style={{
                   gridColumnStart: dayjs(day).day(),
                   border: '1px solid #333',
