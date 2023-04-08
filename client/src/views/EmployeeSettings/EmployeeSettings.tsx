@@ -18,7 +18,6 @@ import { useAllTeams } from '../../hooks/teams';
 import {
   FormLabel,
   FormControl,
-  Input,
   LabelledInput,
   LabelledSelect,
   Select,
@@ -66,42 +65,48 @@ const ContractOverview = ({
   const { t } = useTranslation();
   const { rooms } = useAllRooms();
   const bgColor = contract.bgColor || 'green';
+  const handleContractChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    e.preventDefault();
+    handleChangeContract({
+      targetName: e.target.name,
+      targetValue: e.target.value,
+    });
+  };
   return (
     <>
       <Heading as="h2" size="sm" mb="3" mt="5">
         {t('label.contractData')}
       </Heading>
-      <FormControl id="appointmentsPerWeek">
-        <Input
-          disabled={disabled}
-          name="appointmentsPerWeek"
-          value={contract.appointmentsPerWeek || 0}
-          onChange={(e) => {
-            e.preventDefault();
-            handleChangeContract({
-              targetName: e.target.name,
-              targetValue: e.target.value,
-            });
-          }}
-        />
-        <FormLabel>{t('label.appointmentsPerWeek')}</FormLabel>
-      </FormControl>
-      <FormControl id="hoursPerWeek">
-        <Input
-          disabled={disabled}
-          name="hoursPerWeek"
-          value={contract.hoursPerWeek || 0}
-          onChange={(e) => {
-            e.preventDefault();
-            handleChangeContract({
-              targetName: e.target.name,
-              targetValue: e.target.value,
-            });
-          }}
-        />
-        <FormLabel>{t('label.hoursPerWeek')}</FormLabel>
-      </FormControl>
-      <FormControl id="bgColor">
+      <LabelledInput
+        id="workdaysPerWeek"
+        disabled={disabled}
+        type="number"
+        name="workdaysPerWeek"
+        value={contract.workdaysPerWeek || 0}
+        onChangeHandler={handleContractChange}
+        label={t('label.workdaysPerWeek')}
+      />
+      <LabelledInput
+        id="appointmentsPerWeek"
+        disabled={disabled}
+        type="number"
+        name="appointmentsPerWeek"
+        value={contract.appointmentsPerWeek || 0}
+        onChangeHandler={handleContractChange}
+        label={t('label.appointmentsPerWeek')}
+      />
+      <LabelledInput
+        id="hoursPerWeek"
+        disabled={disabled}
+        type="number"
+        name="hoursPerWeek"
+        value={contract.hoursPerWeek || 0}
+        onChangeHandler={handleContractChange}
+        label={t('label.hoursPerWeek')}
+      />
+      <FormControl id="bgColor" m={'15px auto 10px auto'}>
         <Select
           disabled={disabled}
           name="bgColor"
@@ -111,13 +116,7 @@ const ContractOverview = ({
               bgColor[0].toUpperCase() + bgColor.substring(1)
             })`,
           }}
-          onChange={(e) => {
-            e.preventDefault();
-            handleChangeContract({
-              targetName: e.currentTarget.name,
-              targetValue: e.currentTarget.value,
-            });
-          }}
+          onChange={handleContractChange}
         >
           {colors.map((color, i) => (
             <option key={i} value={color}>
@@ -135,13 +134,7 @@ const ContractOverview = ({
             backgroundColor: contract.roomId ? undefined : 'var(--bgNote)',
           }}
           value={contract.roomId}
-          onChange={(e) => {
-            e.preventDefault();
-            handleChangeContract({
-              targetName: e.currentTarget.name,
-              targetValue: e.currentTarget.value,
-            });
-          }}
+          onChange={handleContractChange}
         >
           <option value="">{t('label.noRoom')}</option>
           {rooms.map((room, i) => (
@@ -201,6 +194,7 @@ const EmployeeSettings = () => {
     employeeId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
     hoursPerWeek: 0,
     appointmentsPerWeek: 0,
+    workdaysPerWeek: 5,
     roomId: '',
     bgColor: 'green',
   };
@@ -514,13 +508,11 @@ const EmployeeSettings = () => {
               </List>
             </>
           ) : (
-            <span>
-              no teams found. Please add the employee to at least one team!
-            </span>
+            <span>{t('warning.employeeSettings.noTeamSelected')}</span>
           )}
           {currentTeam && remainingTeams.length > 0 && (
             <ControlWrapper>
-              <FormControl id="team">
+              <FormControl id="team" m={'15px auto 10px auto'}>
                 <Select
                   name="team"
                   value={currentTeam.uuid}
