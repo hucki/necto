@@ -32,8 +32,7 @@ const ViewWrapper = styled.div(wrapperStyles, {
 
 const SettingsWrapper = styled.div({
   marginTop: '0.5rem',
-  paddingLeft: '0.5rem',
-  paddingRight: '0.5rem',
+  padding: '0.5rem',
   borderWidth: '1px',
   borderRadius: '12px',
 });
