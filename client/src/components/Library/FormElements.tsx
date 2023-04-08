@@ -100,7 +100,7 @@ type CommonLabelledFormElementProps = {
   disabled?: boolean;
   name: string;
   label: string;
-  value: string;
+  value: string | number;
 };
 type LabelledSelectProps = CommonLabelledFormElementProps & {
   hasOptionNoSelection?: boolean;
