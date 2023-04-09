@@ -3,6 +3,8 @@ import React from 'react';
 import { useViewport } from '../../../hooks/useViewport';
 import { Employee } from '../../../types/Employee';
 import EventReport from '../DataDisplay/EventReport';
+import Timesheet from '../DataDisplay/Timesheet';
+import { getCurrentContract } from '../../../helpers/contract';
 
 const EmployeeCardWrapper = styled.div({
   border: '1px solid #3333',
@@ -103,6 +105,14 @@ export const EmployeeCard = ({
             />
           </EventReportContainer>
         ) : null}
+        <div style={{ display: 'grid', gridColumnStart: 1, gridColumnEnd: 4 }}>
+          <Timesheet
+            employeeId={employee.uuid}
+            year={2023}
+            month={3}
+            contract={getCurrentContract(employee)}
+          />
+        </div>
       </EmployeeCardContainer>
     </EmployeeCardWrapper>
   );
