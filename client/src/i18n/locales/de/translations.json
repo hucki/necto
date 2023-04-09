@@ -182,5 +182,14 @@
     "reset": "zurücksetzen",
     "notYetAuthorized": "Du hast Dich erfolgreich registriert, aber Dein account ist noch nicht freigeschaltet.",
     "fillResetPasswordForm": "Bitte fülle dieses Formular aus, um Dein Passwort zurückzusetzen"
+  },
+  "employee": {
+    "contract": {
+      "label": "Vertrag",
+      "appointments": "Therapieeinheiten",
+      "hours": "Stunden",
+      "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} Tagen pro Woche.",
+      "leaveWorthDescription": "Ein Tag Abwesenheit entspricht {{leaveWorthPerDay}} {{contractBase}}"
+    }
   }
 }

@@ -181,5 +181,14 @@
     "reset": "reset",
     "notYetAuthorized": "You have succesfully registered, but your account is not yet activated.",
     "fillResetPasswordForm": "Please fill out this form to reset your password"
+  },
+  "employee": {
+    "contract": {
+      "label": "contract",
+      "appointments": "appointments",
+      "hours": "hours",
+      "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} days per week.",
+      "leaveWorthDescription": "One day of leave equals {{leaveWorthPerDay}} {{contractBase}}"
+    }
   }
 }
