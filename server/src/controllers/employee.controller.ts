@@ -124,6 +124,62 @@ export const getAllActiveEmployeesWithEventsPerWeek = async (
     next(e);
   }
 };
+export const getAllActiveEmployeesWithEventsPerMonth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const year = parseInt(req.params.year);
+  const month = parseInt(req.params.month);
+  const firstOfMonth = dayjs().year(year).month(month).startOf('month');
+  const lastOfMonth = firstOfMonth.endOf('month');
+  try {
+    const employees = await prisma.employee.findMany({
+      where: {
+        tenantId,
+        validUntil: null,
+      },
+      include: {
+        contract: {
+          where: {
+            validUntil: null,
+          },
+        },
+        teams: {
+          select: {
+            team: true,
+          },
+        },
+        events: {
+          where: {
+            OR: [
+              {
+                AND: [
+                  { startTime: { gte: firstOfMonth.toISOString() } },
+                  { startTime: { lte: lastOfMonth.toISOString() } },
+                  { isDeleted: false },
+                ],
+              },
+              {
+                AND: [
+                  { endTime: { gte: firstOfMonth.toISOString() } },
+                  { endTime: { lte: lastOfMonth.toISOString() } },
+                  { isDeleted: false },
+                ],
+              },
+            ],
+          },
+        },
+        user: true,
+      },
+    });
+    res.json(employees);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
 
 /**
  * add one Employee

@@ -83,6 +83,10 @@ router.get(
   '/employees/w/:year/:week',
   employeeController.getAllActiveEmployeesWithEventsPerWeek
 );
+router.get(
+  '/employees/m/:year/:month',
+  employeeController.getAllActiveEmployeesWithEventsPerMonth
+);
 router.post('/employees', employeeController.addEmployee);
 router.patch('/employees', employeeController.updateEmployee);
 
