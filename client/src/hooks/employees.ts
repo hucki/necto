@@ -93,3 +93,18 @@ export function useAllEmployeesWithWeeksEvents(
     ...employeesQuery,
   };
 }
+
+export function useAllEmployeesWithMonthEvents(
+  year: number,
+  month: number
+): UseQueryResult<Employee[]> & { employees: Employee[] } {
+  const employeesQuery = useQuery(['employees', year, month], async () => {
+    return client<Employee[]>(`employees/m/${year}/${month}`);
+  });
+
+  const employees = employeesQuery.data ?? [];
+  return {
+    employees,
+    ...employeesQuery,
+  };
+}
