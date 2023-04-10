@@ -8,6 +8,7 @@ import EmployeeDashboard from '../../components/organisms/Dashboard/EmployeeDash
 import EmployeeReport from '../../components/organisms/List/EmployeeReport';
 import { useAllEmployeesWithWeeksEvents } from '../../hooks/employees';
 import { UserDateContext } from '../../providers/UserDate';
+import SingleView from '../../components/organisms/Employee/SingleView';
 
 const Reports = () => {
   const { t } = useTranslation();
@@ -60,6 +61,20 @@ const Reports = () => {
           current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
           {(!data || isLoading) && <FullPageSpinner />}
           {data && <EmployeeDashboard employees={data} />}
+        </>
+      ),
+    },
+    {
+      allowedRoles: ['admin'],
+      name: 'singleView',
+      label: (
+        <>
+          <IoPeople /> {t('menu.singleView')}
+        </>
+      ),
+      content: (
+        <>
+          <SingleView />
         </>
       ),
     },
