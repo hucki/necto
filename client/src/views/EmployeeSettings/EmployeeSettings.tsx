@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import {
@@ -21,8 +21,16 @@ import {
   LabelledInput,
   LabelledSelect,
   Select,
+  Checkbox,
 } from '../../components/Library';
-import { Button, Heading, List, ListIcon, ListItem } from '@chakra-ui/react';
+import {
+  Button,
+  Heading,
+  List,
+  ListIcon,
+  ListItem,
+  Stack,
+} from '@chakra-ui/react';
 import {
   RiArrowDropRightLine,
   RiEditFill,
@@ -42,9 +50,11 @@ import { FaPlus } from 'react-icons/fa';
 import { useCreateContract, useUpdateContract } from '../../hooks/contract';
 import { useAllRooms } from '../../hooks/rooms';
 import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
+import ContractSummary from '../../components/molecules/DataDisplay/ContractSummary';
+import { getCurrentContract } from '../../helpers/contract';
 dayjs.extend(isBetween);
 
-interface ContractOverviewProps {
+interface ContractFormProps {
   contract: Contract | NewContract;
   disabled: boolean;
   handleChangeContract: ({
@@ -53,32 +63,70 @@ interface ContractOverviewProps {
     // eslint-disable-next-line no-unused-vars
     targetValue,
   }: {
-    targetName: string;
+    targetName: keyof Contract;
     targetValue: string;
   }) => void;
 }
-const ContractOverview = ({
+const ContractForm = ({
   contract,
   handleChangeContract,
   disabled = true,
-}: ContractOverviewProps) => {
+}: ContractFormProps) => {
   const { t } = useTranslation();
   const { rooms } = useAllRooms();
   const bgColor = contract.bgColor || 'green';
+  const activeWorkdays = contract.activeWorkdays.split(',');
   const handleContractChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     e.preventDefault();
     handleChangeContract({
-      targetName: e.target.name,
+      targetName: e.target.name as keyof Contract,
       targetValue: e.target.value,
     });
+  };
+
+  const ActiveWorkdaysCheckboxes = () => {
+    const allWorkdays = ['1', '2', '3', '4', '5'];
+    const handleActiveWorkdayChange = (e: ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      const day = e.currentTarget.name;
+      const checked = e.currentTarget.checked;
+      const newActiveWorkdays = checked
+        ? [...activeWorkdays, day].sort((a, b) => parseInt(a) - parseInt(b))
+        : [...activeWorkdays.filter((activeDay) => activeDay !== day)].sort(
+            (a, b) => parseInt(a) - parseInt(b)
+          );
+      handleChangeContract({
+        targetName: 'activeWorkdays',
+        targetValue: newActiveWorkdays.join(),
+      });
+    };
+    return (
+      <>
+        {allWorkdays.map((day) => (
+          <Checkbox
+            disabled={disabled}
+            key={day}
+            name={day}
+            isChecked={Boolean(activeWorkdays.find((item) => item === day))}
+            onChange={handleActiveWorkdayChange}
+          >
+            {dayjs().day(parseInt(day)).format('ddd')}
+          </Checkbox>
+        ))}
+      </>
+    );
   };
   return (
     <>
       <Heading as="h2" size="sm" mb="3" mt="5">
         {t('label.contractData')}
       </Heading>
+      <ContractSummary contract={contract} />
+      <Stack direction="row">
+        <ActiveWorkdaysCheckboxes />
+      </Stack>
       <LabelledInput
         id="workdaysPerWeek"
         disabled={disabled}
@@ -99,12 +147,20 @@ const ContractOverview = ({
       />
       <LabelledInput
         id="hoursPerWeek"
-        disabled={disabled}
+        disabled={disabled || Boolean(contract.appointmentsPerWeek)}
         type="number"
         name="hoursPerWeek"
         value={contract.hoursPerWeek || 0}
         onChangeHandler={handleContractChange}
         label={t('label.hoursPerWeek')}
+        errorMessage={
+          contract.appointmentsPerWeek && contract.appointmentsPerWeek > 0
+            ? t('employee.contract.hours') +
+              ' ' +
+              t('employee.contract.overruledBy') +
+              t('employee.contract.appointments')
+            : undefined
+        }
       />
       <FormControl id="bgColor" m={'15px auto 10px auto'}>
         <Select
@@ -194,6 +250,7 @@ const EmployeeSettings = () => {
     employeeId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
     hoursPerWeek: 0,
     appointmentsPerWeek: 0,
+    activeWorkdays: '1,2,3,4,5',
     workdaysPerWeek: 5,
     roomId: '',
     bgColor: 'green',
@@ -243,7 +300,7 @@ const EmployeeSettings = () => {
     targetName,
     targetValue,
   }: {
-    targetName: string;
+    targetName: keyof Contract;
     targetValue: string;
   }) => {
     setCurrentContract((contract) => ({
@@ -354,8 +411,8 @@ const EmployeeSettings = () => {
       setCurrentContract({
         ...defaultContract,
         employeeId: currentEmployee.uuid,
-        ...(currentEmployee.contract[0]
-          ? sanitizeContract(currentEmployee.contract[0])
+        ...(getCurrentContract(currentEmployee)
+          ? sanitizeContract(getCurrentContract(currentEmployee))
           : undefined),
       });
     }
@@ -482,7 +539,7 @@ const EmployeeSettings = () => {
         </SettingsWrapper>
         <SettingsWrapper>
           {currentContract ? (
-            <ContractOverview
+            <ContractForm
               disabled={state === 'view'}
               contract={currentContract}
               handleChangeContract={onContractChangeHandler}
