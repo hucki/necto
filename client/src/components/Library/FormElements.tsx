@@ -5,6 +5,7 @@ import {
   FormLabel as ChakraFormLabel,
   FormControl as ChakraFormControl,
   Checkbox as ChakraCheckbox,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import { User } from '../../types/User';
@@ -111,6 +112,7 @@ type LabelledSelectProps = CommonLabelledFormElementProps & {
 };
 
 type LabelledInputProps = CommonLabelledFormElementProps & {
+  errorMessage?: string;
   autoComplete?: string;
   type?: React.HTMLInputTypeAttribute;
   // eslint-disable-next-line no-unused-vars
@@ -173,9 +175,15 @@ const LabelledInput = ({
   onChangeHandler,
   autoComplete,
   type = 'text',
+  errorMessage,
 }: LabelledInputProps) => {
   return (
-    <FormControl id={id} isRequired={isRequired} m={'15px auto 10px auto'}>
+    <FormControl
+      id={id}
+      isRequired={isRequired}
+      m={'15px auto 10px auto'}
+      isInvalid={Boolean(errorMessage)}
+    >
       <Input
         disabled={disabled}
         type={type}
@@ -183,8 +191,10 @@ const LabelledInput = ({
         autoComplete={autoComplete}
         value={value}
         onChange={onChangeHandler}
+        errorBorderColor="#ababab"
       />
       <FormLabel>{label}</FormLabel>
+      <FormErrorMessage>{errorMessage}</FormErrorMessage>
     </FormControl>
   );
 };
