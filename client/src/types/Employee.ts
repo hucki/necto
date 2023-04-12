@@ -37,6 +37,7 @@ export type Contract = {
   hoursPerWeek?: number;
   appointmentsPerWeek?: number;
   workdaysPerWeek: number;
+  activeWorkdays: string;
   bgColor?: BgColor;
   validUntil?: null | Date;
   createdAt?: Date;
@@ -49,6 +50,7 @@ export type NewContract = Pick<
   | 'hoursPerWeek'
   | 'appointmentsPerWeek'
   | 'workdaysPerWeek'
+  | 'activeWorkdays'
   | 'bgColor'
   | 'roomId'
 >;
