@@ -114,7 +114,8 @@
     "institutions": "Einrichtungen",
     "refresh": "neu laden",
     "reports": "Auswertungen",
-    "weekReport": "Wochenbericht"
+    "weekReport": "Wochenbericht",
+    "singleView": "Einzelansicht"
   },
   "label": {
     "user": "user",
@@ -189,7 +190,8 @@
       "appointments": "Therapieeinheiten",
       "hours": "Stunden",
       "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} Tagen pro Woche.",
-      "leaveWorthDescription": "Ein Tag Abwesenheit entspricht {{leaveWorthPerDay}} {{contractBase}}"
+      "leaveWorthDescription": "Ein Tag Abwesenheit entspricht {{leaveWorthPerDay}} {{contractBase}}",
+      "overruledBy": "übersteuert durch "
     }
   }
 }

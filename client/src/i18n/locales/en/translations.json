@@ -113,7 +113,8 @@
     "institutions": "Institutions",
     "refresh": "refresh",
     "reports": "reports",
-    "weekReport": "week report"
+    "weekReport": "week report",
+    "singleView": "single view"
   },
   "label": {
     "name": "name",
@@ -188,7 +189,8 @@
       "appointments": "appointments",
       "hours": "hours",
       "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} days per week.",
-      "leaveWorthDescription": "One day of leave equals {{leaveWorthPerDay}} {{contractBase}}"
+      "leaveWorthDescription": "One day of leave equals {{leaveWorthPerDay}} {{contractBase}}",
+      "overruledBy": "overruled by "
     }
   }
 }
