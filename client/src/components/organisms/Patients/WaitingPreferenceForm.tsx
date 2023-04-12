@@ -54,6 +54,7 @@ export const WaitingPreferenceForm = ({
               size={isReadOnly ? 'md' : 'lg'}
               variant={hasWaitingPreference ? 'solid' : 'subtle'}
               colorScheme={hasWaitingPreference ? 'green' : 'gray'}
+              key={wp.key}
             >
               {!isReadOnly && !hasWaitingPreference && (
                 <TagLeftIcon
