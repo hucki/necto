@@ -40,26 +40,32 @@ export const PersonModal = ({
   const { t } = useTranslation();
   const { isMobile } = useViewport();
 
-  const { mutateAsync: updatePatient, isIdle: updatePatientIsIdle } =
+  const { mutateAsync: updatePatient, status: updatePatientStatus } =
     useUpdatePatient();
-  const { mutateAsync: createPatient, isIdle: createPatientIsIdle } =
+  const { mutateAsync: createPatient, status: createPatientStatus } =
     useCreatePatient();
 
-  const { mutateAsync: updateDoctor, isIdle: updateDoctorIsIdle } =
+  const { mutateAsync: updateDoctor, status: updateDoctorStatus } =
     useUpdateDoctor();
-  const { mutateAsync: createDoctor, isIdle: createDoctorIsIdle } =
+  const { mutateAsync: createDoctor, status: createDoctorStatus } =
     useCreateDoctor();
 
-  const { mutateAsync: updateContact, isIdle: updateContactIsIdle } =
+  const { mutateAsync: updateContact, status: updateContactStatus } =
     useUpdateContact();
 
   const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'edit');
   const [currentPerson, setCurrentPerson] = useState<Person>(() => ({
     ...person,
   }));
-  const isIdleCreate = createPatientIsIdle && createDoctorIsIdle;
+
+  const isIdleCreate =
+    (createPatientStatus === 'idle' || createPatientStatus === 'success') &&
+    (createDoctorStatus === 'idle' || createDoctorStatus === 'success');
   const isIdleUpdate =
-    updatePatientIsIdle && updateDoctorIsIdle && updateContactIsIdle;
+    (updatePatientStatus === 'idle' || updatePatientStatus === 'success') &&
+    (updateDoctorStatus === 'idle' || updateDoctorStatus === 'success') &&
+    (updateContactStatus === 'idle' || updateContactStatus === 'success');
+
   const isIdle = isIdleCreate && isIdleUpdate;
   type ToastOptionsProps = {
     result: 'error' | 'success' | 'info' | 'warning' | undefined;
