@@ -43,6 +43,7 @@ import { Contract } from '../Documents/Contract';
 import { EventList } from '../List/Events';
 import { AddpayForm } from '../Patients/AddpayForm';
 import { WaitingPreferenceForm } from '../Patients/WaitingPreferenceForm';
+import { getDisplayName } from '../../../helpers/displayNames';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -587,11 +588,16 @@ export const PersonForm = ({
                       }
                     >
                       <option value={'remove'}>No Doctor</option>
-                      {doctors.map((t, i) => (
-                        <option key={i} value={t.uuid}>
-                          {t.firstName + ' ' + t.lastName}
-                        </option>
-                      ))}
+                      {doctors
+                        .sort((a, b) => {
+                          if (a.lastName < b.lastName) return -1;
+                          return 1;
+                        })
+                        .map((t, i) => (
+                          <option key={i} value={t.uuid}>
+                            {getDisplayName({ person: t, type: 'full' })}
+                          </option>
+                        ))}
                     </Select>
                     <FormLabel>{t('label.doctor')}</FormLabel>
                   </FormControl>
