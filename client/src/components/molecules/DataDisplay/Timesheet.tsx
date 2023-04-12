@@ -1,7 +1,6 @@
 import React from 'react';
 import { Contract } from '../../../types/Employee';
 import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled/macro';
 import {
   createColumnHelper,
@@ -10,6 +9,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { EventsOfDay, TimesheetDay } from '../../organisms/Employee/SingleView';
+import ContractSummary from './ContractSummary';
 
 const Styles = styled.div`
   padding: 0.5rem;
@@ -55,8 +55,6 @@ const Timesheet = ({
   contract,
   currentTimesheet,
 }: TimesheetProps) => {
-  const { t } = useTranslation();
-
   const columnHelper = createColumnHelper<TimesheetDay>();
 
   const columns = [
@@ -103,15 +101,6 @@ const Timesheet = ({
       ],
     }),
   ];
-  const contractBase: 'hours' | 'appointments' =
-    contract?.appointmentsPerWeek && contract?.appointmentsPerWeek > 0
-      ? 'appointments'
-      : 'hours';
-
-  const targetTimePerDay =
-    ((contract && contract[`${contractBase}PerWeek`]) || 0) /
-    ((contract && contract.workdaysPerWeek) || 0);
-  const leaveWorthPerDay = targetTimePerDay;
 
   const currentMonth = dayjs().year(year).month(month);
   const monthName = currentMonth.format('MMM');
@@ -124,18 +113,7 @@ const Timesheet = ({
     <>
       <div className="header">
         <div className="timeframe">{`${year} / ${monthName}`}</div>
-        <div className="contract">
-          {t('employee.contract.label')}:{' '}
-          {t('employee.contract.summary', {
-            numberOfUnits: contract[`${contractBase}PerWeek`] || 0,
-            contractBase: t(`employee.contract.${contractBase}`),
-            workdaysPerWeek: contract.workdaysPerWeek,
-          })}{' '}
-          {t('employee.contract.leaveWorthDescription', {
-            leaveWorthPerDay,
-            contractBase: t(`employee.contract.${contractBase}`),
-          })}
-        </div>
+        <ContractSummary contract={contract} />
       </div>
       <Styles>
         <table>
