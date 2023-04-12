@@ -121,6 +121,7 @@ model Contract {
   employeeId          String    @db.Uuid
   tenantId            String    @db.Uuid
   workdaysPerWeek     Int       @default(5)
+  activeWorkdays      String    @default("1,2,3,4,5") // Sunday - Saturday : 0 - 6
   hoursPerWeek        Int?
   appointmentsPerWeek Int?
   bgColor             String?   @db.VarChar(64)
