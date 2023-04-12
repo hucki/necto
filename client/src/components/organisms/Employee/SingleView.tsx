@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { EmployeeCard } from '../../molecules/Cards/EmployeeCard';
 import { Employee } from '../../../types/Employee';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 import { ControlWrapper } from '../../atoms/Wrapper';
@@ -162,7 +161,6 @@ const SingleView = () => {
         <FullPageSpinner />
       ) : (
         <>
-          <EmployeeCard employee={currentEmployee} />
           <Timesheet
             contract={contract}
             year={currentDate.year()}
