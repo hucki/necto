@@ -72,15 +72,21 @@ const Timesheet = ({
         }),
         columnHelper.accessor('targetTimeOfDay', {
           header: 'Soll',
-          cell: (info) => info.getValue() || undefined,
+          cell: (info) => info.getValue() || '-',
         }),
         columnHelper.accessor('timeOfDay', {
           header: 'Ist',
-          cell: (info) => info.getValue(),
+          cell: (info) => info.getValue() || '-',
         }),
         columnHelper.accessor('timeDiffOfDay', {
           header: 'Diff',
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            const value = info.getValue() || '-';
+            if (typeof value === 'string') return value;
+            return (
+              <b style={{ color: value < 0 ? 'red' : undefined }}>{value}</b>
+            );
+          },
         }),
       ],
     }),
