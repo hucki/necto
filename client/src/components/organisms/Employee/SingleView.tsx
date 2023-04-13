@@ -59,8 +59,6 @@ const SingleView = () => {
   const contract =
     (currentEmployee && getCurrentContract(currentEmployee)) || undefined;
 
-  console.log({ currentEmployee });
-
   const currentTimesheet: CurrentTimesheet = [];
   const year = currentDate.year();
   const month = currentDate.month();
@@ -104,10 +102,8 @@ const SingleView = () => {
           }
           if (!cur.leaveType) {
             prev.appointments++;
-            prev.hours += dayjs(cur.endTime).diff(
-              dayjs(cur.startTime),
-              'hours'
-            );
+            prev.hours +=
+              dayjs(cur.endTime).diff(dayjs(cur.startTime), 'minutes') / 60;
           }
           return prev;
         },
@@ -116,13 +112,19 @@ const SingleView = () => {
 
     const date = dayjs(`${year}-${month + 1}-${i}`);
     const weekDay = date.format('dd');
+    const isWorkday =
+      contract &&
+      contract.activeWorkdays
+        .split(',')
+        .find((day) => parseInt(day) === date.day());
     const publicHoliday = isPublicHoliday({
       date,
     });
     const weekend = isWeekend({
       date,
     });
-    const targetTimeOfDay = publicHoliday || weekend ? 0 : targetTimePerDay;
+    const targetTimeOfDay =
+      publicHoliday || weekend || !isWorkday ? 0 : targetTimePerDay;
     const timeOfDay = eventsOfDay
       ? eventsOfDay[contractBase] || eventsOfDay.leaves * leaveWorthPerDay
       : 0;
