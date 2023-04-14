@@ -139,8 +139,7 @@ const SingleView = () => {
         ? 0
         : eventsOfDay[contractBase] || eventsOfDay.leaves * leaveWorthPerDay;
     const timeDiffOfDay = timeOfDay - targetTimeOfDay;
-
-    currentTimesheet.push({
+    const currentTimesheetDay = {
       dayOfMonth: i,
       eventsOfDay: eventsOfDay,
       timeOfDay,
@@ -149,8 +148,28 @@ const SingleView = () => {
       isWeekend: weekend,
       publicHolidayName: (publicHoliday && publicHoliday.join()) || undefined,
       weekdayName: weekDay,
-    });
+    };
+    currentTimesheet.push(currentTimesheetDay);
   }
+  const timesheetSum = currentTimesheet.reduce(
+    (prev, curr) => {
+      prev.timeOfDay += curr.timeOfDay;
+      prev.timeDiffOfDay += curr.timeDiffOfDay;
+      prev.targetTimeOfDay += curr.targetTimeOfDay;
+      return prev;
+    },
+    {
+      dayOfMonth: 99,
+      eventsOfDay: undefined,
+      timeOfDay: 0,
+      timeDiffOfDay: 0,
+      targetTimeOfDay: 0,
+      isWeekend: false,
+      publicHolidayName: undefined,
+      weekdayName: 'Sum',
+    }
+  );
+  currentTimesheet.push(timesheetSum);
   return !currentEmployee || !employees ? null : (
     <>
       <ControlWrapper>

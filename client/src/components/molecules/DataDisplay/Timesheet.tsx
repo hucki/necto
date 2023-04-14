@@ -109,13 +109,15 @@ const Timesheet = ({
       header: 'Info',
       columns: [
         columnHelper.accessor('publicHolidayName', {
+          header: () => t('employee.timesheet.publicHoliday'),
           cell: (info) => info.getValue(),
         }),
         columnHelper.accessor('eventsOfDay', {
+          header: () => t('employee.timesheet.absences'),
           cell: (info) => {
             const eventsOfDay: EventsOfDay = info.getValue();
             const hasLeaves = eventsOfDay?.leaves > 0;
-            const leaveNames = eventsOfDay.leaveStates.map(
+            const leaveNames = eventsOfDay?.leaveStates.map(
               (state) =>
                 t(`calendar.leave.type.${state.leaveType}`) +
                 (state.leaveStatus === 'requested'
@@ -164,24 +166,38 @@ const Timesheet = ({
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                style={{
-                  backgroundColor: row.original.isWeekend
-                    ? 'lightgray'
-                    : row.original.publicHolidayName
-                    ? 'lightskyblue'
-                    : undefined,
-                }}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {table.getRowModel().rows.map((row) => {
+              const isSum = row.original.dayOfMonth === 99;
+              return (
+                <tr
+                  key={row.id}
+                  style={{
+                    backgroundColor: row.original.isWeekend
+                      ? 'lightgray'
+                      : row.original.publicHolidayName
+                      ? 'lightskyblue'
+                      : undefined,
+                    ...(isSum
+                      ? {
+                          fontStyle: 'italic',
+                          fontWeight: 'bold',
+                          borderTop: '2px solid',
+                          borderBottom: '4px double',
+                        }
+                      : undefined),
+                  }}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </Styles>
