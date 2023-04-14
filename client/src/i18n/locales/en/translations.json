@@ -186,7 +186,9 @@
   "employee": {
     "timesheet": {
       "label": "timesheet",
-      "model": "current timemodel"
+      "model": "current timemodel",
+      "absences": "absences",
+      "publicHoliday": "public holiday"
     },
     "contract": {
       "label": "contract",

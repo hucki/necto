@@ -187,7 +187,9 @@
   "employee": {
     "timesheet": {
       "label": "Zeitkonto",
-      "model": "aktuelles Zeitmodell"
+      "model": "aktuelles Zeitmodell",
+      "absences": "Abwesenheiten",
+      "publicHoliday": "Feiertag"
     },
     "contract": {
       "label": "Vertrag",
