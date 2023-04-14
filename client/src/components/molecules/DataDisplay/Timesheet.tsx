@@ -10,7 +10,18 @@ import {
 } from '@tanstack/react-table';
 import { EventsOfDay, TimesheetDay } from '../../organisms/Employee/SingleView';
 import ContractSummary from './ContractSummary';
+import { useTranslation } from 'react-i18next';
 
+const TimesheetHeader = styled.div({
+  padding: '0.5rem',
+  marginTop: '0.5rem',
+  backgroundColor: 'whitesmoke',
+});
+const TimeframeLabel = styled.div({
+  fontWeight: 'bold',
+  fontFamily: 'sans-serif',
+  fontSize: '1.25rem',
+});
 const Styles = styled.div`
   padding: 0.5rem;
 
@@ -47,14 +58,17 @@ type TimesheetProps = {
    */
   month: number;
   contract: Contract;
+  name: string;
   currentTimesheet: TimesheetDay[];
 };
 const Timesheet = ({
   year,
   month,
   contract,
+  name,
   currentTimesheet,
 }: TimesheetProps) => {
+  const { t } = useTranslation();
   const columnHelper = createColumnHelper<TimesheetDay>();
 
   const columns = [
@@ -101,7 +115,14 @@ const Timesheet = ({
           cell: (info) => {
             const eventsOfDay: EventsOfDay = info.getValue();
             const hasLeaves = eventsOfDay?.leaves > 0;
-            return hasLeaves ? 'Abwesend' : undefined;
+            const leaveNames = eventsOfDay.leaveStates.map(
+              (state) =>
+                t(`calendar.leave.type.${state.leaveType}`) +
+                (state.leaveStatus === 'requested'
+                  ? ' (' + t(`calendar.leave.status.${state.leaveStatus}`) + ')'
+                  : '')
+            );
+            return hasLeaves ? leaveNames.join() : undefined;
           },
         }),
       ],
@@ -117,10 +138,13 @@ const Timesheet = ({
   });
   return (
     <>
-      <div className="header">
-        <div className="timeframe">{`${year} / ${monthName}`}</div>
+      <TimesheetHeader>
+        <TimeframeLabel>{`${t(
+          'employee.timesheet.label'
+        )} ${year} / ${monthName} ${name}`}</TimeframeLabel>
+        <div>{t('employee.timesheet.model')}:</div>
         <ContractSummary contract={contract} />
-      </div>
+      </TimesheetHeader>
       <Styles>
         <table>
           <thead>

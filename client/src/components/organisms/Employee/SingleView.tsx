@@ -10,11 +10,17 @@ import { getCurrentContract } from '../../../helpers/contract';
 import { UserDateContext } from '../../../providers/UserDate';
 import { useHolidays } from '../../../hooks/useHolidays';
 import dayjs from 'dayjs';
+import { Event, Leave, isLeave } from '../../../types/Event';
+import { getDisplayName } from '../../../helpers/displayNames';
 
 export type EventsOfDay = {
   leaves: number;
   hours: number;
   appointments: number;
+  leaveStates: {
+    leaveType: Leave['leaveType'];
+    leaveStatus: Leave['leaveStatus'];
+  }[];
 };
 export type TimesheetDay = {
   dayOfMonth: number;
@@ -64,14 +70,15 @@ const SingleView = () => {
   const month = currentDate.month();
   const filteredEvents = useMemo(
     () =>
-      currentEmployee?.events?.filter(
-        (event) =>
-          (!event.isCancelled &&
-            dayjs(event.startTime).year() === year &&
-            dayjs(event.startTime).month() === month) ||
-          (dayjs(event.endTime).year() === year &&
-            dayjs(event.endTime).month() === month)
-      ),
+      currentEmployee?.events
+        ?.filter((event) => !event.isCancelled)
+        .filter(
+          (event) =>
+            (dayjs(event.startTime).year() === year &&
+              dayjs(event.startTime).month() === month) ||
+            (dayjs(event.endTime).year() === year &&
+              dayjs(event.endTime).month() === month)
+        ),
     [currentEmployee?.events]
   );
 
@@ -90,14 +97,16 @@ const SingleView = () => {
 
   for (let i = 1; i <= daysInMonth; i++) {
     const eventsOfDay = filteredEvents
-      ?.filter(
-        (event) =>
-          dayjs(event.startTime).isSame(`${year}-${month + 1}-${i}`, 'day') ||
-          dayjs(event.endTime).isSame(`${year}-${month + 1}-${i}`, 'day')
+      ?.filter((event) =>
+        dayjs(event.startTime).isSame(`${year}-${month + 1}-${i}`, 'day')
       )
       .reduce(
-        (prev, cur) => {
-          if (cur.leaveType) {
+        (prev: EventsOfDay, cur: Event) => {
+          if (isLeave(cur)) {
+            prev.leaveStates.push({
+              leaveType: cur.leaveType,
+              leaveStatus: cur.leaveStatus,
+            });
             prev.leaves++;
           }
           if (!cur.leaveType) {
@@ -107,7 +116,7 @@ const SingleView = () => {
           }
           return prev;
         },
-        { leaves: 0, hours: 0, appointments: 0 }
+        { leaves: 0, hours: 0, appointments: 0, leaveStates: [] }
       );
 
     const date = dayjs(`${year}-${month + 1}-${i}`);
@@ -123,11 +132,12 @@ const SingleView = () => {
     const weekend = isWeekend({
       date,
     });
-    const targetTimeOfDay =
-      publicHoliday || weekend || !isWorkday ? 0 : targetTimePerDay;
-    const timeOfDay = eventsOfDay
-      ? eventsOfDay[contractBase] || eventsOfDay.leaves * leaveWorthPerDay
-      : 0;
+    const noTargetTime = publicHoliday || weekend || !isWorkday;
+    const targetTimeOfDay = noTargetTime ? 0 : targetTimePerDay;
+    const timeOfDay =
+      noTargetTime || !eventsOfDay
+        ? 0
+        : eventsOfDay[contractBase] || eventsOfDay.leaves * leaveWorthPerDay;
     const timeDiffOfDay = timeOfDay - targetTimeOfDay;
 
     currentTimesheet.push({
@@ -144,7 +154,7 @@ const SingleView = () => {
   return !currentEmployee || !employees ? null : (
     <>
       <ControlWrapper>
-        <FormControl id="employee" style={{ margin: 'auto 1rem' }}>
+        <FormControl id="employee">
           <Select
             name="employee"
             value={currentEmployee.uuid}
@@ -165,6 +175,7 @@ const SingleView = () => {
         <>
           <Timesheet
             contract={contract}
+            name={getDisplayName({ person: currentEmployee, type: 'full' })}
             year={currentDate.year()}
             month={currentDate.month()}
             currentTimesheet={currentTimesheet}
