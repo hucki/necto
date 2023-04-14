@@ -184,10 +184,15 @@
     "fillResetPasswordForm": "Please fill out this form to reset your password"
   },
   "employee": {
+    "timesheet": {
+      "label": "timesheet",
+      "model": "current timemodel"
+    },
     "contract": {
       "label": "contract",
       "appointments": "appointments",
       "hours": "hours",
+      "activeWorkdays": "working days: {{activeWorkdayNames}}",
       "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} days per week.",
       "leaveWorthDescription": "One day of leave equals {{leaveWorthPerDay}} {{contractBase}}",
       "overruledBy": "overruled by "
