@@ -12,25 +12,53 @@ import { useHolidays } from '../../../hooks/useHolidays';
 import dayjs from 'dayjs';
 import { Event, Leave, isLeave } from '../../../types/Event';
 import { getDisplayName } from '../../../helpers/displayNames';
+import { IconButton } from '../../atoms/Buttons';
+import { CgPushChevronLeft, CgPushChevronRight } from 'react-icons/cg';
 
 export type EventsOfDay = {
   leaves: number;
-  hours: number;
-  appointments: number;
+  hours: {
+    done: number;
+    planned: number;
+  };
+  appointments: {
+    done: number;
+    planned: number;
+  };
   leaveStates: {
     leaveType: Leave['leaveType'];
     leaveStatus: Leave['leaveStatus'];
   }[];
 };
 export type TimesheetDay = {
+  /**
+   * current day of the current month
+   */
   dayOfMonth: number;
+  /**
+   * localized name of current weekday
+   */
   weekdayName: string;
+  /**
+   * localized name of the current public Holiday or undefined
+   */
   publicHolidayName: string | undefined;
   isWeekend: boolean;
   eventsOfDay: EventsOfDay | undefined;
   targetTimeOfDay: number;
+  /**
+   * difference between targetTime and timeOfDay (times with `isDone === false` are ecxcluded)
+   */
   timeDiffOfDay: number;
+  /**
+   * sum of all appointments, hours or leaves of the day
+   * with state `isDone === true`
+   */
   timeOfDay: number;
+  /**
+   * sum of all appointments, hours or leaves of the day
+   */
+  plannedTimeOfDay: number;
 };
 export type CurrentTimesheet = TimesheetDay[];
 
@@ -38,7 +66,7 @@ const SingleView = () => {
   const { t } = useTranslation();
   const { isPublicHoliday, isWeekend } = useHolidays();
 
-  const { currentDate } = useContext(UserDateContext);
+  const { currentDate, goTo } = useContext(UserDateContext);
   const { data: employees, isLoading } = useAllEmployeesWithMonthEvents(
     currentDate.year(),
     currentDate.month()
@@ -110,13 +138,25 @@ const SingleView = () => {
             prev.leaves++;
           }
           if (!cur.leaveType) {
-            prev.appointments++;
-            prev.hours +=
+            const state = cur.isDone ? 'done' : 'planned';
+            prev.appointments[state]++;
+            prev.hours[state] +=
               dayjs(cur.endTime).diff(dayjs(cur.startTime), 'minutes') / 60;
           }
           return prev;
         },
-        { leaves: 0, hours: 0, appointments: 0, leaveStates: [] }
+        {
+          leaves: 0,
+          hours: {
+            done: 0,
+            planned: 0,
+          },
+          appointments: {
+            done: 0,
+            planned: 0,
+          },
+          leaveStates: [],
+        }
       );
 
     const date = dayjs(`${year}-${month + 1}-${i}`);
@@ -137,12 +177,21 @@ const SingleView = () => {
     const timeOfDay =
       noTargetTime || !eventsOfDay
         ? 0
-        : eventsOfDay[contractBase] || eventsOfDay.leaves * leaveWorthPerDay;
+        : // leaves override `contractBase` times
+          eventsOfDay.leaves * leaveWorthPerDay ||
+          eventsOfDay[contractBase].done;
+    const plannedTimeOfDay =
+      noTargetTime || !eventsOfDay
+        ? 0
+        : // leaves override `contractBase` times
+          eventsOfDay.leaves * leaveWorthPerDay ||
+          eventsOfDay[contractBase].done + eventsOfDay[contractBase].planned;
     const timeDiffOfDay = timeOfDay - targetTimeOfDay;
     const currentTimesheetDay = {
       dayOfMonth: i,
       eventsOfDay: eventsOfDay,
       timeOfDay,
+      plannedTimeOfDay,
       timeDiffOfDay,
       targetTimeOfDay,
       isWeekend: weekend,
@@ -162,6 +211,7 @@ const SingleView = () => {
       dayOfMonth: 99,
       eventsOfDay: undefined,
       timeOfDay: 0,
+      plannedTimeOfDay: 0,
       timeDiffOfDay: 0,
       targetTimeOfDay: 0,
       isWeekend: false,
@@ -188,6 +238,23 @@ const SingleView = () => {
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
       </ControlWrapper>
+      <IconButton
+        colorScheme="blackAlpha"
+        marginRight={2}
+        aria-label="previous month"
+        leftIcon={<CgPushChevronLeft size="2rem" />}
+        onClick={() => goTo('previousMonth')}
+      />
+      {currentDate.format('MMM')}
+      <IconButton
+        colorScheme="blackAlpha"
+        marginLeft={2}
+        marginRight={2}
+        aria-label="next month"
+        leftIcon={<CgPushChevronRight size="2rem" />}
+        onClick={() => goTo('nextMonth')}
+      />
+      {currentDate.format('YYYY')}
       {!currentTimesheet || !contract ? (
         <FullPageSpinner />
       ) : (
