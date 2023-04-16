@@ -14,8 +14,10 @@ dayjs.locale('de');
 export type GoToTarget =
   | 'previousDay'
   | 'previousWeek'
+  | 'previousMonth'
   | 'nextDay'
-  | 'nextWeek';
+  | 'nextWeek'
+  | 'nextMonth';
 
 type UserDateContextType = {
   currentDate: Dayjs;
@@ -35,11 +37,17 @@ function UserDateProvider({ children }: { children: ReactNode }) {
 
   const goTo = (target: GoToTarget) => {
     switch (target) {
+      case 'previousMonth':
+        setCurrentDate(dayjs(currentDate).subtract(1, 'month'));
+        break;
       case 'previousWeek':
         setCurrentDate(dayjs(currentDate).subtract(1, 'week'));
         break;
       case 'previousDay':
         setCurrentDate(dayjs(currentDate).subtract(1, 'day'));
+        break;
+      case 'nextMonth':
+        setCurrentDate(dayjs(currentDate).add(1, 'month'));
         break;
       case 'nextWeek':
         setCurrentDate(dayjs(currentDate).add(1, 'week'));
