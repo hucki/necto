@@ -3,6 +3,7 @@ import React from 'react';
 import { useApproveLeave } from '../../../hooks/events';
 import { Event } from '../../../types/Event';
 import { PanelListItem } from './PanelListItem';
+import dayjs from 'dayjs';
 
 interface ApprovalPanelProps {
   events: Event[];
@@ -13,13 +14,17 @@ const ApprovalPanel = ({ events }: ApprovalPanelProps) => {
     approveLeave({ event: leave });
   };
   const eventsToApprove = events ? (
-    events.map((event) => (
-      <PanelListItem
-        key={event.uuid}
-        event={event}
-        handleApproveLeave={handleApproveLeave}
-      />
-    ))
+    events
+      .sort(
+        (a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf()
+      )
+      .map((event) => (
+        <PanelListItem
+          key={event.uuid}
+          event={event}
+          handleApproveLeave={handleApproveLeave}
+        />
+      ))
   ) : (
     <div>no leave to approve</div>
   );
