@@ -21,6 +21,8 @@ const TimeframeLabel = styled.div({
   fontWeight: 'bold',
   fontFamily: 'sans-serif',
   fontSize: '1.25rem',
+  display: 'flex',
+  justifyContent: 'space-between',
 });
 const Styles = styled.div`
   padding: 0.5rem;
@@ -88,9 +90,14 @@ const Timesheet = ({
           header: 'Soll',
           cell: (info) => info.getValue() || '-',
         }),
+        columnHelper.accessor('plannedTimeOfDay', {
+          header: 'Plan',
+          cell: (info) => info.getValue() || '-',
+        }),
         columnHelper.accessor('timeOfDay', {
           header: 'Ist',
-          cell: (info) => info.getValue() || '-',
+          cell: (info) =>
+            info.getValue() != 0 ? <b>{info.getValue()}</b> : '-',
         }),
         columnHelper.accessor('timeDiffOfDay', {
           header: 'Diff',
@@ -141,9 +148,12 @@ const Timesheet = ({
   return (
     <>
       <TimesheetHeader>
-        <TimeframeLabel>{`${t(
-          'employee.timesheet.label'
-        )} ${year} / ${monthName} ${name}`}</TimeframeLabel>
+        <TimeframeLabel>
+          <span>
+            {`${t('employee.timesheet.label')} ${year} / ${monthName}`}{' '}
+          </span>
+          <span>{name}</span>
+        </TimeframeLabel>
         <div>{t('employee.timesheet.model')}:</div>
         <ContractSummary contract={contract} />
       </TimesheetHeader>
@@ -172,6 +182,7 @@ const Timesheet = ({
                 <tr
                   key={row.id}
                   style={{
+                    textAlign: 'center',
                     backgroundColor: row.original.isWeekend
                       ? 'lightgray'
                       : row.original.publicHolidayName
