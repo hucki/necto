@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import dayjs from 'dayjs';
 import { Button, Flex, Grid, Input } from '@chakra-ui/react';
-import { UserDateContext } from '../../../providers/UserDate';
+import { GoToTarget, UserDateContext } from '../../../providers/UserDate';
 import {
   CgChevronDoubleLeft,
   CgChevronDoubleRight,
@@ -10,6 +10,12 @@ import {
 } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
 import { useFilter } from '../../../hooks/useFilter';
+
+export const toCapital = (term: string): string => {
+  const firstLetterCapital = term.substring(0, 1).toUpperCase();
+  const rest = term.substring(1);
+  return firstLetterCapital + rest;
+};
 
 const HeaderBar = () => {
   const { calendarView } = useFilter();
@@ -44,23 +50,21 @@ const HeaderBar = () => {
             <div>{dayjs().format('DD')}</div>
           </div>
         </Button>
-        {calendarView === 'week' ? (
-          <IconButton
-            colorScheme="blackAlpha"
-            marginRight={2}
-            aria-label="previous week"
-            leftIcon={<CgChevronDoubleLeft size="2rem" />}
-            onClick={() => goTo('previousWeek')}
-          />
-        ) : (
-          <IconButton
-            colorScheme="blackAlpha"
-            marginRight={2}
-            aria-label="previous day"
-            leftIcon={<CgChevronLeft size="2rem" />}
-            onClick={() => goTo('previousDay')}
-          />
-        )}
+        <IconButton
+          colorScheme="blackAlpha"
+          marginRight={2}
+          aria-label={`previous ${calendarView}`}
+          leftIcon={
+            calendarView === 'week' ? (
+              <CgChevronDoubleLeft size="2rem" />
+            ) : (
+              <CgChevronLeft size="2rem" />
+            )
+          }
+          onClick={() =>
+            goTo(`previous${toCapital(calendarView)}` as GoToTarget)
+          }
+        />
         <div style={{ maxWidth: '150px' }}>
           <Input
             id="startDate"
@@ -72,23 +76,19 @@ const HeaderBar = () => {
             backgroundColor="white"
           />
         </div>
-        {calendarView === 'day' ? (
-          <IconButton
-            colorScheme="blackAlpha"
-            marginLeft={2}
-            aria-label="next day"
-            icon={<CgChevronRight size="2rem" />}
-            onClick={() => goTo('nextDay')}
-          />
-        ) : (
-          <IconButton
-            colorScheme="blackAlpha"
-            marginLeft={2}
-            aria-label="next week"
-            icon={<CgChevronDoubleRight size="2rem" />}
-            onClick={() => goTo('nextWeek')}
-          />
-        )}
+        <IconButton
+          colorScheme="blackAlpha"
+          marginLeft={2}
+          aria-label={`next ${calendarView}`}
+          leftIcon={
+            calendarView === 'week' ? (
+              <CgChevronDoubleRight size="2rem" />
+            ) : (
+              <CgChevronRight size="2rem" />
+            )
+          }
+          onClick={() => goTo(`next${toCapital(calendarView)}` as GoToTarget)}
+        />
       </Flex>
     </Grid>
   );
