@@ -4,16 +4,13 @@ import {
   FormControl,
   GridItem,
   SimpleGrid,
-  Icon,
 } from '@chakra-ui/react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CgAdd, CgMail } from 'react-icons/cg';
-import { RiPrinterLine } from 'react-icons/ri';
 import {
   useCreateDoctorContact,
   useCreatePatientContact,
@@ -39,11 +36,11 @@ import {
   Checkbox,
   Label,
 } from '../../Library';
-import { Contract } from '../Documents/Contract';
 import { EventList } from '../List/Events';
 import { AddpayForm } from '../Patients/AddpayForm';
 import { WaitingPreferenceForm } from '../Patients/WaitingPreferenceForm';
 import { getDisplayName } from '../../../helpers/displayNames';
+import { PatientContractButton } from '../../atoms/PatientContractButton';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -218,11 +215,6 @@ export const PersonForm = ({
     }
   };
 
-  const contractFileName = `vertrag_${(
-    person.lastName +
-    '_' +
-    person.firstName
-  ).replace(' ', '')}_${dayjs().format('YYYYMMDD')}.pdf`;
   const patientCheckboxes = () => {
     return (
       <SimpleGrid columns={1} gap={2} py={2}>
@@ -248,8 +240,8 @@ export const PersonForm = ({
         <GridItem>
           <ModalFormGroup
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               gap: '0.5rem',
             }}
           >
@@ -274,29 +266,10 @@ export const PersonForm = ({
             {currentPatient &&
               currentCompany &&
               !currentPatient.hasContract && (
-                <div
-                  style={{
-                    padding: 5,
-                    margin: '0 auto',
-                    borderRadius: '5px',
-                    backgroundColor: 'lightblue',
-                  }}
-                >
-                  <PDFDownloadLink
-                    document={
-                      <Contract p={currentPatient} c={currentCompany} />
-                    }
-                    fileName={contractFileName}
-                  >
-                    {({ loading }) => {
-                      return loading ? (
-                        'Loading document...'
-                      ) : (
-                        <Icon w={5} h={5} as={RiPrinterLine} />
-                      );
-                    }}
-                  </PDFDownloadLink>
-                </div>
+                <PatientContractButton
+                  patient={currentPatient}
+                  company={currentCompany}
+                />
               )}
           </ModalFormGroup>
         </GridItem>
@@ -634,12 +607,12 @@ export const PersonForm = ({
                   <IsWaitingSinceInput />
                 </ModalFormGroup>
                 <Divider m="1" />
-                {currentPatient.events?.length ? (
+                {currentPatient.uuid ? (
                   <>
                     <b style={{ marginLeft: '0.5rem' }}>
                       {t('label.appointments')}:
                     </b>
-                    <EventList events={currentPatient.events} />
+                    <EventList patientId={currentPatient.uuid} />
                   </>
                 ) : (
                   <b style={{ marginLeft: '0.5rem' }}>
