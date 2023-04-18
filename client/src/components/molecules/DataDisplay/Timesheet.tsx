@@ -105,7 +105,9 @@ const Timesheet = ({
             const value = info.getValue() || '-';
             if (typeof value === 'string') return value;
             return (
-              <b style={{ color: value < 0 ? 'red' : undefined }}>{value}</b>
+              <b style={{ color: value < 0 ? 'red' : undefined }}>
+                {value.toFixed(2)}
+              </b>
             );
           },
         }),
