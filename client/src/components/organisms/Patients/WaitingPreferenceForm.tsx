@@ -49,38 +49,36 @@ export const WaitingPreferenceForm = ({
         );
 
         return (
-          <>
-            <Tag
-              size={isReadOnly ? 'md' : 'lg'}
-              variant={hasWaitingPreference ? 'solid' : 'subtle'}
-              colorScheme={hasWaitingPreference ? 'green' : 'gray'}
-              key={wp.key}
-            >
-              {!isReadOnly && !hasWaitingPreference && (
-                <TagLeftIcon
-                  as={FaPlus}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() =>
-                    connectWaitingPreference({
-                      patientId,
-                      waitingPreferenceKey: wp.key,
-                    })
-                  }
-                />
-              )}
-              <TagLabel>{wp.label}</TagLabel>
-              {!isReadOnly && hasWaitingPreference && (
-                <TagCloseButton
-                  onClick={() =>
-                    disconnectWaitingPreference({
-                      patientId,
-                      waitingPreferenceKey: wp.key,
-                    })
-                  }
-                />
-              )}
-            </Tag>
-          </>
+          <Tag
+            size={isReadOnly ? 'md' : 'lg'}
+            variant={hasWaitingPreference ? 'solid' : 'subtle'}
+            colorScheme={hasWaitingPreference ? 'green' : 'gray'}
+            key={wp.key}
+          >
+            {!isReadOnly && !hasWaitingPreference && (
+              <TagLeftIcon
+                as={FaPlus}
+                style={{ cursor: 'pointer' }}
+                onClick={() =>
+                  connectWaitingPreference({
+                    patientId,
+                    waitingPreferenceKey: wp.key,
+                  })
+                }
+              />
+            )}
+            <TagLabel>{wp.label}</TagLabel>
+            {!isReadOnly && hasWaitingPreference && (
+              <TagCloseButton
+                onClick={() =>
+                  disconnectWaitingPreference({
+                    patientId,
+                    waitingPreferenceKey: wp.key,
+                  })
+                }
+              />
+            )}
+          </Tag>
         );
       })}
     </WaitingPreferenceTagWrapper>
