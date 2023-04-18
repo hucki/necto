@@ -171,6 +171,20 @@ export function useEmployeeEvents(
   };
 }
 
+export function usePatientEvents(
+  patientId: string
+): UseQueryResult<Event[]> & { patientEvents: Event[] } {
+  const patientEventsQuery = useQuery(['events', patientId], async () => {
+    return client<Event[]>(`patients/events/${patientId}`);
+  });
+
+  const patientEvents = patientEventsQuery.data ?? [];
+  return {
+    patientEvents,
+    ...patientEventsQuery,
+  };
+}
+
 export function useCreateEvent(): UseMutationResult<
   Event,
   Error,
