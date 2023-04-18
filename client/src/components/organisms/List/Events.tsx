@@ -17,11 +17,14 @@ import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { RiCheckboxBlankLine, RiCheckLine } from 'react-icons/ri';
 import { Event } from '../../../types/Event';
 import { IconButton } from '../../atoms/Buttons';
+import { usePatientEvents } from '../../../hooks/events';
 
 interface EventListProps {
-  events: Event[];
+  patientId: string;
 }
-export const EventList = ({ events }: EventListProps) => {
+export const EventList = ({ patientId }: EventListProps) => {
+  const { patientEvents: events } = usePatientEvents(patientId);
+
   const cancelStyle: ChakraProps['css'] = {
     textDecoration: 'line-through',
     color: 'gray',
@@ -44,7 +47,7 @@ export const EventList = ({ events }: EventListProps) => {
         <Tr key={event.uuid}>
           <Td>{event.cancellationReasonId}</Td>
           <Td css={event.isCancelled ? cancelStyle : undefined}>
-            {dayjs(event.startTime).format('llll')}
+            {dayjs(event.startTime).format('dd DD.MM.YY HH:mm')}
           </Td>
           <Td>{event.employee?.alias}</Td>
           <Td>
