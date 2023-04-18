@@ -146,17 +146,20 @@ export const getPatientsEvents = async (
 ): Promise<void> => {
   try {
     const patientId = req.params.patientId;
-    const patientsEvents = await prisma.patient.findMany({
+    const patient = await prisma.patient.findUnique({
       where: {
         uuid: patientId,
-        archived: false,
       },
       include: {
-        events: true,
+        events: {
+          include: {
+            employee: true,
+          },
+        },
         waitingPreferences: true,
       },
     });
-    res.json(patientsEvents);
+    res.json(patient.events);
     res.status(200);
     return;
   } catch (e) {
@@ -180,11 +183,6 @@ export const getAllPatients = async (
       include: {
         contactData: true,
         waitingPreferences: true,
-        events: {
-          include: {
-            employee: true,
-          },
-        },
         doctor: true,
         institution: true,
         addpayFreedom: true,
@@ -228,11 +226,6 @@ export const getAllArchivedPatients = async (
       include: {
         contactData: true,
         waitingPreferences: true,
-        events: {
-          include: {
-            employee: true,
-          },
-        },
         doctor: true,
         institution: true,
         addpayFreedom: true,
