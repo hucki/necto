@@ -3,7 +3,7 @@ import { Employee } from '../../../types/Employee';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import { FormControl, FormLabel, Select } from '../../Library';
-import { useAllEmployeesWithMonthEvents } from '../../../hooks/employees';
+import { useAllEmployees } from '../../../hooks/employees';
 import { useTranslation } from 'react-i18next';
 import Timesheet from '../../molecules/DataDisplay/Timesheet';
 import { getCurrentContract } from '../../../helpers/contract';
@@ -14,6 +14,7 @@ import { Event, Leave, isLeave } from '../../../types/Event';
 import { getDisplayName } from '../../../helpers/displayNames';
 import { IconButton } from '../../atoms/Buttons';
 import { CgPushChevronLeft, CgPushChevronRight } from 'react-icons/cg';
+import { useEmployeeEventsPerMonth } from '../../../hooks/events';
 
 export type EventsOfDay = {
   leaves: number;
@@ -67,13 +68,31 @@ const SingleView = () => {
   const { isPublicHoliday, isWeekend } = useHolidays();
 
   const { currentDate, goTo } = useContext(UserDateContext);
-  const { data: employees, isLoading } = useAllEmployeesWithMonthEvents(
-    currentDate.year(),
-    currentDate.month()
-  );
+  const year = currentDate.year();
+  const month = currentDate.month();
+  const currentMonth = dayjs().year(year).month(month);
+  const daysInMonth = currentMonth.daysInMonth();
+
+  const { data: employees, isLoading } = useAllEmployees();
   const [currentEmployee, setCurrentEmployee] = useState<Employee | undefined>(
     () => (employees && employees[0]) || undefined
   );
+  const {
+    employeeEvents,
+    refetch,
+    status: eventLoadingStatus,
+  } = useEmployeeEventsPerMonth(
+    currentEmployee?.uuid || '',
+    currentDate.year(),
+    currentDate.month()
+  );
+  const currentMonthString = currentMonth.format('MMM');
+  useEffect(() => {
+    if (currentEmployee?.uuid && currentMonthString) {
+      console.log({ uuid: currentEmployee?.uuid, month: currentMonthString });
+      refetch();
+    }
+  }, [currentEmployee, currentMonthString]);
   useEffect(() => {
     if (!isLoading && employees?.length && !currentEmployee) {
       setCurrentEmployee(employees[0]);
@@ -94,11 +113,9 @@ const SingleView = () => {
     (currentEmployee && getCurrentContract(currentEmployee)) || undefined;
 
   const currentTimesheet: CurrentTimesheet = [];
-  const year = currentDate.year();
-  const month = currentDate.month();
   const filteredEvents = useMemo(
     () =>
-      currentEmployee?.events
+      employeeEvents
         ?.filter((event) => event.type !== 'note')
         ?.filter((event) => !event.isCancelled)
         .filter(
@@ -108,11 +125,8 @@ const SingleView = () => {
             (dayjs(event.endTime).year() === year &&
               dayjs(event.endTime).month() === month)
         ),
-    [currentEmployee?.events]
+    [employeeEvents]
   );
-
-  const currentMonth = dayjs().year(year).month(month);
-  const daysInMonth = currentMonth.daysInMonth();
 
   const contractBase: 'hours' | 'appointments' =
     contract?.appointmentsPerWeek && contract?.appointmentsPerWeek > 0
@@ -239,6 +253,7 @@ const SingleView = () => {
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
       </ControlWrapper>
+      {currentEmployee.alias + currentMonth.format('MM')}
       <IconButton
         colorScheme="blackAlpha"
         marginRight={2}
@@ -256,7 +271,7 @@ const SingleView = () => {
         onClick={() => goTo('nextMonth')}
       />
       {currentDate.format('YYYY')}
-      {!currentTimesheet || !contract ? (
+      {eventLoadingStatus !== 'success' || !currentTimesheet || !contract ? (
         <FullPageSpinner />
       ) : (
         <>
