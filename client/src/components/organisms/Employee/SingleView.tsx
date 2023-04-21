@@ -89,7 +89,6 @@ const SingleView = () => {
   const currentMonthString = currentMonth.format('MMM');
   useEffect(() => {
     if (currentEmployee?.uuid && currentMonthString) {
-      console.log({ uuid: currentEmployee?.uuid, month: currentMonthString });
       refetch();
     }
   }, [currentEmployee, currentMonthString]);
@@ -253,7 +252,6 @@ const SingleView = () => {
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
       </ControlWrapper>
-      {currentEmployee.alias + currentMonth.format('MM')}
       <IconButton
         colorScheme="blackAlpha"
         marginRight={2}
