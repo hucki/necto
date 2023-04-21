@@ -106,13 +106,19 @@ export const Contract = ({ p, c }: ContractProps) => {
         </View>
         <View style={styles.section}>
           <Text>{p.lastName + ', ' + p.firstName}</Text>
-          <Text>
-            Name der Eltern/Erziehungsberechtigten
-            ___________________________________
-          </Text>
           <Text>{p.street || '__________________________ '}</Text>
           <Text>
             {p.city ? p.zip + ' ' + p.city : '__________________________'}
+          </Text>
+          <Text>
+            Geburtstag:{' '}
+            {p.birthday
+              ? dayjs(p.birthday).format('DD.MM.YYYY')
+              : '__________________________'}
+          </Text>
+          <Text>
+            Name der Eltern/Erziehungsberechtigten
+            ___________________________________
           </Text>
           <Text>
             {'Versicherung: ' + (p.insurance || '__________________________')}
@@ -128,7 +134,7 @@ export const Contract = ({ p, c }: ContractProps) => {
         </View>
         <View style={styles.singleLine}>
           <Text>
-            {(p.doctorId
+            {(p.doctorId && p.doctor
               ? getDisplayName({ person: p.doctor as Doctor, type: 'full' })
               : 'Frau (Dr.) / Herrn (Dr.) __________________________') +
               ' vom ' +
