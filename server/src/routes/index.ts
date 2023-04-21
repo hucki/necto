@@ -116,6 +116,10 @@ router.get('/events/a', eventController.getAllEvents);
 router.get('/events/d/:year/:month/:day', eventController.getDaysEvents);
 router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 router.get('/events/e/:employeeId', eventController.getEmployeeEvents);
+router.get(
+  '/events/me/:employeeId/:year/:month',
+  eventController.getEmployeeEvents
+);
 
 router.post('/events', eventController.addEvent);
 router.patch(

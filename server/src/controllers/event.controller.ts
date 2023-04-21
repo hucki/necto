@@ -406,6 +406,71 @@ export const getEmployeeEvents = async (
 };
 
 /**
+ * get all Events per month of the defined employeeId
+ *  @param {string} req.params.employeeId
+ *  @param {string} req.params.year
+ *  @param {string} req.params.month
+ */
+export const getEmployeeEventsPerMonth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const employeeId = req.params.employeeId;
+    const year = parseInt(req.params.year);
+    const month = parseInt(req.params.month);
+    const firstOfMonth = dayjs().year(year).month(month).startOf('month');
+    const lastOfMonth = firstOfMonth.endOf('month');
+    const events = await prisma.event.findMany({
+      where: {
+        OR: [
+          {
+            AND: [
+              { startTime: { gte: firstOfMonth.toISOString() } },
+              { startTime: { lte: lastOfMonth.toISOString() } },
+              { isDeleted: false },
+              employeeId && {
+                ressourceId: employeeId,
+              },
+            ],
+          },
+          {
+            AND: [
+              { endTime: { gte: firstOfMonth.toISOString() } },
+              { endTime: { lte: lastOfMonth.toISOString() } },
+              { isDeleted: false },
+              employeeId && {
+                ressourceId: employeeId,
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        patient: true,
+        parentEvent: { include: { childEvents: true } },
+        childEvents: true,
+        room: { include: { building: true } },
+      },
+    });
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].patient) {
+        events[i].patient = decryptPatient({
+          patient: events[i].patient,
+          fields: encryptedPatientFields,
+        });
+      }
+    }
+    res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
  * get all Events that are taking place in the given year/week combination
  *  @param {string} req.params.year
  *  @param {string} req.params.week
