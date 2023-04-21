@@ -220,6 +220,13 @@ function PersonList({
   const rowsPerPage = isMobile ? 10 : 15;
   const numOfPages = Math.ceil(filteredPersons.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
+  const maxNavButtons = 5;
+  const numOfNavButtons =
+    numOfPages > maxNavButtons ? maxNavButtons : numOfPages;
+  const ellipsisBefore =
+    numOfPages > numOfNavButtons && currentPage > 2 ? ' ... ' : '';
+  const ellipsisAfter =
+    numOfPages > numOfNavButtons && currentPage < numOfPages - 1 ? ' ... ' : '';
 
   // modal control
   const {
@@ -505,22 +512,33 @@ function PersonList({
         <IconButton
           aria-label="previous page"
           leftIcon={<CgChevronLeft />}
-          disabled={currentPage === 1}
+          isDisabled={currentPage <= 1}
+          colorScheme="blackAlpha"
           onClick={() => setCurrentPage(currentPage - 1)}
         />
-        {new Array(numOfPages).fill(numOfPages).map((_, index) => (
-          <Button
-            disabled={index + 1 === currentPage}
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
+        {ellipsisBefore}
+        {new Array(numOfPages).fill(numOfPages).map((_, index) => {
+          const outOfRange =
+            index + 1 < currentPage - numOfNavButtons / 2 ||
+            index + 1 > currentPage + numOfNavButtons / 2;
+          return (
+            <Button
+              hidden={outOfRange}
+              isDisabled={index + 1 === currentPage}
+              colorScheme={index + 1 === currentPage ? 'orange' : undefined}
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </Button>
+          );
+        })}
+        {ellipsisAfter}
         <IconButton
           aria-label="next page"
           icon={<CgChevronRight />}
-          disabled={currentPage === numOfPages}
+          isDisabled={currentPage >= numOfPages}
+          colorScheme="blackAlpha"
           onClick={() => setCurrentPage(currentPage + 1)}
         />
       </Flex>
