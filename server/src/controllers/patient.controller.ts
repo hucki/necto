@@ -79,11 +79,13 @@ export const updatePatient = async (
       data: {
         ...encryptedPatient,
         updatedBy: user.uuid,
-        waitingPreferences: {
-          connect: encryptedPatient.waitingPreferences.map((wp) => ({
-            key: wp.key,
-          })),
-        },
+        waitingPreferences: encryptedPatient.waitingPreferences
+          ? {
+              connect: encryptedPatient.waitingPreferences.map((wp) => ({
+                key: wp.key,
+              })),
+            }
+          : undefined,
       },
     });
     res.json(updatedPatient);
