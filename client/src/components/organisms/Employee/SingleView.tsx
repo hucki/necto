@@ -99,6 +99,7 @@ const SingleView = () => {
   const filteredEvents = useMemo(
     () =>
       currentEmployee?.events
+        ?.filter((event) => event.type !== 'note')
         ?.filter((event) => !event.isCancelled)
         .filter(
           (event) =>
