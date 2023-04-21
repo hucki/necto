@@ -4,6 +4,8 @@ import { Patient } from '../../../types/Patient';
 import { getAddpayForTags } from '../Patients/AddpayForm';
 import dayjs from 'dayjs';
 import { Company } from '../../../types/Company';
+import { getDisplayName } from '../../../helpers/displayNames';
+import { Doctor } from '../../../types/Doctor';
 
 interface ContractProps {
   p: Patient;
@@ -126,12 +128,11 @@ export const Contract = ({ p, c }: ContractProps) => {
         </View>
         <View style={styles.singleLine}>
           <Text>
-            {p.doctorId
-              ? p.doctor?.title ||
-                '' + ' ' + p.doctor?.firstName + ' ' + p.doctor?.lastName
-              : 'Frau (Dr.) / Herrn (Dr.) __________________________' +
-                ' vom ' +
-                '__________________________'}
+            {(p.doctorId
+              ? getDisplayName({ person: p.doctor as Doctor, type: 'full' })
+              : 'Frau (Dr.) / Herrn (Dr.) __________________________') +
+              ' vom ' +
+              '__________________________'}
           </Text>
         </View>
         <View style={styles.section}>
