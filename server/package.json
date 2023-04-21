@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "concurrently \"tsc -w\" \"nodemon dist/src/app.js\"",
-    "start-once": "npx tsc && node dist/src/app.js"
+    "start-once": "npx tsc && node dist/src/app.js",
+    "seed-dummy": "ts-node src/db/seed.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -16,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/bcrypt": "^5.0.0",
     "@types/connect-redis": "0.0.18",
     "@types/express": "^4.17.14",
