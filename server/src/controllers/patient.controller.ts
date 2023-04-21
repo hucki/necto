@@ -3,20 +3,16 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
-import { encrypt, decryptContactData, decryptPatient } from '../utils/crypto';
+import {
+  decryptContactData,
+  decryptPatient,
+  encryptedPatientFields,
+  getEncryptedPatient,
+} from '../utils/crypto';
 import { Patient, User, WaitingPreference } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
-
-export const encryptedPatientFields: (keyof Patient)[] = [
-  'notices',
-  'firstName',
-  'lastName',
-  /**
-   * TODO: encrypt 'medicalReport'
-   */
-];
 
 const getSanitizedPatient = (patient) => {
   const sanitizedPatient = { ...patient };
@@ -30,20 +26,6 @@ const getSanitizedPatient = (patient) => {
   delete sanitizedPatient.updatedAt;
   delete sanitizedPatient.addpayFreedom;
   return sanitizedPatient;
-};
-
-const getEncryptedPatient = (patient) => {
-  let encryptedPatient = {
-    ...patient,
-  };
-  for (let i = 0; i < encryptedPatientFields.length; i++) {
-    encryptedPatient[encryptedPatientFields[i]] = encryptedPatient[
-      encryptedPatientFields[i]
-    ]?.length
-      ? encrypt(encryptedPatient[encryptedPatientFields[i]])
-      : encryptedPatient[encryptedPatientFields[i]];
-  }
-  return encryptedPatient;
 };
 
 /**

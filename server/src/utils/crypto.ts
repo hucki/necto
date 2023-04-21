@@ -85,3 +85,26 @@ export const decrypt = (input: string) => {
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
 };
+
+export const encryptedPatientFields: (keyof Patient)[] = [
+  'notices',
+  'firstName',
+  'lastName',
+  /**
+   * TODO: encrypt 'medicalReport'
+   */
+];
+
+export const getEncryptedPatient = (patient) => {
+  let encryptedPatient = {
+    ...patient,
+  };
+  for (let i = 0; i < encryptedPatientFields.length; i++) {
+    encryptedPatient[encryptedPatientFields[i]] = encryptedPatient[
+      encryptedPatientFields[i]
+    ]?.length
+      ? encrypt(encryptedPatient[encryptedPatientFields[i]])
+      : encryptedPatient[encryptedPatientFields[i]];
+  }
+  return encryptedPatient;
+};
