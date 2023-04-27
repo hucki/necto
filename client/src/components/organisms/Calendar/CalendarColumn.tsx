@@ -24,6 +24,10 @@ import { Room } from '../../../types/Rooms';
 import { CounterOfDone } from '../../molecules/DataDisplay/CounterOfDone';
 import styled from '@emotion/styled/macro';
 import { BgColor } from '../../../types/Colors';
+import {
+  CalendarColumnHeaderFormat,
+  CalendarColumnSubHeaderContent,
+} from './types';
 dayjs.locale('de');
 
 // Typeguard

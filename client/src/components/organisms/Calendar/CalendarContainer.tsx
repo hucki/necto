@@ -21,6 +21,10 @@ import CalendarLeaveInput from './CalendarLeaveInput';
 import { SwipeIndicator } from '../../atoms/SwipeIndicator';
 import { useSelector } from 'react-redux';
 import { Room } from '../../../types/Rooms';
+import {
+  CalendarColumnHeaderFormat,
+  CalendarColumnSubHeaderContent,
+} from './types';
 
 interface CalendarInputProps {
   events: Event[];
