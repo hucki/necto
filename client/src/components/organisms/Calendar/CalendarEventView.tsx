@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { LabelledDataDisplay, LabelledInput } from '../../Library';
 import { CalendarEventViewWrapper } from '../../atoms/Wrapper';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
+import { CalenderEventViewProps } from './types';
 
 const CalendarEventView = ({
   eventTitle,
