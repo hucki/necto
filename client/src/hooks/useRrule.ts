@@ -22,8 +22,10 @@ export const useRrule = () => {
 
   const setRruleOptions = (options: Partial<Options>) => {
     setRruleState((cur) => ({
-      ...cur,
       rruleOptions: { ...cur.rruleOptions, ...options },
+      exdates: [],
+      skippedHolidays: [],
+      rruleString: '',
     }));
   };
 
@@ -83,7 +85,7 @@ export const useRrule = () => {
     } else {
       const rruleWithExdates = new RRule({
         ...options,
-        count: numOfPublicHolidays + (options.count || 0),
+        count: numOfPublicHolidays + (options.count ? options.count : 0),
       });
       const rruleSetWithExdates = new RRuleSet();
       rruleSetWithExdates.rrule(rruleWithExdates);
