@@ -83,9 +83,8 @@ function CalendarEventInput({
   const { mutateAsync: createEvent, isIdle } = useCreateEvent();
   const [isCreatingRecurringEvents, setIsCreatingRecurringEvents] =
     useState(false);
-  const isPending = !isIdle || isCreatingRecurringEvents;
+  const isPending = isCreatingRecurringEvents || !isIdle;
   const [message, setMessage] = useState<string | undefined>();
-
   useEffect(() => {
     // reset event State if new incoming datetime or uuid
     setIsNote(getIsNote(dateTime));
@@ -132,8 +131,8 @@ function CalendarEventInput({
           return;
         }
 
-        const rruleObj = rrulestr(createdEvent.rrule);
-        const rruleList = rruleObj?.all();
+        const rruleObj = rrulestr(createdEvent.rrule, { forceset: true });
+        const rruleList = rruleObj.all();
         const eventDuration = dayjs(createdEvent.endTime).diff(
           dayjs(createdEvent.startTime),
           'm'
