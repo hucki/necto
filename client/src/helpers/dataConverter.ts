@@ -1,6 +1,11 @@
 import { Event } from '../types/Event';
 import dayjs, { Dayjs } from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import utc from 'dayjs/plugin/utc';
 import { Patient, patientUpdateKeys } from '../types/Patient';
+dayjs.extend(LocalizedFormat);
+dayjs.extend(utc);
+dayjs.locale('de');
 
 export const getNewUTCDate = (dateTime: Dayjs) => {
   const dt = dayjs.utc(dateTime);
