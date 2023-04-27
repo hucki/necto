@@ -16,7 +16,7 @@ const SwipeIndicator = styled.div((p: SwipeIndicatorProps) => ({
   visibility: 'hidden',
   height: '2rem',
   borderRadius: '100%',
-  backgroundColor: 'teal',
+  backgroundColor: 'slategrey',
   position: 'absolute',
   top: '50%',
   left: p.direction === 'right' ? '15px' : undefined,
@@ -26,10 +26,10 @@ const SwipeIndicator = styled.div((p: SwipeIndicatorProps) => ({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 'x-large',
-    content: p.direction === 'left' ? '">"' : '"<"',
+    content: p.direction === 'left' ? '"▶"' : '"◀"',
     position: 'absolute',
     top: '-4px',
-    left: '9px',
+    left: '8px',
   },
 }));
 
