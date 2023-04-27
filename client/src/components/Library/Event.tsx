@@ -7,13 +7,14 @@ interface CalendarEntryContainerProps {
 
 interface CalendarEntryContentProps {
   strikeThrough?: boolean;
+  isMobile?: boolean;
 }
 
 const CalendarEntryContainer = styled.div(
   {
     position: 'absolute',
     width: '100%',
-    minHeight: '2rem',
+    minHeight: '1rem',
     textAlign: 'left',
     paddingTop: '0.1rem',
     '&:after': {
@@ -31,13 +32,13 @@ const CalendarEntryContainer = styled.div(
   ({ bgColor, checked = false }: CalendarEntryContainerProps) => {
     const styles = {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
-      fontSize: '0.7em',
+      fontSize: '0.6em',
       fontWeight: '300',
       paddingRight: checked ? '0.8rem' : '0.1rem',
       justifyContent: 'space-between',
       overflow: 'hidden',
       borderBottomRightRadius: '0.25rem',
-      borderTop: '2px solid',
+      borderTop: '1px solid',
       transition: 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1)',
       borderColor: '',
       '&:after': {
@@ -68,10 +69,10 @@ const CalendarEntryIconContainer = styled.div({
 });
 
 const CalendarEntryContent = styled.div(
-  ({ strikeThrough }: CalendarEntryContentProps) => ({
+  ({ strikeThrough, isMobile = false }: CalendarEntryContentProps) => ({
     display: 'flex',
     color: 'var(--secondary)',
-    fontSize: '0.6rem',
+    fontSize: isMobile ? '0.5rem' : '0.8rem',
     lineHeight: 'initial',
     textAlign: 'left',
     textDecoration: strikeThrough ? 'line-through' : undefined,
