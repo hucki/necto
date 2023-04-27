@@ -16,6 +16,7 @@ import {
   Stack,
   Radio,
   RadioGroup,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event, NewEvent } from '../../../types/Event';
@@ -231,13 +232,9 @@ function CalendarEventForm({
   }
 
   function handleRecurringIntervalChange(event: BaseSyntheticEvent) {
-    const interval =
-      event.target.value < 1
-        ? 1
-        : event.target.value > 20
-        ? 20
-        : event.target.value;
-    setRecurringInterval(interval);
+    const value = parseInt(event.target.value);
+    const interval = !value || value < 1 ? 1 : value > 20 ? 20 : value;
+    setRecurringInterval(interval as RecurringInterval);
     setMessage(undefined);
   }
   // Typeguard
@@ -253,9 +250,6 @@ function CalendarEventForm({
         count: recurringInterval,
         dtstart: getNewUTCDate(currentStartTime),
       };
-      const rrule = new RRule(newRruleOptions);
-      const rruleSet = new RRuleSet();
-      rruleSet.rrule(rrule);
       setRruleOptions(newRruleOptions);
     } else {
       setCurrentEvent((cur) => ({ ...cur, rrule: '' }));
@@ -529,7 +523,12 @@ function CalendarEventForm({
               </Select>
               <FormLabel>{t('calendar.event.frequency')}</FormLabel>
             </FormControl>
-            <FormControl id="interval" mb="0.75rem" maxWidth="25%">
+            <FormControl
+              id="interval"
+              mb="0.75rem"
+              maxWidth="25%"
+              isInvalid={recurringInterval <= 1}
+            >
               <Input
                 name="interval"
                 type="number"
@@ -538,10 +537,13 @@ function CalendarEventForm({
                 disabled={
                   !isNewEvent(currentEvent) || !currentEvent.isRecurring
                 }
-                defaultValue={recurringInterval}
+                defaultValue={recurringInterval || 1}
                 onChange={handleRecurringIntervalChange}
               />
               <FormLabel>{t('calendar.event.interval')}</FormLabel>
+              {recurringInterval <= 1 && (
+                <FormErrorMessage>min 2!</FormErrorMessage>
+              )}
             </FormControl>
           </div>
           {isNewEvent(currentEvent) && currentEvent.isRecurring && (
