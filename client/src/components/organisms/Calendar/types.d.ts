@@ -1,3 +1,5 @@
+import { Frequency } from 'rrule';
+
 type CalenderEventViewProps = {
   isNote: boolean;
   eventTitle: Event['title'];
@@ -10,7 +12,7 @@ type CalenderEventViewProps = {
   eventRoom: Event['room'];
 };
 
-type RecurringFrequency = 'WEEKLY' | 'MONTHLY' | 'BIWEEKLY';
+type RecurringFrequency = Frequency | 'BIWEEKLY';
 type RecurringInterval =
   | 1
   | 2
