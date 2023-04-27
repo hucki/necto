@@ -118,7 +118,10 @@ export const CalendarEntry = ({
       className={`${readOnly ? 'read-only' : ''}`}
       style={styles}
     >
-      <CalendarEntryContent strikeThrough={isNote && isDone}>
+      <CalendarEntryContent
+        strikeThrough={isNote && isDone}
+        isMobile={isMobile}
+      >
         {!isRoomBooking && event.patient && !event.patient.hasContract && (
           <EventIcon type="noContract" size="s" />
         )}
