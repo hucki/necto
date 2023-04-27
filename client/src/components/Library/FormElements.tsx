@@ -33,7 +33,7 @@ const FormLabel = styled(ChakraFormLabel)({
   margin: '1px 3px',
   padding: '1px 4px',
   transformOrigin: 'left top',
-  zIndex: '2',
+  zIndex: '1',
   borderRadius: '0.5rem',
   boxShadow: '0px 1px 0px #3333',
 });
