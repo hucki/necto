@@ -27,7 +27,7 @@ import {
   Checkbox,
   LabelledInput,
 } from '../../Library';
-import { RRule, Options } from 'rrule';
+import { RRule, RRuleSet, rrulestr } from 'rrule';
 import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
@@ -37,6 +37,8 @@ import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { RiSearchLine } from 'react-icons/ri';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
 import { Person } from '../../../types/Person';
+import { useRrule } from '../../../hooks/useRrule';
+import { RecurringFrequency, RecurringInterval } from './types';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -137,11 +139,12 @@ function CalendarEventForm({
   const { t } = useTranslation();
   const { patients } = useAllPatients();
   const { rooms } = useAllRooms();
-
-  // Typeguard
-  const isNewEvent = (event: Event | NewEvent): event is NewEvent => {
-    return !event.hasOwnProperty('uuid');
-  };
+  const [recurringFrequency, setRecurringFrequency] =
+    useState<RecurringFrequency>(RRule.WEEKLY);
+  const [recurringInterval, setRecurringInterval] =
+    useState<RecurringInterval>(10);
+  const { setRruleOptions, rruleString, skippedHolidays, isPending } =
+    useRrule();
 
   // Form state
   const [currentEvent, setCurrentEvent] = useState<Event | NewEvent>(() => ({
@@ -160,24 +163,11 @@ function CalendarEventForm({
       ? patients.find((p) => p.uuid === currentEvent.patientId)
       : undefined;
 
-  const [rruleOptions, setRruleOptions] = useState<Partial<Options>>(() => ({
-    freq: RRule.WEEKLY,
-    interval: 1,
-    // FIXME: current version of rrule.all() yields invalid dates
-    // when tzid is used. Quickfix: comment out tzid
-    // https://github.com/jakubroztocil/rrule/issues/523
-    // tzid: 'Europe/Amsterdam',
-    count: 10,
-    dtstart: getNewUTCDate(currentStartTime),
-  }));
-
   const [eventDuration, setEventDuration] = useState(
     dayjs(currentEndTime).diff(dayjs(currentStartTime), 'm')
   );
-  const [recurringFrequency, setRecurringFrequency] =
-    useState<RecurringFrequency>('WEEKLY');
-  const [recurringInterval, setRecurringInterval] =
-    useState<RecurringInterval>(10);
+
+  // const [skippedHolidays, setSkippedHolidays] = useState<string[]>(() => []);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [timeline, setTimeline] = useState<ReactElement<any, any>>();
 
@@ -250,20 +240,23 @@ function CalendarEventForm({
     setRecurringInterval(interval);
     setMessage(undefined);
   }
-
+  // Typeguard
+  const isNewEvent = (event: Event | NewEvent): event is NewEvent => {
+    return !event.hasOwnProperty('uuid');
+  };
   useEffect(() => {
     if (!isNewEvent(currentEvent)) return;
     if (currentEvent.isRecurring) {
-      setRruleOptions((cur) => ({
-        ...cur,
-        freq:
-          recurringFrequency === 'WEEKLY' || recurringFrequency === 'BIWEEKLY'
-            ? RRule.WEEKLY
-            : RRule.MONTHLY,
+      const newRruleOptions = {
+        freq: recurringFrequency === 'BIWEEKLY' ? RRule.WEEKLY : RRule.WEEKLY,
         interval: recurringFrequency === 'BIWEEKLY' ? 2 : 1,
         count: recurringInterval,
         dtstart: getNewUTCDate(currentStartTime),
-      }));
+      };
+      const rrule = new RRule(newRruleOptions);
+      const rruleSet = new RRuleSet();
+      rruleSet.rrule(rrule);
+      setRruleOptions(newRruleOptions);
     } else {
       setCurrentEvent((cur) => ({ ...cur, rrule: '' }));
     }
@@ -275,19 +268,20 @@ function CalendarEventForm({
   ]);
 
   useEffect(() => {
+    if (isPending) return;
     if (!isNewEvent(currentEvent)) return;
-    const rrule = new RRule(rruleOptions);
     if (currentEvent.isRecurring) {
-      setCurrentEvent((cur) => ({ ...cur, rrule: rrule.toString() }));
+      setCurrentEvent((cur) => ({ ...cur, rrule: rruleString }));
     }
-  }, [rruleOptions]);
+  }, [rruleString, isPending]);
 
   function onBuildTimelineHandler() {
-    const rrule = new RRule(rruleOptions);
+    const rruleSet = rrulestr(rruleString, { forceset: true }) as RRuleSet;
+    const rruleList = rruleSet.all();
     const dt = dayjs.utc(currentStartTime);
     setTimeline(
       <ul>
-        {rrule.all().map((date) => {
+        {rruleList.map((date) => {
           return (
             <li key={date.toString()}>
               {dayjs
@@ -297,6 +291,11 @@ function CalendarEventForm({
             </li>
           );
         })}
+        {skippedHolidays.length ? (
+          <li>
+            skipped: <b>{skippedHolidays.join()}</b>
+          </li>
+        ) : null}
       </ul>
     );
   }
@@ -518,13 +517,13 @@ function CalendarEventForm({
                 }
                 onChange={onSelectChange}
               >
-                <option value="WEEKLY">
+                <option value={RRule.WEEKLY}>
                   {t('calendar.event.frequencyWeekly')}
                 </option>
                 <option value="BIWEEKLY">
                   {t('calendar.event.frequencyBiWeekly')}
                 </option>
-                <option value="MONTHLY" disabled>
+                <option value={RRule.MONTHLY} disabled>
                   {t('calendar.event.frequencyMonthly')}
                 </option>
               </Select>
