@@ -287,9 +287,6 @@ function CalendarColumn({
         key={`DayHeader_d${date.format('YYYYMMDD')}`}
       >
         <DayHeaderLabel>{columnHeader}</DayHeaderLabel>
-        {isPublicHolidayToday && (
-          <HolidayLabel>{isPublicHolidayToday.join()}</HolidayLabel>
-        )}
       </CalendarColumnDayHeader>
       <CalendarColumnRessourceWrapper
         id={`RessourceHeader_d${date.format('YYYYMMDD')}`}
