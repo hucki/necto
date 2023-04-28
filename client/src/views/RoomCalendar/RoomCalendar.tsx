@@ -46,6 +46,7 @@ function combineRoomBookings(events: Event[]): Event[] {
           } else {
             const lastIndex = prev.length - 1;
             if (
+              cur.roomId !== prev[lastIndex].roomId ||
               !dayjs(cur.startTime).isSame(
                 dayjs(prev[lastIndex].startTime),
                 'day'
