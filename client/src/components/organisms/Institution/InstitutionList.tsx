@@ -210,7 +210,12 @@ const InstitutionList = ({
           }}
         >
           <ModalContent minW="80vw">
-            <ModalBody>
+            <ModalBody
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              height="fit-content"
+            >
               {currentInstitution ? (
                 <InstitutionModal
                   onClose={onClose}

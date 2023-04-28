@@ -556,9 +556,10 @@ function PersonList({
         >
           <ModalContent minW="80vw">
             <ModalBody
-              display={'flex'}
-              flexDirection={'column'}
-              justifyContent={'space-between'}
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              height="fit-content"
             >
               {currentPerson ? (
                 <PersonModal
