@@ -115,8 +115,12 @@ function CalendarEventInput({
   };
 
   async function handleSubmit() {
-    if (checkOverlap({ eventToCheck: newEvent, eventList: rawEvents })) {
-      setMessage(t('error.event.overlapping') || undefined);
+    const { conflicts } = checkOverlap({
+      eventToCheck: newEvent,
+      eventList: rawEvents,
+    });
+    if (conflicts.length) {
+      setMessage(t('error.event.overlapping') + conflicts.join() || undefined);
       return false;
     }
     if (newEvent) {
@@ -193,7 +197,14 @@ function CalendarEventInput({
       </>
     );
   };
-
+  const isSameTime = dayjs(newEvent.endTime).isSame(
+    dayjs(dayjs(newEvent.startTime))
+  );
+  const endBeforeStart = dayjs(newEvent.endTime).isBefore(
+    dayjs(dayjs(newEvent.startTime))
+  );
+  const isInvalid = isSameTime || endBeforeStart;
+  const disableSubmit = isPending || isInvalid;
   return (
     <CalendarItemModal
       isOpen={isOpen}
@@ -204,18 +215,18 @@ function CalendarEventInput({
       }
       modalBody={
         <>
+          {message && <ErrorMessage error={{ message }} />}
           <CalendarEventForm
             event={newEvent}
             setMessage={setMessage}
             handleChangedEvent={handleChangedEvent}
           />
-          {message && <ErrorMessage error={{ message }} />}
         </>
       }
       bodyBgColor={newEvent.type === 'note' ? 'note' : undefined}
       modalFooter={
         <ModalFooterControls
-          isDisabled={isPending}
+          isDisabled={disableSubmit}
           onClose={onClose}
           onSubmit={handleSubmit}
         />

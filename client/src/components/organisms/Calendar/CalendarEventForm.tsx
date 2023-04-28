@@ -479,6 +479,11 @@ function CalendarEventForm({
         name="endTime"
         value={dayjs(currentEndTime).format('YYYY-MM-DDTHH:mm:ss')}
         onChangeHandler={handleEndTimeChange}
+        errorMessage={
+          dayjs(currentEndTime).isSame(currentStartTime)
+            ? t('error.event.endTimeToSmall')
+            : undefined
+        }
       />
       {!isNote && (
         <div>
