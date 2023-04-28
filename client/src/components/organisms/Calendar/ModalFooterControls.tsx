@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaTimes } from 'react-icons/fa';
+import { FaSave, FaTimes } from 'react-icons/fa';
 
 interface ModalFooterControlsProps {
   isDisabled?: boolean;
@@ -16,6 +16,8 @@ export const ModalFooterControls = ({
 }: ModalFooterControlsProps) => {
   const { t } = useTranslation();
 
+  const isDisabledSubmit = isDisabled || !onSubmit;
+  const isDisabledCancel = isDisabled || !onClose;
   return (
     <>
       <div
@@ -31,18 +33,19 @@ export const ModalFooterControls = ({
           leftIcon={<FaTimes />}
           aria-label="cancel modal"
           type="button"
-          isDisabled={isDisabled || !onClose}
+          isDisabled={isDisabledCancel}
           onClick={onClose ? onClose : () => console.log('not implemented')}
           size="sm"
         >
           {t('button.cancel')}
         </Button>
         <Button
+          leftIcon={<FaSave />}
           aria-label="save changes"
           type="button"
           size="sm"
           colorScheme="blue"
-          isDisabled={isDisabled || !onSubmit}
+          isDisabled={isDisabledSubmit}
           onClick={onSubmit ? onSubmit : () => console.log('not implemented')}
         >
           {t('button.save')}

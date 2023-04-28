@@ -31,7 +31,7 @@ import {
 } from '../../../hooks/events';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { CancellationReason, Event, NewEvent } from '../../../types/Event';
-import { FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 
 import CalendarEventView from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
@@ -104,8 +104,12 @@ function CalendarEventEdit({
   const patientIsArchived = Boolean(changedEvent.patient?.archived);
 
   function handleSubmit() {
-    if (checkOverlap({ eventToCheck: changedEvent, eventList: rawEvents })) {
-      setMessage(t('error.event.overlapping') || undefined);
+    const { conflicts } = checkOverlap({
+      eventToCheck: changedEvent,
+      eventList: rawEvents,
+    });
+    if (conflicts.length) {
+      setMessage(t('error.event.overlapping') + conflicts.join() || undefined);
       return false;
     }
     if (changedEvent) {
@@ -117,8 +121,12 @@ function CalendarEventEdit({
   }
 
   function handleSubmitCurrentAndFuture() {
-    if (checkOverlap({ eventToCheck: changedEvent, eventList: rawEvents })) {
-      setMessage(t('error.event.overlapping') || undefined);
+    const { conflicts } = checkOverlap({
+      eventToCheck: changedEvent,
+      eventList: rawEvents,
+    });
+    if (conflicts.length) {
+      setMessage(t('error.event.overlapping') + conflicts.join() || undefined);
       return false;
     }
     if (changedEvent) {
@@ -188,6 +196,14 @@ function CalendarEventEdit({
     patientIsArchived ||
     dayjs(changedEvent.endTime).isBefore(dayjs().hour(0).subtract(3, 'days')) ||
     changedEvent.isDone;
+  const isSameTime = dayjs(changedEvent.endTime).isSame(
+    dayjs(dayjs(changedEvent.startTime))
+  );
+  const endBeforeStart = dayjs(changedEvent.endTime).isBefore(
+    dayjs(dayjs(changedEvent.startTime))
+  );
+  const isInvalid = isSameTime || endBeforeStart;
+  const disableSubmit = isInvalid || isReadOnly;
 
   return (
     <>
@@ -254,6 +270,7 @@ function CalendarEventEdit({
               />
             </ModalHeader>
             <ModalBody bgColor={isNote ? 'note' : undefined}>
+              {message && <ErrorMessage error={{ message }} />}
               {patientIsArchived && (
                 <Badge colorScheme="orange">patient archiviert</Badge>
               )}
@@ -277,7 +294,6 @@ function CalendarEventEdit({
                   handleChangedEvent={handleChangedEvent}
                 />
               )}
-              {message && <ErrorMessage error={{ message }} />}
             </ModalBody>
 
             <ModalFooter
@@ -294,13 +310,13 @@ function CalendarEventEdit({
                 }}
               >
                 <ControlWrapper>
-                  {!isNote && (
+                  {!isNote && isReadOnly && (
                     <Menu>
                       <MenuButton
                         leftIcon={<FaTimes />}
                         aria-label="cancel event"
                         colorScheme="orange"
-                        disabled={disableCancel}
+                        isDisabled={disableCancel}
                         size="sm"
                         type="button"
                         as={Button}
@@ -310,13 +326,13 @@ function CalendarEventEdit({
                       {CancelMenuItems()}
                     </Menu>
                   )}
-                  {!isNote && changedEvent.isRecurring ? (
+                  {!isNote && !isReadOnly && changedEvent.isRecurring ? (
                     <Menu>
                       <MenuButton
                         leftIcon={<FaTimes />}
                         aria-label="delete event"
                         colorScheme="red"
-                        disabled={disableDelete}
+                        isDisabled={disableDelete}
                         size="sm"
                         type="button"
                         as={Button}
@@ -333,17 +349,19 @@ function CalendarEventEdit({
                       </MenuList>
                     </Menu>
                   ) : (
-                    <Button
-                      leftIcon={<FaTrash />}
-                      aria-label="delete event"
-                      disabled={disableDelete}
-                      colorScheme="red"
-                      size="sm"
-                      type="button"
-                      onClick={handleDelete}
-                    >
-                      {t('button.delete')}
-                    </Button>
+                    !isReadOnly && (
+                      <Button
+                        leftIcon={<FaTrash />}
+                        aria-label="delete event"
+                        isDisabled={disableDelete}
+                        colorScheme="red"
+                        size="sm"
+                        type="button"
+                        onClick={handleDelete}
+                      >
+                        {t('button.delete')}
+                      </Button>
+                    )
                   )}
                 </ControlWrapper>
                 <ControlWrapper>
@@ -352,7 +370,7 @@ function CalendarEventEdit({
                       leftIcon={<FaEdit />}
                       aria-label="edit event"
                       type="button"
-                      disabled={patientIsArchived}
+                      isDisabled={patientIsArchived}
                       onClick={() => setIsReadOnly(!isReadOnly)}
                       colorScheme="blue"
                       size="sm"
@@ -361,11 +379,21 @@ function CalendarEventEdit({
                     </Button>
                   ) : changedEvent.isRecurring ? (
                     <Menu>
-                      <MenuButton
+                      <Button
                         leftIcon={<FaTimes />}
+                        aria-label="cancel modal"
+                        type="button"
+                        isDisabled={isReadOnly}
+                        onClick={onClose}
+                        size="sm"
+                      >
+                        {t('button.cancel')}
+                      </Button>
+                      <MenuButton
+                        leftIcon={<FaSave />}
                         aria-label="save changes"
                         colorScheme="blue"
-                        disabled={isReadOnly}
+                        isDisabled={isReadOnly}
                         size="sm"
                         type="button"
                         as={Button}
@@ -382,16 +410,29 @@ function CalendarEventEdit({
                       </MenuList>
                     </Menu>
                   ) : (
-                    <Button
-                      aria-label="save changes"
-                      type="button"
-                      disabled={isReadOnly}
-                      onClick={handleSubmit}
-                      size="sm"
-                      colorScheme="blue"
-                    >
-                      {t('button.save')}
-                    </Button>
+                    <>
+                      <Button
+                        leftIcon={<FaTimes />}
+                        aria-label="cancel modal"
+                        type="button"
+                        isDisabled={isReadOnly}
+                        onClick={onClose}
+                        size="sm"
+                      >
+                        {t('button.cancel')}
+                      </Button>
+                      <Button
+                        leftIcon={<FaSave />}
+                        aria-label="save changes"
+                        type="button"
+                        isDisabled={disableSubmit}
+                        onClick={handleSubmit}
+                        size="sm"
+                        colorScheme="blue"
+                      >
+                        {t('button.save')}
+                      </Button>
+                    </>
                   )}
                 </ControlWrapper>
               </div>
