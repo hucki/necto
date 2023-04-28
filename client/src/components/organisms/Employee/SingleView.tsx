@@ -3,7 +3,7 @@ import { Employee } from '../../../types/Employee';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import { FormControl, FormLabel, Select } from '../../Library';
-import { useAllEmployees } from '../../../hooks/employees';
+import { useAllActiveEmployees } from '../../../hooks/employees';
 import { useTranslation } from 'react-i18next';
 import Timesheet from '../../molecules/DataDisplay/Timesheet';
 import { getCurrentContract } from '../../../helpers/contract';
@@ -73,7 +73,7 @@ const SingleView = () => {
   const currentMonth = dayjs().year(year).month(month);
   const daysInMonth = currentMonth.daysInMonth();
 
-  const { data: employees, isLoading } = useAllEmployees();
+  const { data: employees, isLoading } = useAllActiveEmployees();
   const [currentEmployee, setCurrentEmployee] = useState<Employee | undefined>(
     () => (employees && employees[0]) || undefined
   );
@@ -243,11 +243,13 @@ const SingleView = () => {
             value={currentEmployee.uuid}
             onChange={onEmployeeChangeHandler}
           >
-            {employees.map((t, i) => (
-              <option key={i} value={t.uuid}>
-                {t.firstName + ' ' + t.lastName}
-              </option>
-            ))}
+            {employees
+              .sort((a, b) => (a.lastName < b.lastName ? -1 : 1))
+              .map((t, i) => (
+                <option key={i} value={t.uuid}>
+                  {t.firstName + ' ' + t.lastName}
+                </option>
+              ))}
           </Select>
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
