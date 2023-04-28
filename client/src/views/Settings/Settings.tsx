@@ -26,16 +26,6 @@ const Settings = (): JSX.Element => {
   const { t } = useTranslation();
   const tabData = [
     {
-      allowedRoles: ['admin', 'planner', 'employee'],
-      name: 'teamSettings',
-      label: (
-        <>
-          <IoPeople /> {t('menu.teamSettings')}
-        </>
-      ),
-      content: <TeamSettings />,
-    },
-    {
       allowedRoles: ['admin', 'planner'],
       name: 'employeeSettings',
       label: (
@@ -67,6 +57,16 @@ const Settings = (): JSX.Element => {
         </>
       ),
       content: <EventSettings />,
+    },
+    {
+      allowedRoles: ['admin', 'planner', 'employee'],
+      name: 'teamSettings',
+      label: (
+        <>
+          <IoPeople /> {t('menu.teamSettings')}
+        </>
+      ),
+      content: <TeamSettings />,
     },
     {
       allowedRoles: ['admin', 'planner', 'employee', 'user'],

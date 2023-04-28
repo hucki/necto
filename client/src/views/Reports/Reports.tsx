@@ -25,6 +25,20 @@ const Reports = () => {
   const tabData = [
     {
       allowedRoles: ['admin'],
+      name: 'singleView',
+      label: (
+        <>
+          <IoPeople /> {t('menu.singleView')}
+        </>
+      ),
+      content: (
+        <>
+          <SingleView />
+        </>
+      ),
+    },
+    {
+      allowedRoles: ['admin'],
       name: 'weekReport',
       label: (
         <>
@@ -61,20 +75,6 @@ const Reports = () => {
           current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
           {(!data || isLoading) && <FullPageSpinner />}
           {data && <EmployeeDashboard employees={data} />}
-        </>
-      ),
-    },
-    {
-      allowedRoles: ['admin'],
-      name: 'singleView',
-      label: (
-        <>
-          <IoPeople /> {t('menu.singleView')}
-        </>
-      ),
-      content: (
-        <>
-          <SingleView />
         </>
       ),
     },
