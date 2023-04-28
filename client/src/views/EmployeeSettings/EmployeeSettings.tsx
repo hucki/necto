@@ -440,11 +440,13 @@ const EmployeeSettings = () => {
             value={currentEmployee.uuid}
             onChange={onEmployeeChangeHandler}
           >
-            {employees.map((t, i) => (
-              <option key={i} value={t.uuid}>
-                {t.firstName + ' ' + t.lastName}
-              </option>
-            ))}
+            {employees
+              .sort((a, b) => (a.lastName < b.lastName ? -1 : 1))
+              .map((t, i) => (
+                <option key={i} value={t.uuid}>
+                  {t.firstName + ' ' + t.lastName}
+                </option>
+              ))}
           </Select>
           <FormLabel>{t('label.employeeSelect')}</FormLabel>
         </FormControl>
