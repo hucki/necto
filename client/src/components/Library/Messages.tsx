@@ -23,7 +23,10 @@ function ErrorMessage({
     <div
       role="alert"
       style={{
-        color: colors.danger,
+        borderRadius: '0.25rem',
+        padding: '0.25rem',
+        backgroundColor: colors.danger,
+        color: colors.base,
         display: displayVariant[variant as 'stack' | 'inline'],
       }}
       {...props}
@@ -33,6 +36,8 @@ function ErrorMessage({
         style={{
           whiteSpace: 'break-spaces',
           margin: '0',
+          fontSize: '0.9rem',
+          fontWeight: 'bold',
           marginBottom: -5,
           display: variant === 'stack' ? 'block' : 'inline-block',
         }}
