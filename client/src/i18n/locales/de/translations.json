@@ -81,7 +81,8 @@
   "error": {
     "prefix": "Es gab einen Fehler",
     "event": {
-      "overlapping": "Überlappende Termine sind nicht erlaubt. Bitte Termin anpassen"
+      "overlapping": "Terminkonflikt: ",
+      "endTimeToSmall": "Endzeit muss größer Startzeit sein"
     },
     "api": {
       "token_wrong_or_expired": "Link falsch oder abgelaufen. Bitte fordere einen neuen Link an.",

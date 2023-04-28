@@ -80,7 +80,8 @@
   "error": {
     "prefix": "There was an error",
     "event": {
-      "overlapping": "Overlapping Appointments are not allowed. Please check again"
+      "overlapping": "conflicting appointments: ",
+      "endTimeToSmall": "end time has to be past start time"
     },
     "api": {
       "token_wrong_or_expired": "Link wrong or expired. Please request a new reset link.",
