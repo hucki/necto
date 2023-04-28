@@ -79,6 +79,21 @@ export function useAllEmployees(): UseQueryResult<Employee[]> & {
   };
 }
 
+export function useAllActiveEmployees(): UseQueryResult<Employee[]> & {
+  employees: Employee[];
+} {
+  const employeesQuery = useQuery(['employees/active'], async () => {
+    return client<Employee[]>('employees/active');
+  });
+
+  const employees = employeesQuery.data ?? [];
+
+  return {
+    employees,
+    ...employeesQuery,
+  };
+}
+
 export function useAllEmployeesWithWeeksEvents(
   year: number,
   week: number
