@@ -6,23 +6,33 @@ interface CheckOverlapProps {
   eventList: Event[];
 }
 
+interface CheckOverlapResult {
+  conflicts: string[];
+}
+
 export function checkOverlap({ eventToCheck, eventList }: CheckOverlapProps) {
+  const result: CheckOverlapResult = {
+    conflicts: [],
+  };
   if (eventToCheck) {
     const checkStart = eventToCheck.startTime;
     const checkEnd = eventToCheck.endTime;
-    const result = eventList.filter(
-      (event) =>
-        !event.isCancelled &&
-        (!eventToCheck.hasOwnProperty('uuid') ||
-          (eventToCheck as Event).uuid !== event.uuid) &&
-        eventToCheck.ressourceId === event.ressourceId &&
-        ((dayjs(checkStart) >= dayjs(event.startTime) &&
-          dayjs(checkStart) < dayjs(event.endTime)) ||
-          (dayjs(checkEnd) > dayjs(event.startTime) &&
-            dayjs(checkEnd) <= dayjs(event.endTime)))
-    );
-    if (!result.length) return false;
-    return true;
+    const conflicts = eventList
+      .filter(
+        (event) =>
+          !event.isCancelled &&
+          (!eventToCheck.hasOwnProperty('uuid') ||
+            (eventToCheck as Event).uuid !== event.uuid) &&
+          eventToCheck.ressourceId === event.ressourceId &&
+          ((dayjs(checkStart) >= dayjs(event.startTime) &&
+            dayjs(checkStart) < dayjs(event.endTime)) ||
+            (dayjs(checkEnd) > dayjs(event.startTime) &&
+              dayjs(checkEnd) <= dayjs(event.endTime)))
+      )
+      .map((event) => dayjs(event.startTime).format('lll'));
+    if (conflicts.length) {
+      result.conflicts = [...conflicts];
+    }
   }
-  return false;
+  return result;
 }
