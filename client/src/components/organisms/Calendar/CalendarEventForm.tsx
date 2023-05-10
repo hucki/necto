@@ -79,6 +79,12 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Escape' && search !== '') {
+      e.preventDefault();
+      setSearch('');
+    }
+  };
   const onSelectPerson = ({ person }: { person: Person }) => {
     setSearch('');
     handleSelectPerson({ person });
@@ -103,6 +109,7 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
               type="text"
               autoComplete="off"
               value={search}
+              onKeyDown={handleKeyDown}
               onChange={handleSearch}
               pl="2rem"
               ref={inputRef}
@@ -117,7 +124,7 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
             gap: '0.2rem',
             boxShadow: '3px 3px 2px #3333',
             backgroundColor: 'linen',
-            border: noResults ? '1px solid red' : undefined,
+            border: `2px solid ${noResults ? 'red' : '#3182ce'}`,
             width: '100%',
             display: 'flex',
             flexDirection: 'row',
@@ -126,7 +133,8 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
           {noResults ? (
             <>
               <span>
-                keine Ergebnisse zu: <b>{search}</b>
+                {t('error.search.noResultsFor')}
+                <b>{search}</b>
               </span>
               <Button
                 aria-label="add Patient"
@@ -324,7 +332,7 @@ function CalendarEventForm({
       <ul>
         {rruleList.map((date) => {
           return (
-            <li key={date.toString()}>
+            <li key={date.toString()} style={{ listStyle: 'none' }}>
               {dayjs
                 .utc(date)
                 .hour(dt.local().hour())
@@ -333,8 +341,8 @@ function CalendarEventForm({
           );
         })}
         {skippedHolidays.length ? (
-          <li>
-            skipped: <b>{skippedHolidays.join()}</b>
+          <li style={{ listStyle: 'none', borderTop: '1px solid black' }}>
+            {t('calendar.event.skipped')}: <b>{skippedHolidays.join(', ')}</b>
           </li>
         ) : null}
       </ul>
@@ -643,7 +651,7 @@ function CalendarEventForm({
                       cursor: 'pointer',
                     }}
                   />
-                  <PopoverHeader></PopoverHeader>
+                  <PopoverHeader>{t('button.preview')}</PopoverHeader>
                   <PopoverBody>{timeline}</PopoverBody>
                 </PopoverContent>
               </Popover>
