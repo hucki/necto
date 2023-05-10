@@ -64,7 +64,8 @@
     "delete": "löschen",
     "archive": "archivieren",
     "activate": "aktivieren",
-    "add": "hinzufügen"
+    "add": "hinzufügen",
+    "new": "neu"
   },
   "time": {
     "ofDay": {
