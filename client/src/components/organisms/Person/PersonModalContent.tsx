@@ -23,19 +23,19 @@ import { PersonCard } from '../../molecules/Cards/PersonCard';
 import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { PersonForm } from './PersonForm';
 
-interface PersonModalProps {
+interface PersonModalContentProps {
   person: Person;
   type?: 'create' | 'edit';
   personType?: 'doctor' | 'patient';
   onClose: () => void;
 }
 
-export const PersonModal = ({
+export const PersonModalContent = ({
   person,
   onClose,
   type = 'edit',
   personType = 'patient',
-}: PersonModalProps) => {
+}: PersonModalContentProps) => {
   const toast = useToast();
   const { t } = useTranslation();
   const { isMobile } = useViewport();
