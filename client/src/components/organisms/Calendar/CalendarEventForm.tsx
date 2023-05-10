@@ -17,6 +17,7 @@ import {
   Radio,
   RadioGroup,
   FormErrorMessage,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event, NewEvent } from '../../../types/Event';
@@ -35,11 +36,17 @@ import utc from 'dayjs/plugin/utc';
 import { useAllPatients } from '../../../hooks/patient';
 import { useAllRooms } from '../../../hooks/rooms';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
-import { RiSearchLine } from 'react-icons/ri';
-import { PersonCard } from '../../molecules/Cards/PersonCard';
+import { RiSearchLine, RiUserAddLine } from 'react-icons/ri';
+import {
+  PersonCard,
+  PersonCardControlWrapper,
+} from '../../molecules/Cards/PersonCard';
 import { Person } from '../../../types/Person';
 import { useRrule } from '../../../hooks/useRrule';
 import { RecurringFrequency, RecurringInterval } from './types';
+import { PersonCreateModal } from '../Person/PersonCreateModal';
+import { FaTimes } from 'react-icons/fa';
+import { IconButton } from '../../atoms/Buttons';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -51,7 +58,9 @@ interface PersonFilterProps {
 }
 
 const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const filteredPersons = persons.filter(
     (person) =>
       person.firstName.toLowerCase().includes(search.toLowerCase()) ||
@@ -65,6 +74,7 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
     setSearch('');
     handleSelectPerson({ person });
   };
+  const noResults = !filteredPersons.length;
   return (
     <>
       <Popover
@@ -92,17 +102,39 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
         </PopoverTrigger>
         <PopoverContent
           style={{
-            paddingLeft: '0.2rem',
-            paddingRight: '0.2rem',
+            padding: '0 0.2rem',
+            alignItems: 'center',
             margin: 'auto 0',
             gap: '0.2rem',
             boxShadow: '3px 3px 2px #3333',
             backgroundColor: 'linen',
+            border: noResults ? '1px solid red' : undefined,
             width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
           }}
         >
-          {!filteredPersons.length ? (
-            <>{`keine Ergebinsse zu "${search}"`}</>
+          {noResults ? (
+            <>
+              <span>
+                keine Ergebnisse zu: <b>{search}</b>
+              </span>
+              <Button
+                aria-label="add Patient"
+                leftIcon={<RiUserAddLine />}
+                onClick={() => onOpen()}
+                colorScheme={'green'}
+                w="15rem"
+                mx="0.5rem"
+              >
+                {t('button.add')}
+              </Button>
+              <PersonCreateModal
+                isOpen={isOpen}
+                onClose={onClose}
+                personType="patient"
+              />
+            </>
           ) : (
             <ul>
               {filteredPersons.map((p, i) => (
@@ -221,6 +253,12 @@ function CalendarEventForm({
     setCurrentEvent((cur) => ({
       ...cur,
       patientId,
+    }));
+  }
+  function onRemovePerson() {
+    setCurrentEvent((cur) => ({
+      ...cur,
+      patientId: '',
     }));
   }
   function handleEventDurationChange(event: BaseSyntheticEvent) {
@@ -364,12 +402,26 @@ function CalendarEventForm({
       </FormGroup>
       {!isNote && (
         <FormControl id="patient" mb="0.75rem" mt="0.5rem">
-          <PersonFilter
-            persons={patients}
-            handleSelectPerson={({ person }) => onSelectPerson(person.uuid)}
-          />
-          {currentPerson && <PersonCard person={currentPerson} />}
-          <FormLabel>{t('calendar.event.patient')}</FormLabel>
+          {currentPerson ? (
+            <PersonCardControlWrapper>
+              <PersonCard person={currentPerson} hasBorder />
+              <IconButton
+                aria-label="remove patient"
+                icon={<FaTimes />}
+                colorScheme="orange"
+                onClick={onRemovePerson}
+                isDisabled={!isNewEvent(currentEvent)}
+              />
+            </PersonCardControlWrapper>
+          ) : (
+            <>
+              <PersonFilter
+                persons={patients}
+                handleSelectPerson={({ person }) => onSelectPerson(person.uuid)}
+              />
+              <FormLabel>{t('calendar.event.patient')}</FormLabel>
+            </>
+          )}
         </FormControl>
       )}
       <FormControl
