@@ -125,7 +125,16 @@ export const CalendarEntry = ({
         {!isRoomBooking && event.patient && !event.patient.hasContract && (
           <EventIcon type="noContract" size="s" />
         )}
-        {entryTitle}
+        <span
+          style={{
+            marginLeft:
+              !isRoomBooking && event.patient && !event.patient.hasContract
+                ? undefined
+                : '0.2rem',
+          }}
+        >
+          {entryTitle}
+        </span>
       </CalendarEntryContent>
       <CalendarEntryIconContainer>
         {!isNote && !isLeave(event) && showTime && (

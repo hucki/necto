@@ -72,11 +72,12 @@ const CalendarEntryContent = styled.div(
   ({ strikeThrough, isMobile = false }: CalendarEntryContentProps) => ({
     display: 'flex',
     color: 'var(--secondary)',
-    fontSize: isMobile ? '0.5rem' : '0.8rem',
+    fontSize: isMobile ? '0.5rem' : '0.7rem',
     lineHeight: 'initial',
     textAlign: 'left',
     textDecoration: strikeThrough ? 'line-through' : undefined,
     fontWeight: 'bold',
+    whiteSpace: 'nowrap',
   })
 );
 
