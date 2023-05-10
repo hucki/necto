@@ -126,6 +126,21 @@ export function useWeeksEvents(
   };
 }
 
+export function useWeeksRoomsFromEvents(
+  year: number,
+  week: number
+): UseQueryResult<Event[]> & { rawEvents: Event[] } {
+  const eventsQuery = useQuery(['events/rooms', year, week], async () => {
+    return client<Event[]>(`events/r/${year}/${week}`);
+  });
+
+  const rawEvents = eventsQuery.data ?? [];
+  return {
+    rawEvents,
+    ...eventsQuery,
+  };
+}
+
 export function useLeavesByStatus(
   leaveStatus: LeaveStatus
 ): UseQueryResult<Event[]> & { rawEvents: Event[] } {
