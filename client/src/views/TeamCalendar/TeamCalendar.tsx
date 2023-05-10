@@ -16,8 +16,6 @@ import { MinimalUser } from '../../types/Auth';
 function TeamCalendar(): JSX.Element {
   const { user } = useContext(AuthContext);
   const { currentTeam, setCalendarView } = useFilter();
-  setCalendarView('day');
-
   const isAuthorized = (user: MinimalUser) => {
     if (!user.roles) return false;
     if (user.roles?.find((role) => role === 'admin' || role === 'planner'))
@@ -30,6 +28,9 @@ function TeamCalendar(): JSX.Element {
   );
   const { isLoading, rawEvents } = useDaysEvents(calendarDate);
 
+  useEffect(() => {
+    setCalendarView('day');
+  }, []);
   useEffect(() => {
     if (currentDate && calendarDate !== currentDate)
       setCalendarDate(currentDate);
