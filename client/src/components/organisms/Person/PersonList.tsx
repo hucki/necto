@@ -339,7 +339,7 @@ function PersonList({
               <Td>{diagnosticDisplay(p)}</Td>
               <Td>
                 {p.waitingPreferences?.map((wp) => (
-                  <Tag colorScheme="orange" variant="solid">
+                  <Tag colorScheme="orange" variant="solid" key={wp.key}>
                     <TagLabel>{wp.label}</TagLabel>
                   </Tag>
                 ))}
