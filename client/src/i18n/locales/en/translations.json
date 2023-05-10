@@ -30,7 +30,8 @@
       "end": "end",
       "previewRecurringApointments": "preview recurring appointments",
       "thisEvent": "only this event",
-      "thisAndAllFutureEvents": "this and all future events of this series"
+      "thisAndAllFutureEvents": "this and all future events of this series",
+      "skipped": "skipped"
     },
     "leave": {
       "type": {
@@ -80,6 +81,7 @@
   },
   "error": {
     "prefix": "There was an error",
+    "search": { "noResultsFor": "no results for: " },
     "event": {
       "overlapping": "conflicting appointments: ",
       "endTimeToSmall": "end time has to be past start time"

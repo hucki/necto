@@ -31,7 +31,8 @@
       "end": "Ende",
       "previewRecurringApointments": "Vorschau Terminserie",
       "thisEvent": "nur diesen Termin",
-      "thisAndAllFutureEvents": "diesen + zukünftige Termine der Serie"
+      "thisAndAllFutureEvents": "diesen + zukünftige Termine der Serie",
+      "skipped": "übersprungen"
     },
     "leave": {
       "type": {
@@ -81,6 +82,7 @@
   },
   "error": {
     "prefix": "Es gab einen Fehler",
+    "search": { "noResultsFor": "keine Ergebnisse zu: " },
     "event": {
       "overlapping": "Terminkonflikt: ",
       "endTimeToSmall": "Endzeit muss größer Startzeit sein"
