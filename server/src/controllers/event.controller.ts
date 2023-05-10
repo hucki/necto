@@ -527,6 +527,62 @@ export const getWeeksEvents = async (
     next(e);
   }
 };
+/**
+ * get all Roombooking from Events that are taking place in the given year/week combination
+ *  @param {string} req.params.year
+ *  @param {string} req.params.week
+ */
+export const getWeeksRoomsFromEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const year = parseInt(req.params.year);
+    const week = parseInt(req.params.week);
+    const firstOfWeek = dayjs().year(year).isoWeek(week).startOf('isoWeek');
+    const lastOfWeek = firstOfWeek.endOf('isoWeek');
+    const events = await prisma.event.findMany({
+      where: {
+        OR: [
+          {
+            AND: [
+              { startTime: { gte: firstOfWeek.toDate() } },
+              { startTime: { lte: lastOfWeek.toDate() } },
+              { isDeleted: false },
+              { roomId: { not: null } },
+            ],
+          },
+          {
+            AND: [
+              { endTime: { gte: firstOfWeek.toDate() } },
+              { endTime: { lte: lastOfWeek.toDate() } },
+              { isDeleted: false },
+              { roomId: { not: null } },
+            ],
+          },
+        ],
+      },
+      include: {
+        patient: false,
+        room: { include: { building: true } },
+        employee: { include: { contract: { where: { validUntil: null } } } },
+      },
+    });
+    const roomBookings = events.map((event) => ({
+      ...event,
+      ressourceId: event.roomId || '',
+      title: event.employee?.alias || '',
+      bgColor: event.employee?.contract[0].bgColor,
+      type: 'roomBooking',
+    }));
+    res.json(roomBookings);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
 
 /**
  * get all Events
