@@ -8,6 +8,13 @@ import { Person } from '../../../types/Person';
 import { ContactDataDisplay } from '../DataDisplay/ContactData';
 import { EventIcon } from '../DataDisplay/Icons';
 
+export const PersonCardControlWrapper = styled.div({
+  display: 'grid',
+  gridTemplateColumns: 'auto 42px',
+  width: '100%',
+  alignItems: 'center',
+});
+
 interface PersonCardContainerProps {
   hasBorder: boolean;
   type: 'doctor' | 'patient';
