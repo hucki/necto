@@ -58,16 +58,16 @@ const CalendarScaleItem = styled.div(({ numOfHours }: CalendarCommonProps) => ({
   fontStyle: 'italic',
   fontSize: 'small',
   backgroundColor: `${colors.base}`,
-  borderTop: '2px solid',
   borderImageSlice: '1',
   borderImageSource: `linear-gradient(to right, ${colors.base}, ${colors.gray50})`,
 }));
 
 const CalendarScaleTime = styled.div({
   position: 'relative',
-  top: '-10px',
-  textAlign: 'left',
+  top: '-5px',
+  textAlign: 'center',
   fontSize: '0.7rem',
+  color: 'gray',
 });
 
 const CalendarColumnWrapper = styled.div({
@@ -128,11 +128,11 @@ const CalendarColumnRessourceBody = styled.div(
     borderBottom: calendarBorder,
     backgroundImage:
       isPublicHoliday && !isWeekend
-        ? 'linear-gradient(#3393 50%, #3391 50%)'
+        ? 'linear-gradient( #3391 1%, #3393 1%)'
         : isWeekend
-        ? `linear-gradient(#3333 50%, ${colors.gray10} 50%)`
-        : `linear-gradient(${colors.gray10} 50%, transparent 50%)`,
-    backgroundSize: `1px calc(100% / ${numOfHours} * 2)`,
+        ? `linear-gradient(#3334 1%, ${colors.gray10} 1%)`
+        : 'linear-gradient(rgb(218,220,224) 1%, transparent 1%)',
+    backgroundSize: `1px calc(100% / ${numOfHours})`,
     borderRight: calendarBorder,
   })
 );
