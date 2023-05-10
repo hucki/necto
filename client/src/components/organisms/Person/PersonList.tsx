@@ -32,14 +32,18 @@ import {
   RiUserAddLine,
 } from 'react-icons/ri';
 import { getDisplayName } from '../../../helpers/displayNames';
-import { useFilter } from '../../../hooks/useFilter';
 import { useViewport } from '../../../hooks/useViewport';
 import { Doctor } from '../../../types/Doctor';
 import { Patient, WaitingPatient } from '../../../types/Patient';
 import * as colors from '../../../styles/colors';
 import { FormControl, Input, Label } from '../../Library';
-import { PersonModal } from './PersonModal';
-import { Person } from '../../../types/Person';
+import { PersonModalContent } from './PersonModalContent';
+import {
+  Person,
+  isDoctor,
+  isPatient,
+  isWaitingPatient,
+} from '../../../types/Person';
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
@@ -48,6 +52,7 @@ import { WaitingPreference } from '../../../types/Settings';
 import { useAllWaitingPreferences } from '../../../hooks/settings';
 import { WaitingPreferenceTagWrapper } from '../Patients/WaitingPreferenceForm';
 import { FaTimes } from 'react-icons/fa';
+import { PersonCreateModal } from './PersonCreateModal';
 
 type ListType = 'doctors' | 'patients' | 'waitingPatients';
 
@@ -67,7 +72,6 @@ function PersonList({
 }: PersonListProps) {
   const { isMobile } = useViewport();
   const { t } = useTranslation();
-  const { currentCompany } = useFilter();
   const { waitingPreferences } = useAllWaitingPreferences();
   const [waitingPreferenceFilter, setWaitingPreferenceFilter] = useState<
     WaitingPreference['key'][]
@@ -88,6 +92,7 @@ function PersonList({
           const isActive = waitingPreferenceFilter.includes(wp.key);
           return (
             <Tag
+              key={wp.key}
               colorScheme={isActive ? 'orange' : 'blackAlpha'}
               variant={isActive ? 'solid' : 'subtle'}
               onClick={
@@ -125,21 +130,6 @@ function PersonList({
 
   const isDoctorList = (persons: Person[]): persons is Doctor[] => {
     if (listType === 'doctors') return true;
-    return false;
-  };
-
-  const isWaitingPatient = (person: Person): person is WaitingPatient => {
-    if ('numberInLine' in person) return true;
-    return false;
-  };
-
-  const isPatient = (person: Person): person is Patient => {
-    if ('firstContactAt' in person) return true;
-    return false;
-  };
-
-  const isDoctor = (person: Person): person is Doctor => {
-    if (!isWaitingPatient(person) && !isPatient(person)) return true;
     return false;
   };
 
@@ -244,9 +234,7 @@ function PersonList({
   const [currentPerson, setCurrentPerson] = useState<
     Person | WaitingPatient | undefined
   >(undefined);
-  const [newPerson, setNewPerson] = useState<Patient | Doctor | undefined>(
-    undefined
-  );
+
   function showPersonInfo(person: Person) {
     setCurrentPerson({
       ...person,
@@ -254,37 +242,6 @@ function PersonList({
       medicalReport: isPatient(person) ? person.medicalReport || '' : undefined,
     });
     onOpenInfo();
-  }
-
-  const initNewPerson = () => {
-    const sharedFields = {
-      firstName: '',
-      lastName: '',
-      title: '',
-      gender: '',
-      zip: '',
-      street: '',
-      city: '',
-    };
-    const patientFields = {
-      isAddpayFreed: false,
-      careFacility: '',
-      notices: '',
-      medicalReport: '',
-      firstContactAt: dayjs().toDate(),
-      isWaitingSince: dayjs().toDate(),
-      companyId: currentCompany?.uuid,
-    };
-    const newPerson = Object.assign(
-      sharedFields,
-      listType === 'doctors' ? null : patientFields
-    );
-    setNewPerson({ ...newPerson });
-  };
-
-  function showPersonCreate() {
-    initNewPerson();
-    onOpenCreate();
   }
 
   const diagnosticDisplay = (p: WaitingPatient) => {
@@ -424,7 +381,7 @@ function PersonList({
             <Button
               aria-label={`add${listType === 'doctors' ? 'Doctor' : 'Patient'}`}
               leftIcon={<RiUserAddLine />}
-              onClick={() => showPersonCreate()}
+              onClick={() => onOpenCreate()}
               colorScheme={'green'}
               w="15rem"
               mx="0.5rem"
@@ -562,7 +519,7 @@ function PersonList({
               height="fit-content"
             >
               {currentPerson ? (
-                <PersonModal
+                <PersonModalContent
                   onClose={onCloseInfo}
                   person={currentPerson}
                   personType={listType !== 'doctors' ? 'patient' : 'doctor'}
@@ -572,31 +529,11 @@ function PersonList({
           </ModalContent>
         </ModalOverlay>
       </Modal>
-      <Modal
+      <PersonCreateModal
         isOpen={isOpenCreate}
         onClose={onCloseCreate}
-        scrollBehavior="inside"
-        size={isMobile ? 'full' : undefined}
-      >
-        <ModalOverlay
-          css={{
-            backgroundColor: 'rgba(0,0,0,0.3)',
-          }}
-        >
-          <ModalContent minW="80vw">
-            <ModalBody>
-              {newPerson ? (
-                <PersonModal
-                  onClose={onCloseCreate}
-                  person={newPerson}
-                  personType={listType !== 'doctors' ? 'patient' : 'doctor'}
-                  type="create"
-                />
-              ) : null}
-            </ModalBody>
-          </ModalContent>
-        </ModalOverlay>
-      </Modal>
+        personType={listType !== 'doctors' ? 'patient' : 'doctor'}
+      />
     </>
   );
 }
