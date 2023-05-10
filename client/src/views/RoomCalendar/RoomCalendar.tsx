@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
-import { Event, EventType } from '../../types/Event';
+import { Event } from '../../types/Event';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useAllRooms } from '../../hooks/rooms';
@@ -10,7 +10,7 @@ import { useFilter } from '../../hooks/useFilter';
 import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 import { ViewWrapper } from '../../components/atoms/Wrapper';
 import { Room } from '../../types/Rooms';
-import { useWeeksEvents } from '../../hooks/events';
+import { useWeeksRoomsFromEvents } from '../../hooks/events';
 import { UserDateContext } from '../../providers/UserDate';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { Employee } from '../../types/Employee';
@@ -73,18 +73,6 @@ function combineRoomBookings(events: Event[]): Event[] {
     return prev;
   }, [] as Event[]);
 }
-function getRoomBookingsFromEvents(events: Event[]): Event[] {
-  const res = events
-    .filter((event) => event.roomId)
-    .map((event) => ({
-      ...event,
-      ressourceId: event.roomId || '',
-      title: event.employee?.alias || '',
-      bgColor: event.employee?.contract[0].bgColor,
-      type: 'roomBooking' as EventType,
-    }));
-  return combineRoomBookings(res);
-}
 
 function getRooms(buildingId: string, rooms: Room[]) {
   return rooms.filter((r) => r.building.uuid === buildingId);
@@ -92,16 +80,17 @@ function getRooms(buildingId: string, rooms: Room[]) {
 
 function RoomCalendar(): JSX.Element {
   const { setCalendarView } = useFilter();
-  setCalendarView('week');
   const { currentDate } = useContext(UserDateContext);
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
   const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } =
-    useWeeksEvents(calendarDate.year(), calendarDate.week());
+    useWeeksRoomsFromEvents(calendarDate.year(), calendarDate.week());
   const { isLoading: isLoadingRooms, rooms } = useAllRooms();
   const { isLoading: isLoadingBuildings, buildings } = useAllbuildings();
-
+  useEffect(() => {
+    setCalendarView('week');
+  }, []);
   useEffect(() => {
     if (currentDate && calendarDate !== currentDate)
       setCalendarDate(currentDate);
@@ -137,7 +126,7 @@ function RoomCalendar(): JSX.Element {
       </Flex>
       <CalendarContainer
         readOnly={true}
-        events={getRoomBookingsFromEvents(weeksEvents)}
+        events={combineRoomBookings(weeksEvents)}
         ressources={ressources}
         daysRange={[
           calendarDate.startOf('week'),
