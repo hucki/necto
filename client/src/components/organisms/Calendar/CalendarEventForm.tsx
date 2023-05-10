@@ -61,11 +61,20 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const filteredPersons = persons.filter(
-    (person) =>
-      person.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      person.lastName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredPersons = persons.filter((person) => {
+    const searches = search.toLowerCase().split(/,| /);
+    const findings: boolean[] = [];
+    for (let i = 0; i < searches.length; i++) {
+      const found = (term: string) =>
+        person.firstName.toLowerCase().includes(term) ||
+        person.lastName.toLowerCase().includes(term);
+      if (searches[i] === '') continue;
+      if (found(searches[i])) findings.push(true);
+    }
+    if (searches.filter((term) => term !== '').length === findings.length)
+      return true;
+    return false;
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
@@ -125,9 +134,9 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
                 onClick={() => onOpen()}
                 colorScheme={'green'}
                 w="15rem"
-                mx="0.5rem"
+                m="0.5rem"
               >
-                {t('button.add')}
+                {t('button.new')}
               </Button>
               <PersonCreateModal
                 isOpen={isOpen}
@@ -424,11 +433,7 @@ function CalendarEventForm({
           )}
         </FormControl>
       )}
-      <FormControl
-        id="eventTitleInput"
-        mb="0.75rem"
-        mt={isNote ? '0.5rem' : undefined}
-      >
+      <FormControl id="eventTitleInput" mb="0.75rem" mt="0.8rem">
         {isNote ? (
           <Textarea
             name="title"
@@ -453,7 +458,7 @@ function CalendarEventForm({
           {t(`calendar.event.${isNote ? 'text' : 'title'}`)}
         </FormLabel>
       </FormControl>
-      <FormControl id="roomId">
+      <FormControl id="roomId" mt="0.8rem">
         <Select
           name="roomId"
           disabled={currentEvent.isHomeVisit}
@@ -509,7 +514,7 @@ function CalendarEventForm({
         onChangeHandler={handleStartTimeChange}
       />
       {!isNote && (
-        <FormControl id="duration" mb="0.75rem" maxWidth="25%">
+        <FormControl id="duration" mb="0.75rem" maxWidth="25%" mt="0.8rem">
           <Select
             id="duration"
             name="duration"
