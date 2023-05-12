@@ -66,33 +66,33 @@ export const AddpayTags = ({
   onRemoveHandler,
   size = 'md',
 }: AddpayTagsProps) => {
-  const tags = addpayState.map((yearsState) => (
-    <Tag
-      key={yearsState.year}
-      size={size}
-      variant={yearsState.addpayFreed ? 'solid' : 'subtle'}
-      colorScheme={yearsState.addpayFreed ? 'green' : 'gray'}
-    >
-      {isInteractive &&
-        onAddHandler &&
-        !yearsState.addpayFreed &&
-        !yearsState.disabled && (
-          <TagLeftIcon
-            as={FaPlus}
-            onClick={() => onAddHandler(yearsState.year)}
-            style={{ cursor: 'pointer' }}
-          />
+  const tags = addpayState.map((yearsState) => {
+    const isActive = yearsState.addpayFreed;
+    const clickHandler =
+      !isActive && onAddHandler
+        ? () => onAddHandler(yearsState.year)
+        : isActive && onRemoveHandler
+        ? () => onRemoveHandler(yearsState.year)
+        : undefined;
+    return (
+      <Tag
+        key={yearsState.year}
+        size={size}
+        variant={isActive ? 'solid' : 'subtle'}
+        colorScheme={isActive ? 'green' : 'gray'}
+        onClick={isInteractive ? clickHandler : undefined}
+      >
+        {isInteractive && clickHandler && !isActive && !yearsState.disabled && (
+          <TagLeftIcon as={FaPlus} style={{ cursor: 'pointer' }} />
         )}
-      <TagLabel style={{ textAlign: 'center' }}>{yearsState.year}</TagLabel>
+        <TagLabel style={{ textAlign: 'center' }}>{yearsState.year}</TagLabel>
 
-      {isInteractive &&
-        onRemoveHandler &&
-        yearsState.addpayFreed &&
-        !yearsState.disabled && (
-          <TagCloseButton onClick={() => onRemoveHandler(yearsState.year)} />
+        {isInteractive && clickHandler && isActive && !yearsState.disabled && (
+          <TagCloseButton />
         )}
-    </Tag>
-  ));
+      </Tag>
+    );
+  });
   return <TagWrapper>{tags}</TagWrapper>;
 };
 
