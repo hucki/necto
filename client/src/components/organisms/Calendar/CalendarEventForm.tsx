@@ -434,7 +434,6 @@ function CalendarEventForm({
                 icon={<FaTimes />}
                 colorScheme="orange"
                 onClick={onRemovePerson}
-                isDisabled={!isNewEvent(currentEvent)}
               />
             </PersonCardControlWrapper>
           ) : (
