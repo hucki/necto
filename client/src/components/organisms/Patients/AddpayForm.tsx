@@ -1,7 +1,7 @@
-import { Tag, TagCloseButton, TagLabel, TagLeftIcon } from '@chakra-ui/react';
+import { Tag, TagLabel, TagLeftIcon } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import React, { useEffect, useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
+import { FaMinus, FaPlus } from 'react-icons/fa';
 import {
   useAddpayFreedomOfPatient,
   useCreateAddpayFreedom,
@@ -76,6 +76,7 @@ export const AddpayTags = ({
         : undefined;
     return (
       <Tag
+        as={isInteractive ? 'button' : undefined}
         key={yearsState.year}
         size={size}
         variant={isActive ? 'solid' : 'subtle'}
@@ -83,14 +84,10 @@ export const AddpayTags = ({
         onClick={isInteractive ? clickHandler : undefined}
         style={{ cursor: isInteractive ? 'pointer' : undefined }}
       >
-        {isInteractive && clickHandler && !isActive && !yearsState.disabled && (
-          <TagLeftIcon as={FaPlus} />
+        {isInteractive && clickHandler && !yearsState.disabled && (
+          <TagLeftIcon as={!isActive ? FaPlus : FaMinus} />
         )}
         <TagLabel style={{ textAlign: 'center' }}>{yearsState.year}</TagLabel>
-
-        {isInteractive && clickHandler && isActive && !yearsState.disabled && (
-          <TagCloseButton />
-        )}
       </Tag>
     );
   });
