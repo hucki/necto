@@ -18,6 +18,7 @@ import {
   RadioGroup,
   FormErrorMessage,
   useDisclosure,
+  InputRightElement,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 import { Event, NewEvent } from '../../../types/Event';
@@ -36,7 +37,7 @@ import utc from 'dayjs/plugin/utc';
 import { useAllPatients } from '../../../hooks/patient';
 import { useAllRooms } from '../../../hooks/rooms';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
-import { RiSearchLine, RiUserAddLine } from 'react-icons/ri';
+import { RiCloseLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri';
 import {
   PersonCard,
   PersonCardControlWrapper,
@@ -47,6 +48,7 @@ import { RecurringFrequency, RecurringInterval } from './types';
 import { PersonCreateModal } from '../Person/PersonCreateModal';
 import { FaTimes } from 'react-icons/fa';
 import { IconButton } from '../../atoms/Buttons';
+import * as colors from '../../../styles/colors';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -114,6 +116,11 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
               pl="2rem"
               ref={inputRef}
             />
+            <InputRightElement cursor="pointer" onClick={() => setSearch('')}>
+              <RiCloseLine
+                color={search ? colors.indigo : colors.indigoLighten80}
+              />
+            </InputRightElement>
           </InputGroup>
         </PopoverTrigger>
         <PopoverContent
