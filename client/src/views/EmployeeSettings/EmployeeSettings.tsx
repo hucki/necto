@@ -6,15 +6,7 @@ import {
   useCreateEmployee,
   useUpdateEmployee,
 } from '../../hooks/employees';
-import {
-  Contract,
-  Employee,
-  Employee2Team,
-  NewContract,
-  Team,
-} from '../../types/Employee';
-import { useAddEmployeeToTeam } from '../../hooks/teams';
-import { useAllTeams } from '../../hooks/teams';
+import { Contract, Employee, NewContract } from '../../types/Employee';
 import {
   FormLabel,
   FormControl,
@@ -23,19 +15,8 @@ import {
   Select,
   Checkbox,
 } from '../../components/Library';
-import {
-  Button,
-  Heading,
-  List,
-  ListIcon,
-  ListItem,
-  Stack,
-} from '@chakra-ui/react';
-import {
-  RiArrowDropRightLine,
-  RiEditFill,
-  RiUserAddLine,
-} from 'react-icons/ri';
+import { Button, Heading, Stack } from '@chakra-ui/react';
+import { RiEditFill, RiUserAddLine } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useAllUsers } from '../../hooks/user';
 import { colors } from '../../config/colors';
@@ -45,13 +26,12 @@ import {
   SettingsWrapper,
   SettingsGrid,
 } from '../../components/atoms/Wrapper';
-import { IconButton } from '../../components/atoms/Buttons';
-import { FaPlus } from 'react-icons/fa';
 import { useCreateContract, useUpdateContract } from '../../hooks/contract';
 import { useAllRooms } from '../../hooks/rooms';
 import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
 import ContractSummary from '../../components/molecules/DataDisplay/ContractSummary';
 import { getCurrentContract } from '../../helpers/contract';
+import { TeamsForm } from '../../components/organisms/Employee/TeamsForm';
 dayjs.extend(isBetween);
 
 interface ContractFormProps {
@@ -209,7 +189,7 @@ const ContractForm = ({
 const EmployeeSettings = () => {
   const { t } = useTranslation();
   const { isLoading, employees, refetch: refetchEmployees } = useAllEmployees();
-  const { isLoading: isLoadingTeams, teams } = useAllTeams();
+
   const { users } = useAllUsers();
   const { currentCompany } = useFilter();
 
@@ -218,8 +198,6 @@ const EmployeeSettings = () => {
   const { mutateAsync: updateEmployee } = useUpdateEmployee();
   const { mutateAsync: updateContract } = useUpdateContract();
   const { mutateAsync: createContract } = useCreateContract();
-  const { mutateAsync: addEmployeeToTeam, status: addEmployeeToTeamStatus } =
-    useAddEmployeeToTeam();
 
   const [currentEmployee, setCurrentEmployee] = useState<
     Employee | undefined
@@ -265,20 +243,14 @@ const EmployeeSettings = () => {
     }
     return defaultContract;
   });
-  const [currentTeam, setCurrentTeam] = useState<Team | undefined>();
+
   const [state, setState] = useState<'view' | 'edit'>('view');
-  const remainingTeams = teams.filter(
-    (t) => !currentEmployee?.teams?.find((ct) => ct.team.uuid === t.uuid)
-  );
 
   useEffect(() => {
     if (!isLoading && employees.length) {
       setCurrentEmployee(employees[0]);
     }
-    if (!isLoadingTeams && teams.length) {
-      setCurrentTeam(teams[0]);
-    }
-  }, [isLoading, isLoadingTeams]);
+  }, [isLoading]);
 
   const onEmployeeChangeHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -309,10 +281,6 @@ const EmployeeSettings = () => {
     }));
   };
 
-  const onTeamChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentTeam(teams.filter((t) => t.uuid === event.target.value)[0]);
-  };
-
   const handleCreateEmployee = async () => {
     if (!currentCompany?.uuid) {
       return;
@@ -334,16 +302,6 @@ const EmployeeSettings = () => {
     });
   };
 
-  const handleAddEmployeeToTeam = () => {
-    if (currentTeam && currentEmployee) {
-      const employee2Team: Employee2Team = {
-        employee: currentEmployee,
-        team: currentTeam,
-      };
-      addEmployeeToTeam({ employee2Team });
-      refetchEmployees();
-    }
-  };
   const cancelEdit = () => {
     setState((currentState) => (currentState === 'view' ? 'edit' : 'view'));
   };
@@ -552,55 +510,10 @@ const EmployeeSettings = () => {
         </SettingsWrapper>
 
         <SettingsWrapper>
-          {currentEmployee.teams?.length ? (
-            <>
-              <Heading as="h3" size="sm" mb="2" mt="5">
-                {t('label.currentTeams')}
-              </Heading>
-              <List style={{ marginBottom: '10px' }}>
-                {currentEmployee.teams.map((t, i) => (
-                  <ListItem key={i}>
-                    <ListIcon as={RiArrowDropRightLine} />
-                    {t.team.displayName}
-                  </ListItem>
-                ))}
-              </List>
-            </>
-          ) : (
-            <span>{t('warning.employeeSettings.noTeamSelected')}</span>
-          )}
-          {currentTeam && remainingTeams.length > 0 && (
-            <ControlWrapper>
-              <FormControl id="team" m={'15px auto 10px auto'}>
-                <Select
-                  name="team"
-                  value={currentTeam.uuid}
-                  onChange={onTeamChangeHandler}
-                  disabled={
-                    state !== 'edit' || addEmployeeToTeamStatus !== 'idle'
-                  }
-                >
-                  {remainingTeams.map((t, i) => (
-                    <option key={i} value={t.uuid}>
-                      {t.displayName}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>team to add to:</FormLabel>
-              </FormControl>
-              <IconButton
-                aria-label="add employee to team"
-                icon={<FaPlus />}
-                alignSelf="center"
-                type="button"
-                onClick={handleAddEmployeeToTeam}
-                disabled={
-                  state !== 'edit' || addEmployeeToTeamStatus !== 'idle'
-                }
-                colorScheme="green"
-              />
-            </ControlWrapper>
-          )}
+          <TeamsForm
+            employeeId={currentEmployee.uuid}
+            isReadOnly={state === 'view'}
+          />
         </SettingsWrapper>
       </SettingsGrid>
     </>
