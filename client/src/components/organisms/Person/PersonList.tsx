@@ -140,28 +140,36 @@ function PersonList({
       setCurrentPage(1);
     }
   }, [search]);
+
   const filteredPatients: Patient[] | WaitingPatient[] =
     isWaitingPatientList(persons) || isPatientList(persons)
       ? (persons
-          .filter(
-            (person: Patient | WaitingPatient) =>
-              ((isPatient(person) || isWaitingPatient(person)) &&
-                person.firstName
-                  .toLowerCase()
-                  .includes(search.toLowerCase())) ||
-              person.lastName.toLowerCase().includes(search.toLowerCase()) ||
-              person.street?.toLowerCase().includes(search.toLowerCase()) ||
-              person.city?.toLowerCase().includes(search.toLowerCase()) ||
-              person.institution?.name
-                ?.toLowerCase()
-                .includes(search.toLowerCase()) ||
-              person.notices?.toLowerCase().includes(search.toLowerCase()) ||
-              person.contactData
-                ?.filter((contact) => contact.type === 'telephone')
-                .findIndex((contact) =>
-                  contact.contact.toLowerCase().includes(search.toLowerCase())
-                ) !== -1
-          )
+          .filter((person: Patient | WaitingPatient) => {
+            const searches = search.toLowerCase().split(/,| /);
+            const findings: boolean[] = [];
+            for (let i = 0; i < searches.length; i++) {
+              const found = (term: string) =>
+                ((isPatient(person) || isWaitingPatient(person)) &&
+                  person.firstName.toLowerCase().includes(term)) ||
+                person.lastName.toLowerCase().includes(term) ||
+                person.street?.toLowerCase().includes(term) ||
+                person.city?.toLowerCase().includes(term) ||
+                person.institution?.name?.toLowerCase().includes(term) ||
+                person.notices?.toLowerCase().includes(term) ||
+                person.contactData
+                  ?.filter((contact) => contact.type === 'telephone')
+                  .findIndex((contact) =>
+                    contact.contact.toLowerCase().includes(term)
+                  ) !== -1;
+              if (searches[i] === '') continue;
+              if (found(searches[i])) findings.push(true);
+            }
+            if (
+              searches.filter((term) => term !== '').length === findings.length
+            )
+              return true;
+            return false;
+          })
           .filter((person) => {
             return !waitingPreferenceFilter.length
               ? true
@@ -172,18 +180,27 @@ function PersonList({
       : ([] as Patient[] | WaitingPatient[]);
 
   const allDoctors = isDoctorList(persons) ? persons : [];
-  const filteredDoctors = allDoctors.filter(
-    (person: Doctor) =>
-      person.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      person.lastName.toLowerCase().includes(search.toLowerCase()) ||
-      person.street?.toLowerCase().includes(search.toLowerCase()) ||
-      person.city?.toLowerCase().includes(search.toLowerCase()) ||
-      person.contactData
-        ?.filter((contact) => contact.type === 'telephone')
-        .findIndex((contact) =>
-          contact.contact.toLowerCase().includes(search.toLowerCase())
-        ) !== -1
-  );
+  const filteredDoctors = allDoctors.filter((person: Doctor) => {
+    const searches = search.toLowerCase().split(/,| /);
+    const findings: boolean[] = [];
+    for (let i = 0; i < searches.length; i++) {
+      const found = (term: string) =>
+        person.firstName.toLowerCase().includes(term) ||
+        person.lastName.toLowerCase().includes(term) ||
+        person.street?.toLowerCase().includes(term) ||
+        person.city?.toLowerCase().includes(term) ||
+        person.contactData
+          ?.filter((contact) => contact.type === 'telephone')
+          .findIndex((contact) =>
+            contact.contact.toLowerCase().includes(term)
+          ) !== -1;
+      if (searches[i] === '') continue;
+      if (found(searches[i])) findings.push(true);
+    }
+    if (searches.filter((term) => term !== '').length === findings.length)
+      return true;
+    return false;
+  });
 
   const filteredPersons: Person[] =
     listType === 'doctors'
