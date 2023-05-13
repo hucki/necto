@@ -1,4 +1,5 @@
 import styled from '@emotion/styled/macro';
+import { Color, colors } from '../../styles/theming';
 
 interface CalendarEntryContainerProps {
   bgColor?: string;
@@ -31,7 +32,7 @@ const CalendarEntryContainer = styled.div(
   },
   ({ bgColor, checked = false }: CalendarEntryContainerProps) => {
     const styles = {
-      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      backgroundColor: colors.red[100],
       fontSize: '0.6em',
       fontWeight: '300',
       paddingRight: checked ? '0.8rem' : '0.1rem',
@@ -45,13 +46,10 @@ const CalendarEntryContainer = styled.div(
         content: checked ? '"L"' : '""',
       },
     };
+
     if (bgColor) {
-      styles.backgroundColor = `var(--bg${
-        bgColor[0].toUpperCase() + bgColor.substring(1)
-      })`;
-      styles.borderColor = `var(--bg${
-        bgColor[0].toUpperCase() + bgColor.substring(1)
-      }Border)`;
+      styles.backgroundColor = colors[bgColor as Color][100];
+      styles.borderColor = colors[bgColor as Color][400];
     }
     return styles;
   }

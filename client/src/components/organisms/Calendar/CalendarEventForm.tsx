@@ -48,7 +48,7 @@ import { RecurringFrequency, RecurringInterval } from './types';
 import { PersonCreateModal } from '../Person/PersonCreateModal';
 import { FaTimes } from 'react-icons/fa';
 import { IconButton } from '../../atoms/Buttons';
-import * as colors from '../../../styles/colors';
+import { colors } from '../../../styles/theming';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -116,11 +116,11 @@ const PersonFilter = ({ persons, handleSelectPerson }: PersonFilterProps) => {
               pl="2rem"
               ref={inputRef}
             />
-            <InputRightElement cursor="pointer" onClick={() => setSearch('')}>
-              <RiCloseLine
-                color={search ? colors.indigo : colors.indigoLighten80}
-              />
-            </InputRightElement>
+            {search && (
+              <InputRightElement cursor="pointer" onClick={() => setSearch('')}>
+                <RiCloseLine color={colors.blue[400]} />
+              </InputRightElement>
+            )}
           </InputGroup>
         </PopoverTrigger>
         <PopoverContent
@@ -477,7 +477,7 @@ function CalendarEventForm({
           name="roomId"
           disabled={currentEvent.isHomeVisit}
           style={{
-            backgroundColor: currentEvent.roomId ? undefined : 'var(--bgNote)',
+            backgroundColor: currentEvent.roomId ? undefined : colors.note[100],
           }}
           value={currentEvent.roomId}
           onChange={onSelectChange}

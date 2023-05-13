@@ -19,7 +19,7 @@ import { Button, Heading, Stack } from '@chakra-ui/react';
 import { RiEditFill, RiUserAddLine } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useAllUsers } from '../../hooks/user';
-import { colors } from '../../config/colors';
+import { defaultColors } from '../../config/colors';
 import { useFilter } from '../../hooks/useFilter';
 import {
   ControlWrapper,
@@ -32,6 +32,7 @@ import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
 import ContractSummary from '../../components/molecules/DataDisplay/ContractSummary';
 import { getCurrentContract } from '../../helpers/contract';
 import { TeamsForm } from '../../components/organisms/Employee/TeamsForm';
+import { Color, colors } from '../../styles/theming';
 dayjs.extend(isBetween);
 
 interface ContractFormProps {
@@ -148,13 +149,11 @@ const ContractForm = ({
           name="bgColor"
           value={contract.bgColor || 'green'}
           style={{
-            backgroundColor: `var(--bg${
-              bgColor[0].toUpperCase() + bgColor.substring(1)
-            })`,
+            backgroundColor: colors[bgColor as Color][100],
           }}
           onChange={handleContractChange}
         >
-          {colors.map((color, i) => (
+          {defaultColors.map((color, i) => (
             <option key={i} value={color}>
               {color}
             </option>
@@ -167,7 +166,7 @@ const ContractForm = ({
           disabled={disabled}
           name="roomId"
           style={{
-            backgroundColor: contract.roomId ? undefined : 'var(--bgNote)',
+            backgroundColor: contract.roomId ? undefined : colors.note[100],
           }}
           value={contract.roomId}
           onChange={handleContractChange}

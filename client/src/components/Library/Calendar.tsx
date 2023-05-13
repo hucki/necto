@@ -1,7 +1,8 @@
 import styled from '@emotion/styled/macro';
-import * as colors from '../../styles/colors';
+// import * as colors from '../../styles/colors';
+import { colors, Color } from '../../styles/theming';
 
-const calendarBorder = `1px solid ${colors.gray50}`;
+const calendarBorder = `1px solid ${colors.gray[200]}`;
 
 type CalendarCommonProps = {
   numOfHours: number;
@@ -49,7 +50,7 @@ const CalendarScale = styled.div(({ scaleWidth }: CalendarScaleProps) => ({
 const CalendarScaleHeader = styled.div(
   ({ numOfHours }: CalendarCommonProps) => ({
     height: `calc(100% / ${numOfHours})`,
-    backgroundColor: `${colors.base}`,
+    backgroundColor: `${colors.white}`,
   })
 );
 
@@ -57,9 +58,9 @@ const CalendarScaleItem = styled.div(({ numOfHours }: CalendarCommonProps) => ({
   height: `calc(100% / ${numOfHours})`,
   fontStyle: 'italic',
   fontSize: 'small',
-  backgroundColor: `${colors.base}`,
+  backgroundColor: `${colors.white}`,
   borderImageSlice: '1',
-  borderImageSource: `linear-gradient(to right, ${colors.base}, ${colors.gray50})`,
+  borderImageSource: `linear-gradient(to right, ${colors.white}, ${colors.gray[600]})`,
 }));
 
 const CalendarScaleTime = styled.div({
@@ -79,8 +80,8 @@ const CalendarColumnWrapper = styled.div({
 const CalendarColumnDayHeader = styled.div(
   ({ numOfHours, isToday }: CalendarColumnProps) => ({
     height: `calc((100% / ${numOfHours}) / 2)`,
-    backgroundColor: `${colors.base}`,
-    color: `${colors.gray}`,
+    backgroundColor: `${colors.white}`,
+    color: `${colors.gray[400]}`,
     fontWeight: isToday ? 'bold' : undefined,
     boxSizing: 'border-box',
     borderTop: isToday ? '0.2rem solid red' : '0.2rem solid transparent',
@@ -103,9 +104,7 @@ const CalendarColumnRessourceHeader = styled.div(
   }: CalendarRessourceProps & CalendarRessourceHeaderProps) => ({
     width: `calc(100% / ${numOfRessources})`,
     textAlign: 'center',
-    color: bgColor
-      ? `var(--bg${bgColor[0].toUpperCase() + bgColor.substring(1)}Text)`
-      : undefined,
+    color: bgColor ? colors[bgColor as Color][600] : undefined,
     fontWeight: 'bold',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -130,7 +129,7 @@ const CalendarColumnRessourceBody = styled.div(
       isPublicHoliday && !isWeekend
         ? 'linear-gradient( #3391 1%, #3393 1%)'
         : isWeekend
-        ? `linear-gradient(#3334 1%, ${colors.gray10} 1%)`
+        ? `linear-gradient(#3334 1%, ${colors.gray[50]} 1%)`
         : 'linear-gradient(rgb(218,220,224) 1%, transparent 1%)',
     backgroundSize: `1px calc(100% / ${numOfHours})`,
     borderRight: calendarBorder,
@@ -139,7 +138,7 @@ const CalendarColumnRessourceBody = styled.div(
 
 const DayHeaderLabel = styled.div({
   pointerEvents: 'none',
-  color: colors.gray80,
+  color: colors.gray[600],
   fontWeight: 'bold',
   overflow: 'hidden',
   whiteSpace: 'nowrap',
@@ -150,7 +149,7 @@ const DayHeaderLabel = styled.div({
 });
 const HolidayLabel = styled.div({
   pointerEvents: 'none',
-  color: colors.gray80,
+  color: colors.gray[600],
   fontWeight: 'bold',
   overflow: 'hidden',
   wordBreak: 'break-all',

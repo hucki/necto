@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import { BgColor } from '../../types/Colors';
+import { colors, Color } from '../../styles/theming';
 
 const ModalOverlay = styled(ChakraModalOverlay)({
   backgroundColor: 'rgba(0,0,0,0.3)',
@@ -36,9 +37,7 @@ const ModalHeader = styled(ChakraModalHeader)(
   },
   ({ bgColor = 'green' }: ModalHeaderProps) => {
     return {
-      backgroundColor: `var(--bg${
-        bgColor[0].toUpperCase() + bgColor.substring(1)
-      })`,
+      backgroundColor: colors[bgColor as Color][100],
     };
   }
 );
@@ -52,9 +51,7 @@ const ModalBody = styled(ChakraModalBody)(
   ({ bgColor }: ModalHeaderProps) => {
     if (bgColor) {
       return {
-        backgroundColor: `var(--bg${
-          bgColor[0].toUpperCase() + bgColor.substring(1)
-        })`,
+        backgroundColor: colors[bgColor as Color][100],
       };
     }
   }
@@ -68,9 +65,7 @@ const ModalFooter = styled(ChakraModalFooter)(
   ({ bgColor }: ModalHeaderProps) => {
     if (bgColor) {
       return {
-        backgroundColor: `var(--bg${
-          bgColor[0].toUpperCase() + bgColor.substring(1)
-        })`,
+        backgroundColor: colors[bgColor as Color][100],
       };
     }
   }
