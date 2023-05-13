@@ -11,6 +11,11 @@ export type AddpayFreedom = {
   freedUntil: Date;
 };
 
+export type AddpayFreedomInput = {
+  pid: string;
+  year: string;
+};
+
 export const patientUpdateKeys = [
   'uuid',
   'firstName',

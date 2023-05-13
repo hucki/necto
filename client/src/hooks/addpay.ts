@@ -6,7 +6,7 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { client } from '../services/ApiClient';
-import { AddpayFreedom } from '../types/Patient';
+import { AddpayFreedom, AddpayFreedomInput } from '../types/Patient';
 
 export function useAddpayFreedomOfPatient(patientId: string): UseQueryResult<
   AddpayFreedom[]
@@ -28,16 +28,18 @@ export function useAddpayFreedomOfPatient(patientId: string): UseQueryResult<
 export function useCreateAddpayFreedom(): UseMutationResult<
   AddpayFreedom,
   Error,
-  { addpayFreedom: AddpayFreedom },
+  { addpayFreedom: AddpayFreedomInput },
   string
 > {
   const queryClient = useQueryClient();
   const createAddpayFreedom = async ({
     addpayFreedom,
   }: {
-    addpayFreedom: AddpayFreedom;
+    addpayFreedom: AddpayFreedomInput;
   }): Promise<AddpayFreedom> => {
-    return client<AddpayFreedom>('addpay', { data: addpayFreedom });
+    return client<AddpayFreedomInput, AddpayFreedom>('addpay', {
+      data: addpayFreedom,
+    });
   };
   return useMutation(createAddpayFreedom, {
     onSuccess: () => {

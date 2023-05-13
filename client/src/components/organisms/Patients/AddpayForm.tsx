@@ -131,8 +131,7 @@ export const AddpayForm = ({
   const handleCreateAddpayFreedom = (year: number) => {
     const newAddpayFreedom = {
       pid: patientId,
-      freedFrom: new Date(`01-01-${year}`),
-      freedUntil: new Date(`12-31-${year}`),
+      year: year.toString(),
     };
     createAddpayFreedom({
       addpayFreedom: newAddpayFreedom,

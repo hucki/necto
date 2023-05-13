@@ -18,7 +18,12 @@ export const addAddpayFreedom = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const incomingAddpayFreedom = { ...req.body };
+    const year = req.body.year;
+    const incomingAddpayFreedom = {
+      pid: req.body.pid,
+      freedFrom: dayjs().date(1).month(0).year(year).toDate(),
+      freedUntil: dayjs().date(31).month(11).year(year).toDate(),
+    };
     const user = req.user as User;
     const createdAddpayFreedom = await prisma.addpayFreedom.create({
       data: {

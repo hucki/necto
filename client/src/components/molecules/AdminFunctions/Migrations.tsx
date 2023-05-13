@@ -33,8 +33,9 @@ export const Migrations = (): JSX.Element => {
         ) {
           const newAddpayFreedom = {
             pid: patients[i].uuid || '',
-            freedFrom: new Date(`01-01-${targetYear}`),
-            freedUntil: new Date(`12-31-${targetYear}`),
+            year: targetYear.toString(),
+            // freedFrom: new Date(`01-01-${targetYear}`),
+            // freedUntil: new Date(`12-31-${targetYear}`),
           };
           if (newAddpayFreedom.pid.length) {
             createAddpayFreedom({
