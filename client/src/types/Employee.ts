@@ -59,3 +59,15 @@ export type Employee2Team = {
   employee: Employee;
   team: Team;
 };
+
+export type AddEmployeeToTeamVariables = {
+  employeeId: Employee['uuid'];
+  teamId: Team['uuid'];
+};
+
+export type RemoveEmployeeToTeamVariables = AddEmployeeToTeamVariables;
+
+export type TeamEmployeeRelation = {
+  teamId: Team['uuid'];
+  employeeId: Employee['uuid'];
+};
