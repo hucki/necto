@@ -95,7 +95,15 @@ router.get('/teams', teamController.getAllTeams);
 // router.post('/teams', teamController.addTeam);
 
 // employeeToTeam routes
+router.get(
+  '/employee2team/:employeeId',
+  employeeToTeamController.getTeamsOfEmployee
+);
 router.post('/employee2team', employeeToTeamController.addEmployeeToTeam);
+router.delete(
+  '/employee2team',
+  employeeToTeamController.removeEmployeeFromTeam
+);
 
 // contract routes
 router.get('/contracts', contractController.getAllContracts);
