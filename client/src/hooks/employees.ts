@@ -12,7 +12,7 @@ export function useEmployee(
   uuid: string
 ): UseQueryResult<Employee> & { employee: Employee | undefined } {
   const employeeQuery = useQuery(['employee', uuid], async () => {
-    return client<Employee>(`employees/${uuid}`);
+    return client<Employee>(`employee/${uuid}`);
   });
   const employee = employeeQuery.data;
   return {
