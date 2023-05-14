@@ -9,10 +9,14 @@ import { client } from '../services/ApiClient';
 import { Employee, NewEmployee } from '../types/Employee';
 
 export function useEmployee(
-  uuid: string
+  uuid?: string
 ): UseQueryResult<Employee> & { employee: Employee | undefined } {
-  const employeeQuery = useQuery(['employee', uuid], async () => {
-    return client<Employee>(`employee/${uuid}`);
+  const employeeQuery = useQuery({
+    queryKey: ['employee', uuid],
+    queryFn: async () => {
+      return client<Employee>(`employee/${uuid}`);
+    },
+    enabled: !!uuid,
   });
   const employee = employeeQuery.data;
   return {

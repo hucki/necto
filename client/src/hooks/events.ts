@@ -173,10 +173,14 @@ export function useDaysEvents(
 }
 
 export function useEmployeeEvents(
-  employeeId: string
+  employeeId?: string
 ): UseQueryResult<Event[]> & { employeeEvents: Event[] } {
-  const employeeEventsQuery = useQuery(['events', employeeId], async () => {
-    return client<Event[]>(`events/e/${employeeId}`);
+  const employeeEventsQuery = useQuery({
+    queryKey: ['events', employeeId],
+    queryFn: async () => {
+      return client<Event[]>(`events/e/${employeeId}`);
+    },
+    enabled: !!employeeId,
   });
 
   const employeeEvents = employeeEventsQuery.data ?? [];

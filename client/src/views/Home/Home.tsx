@@ -75,8 +75,8 @@ const Home = () => {
     ? 'day'
     : 'evening';
 
-  const employeeEventsResult = useEmployeeEvents(user?.employeeId || '');
-  const { employee } = useEmployee(user?.employeeId || '');
+  const employeeEventsResult = useEmployeeEvents(user?.employeeId);
+  const { employee } = useEmployee(user?.employeeId);
 
   const upcomingEvents = employeeEventsResult
     ? employeeEventsResult.employeeEvents
