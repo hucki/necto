@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Divider } from '@chakra-ui/react';
+import { Divider, useColorModeValue } from '@chakra-ui/react';
 import {
   IoBusinessOutline,
   IoCalendarNumberOutline,
@@ -31,6 +31,7 @@ interface SideNavProps {
 const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
   const { pathname: currentView } = useLocation();
   const { user, logMeOut } = useContext(AuthContext);
+  const bgSideNav = useColorModeValue('white', 'gray');
   const navigate = useNavigate();
   const onClickHandler = (route: string) => {
     navigate(route);
@@ -45,7 +46,7 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
     <>
       <SideNavOverlay isOpen={isOpen} onClick={onClose} />
 
-      <SideNavContainer isOpen={isOpen}>
+      <SideNavContainer isOpen={isOpen} bg={bgSideNav}>
         {user && (
           <>
             {/* Basics */}

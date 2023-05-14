@@ -1,3 +1,3 @@
-import { colors } from '../config/colors';
+import { defaultColors } from '../config/colors';
 
-export type BgColor = typeof colors[number];
+export type BgColor = (typeof defaultColors)[number];

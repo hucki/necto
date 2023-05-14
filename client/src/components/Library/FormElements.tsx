@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
 import { User } from '../../types/User';
+import { colors } from '../../styles/theming';
 
 const inputStyles = {
   border: '1px solid #ababab',
@@ -148,7 +149,7 @@ const LabelledSelect = ({
         onChange={onChangeHandler}
         style={{
           backgroundColor:
-            !value || value === 'remove' ? 'var(--bgNote)' : undefined,
+            !value || value === 'remove' ? colors.note[100] : undefined,
         }}
       >
         {hasOptionNoSelection && (

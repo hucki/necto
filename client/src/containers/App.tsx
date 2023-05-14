@@ -7,6 +7,7 @@ import { AuthProvider } from '../providers/AuthProvider';
 import { AuthChecker } from './AuthChecker';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configureStore } from '@reduxjs/toolkit';
+import theme from '../styles/theme';
 
 const queryClient = new QueryClient();
 
@@ -17,7 +18,7 @@ function App() {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <ChakraProvider>
+          <ChakraProvider theme={theme}>
             <Container m={0} p={0}>
               <Router>
                 <AuthChecker />
