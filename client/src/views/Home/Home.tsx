@@ -18,6 +18,8 @@ import { useAllUsers } from '../../hooks/user';
 import { AuthContext } from '../../providers/AuthProvider';
 import { Event } from '../../types/Event';
 import { isAuthorized } from '../../config/home';
+import { useEmployee } from '../../hooks/employees';
+import { TimeSheet } from '../../components/organisms/Employee/TimeSheet';
 
 interface EmployeeEventAccordionItemProps {
   employeeId: string;
@@ -74,11 +76,14 @@ const Home = () => {
     : 'evening';
 
   const employeeEventsResult = useEmployeeEvents(user?.employeeId || '');
+  const { employee } = useEmployee(user?.employeeId || '');
 
   const upcomingEvents = employeeEventsResult
-    ? employeeEventsResult.employeeEvents.filter((e) =>
-        dayjs(e.startTime).isAfter(now)
-      )
+    ? employeeEventsResult.employeeEvents
+        .filter((e) => dayjs(e.startTime).isAfter(now))
+        .sort((a, b) =>
+          dayjs(a.startTime).isBefore(dayjs(b.startTime)) ? 1 : -1
+        )
     : [];
   return (
     <>
@@ -147,6 +152,26 @@ const Home = () => {
               employeeId={user.employeeId}
               now={now}
             />
+          )}
+          {user && employee && isAuthorized(user, 'personalTimesheet') && (
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <Box
+                    flex="1"
+                    textAlign="left"
+                    display="flex"
+                    flexDirection="row"
+                  >
+                    <span>Zeitkonto</span>
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                <TimeSheet employee={employee} />
+              </AccordionPanel>
+            </AccordionItem>
           )}
         </Accordion>
       </div>

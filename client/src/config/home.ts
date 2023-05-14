@@ -10,6 +10,9 @@ export const authorizedHome = {
   employeeEvents: {
     rolesWithAccess: ['admin', 'planner', 'employee'],
   },
+  personalTimesheet: {
+    rolesWithAccess: ['admin'],
+  },
 };
 
 export type HomeItem = keyof typeof authorizedHome;
