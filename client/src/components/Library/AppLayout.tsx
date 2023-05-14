@@ -31,7 +31,7 @@ const Sidebar = styled.div(
 interface SideNavContainerProps {
   isOpen?: boolean;
 }
-const SideNavContainer = styled.div(
+const SideNavContainer = styled(Box)(
   {
     paddingTop: '3.5rem',
     height: '100%' /* 100% Full-height */,
@@ -40,7 +40,6 @@ const SideNavContainer = styled.div(
     zIndex: '2' /* Stay on top */,
     top: '0' /* Stay at the top */,
     left: '0',
-    backgroundColor: 'linen',
     overflowX: 'hidden' /* Disable horizontal scroll */,
     transition:
       '0.5s' /* 0.5 second transition effect to slide in the sidenav */,
@@ -72,7 +71,7 @@ const ContentContainer = styled(Box)({
   display: 'grid',
   gridTemplateRows: 'auto minmax(0, 1fr) auto',
   gridTemplateAreas: '"header" "content" "footer"',
-  backgroundColor: 'linen',
+  // backgroundColor: 'linen',
 });
 
 const Header = styled(Box)({
@@ -82,7 +81,6 @@ const Header = styled(Box)({
   justifyContent: 'flex-end',
   width: '100%',
   height: 'clamp(52px, 5vh)',
-  backgroundColor: 'linen',
   boxShadow: '-2px 0 15px #3333 inset',
 });
 
@@ -91,10 +89,9 @@ const Content = styled(Box)({
   height: '100%',
   padding: '0.25rem',
   overflow: 'auto',
-  backgroundColor: 'white',
 });
 
-const Footer = styled.div({
+const Footer = styled(Box)({
   gridArea: 'footer',
   fontSize: 'small',
   width: '100%',
@@ -103,7 +100,6 @@ const Footer = styled.div({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  backgroundColor: 'linen',
   boxShadow: '2px 0 15px #3333 inset',
 });
 

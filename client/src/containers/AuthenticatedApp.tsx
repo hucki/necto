@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { NavToggle } from '../components/molecules/Nav/NavToggle';
 import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { useColorModeValue } from '@chakra-ui/react';
 
 interface AuthenticatedAppInputProps {
   id: string;
@@ -25,6 +26,9 @@ interface AuthenticatedAppInputProps {
 
 function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
   const { pathname: currentView } = useLocation();
+  // Here's the signature
+  const bgHeader = useColorModeValue('linen', 'black');
+  const bgMain = useColorModeValue('white', 'gray');
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -50,17 +54,17 @@ function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
         <SideNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
         <ErrorBoundary>
           <ContentContainer>
-            <Header>
+            <Header bg={bgHeader}>
               <HeaderBar />
             </Header>
-            <Content id="Content" pr={1}>
+            <Content id="Content" pr={1} bg={bgMain}>
               {isError ? (
                 <div className="error">an error occured</div>
               ) : (
                 <Dashboard id={id} style={{ height: '100%' }} />
               )}
             </Content>
-            <Footer>
+            <Footer bg={bgHeader}>
               <p>
                 {' '}
                 {currentView.length && (
