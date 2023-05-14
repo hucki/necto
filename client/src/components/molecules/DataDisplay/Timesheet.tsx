@@ -72,7 +72,13 @@ const Timesheet = ({
 }: TimesheetProps) => {
   const { t } = useTranslation();
   const columnHelper = createColumnHelper<TimesheetDay>();
-
+  type GetInterpretedValueProps = {
+    value?: string | number;
+  };
+  const getInterpretedValue = ({ value = '-' }: GetInterpretedValueProps) => {
+    if (typeof value === 'string') return value;
+    return value === 0 ? '-' : value.toFixed(2);
+  };
   const columns = [
     columnHelper.group({
       id: 'day',
@@ -88,25 +94,24 @@ const Timesheet = ({
         }),
         columnHelper.accessor('targetTimeOfDay', {
           header: 'Soll',
-          cell: (info) => info.getValue() || '-',
+          cell: (info) => getInterpretedValue({ value: info.getValue() }),
         }),
         columnHelper.accessor('plannedTimeOfDay', {
           header: 'Plan',
-          cell: (info) => info.getValue() || '-',
+          cell: (info) => getInterpretedValue({ value: info.getValue() }),
         }),
         columnHelper.accessor('timeOfDay', {
           header: 'Ist',
-          cell: (info) =>
-            info.getValue() != 0 ? <b>{info.getValue()}</b> : '-',
+          cell: (info) => getInterpretedValue({ value: info.getValue() }),
         }),
         columnHelper.accessor('timeDiffOfDay', {
           header: 'Diff',
           cell: (info) => {
-            const value = info.getValue() || '-';
-            if (typeof value === 'string') return value;
+            const value = getInterpretedValue({ value: info.getValue() });
+            if (value === '-') return value;
             return (
-              <b style={{ color: value < 0 ? 'red' : undefined }}>
-                {value.toFixed(2)}
+              <b style={{ color: parseInt(value) < 0 ? 'red' : undefined }}>
+                {value}
               </b>
             );
           },
