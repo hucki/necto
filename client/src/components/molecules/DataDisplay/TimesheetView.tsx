@@ -8,9 +8,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { EventsOfDay, TimesheetDay } from '../../organisms/Employee/SingleView';
 import ContractSummary from './ContractSummary';
 import { useTranslation } from 'react-i18next';
+import { EventsOfDay, TimesheetDay } from '../../organisms/Employee/TimeSheet';
 
 const TimesheetHeader = styled.div({
   padding: '0.5rem',
@@ -53,7 +53,7 @@ const Styles = styled.div`
   }
 `;
 
-type TimesheetProps = {
+type TimesheetViewProps = {
   year: number;
   /**
    * zero based month -> 0 = January
@@ -63,13 +63,13 @@ type TimesheetProps = {
   name: string;
   currentTimesheet: TimesheetDay[];
 };
-const Timesheet = ({
+const TimesheetView = ({
   year,
   month,
   contract,
   name,
   currentTimesheet,
-}: TimesheetProps) => {
+}: TimesheetViewProps) => {
   const { t } = useTranslation();
   const columnHelper = createColumnHelper<TimesheetDay>();
   type GetInterpretedValueProps = {
@@ -223,4 +223,4 @@ const Timesheet = ({
   );
 };
 
-export default Timesheet;
+export default TimesheetView;
