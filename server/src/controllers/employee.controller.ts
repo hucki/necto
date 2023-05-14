@@ -35,6 +35,36 @@ export const getAllEmployees = async (
     next(e);
   }
 };
+export const getOneEmployee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const employeeId = req.params.employeeId;
+  try {
+    const employee = await prisma.employee.findUnique({
+      where: { uuid: employeeId },
+      include: {
+        contract: {
+          where: {
+            validUntil: null,
+          },
+        },
+        teams: {
+          select: {
+            team: true,
+          },
+        },
+        user: true,
+      },
+    });
+    res.json(employee);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
 
 export const getAllActiveEmployees = async (
   req: Request,
