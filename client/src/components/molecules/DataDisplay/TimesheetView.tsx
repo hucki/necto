@@ -172,11 +172,11 @@ const TimesheetView = ({
               <StatLabel>Jahr</StatLabel>
               <StatNumber>{year}</StatNumber>
             </Stat>
-            <Stat>
+            <Stat border="1px solid gray" padding="0.25rem">
               <StatLabel>Monat</StatLabel>
               <StatNumber>{monthName}</StatNumber>
             </Stat>
-            <Stat>
+            <Stat border="1px solid gray" padding="0.25rem">
               <StatLabel>Soll</StatLabel>
               <StatNumber>
                 {getInterpretedValue({ value: stats.targetTimeOfDay })}
@@ -188,13 +188,13 @@ const TimesheetView = ({
                 {getInterpretedValue({ value: stats.plannedTimeOfDay })}
               </StatNumber>
             </Stat> */}
-            <Stat>
+            <Stat border="1px solid gray" padding="0.25rem">
               <StatLabel>Ist</StatLabel>
               <StatNumber>
                 {getInterpretedValue({ value: stats.timeOfDay })}
               </StatNumber>
             </Stat>
-            <Stat>
+            <Stat border="1px solid gray" padding="0.25rem">
               <StatLabel>Diff</StatLabel>
               <StatNumber color={stats.timeDiffOfDay < 0 ? 'red' : undefined}>
                 {getInterpretedValue({ value: stats.timeDiffOfDay })}
