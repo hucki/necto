@@ -19,6 +19,7 @@ export type HomeItem = keyof typeof authorizedHome;
 
 export const isAuthorized = (user: MinimalUser, homeItem: HomeItem) => {
   const { rolesWithAccess } = authorizedHome[homeItem];
+  console.log({ rolesWithAccess, roles: user.roles });
   for (let i = 0; i < rolesWithAccess.length; i++) {
     if (user.roles?.find((role) => role === rolesWithAccess[i])) return true;
   }
