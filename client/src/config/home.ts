@@ -11,7 +11,7 @@ export const authorizedHome = {
     rolesWithAccess: ['admin', 'planner', 'employee'],
   },
   personalTimesheet: {
-    rolesWithAccess: ['admin'],
+    rolesWithAccess: ['admin', 'planner', 'employee'],
   },
 };
 
