@@ -11,6 +11,7 @@ import {
 import ContractSummary from './ContractSummary';
 import { useTranslation } from 'react-i18next';
 import { EventsOfDay, TimesheetDay } from '../../organisms/Employee/TimeSheet';
+import { Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
 
 const TimesheetHeader = styled.div({
   padding: '0.5rem',
@@ -26,10 +27,12 @@ const TimeframeLabel = styled.div({
 });
 const Styles = styled.div`
   padding: 0.5rem;
+  overflow: scroll;
 
   table {
     border-spacing: 0;
     border: 1px solid black;
+    font-size: 12px;
 
     tr {
       :last-child {
@@ -72,6 +75,7 @@ const TimesheetView = ({
 }: TimesheetViewProps) => {
   const { t } = useTranslation();
   const columnHelper = createColumnHelper<TimesheetDay>();
+  const stats = currentTimesheet.find((row) => row.dayOfMonth === 99);
   type GetInterpretedValueProps = {
     value?: string | number;
   };
@@ -86,7 +90,10 @@ const TimesheetView = ({
       columns: [
         columnHelper.accessor('dayOfMonth', {
           header: 'Nr',
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            const value = info.getValue();
+            return value !== 99 ? value : '';
+          },
         }),
         columnHelper.accessor('weekdayName', {
           header: 'Tag',
@@ -156,11 +163,45 @@ const TimesheetView = ({
     <>
       <TimesheetHeader>
         <TimeframeLabel>
-          <span>
-            {`${t('employee.timesheet.label')} ${year} / ${monthName}`}{' '}
-          </span>
+          <span>{t('employee.timesheet.label')}</span>
           <span>{name}</span>
         </TimeframeLabel>
+        {stats && (
+          <StatGroup bg="white">
+            <Stat border="1px solid gray" padding="0.25rem">
+              <StatLabel>Jahr</StatLabel>
+              <StatNumber>{year}</StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Monat</StatLabel>
+              <StatNumber>{monthName}</StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Soll</StatLabel>
+              <StatNumber>
+                {getInterpretedValue({ value: stats.targetTimeOfDay })}
+              </StatNumber>
+            </Stat>
+            {/* <Stat>
+              <StatLabel>Plan</StatLabel>
+              <StatNumber>
+                {getInterpretedValue({ value: stats.plannedTimeOfDay })}
+              </StatNumber>
+            </Stat> */}
+            <Stat>
+              <StatLabel>Ist</StatLabel>
+              <StatNumber>
+                {getInterpretedValue({ value: stats.timeOfDay })}
+              </StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel>Diff</StatLabel>
+              <StatNumber color={stats.timeDiffOfDay < 0 ? 'red' : undefined}>
+                {getInterpretedValue({ value: stats.timeDiffOfDay })}
+              </StatNumber>
+            </Stat>
+          </StatGroup>
+        )}
         <div>{t('employee.timesheet.model')}:</div>
         <ContractSummary contract={contract} />
       </TimesheetHeader>

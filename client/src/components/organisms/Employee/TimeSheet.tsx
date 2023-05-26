@@ -195,6 +195,7 @@ export const TimeSheet = ({ employee }: TimeSheetProps) => {
       prev.timeOfDay += curr.timeOfDay;
       prev.timeDiffOfDay += curr.timeDiffOfDay;
       prev.targetTimeOfDay += curr.targetTimeOfDay;
+      prev.plannedTimeOfDay += curr.plannedTimeOfDay;
       return prev;
     },
     {
