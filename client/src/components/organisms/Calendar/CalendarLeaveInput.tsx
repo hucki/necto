@@ -18,6 +18,7 @@ import { Room } from '../../../types/Rooms';
 import { isEmployeeRessource } from './CalendarColumn';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
 import { useViewport } from '../../../hooks/useViewport';
+import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
@@ -70,7 +71,9 @@ const CalendarLeaveInput = ({
 
   const [newLeave, setNewLeave] = useState<NewEvent>(defaultLeave);
   const [chosenLeaveType, setChosenLeaveType] = useState<LeaveType>();
-  const { mutateAsync: createEvent } = useCreateEvent();
+  const { mutateAsync: createEvent, isIdle } = useCreateEvent();
+  const [isCreatingRecurringEvents, setIsCreatingRecurringEvents] =
+    useState(false);
   const [rruleOptions, setRruleOptions] = useState<Partial<Options>>({
     freq: RRule.DAILY,
     interval: 1,
@@ -96,6 +99,7 @@ const CalendarLeaveInput = ({
         const rruleObj = rrulestr(createdEvent.rrule);
         const rruleList = rruleObj?.all();
         if (rruleList && rruleList.length > 1) {
+          setIsCreatingRecurringEvents(true);
           const currentTZHour = dayjs.utc(rruleList[0]).local().hour();
           for (let i = 1; i < rruleList.length; i++) {
             const dt = dayjs(rruleList[i]).hour(currentTZHour);
@@ -107,6 +111,7 @@ const CalendarLeaveInput = ({
               event: nextEvent,
             });
           }
+          setIsCreatingRecurringEvents(false);
         }
         onClose();
       } catch (error) {
@@ -224,6 +229,8 @@ const CalendarLeaveInput = ({
     <>
       {!chosenLeaveType ? (
         <ChooseLeave />
+      ) : isPending ? (
+        <FullPageSpinner />
       ) : (
         <>
           <LabelledInput
@@ -250,6 +257,8 @@ const CalendarLeaveInput = ({
       )}
     </>
   );
+  const isPending = isCreatingRecurringEvents || !isIdle;
+
   return (
     <>
       <CalendarItemModal
@@ -261,6 +270,7 @@ const CalendarLeaveInput = ({
         modalBody={<ModalBodyContent />}
         modalFooter={
           <ModalFooterControls
+            isDisabled={isPending}
             onClose={onClose}
             onSubmit={chosenLeaveType ? handleSubmit : undefined}
           />
