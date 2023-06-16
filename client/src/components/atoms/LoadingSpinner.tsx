@@ -1,6 +1,7 @@
 import React from 'react';
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled/macro';
+import { SpinnerInfo } from '../Library/Messages';
 
 const spin = keyframes({
   '0%': { transform: 'rotate(0deg)' },
@@ -29,10 +30,14 @@ const FullSizeContainer = styled.div({
   justifyContent: 'center',
   alignItems: 'center',
 });
-function FullPageSpinner(): JSX.Element {
+type FullPageSpinnerProps = {
+  info?: string;
+};
+function FullPageSpinner({ info }: FullPageSpinnerProps): JSX.Element {
   return (
     <FullSizeContainer>
       <Spinner />
+      {info && <SpinnerInfo>{info}</SpinnerInfo>}
     </FullSizeContainer>
   );
 }
