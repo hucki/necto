@@ -22,6 +22,7 @@ import { ModalFooterControls } from './ModalFooterControls';
 import { Room } from '../../../types/Rooms';
 import { isEmployeeRessource } from './CalendarColumn';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
+import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -214,14 +215,18 @@ function CalendarEventInput({
         newEvent.type === 'note' ? 'note' : newEvent?.bgColor || 'green'
       }
       modalBody={
-        <>
-          {message && <ErrorMessage error={{ message }} />}
-          <CalendarEventForm
-            event={newEvent}
-            setMessage={setMessage}
-            handleChangedEvent={handleChangedEvent}
-          />
-        </>
+        isPending ? (
+          <FullPageSpinner info={newEvent.startTime.format('llll')} />
+        ) : (
+          <>
+            {message && <ErrorMessage error={{ message }} />}
+            <CalendarEventForm
+              event={newEvent}
+              setMessage={setMessage}
+              handleChangedEvent={handleChangedEvent}
+            />
+          </>
+        )
       }
       bodyBgColor={newEvent.type === 'note' ? 'note' : undefined}
       modalFooter={
