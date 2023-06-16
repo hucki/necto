@@ -185,7 +185,7 @@ const LabelledInput = ({
       isInvalid={Boolean(errorMessage)}
     >
       <Input
-        disabled={disabled}
+        isDisabled={disabled}
         type={type}
         name={name}
         autoComplete={autoComplete}
