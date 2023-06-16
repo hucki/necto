@@ -70,4 +70,10 @@ const Greeting = styled.div({
   padding: '1rem',
 });
 
-export { ErrorMessage, NotificationCount, Greeting };
+const SpinnerInfo = styled.div({
+  fontSize: '0.75rem',
+  height: '1.1rem',
+  lineHeight: '1.1rem',
+  textAlign: 'center',
+});
+export { ErrorMessage, NotificationCount, Greeting, SpinnerInfo };
