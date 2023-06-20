@@ -74,7 +74,14 @@ function AuthenticatedApp({ id }: AuthenticatedAppInputProps): JSX.Element {
                 <span role="img" aria-label="pizza">
                   🍕
                 </span>{' '}
-                by Hucki
+                by Hucki (
+                <span
+                  style={{ fontFamily: 'monospace' }}
+                  onClick={window ? () => window.location.reload() : undefined}
+                >
+                  v{process.env.REACT_APP_VERSION}
+                </span>
+                )
               </p>
             </Footer>
           </ContentContainer>
