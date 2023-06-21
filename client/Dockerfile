@@ -1,5 +1,4 @@
 ARG SKIP_PREFLIGHT_CHECK
-ARG REACT_APP_VERSION
 ARG REACT_APP_API_URL
 ARG REACT_APP_API_URL_PROD
 # build environment
@@ -8,12 +7,10 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 ARG SKIP_PREFLIGHT_CHECK
-ARG REACT_APP_VERSION
 ARG REACT_APP_API_URL
 ARG REACT_APP_API_URL_PROD
 ENV PATH /app/node_modules/.bin:$PATH
 ENV SKIP_PREFLIGHT_CHECK=${SKIP_PREFLIGHT_CHECK}
-ENV REACT_APP_VERSION=${REACT_APP_VERSION}
 ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 ENV REACT_APP_API_URL_PROD=${REACT_APP_API_URL_PROD}
 # Install app dependencies
@@ -22,6 +19,7 @@ RUN npm ci
 # Copy app to container
 COPY . ./
 # Run the "build" script in package.json
+RUN export REACT_APP_VERSION=$(npm run pkg version)
 RUN npm run build
 
 #production environment
