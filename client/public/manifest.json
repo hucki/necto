@@ -1,6 +1,7 @@
 {
   "short_name": "necto",
   "name": "necto - schedule together!",
+  "version": "0.1.1",
   "icons": [
     {
       "src": "favicon.ico",
