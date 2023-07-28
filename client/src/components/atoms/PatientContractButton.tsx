@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { usePDF } from '@react-pdf/renderer';
 import { Contract } from '../organisms/Documents/Contract';
 import { RiPrinterLine } from 'react-icons/ri';
@@ -10,11 +10,13 @@ import { IconButton } from './Buttons';
 type PatientContractButtonProps = {
   patient: Patient;
   company: Company;
+  handleReset: () => void;
 };
 
 export const PatientContractButton = ({
   patient,
   company,
+  handleReset,
 }: PatientContractButtonProps) => {
   const contractFileName = `vertrag_${(
     patient.lastName +
@@ -22,13 +24,9 @@ export const PatientContractButton = ({
     patient.firstName
   ).replace(' ', '')}_${dayjs().format('YYYYMMDD')}.pdf`;
 
-  const [instance, updateInstance] = usePDF({
+  const [instance] = usePDF({
     document: <Contract p={patient} c={company} />,
   });
-
-  useEffect(() => {
-    updateInstance();
-  }, [patient]);
 
   if (instance.error) return <div>Something went wrong: {instance.error}</div>;
 
@@ -42,6 +40,7 @@ export const PatientContractButton = ({
         icon={<RiPrinterLine />}
         download={contractFileName}
         colorScheme="blue"
+        onClick={handleReset}
       />
     </>
   );
