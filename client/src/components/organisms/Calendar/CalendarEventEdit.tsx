@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -10,6 +10,7 @@ import {
   MenuItem,
   Icon,
   Badge,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { BaseSyntheticEvent, useState } from 'react';
 import {
@@ -45,6 +46,9 @@ import {
 } from 'react-icons/ri';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
+import { isAuthorized } from '../../../config/eventHandling';
+import { AuthContext } from '../../../providers/AuthProvider';
+import { Alert } from '../../molecules/Error/Alert';
 dayjs.extend(LocalizedFormat);
 dayjs.locale('de');
 
@@ -62,6 +66,12 @@ function CalendarEventEdit({
   onClose,
 }: CalendarEventEditProps): JSX.Element {
   const { t } = useTranslation();
+  const {
+    isOpen: isOpenAlert,
+    onOpen: onOpenAlert,
+    onClose: onCloseAlert,
+  } = useDisclosure();
+  const { user } = useContext(AuthContext);
   const { isMobile } = useViewport();
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
@@ -188,9 +198,22 @@ function CalendarEventEdit({
       </MenuList>
     );
   };
-
+  const handleConfirmAlert = () => {
+    updateEvent({
+      event: {
+        ...changedEvent,
+        isDone: !changedEvent.isDone,
+      },
+    });
+    onCloseAlert();
+    onClose();
+  };
   const isFutureEvent = dayjs(changedEvent.endTime).isAfter(dayjs());
-  const disableDone = isFutureEvent || patientIsArchived || changedEvent.isDone;
+  const userCanChangeIsDone =
+    !isFutureEvent && user && isAuthorized(user, 'removeIsDone');
+  const disableDone =
+    !userCanChangeIsDone &&
+    (isFutureEvent || patientIsArchived || changedEvent.isDone);
   const disableCancel = patientIsArchived || changedEvent.isDone;
   const disableDelete =
     patientIsArchived ||
@@ -204,7 +227,6 @@ function CalendarEventEdit({
   );
   const isInvalid = isSameTime || endBeforeStart;
   const disableSubmit = isInvalid || isReadOnly;
-
   return (
     <>
       <Modal
@@ -221,7 +243,7 @@ function CalendarEventEdit({
             <ModalHeader
               bgColor={isNote ? 'note' : changedEvent?.bgColor || 'green'}
             >
-              {changedEvent.isDone !== true ? (
+              {!disableDone ? (
                 <IconButton
                   aria-label="set isDone"
                   isDisabled={disableDone}
@@ -232,10 +254,15 @@ function CalendarEventEdit({
                       <RiCheckboxBlankLine />
                     )
                   }
-                  onClick={handleDone}
+                  onClick={changedEvent.isDone ? onOpenAlert : handleDone}
                 />
               ) : (
-                <Icon as={RiCheckFill} w={8} h={8} fill="green" />
+                <Icon
+                  as={changedEvent.isDone ? RiCheckFill : RiCheckboxBlankLine}
+                  w={8}
+                  h={8}
+                  fill={changedEvent.isDone ? 'green' : 'gray'}
+                />
               )}
               <div>
                 <div className="modal-title">
@@ -440,6 +467,12 @@ function CalendarEventEdit({
           </ModalContent>
         </ModalOverlay>
       </Modal>
+      <Alert
+        onClose={onCloseAlert}
+        isOpen={isOpenAlert}
+        onConfirm={handleConfirmAlert}
+        type="isDone"
+      />
     </>
   );
 }
