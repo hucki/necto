@@ -135,6 +135,7 @@
     "isAddpayFreed": "freed?",
     "addPayFreedUntil": "freed for",
     "hasContract": "contract?",
+    "createContract": "create Contract",
     "notices": "notices",
     "firstContactAt": "Date of reception",
     "isWaitingSince": "Date for Waiting List",

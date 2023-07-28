@@ -136,6 +136,7 @@
     "isAddpayFreed": "befreit?",
     "addPayFreedUntil": "befreit für",
     "hasContract": "Vertrag?",
+    "createContract": "Vertrag erzeugen",
     "notices": "Notizen",
     "firstContactAt": "Anmeldedatum",
     "isWaitingSince": "Datum für Warteliste",
