@@ -70,7 +70,7 @@ const isWaitingPatient = (patient: Patient): boolean => {
 
 export const PersonForm = ({
   person,
-  isReadOnly = true,
+  isReadOnly: isReadOnlyIncoming = true,
   isPending = false,
   personType = 'patient',
   onChange,
@@ -80,6 +80,8 @@ export const PersonForm = ({
   const { currentCompany } = useFilter();
   const { isMobile } = useViewport();
   const { doctors } = useAllDoctors();
+  const [isCreatingContract, setIsCreatingContract] = useState(false);
+  const isReadOnly = isCreatingContract || isReadOnlyIncoming;
   const { mutateAsync: createPatientContact } = useCreatePatientContact();
   const { mutateAsync: createDoctorContact } = useCreateDoctorContact();
   const { institutions } = useAllInstitutions();
@@ -264,11 +266,23 @@ export const PersonForm = ({
               />
             </FormControl>
             {currentPatient &&
+              !currentPatient.hasContract &&
+              !isCreatingContract && (
+                <Button
+                  onClick={() => setIsCreatingContract(true)}
+                  colorScheme="orange"
+                >
+                  {t('label.createContract')}
+                </Button>
+              )}
+            {isCreatingContract &&
+              currentPatient &&
               currentCompany &&
               !currentPatient.hasContract && (
                 <PatientContractButton
                   patient={currentPatient}
                   company={currentCompany}
+                  handleReset={() => setIsCreatingContract(false)}
                 />
               )}
           </ModalFormGroup>
