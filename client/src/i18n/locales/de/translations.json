@@ -205,5 +205,12 @@
       "leaveWorthDescription": "Ein Tag Abwesenheit entspricht {{leaveWorthPerDay}} {{contractBase}}",
       "overruledBy": "übersteuert durch "
     }
+  },
+  "alert": {
+    "isDone": {
+      "dialogHeader": "erledigt entfernen?",
+      "dialogBody": "Möchtest Du den ✅ erledigt Haken für diesen Termin wieder entfernen?",
+      "dialogConfirm": "ja, weg damit!"
+    }
   }
 }
