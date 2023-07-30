@@ -25,13 +25,6 @@ export const Alert = ({
   const cancelRef = React.useRef(null);
   const { t } = useTranslation();
 
-  const i18nRefs = {
-    isDone: {
-      dialogHeader: 'alert.isDone.dialogHeader',
-      dialogBody: 'alert.isDone.dialogBody',
-      dialogConfirm: 'alert.isDone.dialogConfirm',
-    },
-  };
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -41,17 +34,17 @@ export const Alert = ({
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            {t(`${i18nRefs[type].dialogHeader}`)}
+            {t(`alert.${type}.dialogHeader`)}
           </AlertDialogHeader>
 
-          <AlertDialogBody>{t(i18nRefs[type].dialogBody)}</AlertDialogBody>
+          <AlertDialogBody>{t(`alert.${type}.dialogBody`)}</AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
               {t('button.cancel')}
             </Button>
             <Button colorScheme="red" onClick={onConfirm} ml={3}>
-              {t(i18nRefs[type].dialogConfirm)}
+              {t(`alert.${type}.dialogConfirm`)}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
