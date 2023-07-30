@@ -56,7 +56,7 @@ export const patientUpdateKeys = [
 export type PatientUpdate = (typeof patientUpdateKeys)[number];
 
 export type Patient = {
-  uuid?: string;
+  uuid: string;
   firstName: string;
   lastName: string;
   title?: string;
@@ -102,4 +102,5 @@ export type Patient = {
   addpayFreedom?: AddpayFreedom[];
 };
 
+export type NewPatient = Partial<Patient>;
 export type WaitingPatient = { numberInLine: number } & Patient;
