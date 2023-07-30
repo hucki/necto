@@ -55,7 +55,7 @@ export const WaitingSinceInput = ({
           defaultValue={defaultValueIsWaitingSince}
           onBlur={(e) => onInputChange({ event: e, key: 'isWaitingSince' })}
         />
-        <FormLabel>{t('label.isWaitingSince')}</FormLabel>
+        <FormLabel>{t('label.date')}</FormLabel>
       </FormControl>
       <FormControl id="isWaitingAgain" style={{ textAlign: 'center' }}>
         <Checkbox
