@@ -42,6 +42,7 @@ import { WaitingPreferenceForm } from '../Patients/WaitingPreferenceForm';
 import { getDisplayName } from '../../../helpers/displayNames';
 import { PatientContractButton } from '../../atoms/PatientContractButton';
 import { WaitingSinceInput } from '../Patients/WaitingSinceInput';
+import { PersonFormField } from './FormField';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -124,15 +125,6 @@ export const PersonForm = ({
       }
     }
   }, [currentPatient]);
-
-  const sharedAutoFields: PersonKey[] = ['title', 'street', 'zip', 'city'];
-
-  const patientAutoFields: PersonKey[] = ['gender', 'notices', 'medicalReport'];
-
-  const autoFormFieldKeys =
-    personType !== 'doctor'
-      ? sharedAutoFields.concat(patientAutoFields)
-      : sharedAutoFields;
 
   function onInputChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
@@ -396,44 +388,80 @@ export const PersonForm = ({
     );
   };
 
-  const autoFormFields = () => {
-    return Object.keys(currentPerson)
-      .filter(
-        (key) =>
-          autoFormFieldKeys.findIndex((element) => element === key) !== -1
-      )
-      .map((key) =>
-        typeof currentPerson[key as keyof Person] === 'string' ||
-        typeof currentPerson[key as keyof Person] === 'boolean' ? (
-          <ModalFormGroup key={key}>
-            <FormControl id={key}>
-              {typeof currentPerson[key as keyof Person] === 'boolean' ? (
-                <Checkbox
-                  name={key}
-                  isDisabled={isReadOnly || personNotCreated}
-                  size="lg"
-                  my={2}
-                  isChecked={currentPerson[key as keyof Person] ? true : false}
-                  onChange={(e) =>
-                    onCheckboxChange({ event: e, key: key as keyof Person })
-                  }
-                />
-              ) : (
-                <Input
-                  autoComplete="off"
-                  isDisabled={isReadOnly || personNotCreated}
-                  onChange={(e) =>
-                    onInputChange({ event: e, key: key as keyof Person })
-                  }
-                  id={key}
-                  value={currentPerson[key as keyof Person]?.toString()}
-                ></Input>
-              )}
-              <FormLabel>{t(`label.${key}`)}</FormLabel>
-            </FormControl>
-          </ModalFormGroup>
-        ) : null
-      );
+  const PersonBaseForm = () => {
+    return (
+      <SimpleGrid columns={2} columnGap={2} templateColumns="25% 75%">
+        <GridItem colSpan={2}>
+          <PersonFormField
+            fieldKey="street"
+            isDisabled={isReadOnly || personNotCreated}
+            onCheckboxChange={onCheckboxChange}
+            onInputChange={onInputChange}
+            person={currentPerson}
+          />
+        </GridItem>
+        <GridItem colSpan={1}>
+          <PersonFormField
+            fieldKey="zip"
+            isDisabled={isReadOnly || personNotCreated}
+            onCheckboxChange={onCheckboxChange}
+            onInputChange={onInputChange}
+            person={currentPerson}
+          />
+        </GridItem>
+        <GridItem colSpan={1}>
+          <PersonFormField
+            fieldKey="city"
+            isDisabled={isReadOnly || personNotCreated}
+            onCheckboxChange={onCheckboxChange}
+            onInputChange={onInputChange}
+            person={currentPerson}
+          />
+        </GridItem>
+        <GridItem colSpan={personType !== 'doctor' ? 1 : 2}>
+          <PersonFormField
+            fieldKey="title"
+            isDisabled={isReadOnly || personNotCreated}
+            onCheckboxChange={onCheckboxChange}
+            onInputChange={onInputChange}
+            person={currentPerson}
+          />
+        </GridItem>
+        {personType !== 'doctor' && (
+          <GridItem colSpan={1} width="25%">
+            <PersonFormField
+              fieldKey="gender"
+              isDisabled={isReadOnly || personNotCreated}
+              onCheckboxChange={onCheckboxChange}
+              onInputChange={onInputChange}
+              person={currentPerson}
+            />
+          </GridItem>
+        )}
+        {personType !== 'doctor' && (
+          <>
+            <GridItem colSpan={2}>
+              <PersonFormField
+                fieldKey="notices"
+                isDisabled={isReadOnly || personNotCreated}
+                onCheckboxChange={onCheckboxChange}
+                onInputChange={onInputChange}
+                person={currentPerson}
+              />
+            </GridItem>
+            <GridItem colSpan={2}>
+              <PersonFormField
+                fieldKey="medicalReport"
+                isDisabled={isReadOnly || personNotCreated}
+                onCheckboxChange={onCheckboxChange}
+                onInputChange={onInputChange}
+                person={currentPerson}
+              />
+            </GridItem>
+          </>
+        )}
+      </SimpleGrid>
+    );
   };
 
   return (
@@ -500,7 +528,7 @@ export const PersonForm = ({
             </FormGroup>
             {!personNotCreated && (
               <>
-                {autoFormFields()}
+                <PersonBaseForm />
                 {personType !== 'doctor' && <BirthdayInput />}
                 {phoneFromContact()}
                 {personType === 'doctor' && faxFromContact()}
@@ -574,7 +602,6 @@ export const PersonForm = ({
                       defaultValueIsWaitingSince={defaultValueIsWaitingSince}
                     />
                   ) : null}
-                  {/* <IsWaitingSinceInput /> */}
                 </ModalFormGroup>
                 <Divider m="1" />
                 {currentPatient.uuid ? (
