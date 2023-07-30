@@ -41,10 +41,22 @@ import { AddpayForm } from '../Patients/AddpayForm';
 import { WaitingPreferenceForm } from '../Patients/WaitingPreferenceForm';
 import { getDisplayName } from '../../../helpers/displayNames';
 import { PatientContractButton } from '../../atoms/PatientContractButton';
+import { WaitingSinceInput } from '../Patients/WaitingSinceInput';
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
 
+type PersonKey = keyof Patient;
+
+export interface OnInputChangeProps {
+  event: React.FormEvent<HTMLInputElement>;
+  key: PersonKey;
+}
+
+export interface OnContactChangeProps {
+  event: React.FormEvent<HTMLInputElement>;
+  id: string;
+}
 interface PersonFormProps {
   person: Person;
   isReadOnly: boolean;
@@ -54,19 +66,6 @@ interface PersonFormProps {
   onChange: (person: Person, contactDataCollection: ContactData[]) => void;
   onCreate: () => void;
 }
-
-const isWaitingPatient = (patient: Patient): boolean => {
-  if (patient.isWaitingAgain) return true;
-  if (patient.archived) return false;
-  if (!patient.events) return true;
-  if (!patient.events.length) return true;
-  if (
-    patient.events.filter((event) => !event.isCancelled && !event.isDiagnostic)
-      .length
-  )
-    return false;
-  return false;
-};
 
 export const PersonForm = ({
   person,
@@ -125,7 +124,6 @@ export const PersonForm = ({
       }
     }
   }, [currentPatient]);
-  type PersonKey = keyof Patient;
 
   const sharedAutoFields: PersonKey[] = ['title', 'street', 'zip', 'city'];
 
@@ -135,16 +133,6 @@ export const PersonForm = ({
     personType !== 'doctor'
       ? sharedAutoFields.concat(patientAutoFields)
       : sharedAutoFields;
-
-  interface OnInputChangeProps {
-    event: React.FormEvent<HTMLInputElement>;
-    key: PersonKey;
-  }
-
-  interface OnContactChangeProps {
-    event: React.FormEvent<HTMLInputElement>;
-    id: string;
-  }
 
   function onInputChange({ event, key }: OnInputChangeProps) {
     event.preventDefault();
@@ -407,48 +395,7 @@ export const PersonForm = ({
       </ModalFormGroup>
     );
   };
-  const IsWaitingSinceInput = () => {
-    if (!currentPatient) return null;
-    return (
-      <FormGroup>
-        <FormControl id="isWaitingSince">
-          <Input
-            autoComplete="off"
-            type="date"
-            disabled={
-              isReadOnly ||
-              personNotCreated ||
-              !isWaitingPatient(currentPatient)
-            }
-            name="isWaitingSince"
-            defaultValue={defaultValueIsWaitingSince}
-            onBlur={(e) =>
-              onInputChange({ event: e, key: 'isWaitingSince' as keyof Person })
-            }
-          />
-          <FormLabel>{t('label.isWaitingSince')}</FormLabel>
-        </FormControl>
-        <FormControl id="isWaitingAgain" style={{ textAlign: 'center' }}>
-          <Checkbox
-            name="isWaitingAgain"
-            isDisabled={
-              isReadOnly ||
-              personNotCreated ||
-              (!(currentPerson as Patient).isWaitingAgain &&
-                isWaitingPatient(currentPatient))
-            }
-            size="lg"
-            my={2}
-            isChecked={(currentPerson as Patient).isWaitingAgain ? true : false}
-            onChange={(e) =>
-              onCheckboxChange({ event: e, key: 'isWaitingAgain' })
-            }
-          />
-          <FormLabel>{t('label.isWaitingAgain')}</FormLabel>
-        </FormControl>
-      </FormGroup>
-    );
-  };
+
   const autoFormFields = () => {
     return Object.keys(currentPerson)
       .filter(
@@ -618,7 +565,16 @@ export const PersonForm = ({
                     patientId={currentPatient.uuid}
                     isReadOnly={isReadOnly}
                   />
-                  <IsWaitingSinceInput />
+                  {currentPatient ? (
+                    <WaitingSinceInput
+                      patient={currentPatient}
+                      isDisabled={isReadOnly || personNotCreated}
+                      onCheckboxChange={onCheckboxChange}
+                      onInputChange={onInputChange}
+                      defaultValueIsWaitingSince={defaultValueIsWaitingSince}
+                    />
+                  ) : null}
+                  {/* <IsWaitingSinceInput /> */}
                 </ModalFormGroup>
                 <Divider m="1" />
                 {currentPatient.uuid ? (
