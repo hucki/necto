@@ -139,7 +139,7 @@
     "notices": "notices",
     "firstContactAt": "Date of reception",
     "isWaitingSince": "Date for Waiting List",
-    "isWaitingAgain": "Put on Waiting List",
+    "isWaitingAgain": "Put on?",
     "telephoneNumber": "telephone",
     "mailAddress": "email",
     "actions": "Actions",
