@@ -29,6 +29,7 @@ export const ContactInput = ({
           onChange={(e) => onChange({ event: e, id: contact.uuid || '' })}
           id={contact.uuid}
           value={contact.contact}
+          autocomplete="off"
         />
         <FormLabel>
           {contact.type === 'telephone' ? (
