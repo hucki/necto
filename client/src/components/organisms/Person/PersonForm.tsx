@@ -590,7 +590,6 @@ export const PersonForm = ({
                     <FormLabel>{t('label.institution')}</FormLabel>
                   </FormControl>
                 </ModalFormGroup>
-                <Divider m="1" />
                 <ModalFormGroup>
                   <Label>{t('label.waitingPreference')}</Label>
                   <WaitingPreferenceForm
@@ -598,13 +597,19 @@ export const PersonForm = ({
                     isReadOnly={isReadOnly}
                   />
                   {currentPatient ? (
-                    <WaitingSinceInput
-                      patient={currentPatient}
-                      isDisabled={isReadOnly || personNotCreated}
-                      onCheckboxChange={onCheckboxChange}
-                      onInputChange={onInputChange}
-                      defaultValueIsWaitingSince={defaultValueIsWaitingSince}
-                    />
+                    <>
+                      <Divider m="1" />
+                      <Label style={{ marginBottom: '0.5rem' }}>
+                        {t('menu.waiting')}
+                      </Label>
+                      <WaitingSinceInput
+                        patient={currentPatient}
+                        isDisabled={isReadOnly || personNotCreated}
+                        onCheckboxChange={onCheckboxChange}
+                        onInputChange={onInputChange}
+                        defaultValueIsWaitingSince={defaultValueIsWaitingSince}
+                      />
+                    </>
                   ) : null}
                 </ModalFormGroup>
                 <Divider m="1" />
