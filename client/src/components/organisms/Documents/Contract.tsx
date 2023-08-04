@@ -78,6 +78,9 @@ export const Contract = ({ p, c }: ContractProps) => {
       flexDirection: 'row',
     },
   });
+  const currentPhones = p.contactData
+    ?.filter((c) => c.type === 'telephone')
+    .map((contact) => contact.contact);
   const today = dayjs.utc(new Date()).format('DD.MM.YYYY');
   const addPayInfo = addPay
     .map((item) => item.year + ': ' + (item.addpayFreed ? 'ja' : 'nein'))
@@ -114,6 +117,12 @@ export const Contract = ({ p, c }: ContractProps) => {
             Geburtstag:{' '}
             {p.birthday
               ? dayjs(p.birthday).format('DD.MM.YYYY')
+              : '__________________________'}
+          </Text>
+          <Text>
+            Telefon:{' '}
+            {currentPhones?.length
+              ? currentPhones.join()
               : '__________________________'}
           </Text>
           <Text>
