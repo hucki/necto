@@ -223,8 +223,10 @@ export const PersonForm = ({
           <ModalFormGroup
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateColumns: '1fr 0.5fr 2fr',
               gap: '0.5rem',
+              backgroundColor: 'linen',
+              padding: '0.25rem',
             }}
           >
             {t('label.hasContract')}
@@ -245,21 +247,12 @@ export const PersonForm = ({
                 }
               />
             </FormControl>
-            {currentPatient &&
-              !currentPatient.hasContract &&
-              !isCreatingContract && (
-                <Button
-                  onClick={() => setIsCreatingContract(true)}
-                  colorScheme="orange"
-                >
-                  {t('label.createContract')}
-                </Button>
-              )}
-            {isCreatingContract &&
+            {isReadOnly &&
               currentPatient &&
               currentCompany &&
               !currentPatient.hasContract && (
                 <PatientContractButton
+                  isDisabled={false}
                   patient={currentPatient}
                   company={currentCompany}
                   handleReset={() => setIsCreatingContract(false)}
