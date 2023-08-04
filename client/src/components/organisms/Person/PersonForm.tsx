@@ -388,87 +388,6 @@ export const PersonForm = ({
     );
   };
 
-  const PersonBaseForm = () => {
-    return (
-      <SimpleGrid columns={3} columnGap={2} templateColumns="1fr 1fr 2fr">
-        <GridItem colSpan={3}>
-          <PersonFormField
-            fieldKey="street"
-            isDisabled={isReadOnly || personNotCreated}
-            onCheckboxChange={onCheckboxChange}
-            onInputChange={onInputChange}
-            person={currentPerson}
-          />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <PersonFormField
-            fieldKey="zip"
-            isDisabled={isReadOnly || personNotCreated}
-            onCheckboxChange={onCheckboxChange}
-            onInputChange={onInputChange}
-            person={currentPerson}
-          />
-        </GridItem>
-        <GridItem colSpan={2}>
-          <PersonFormField
-            fieldKey="city"
-            isDisabled={isReadOnly || personNotCreated}
-            onCheckboxChange={onCheckboxChange}
-            onInputChange={onInputChange}
-            person={currentPerson}
-          />
-        </GridItem>
-        <GridItem colSpan={personType !== 'doctor' ? 1 : 3}>
-          <PersonFormField
-            fieldKey="title"
-            isDisabled={isReadOnly || personNotCreated}
-            onCheckboxChange={onCheckboxChange}
-            onInputChange={onInputChange}
-            person={currentPerson}
-          />
-        </GridItem>
-        {personType !== 'doctor' && (
-          <>
-            <GridItem colSpan={1}>
-              <PersonFormField
-                fieldKey="gender"
-                isDisabled={isReadOnly || personNotCreated}
-                onCheckboxChange={onCheckboxChange}
-                onInputChange={onInputChange}
-                person={currentPerson}
-              />
-            </GridItem>
-            <GridItem colSpan={1}>
-              <BirthdayInput />
-            </GridItem>
-          </>
-        )}
-        {personType !== 'doctor' && (
-          <>
-            <GridItem colSpan={3}>
-              <PersonFormField
-                fieldKey="notices"
-                isDisabled={isReadOnly || personNotCreated}
-                onCheckboxChange={onCheckboxChange}
-                onInputChange={onInputChange}
-                person={currentPerson}
-              />
-            </GridItem>
-            <GridItem colSpan={3}>
-              <PersonFormField
-                fieldKey="medicalReport"
-                isDisabled={isReadOnly || personNotCreated}
-                onCheckboxChange={onCheckboxChange}
-                onInputChange={onInputChange}
-                person={currentPerson}
-              />
-            </GridItem>
-          </>
-        )}
-      </SimpleGrid>
-    );
-  };
-
   return (
     <>
       {isPending ? (
@@ -533,7 +452,86 @@ export const PersonForm = ({
             </FormGroup>
             {!personNotCreated && (
               <>
-                <PersonBaseForm />
+                <SimpleGrid
+                  columns={3}
+                  columnGap={2}
+                  templateColumns="1fr 1fr 2fr"
+                >
+                  <GridItem colSpan={3}>
+                    <PersonFormField
+                      fieldKey="street"
+                      isDisabled={isReadOnly || personNotCreated}
+                      onCheckboxChange={onCheckboxChange}
+                      onInputChange={onInputChange}
+                      person={currentPerson}
+                    />
+                  </GridItem>
+                  <GridItem colSpan={1}>
+                    <PersonFormField
+                      fieldKey="zip"
+                      isDisabled={isReadOnly || personNotCreated}
+                      onCheckboxChange={onCheckboxChange}
+                      onInputChange={onInputChange}
+                      person={currentPerson}
+                    />
+                  </GridItem>
+                  <GridItem colSpan={2}>
+                    <PersonFormField
+                      fieldKey="city"
+                      isDisabled={isReadOnly || personNotCreated}
+                      onCheckboxChange={onCheckboxChange}
+                      onInputChange={onInputChange}
+                      person={currentPerson}
+                    />
+                  </GridItem>
+                  <GridItem colSpan={personType !== 'doctor' ? 1 : 3}>
+                    <PersonFormField
+                      fieldKey="title"
+                      isDisabled={isReadOnly || personNotCreated}
+                      onCheckboxChange={onCheckboxChange}
+                      onInputChange={onInputChange}
+                      person={currentPerson}
+                    />
+                  </GridItem>
+                  {personType !== 'doctor' && (
+                    <>
+                      <GridItem colSpan={1}>
+                        <PersonFormField
+                          fieldKey="gender"
+                          isDisabled={isReadOnly || personNotCreated}
+                          onCheckboxChange={onCheckboxChange}
+                          onInputChange={onInputChange}
+                          person={currentPerson}
+                        />
+                      </GridItem>
+                      <GridItem colSpan={1}>
+                        <BirthdayInput />
+                      </GridItem>
+                    </>
+                  )}
+                  {personType !== 'doctor' && (
+                    <>
+                      <GridItem colSpan={3}>
+                        <PersonFormField
+                          fieldKey="notices"
+                          isDisabled={isReadOnly || personNotCreated}
+                          onCheckboxChange={onCheckboxChange}
+                          onInputChange={onInputChange}
+                          person={currentPerson}
+                        />
+                      </GridItem>
+                      <GridItem colSpan={3}>
+                        <PersonFormField
+                          fieldKey="medicalReport"
+                          isDisabled={isReadOnly || personNotCreated}
+                          onCheckboxChange={onCheckboxChange}
+                          onInputChange={onInputChange}
+                          person={currentPerson}
+                        />
+                      </GridItem>
+                    </>
+                  )}
+                </SimpleGrid>
                 {phoneFromContact()}
                 {personType === 'doctor' && faxFromContact()}
                 {emailFromContact()}
