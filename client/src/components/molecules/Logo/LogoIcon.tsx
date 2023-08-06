@@ -9,6 +9,7 @@ const wiggle = keyframes({
 });
 
 const IconWrapper = styled.div({
+  backgroundColor: 'linen',
   width: '4rem',
   height: '4rem',
   margin: '2rem',
