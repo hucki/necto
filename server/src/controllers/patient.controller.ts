@@ -195,6 +195,51 @@ export const getAllPatients = async (
   }
 };
 /**
+ * get filtered Patients by query params
+ */
+export const getFilteredPatients = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const filters = req.query;
+  try {
+    const patients = await prisma.patient.findMany({
+      where: {
+        archived: false,
+        ...filters,
+      },
+      include: {
+        contactData: true,
+        waitingPreferences: true,
+        doctor: true,
+        institution: true,
+        addpayFreedom: true,
+      },
+      orderBy: {
+        lastName: 'asc',
+      },
+    });
+    for (let i = 0; i < patients.length; i++) {
+      patients[i] = {
+        ...patients[i],
+        ...decryptPatient({
+          patient: patients[i],
+          fields: encryptedPatientFields,
+        }),
+      };
+      if (patients[i].contactData) {
+        patients[i].contactData = decryptContactData(patients[i].contactData);
+      }
+    }
+    res.json(patients);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+/**
  * get all archived Patients
  */
 export const getAllArchivedPatients = async (

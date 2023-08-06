@@ -163,6 +163,7 @@ router.patch(
 );
 router.patch('/patients/:patientId', patientController.updatePatient);
 router.get('/patients/waiting', patientController.getWaitingPatients);
+router.get('/patients/filtered', patientController.getFilteredPatients);
 router.post('/patients', patientController.addPatient);
 
 router.post(
