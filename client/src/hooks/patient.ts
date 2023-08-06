@@ -128,6 +128,28 @@ export function useAllPatients(): UseQueryResult<Patient[]> & {
   };
 }
 
+export function useFilteredPatients({
+  institutionId,
+}: {
+  institutionId: string;
+}): UseQueryResult<Patient[]> & {
+  patients: Patient[];
+} {
+  const patientsQuery = useQuery(['patients'], async () => {
+    const queryParams = { institutionId: institutionId };
+    return client<Patient[]>('patients/filtered/', {
+      queryParams: queryParams,
+    });
+  });
+
+  const patients = patientsQuery.data ?? [];
+
+  return {
+    patients,
+    ...patientsQuery,
+  };
+}
+
 export function useAllArchivedPatients(): UseQueryResult<Patient[]> & {
   archivedPatients: Patient[];
 } {
