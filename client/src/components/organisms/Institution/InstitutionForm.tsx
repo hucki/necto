@@ -7,6 +7,7 @@ import { Institution, InstitutionInput } from '../../../types/Institution';
 import { ContactInput } from '../../atoms/ContactData/ContactInput';
 import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
 import { FormLabel, Input, Checkbox } from '../../Library';
+import { InstitutionsPatients } from './InstitutionsPatients';
 
 interface InstitutionFormProps {
   institution: Institution;
@@ -201,6 +202,11 @@ export const InstitutionForm = ({
           {phoneFromContact()}
           {faxFromContact()}
         </GridItem>
+        {institution.uuid && (
+          <GridItem>
+            <InstitutionsPatients institutionId={institution.uuid} />
+          </GridItem>
+        )}
       </SimpleGrid>
     </>
   );
