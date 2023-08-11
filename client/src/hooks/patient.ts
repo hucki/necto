@@ -82,7 +82,11 @@ export function useConnectWaitingPreference(): UseMutationResult<
   };
   return useMutation(updatePatient, {
     onSuccess: () => {
+      queryClient.invalidateQueries(['patients/connect/wp']);
       queryClient.invalidateQueries(['settings/wp']);
+      queryClient.invalidateQueries(['patients']);
+      queryClient.invalidateQueries(['waitingPatients']);
+      queryClient.invalidateQueries(['archivedPatients']);
     },
   });
 }
@@ -108,7 +112,11 @@ export function useDisconnectWaitingPreference(): UseMutationResult<
   };
   return useMutation(updatePatient, {
     onSuccess: () => {
+      queryClient.invalidateQueries(['patients/disconnect/wp']);
       queryClient.invalidateQueries(['settings/wp']);
+      queryClient.invalidateQueries(['patients']);
+      queryClient.invalidateQueries(['waitingPatients']);
+      queryClient.invalidateQueries(['archivedPatients']);
     },
   });
 }
