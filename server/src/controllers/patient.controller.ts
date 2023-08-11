@@ -25,6 +25,7 @@ const getSanitizedPatient = (patient) => {
   delete sanitizedPatient.createdAt;
   delete sanitizedPatient.updatedAt;
   delete sanitizedPatient.addpayFreedom;
+  delete sanitizedPatient.waitingPreferences;
   return sanitizedPatient;
 };
 
