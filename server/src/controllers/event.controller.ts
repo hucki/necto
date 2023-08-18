@@ -128,7 +128,6 @@ export const updateCurrentAndFutureEvents = async (
       'isRecurring',
       'isCancelled',
       'isDeleted',
-      'isDone',
       'isCancelledReason',
       'cancellationReasonId',
       'rrule',
