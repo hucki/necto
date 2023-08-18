@@ -538,6 +538,7 @@ function CalendarEventForm({
             <option value={45}>45 min</option>
             <option value={30}>30 min</option>
             <option value={60}>60 min</option>
+            <option value={40}>40 min</option>
           </Select>
           <FormLabel>{t('calendar.event.duration')}</FormLabel>
         </FormControl>
