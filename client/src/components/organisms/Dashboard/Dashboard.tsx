@@ -21,6 +21,7 @@ interface DashboardInputProps {
 }
 const Dashboard = ({ id }: DashboardInputProps) => {
   const { user } = useContext(AuthContext);
+  const employeeId = user?.employeeId;
   const { isLoading, error, teamMembers } = useAllTeamMembers();
   if (isLoading)
     return (
@@ -95,8 +96,8 @@ const Dashboard = ({ id }: DashboardInputProps) => {
           <Route
             path="/personalcal"
             element={
-              user && isAuthorized(user, 'personalcal') ? (
-                <PersonalCalendar id={id} />
+              user && employeeId && isAuthorized(user, 'personalcal') ? (
+                <PersonalCalendar id={id} employeeId={employeeId} />
               ) : (
                 <RedirectHome />
               )
