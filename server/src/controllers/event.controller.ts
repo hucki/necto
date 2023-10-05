@@ -706,3 +706,79 @@ export const getAllDeletedEvents = async (
     next(e);
   }
 };
+
+/**
+ * API V2 get Events per queryParameter
+ */
+export const getEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { employeeId, year, week, month, date } = req.query;
+    let startDate;
+    let endDate;
+    const thisYear = parseInt(year.toString());
+    if (month) {
+      const thisMonth = parseInt(month.toString());
+      startDate = dayjs().year(thisYear).month(thisMonth).startOf('month');
+      endDate = startDate.endOf('month');
+    } else if (week) {
+      const thisWeek = parseInt(week.toString());
+      startDate = dayjs().year(thisYear).isoWeek(thisWeek).startOf('isoWeek');
+      endDate = startDate.endOf('isoWeek');
+    } else if (date) {
+      startDate = dayjs(date.toString())
+        .set('hour', 0)
+        .set('minute', 0)
+        .set('second', 0);
+      endDate = startDate.add(24, 'h');
+    }
+    const events = await prisma.event.findMany({
+      where: {
+        OR: [
+          {
+            AND: [
+              { startTime: { gte: startDate.toISOString() } },
+              { startTime: { lte: endDate.toISOString() } },
+              { isDeleted: false },
+              employeeId && {
+                ressourceId: employeeId.toString(),
+              },
+            ],
+          },
+          {
+            AND: [
+              { endTime: { gte: startDate.toISOString() } },
+              { endTime: { lte: endDate.toISOString() } },
+              { isDeleted: false },
+              employeeId && {
+                ressourceId: employeeId.toString(),
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        patient: true,
+        parentEvent: { include: { childEvents: true } },
+        childEvents: true,
+        room: { include: { building: true } },
+      },
+    });
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].patient) {
+        events[i].patient = decryptPatient({
+          patient: events[i].patient,
+          fields: encryptedPatientFields,
+        });
+      }
+    }
+    res.json(events);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};

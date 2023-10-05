@@ -257,4 +257,7 @@ router.get('/companies', companyController.getAllCompanies);
 // seed routes
 // router.get('/seed/levels', seedController.permissionLevels);
 
+// v2 routes
+router.get('/v2/events', eventController.getEvents);
+
 export { router, errorRouter };
