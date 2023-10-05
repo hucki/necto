@@ -1,7 +1,7 @@
 import React from 'react';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
-import { useDaysEvents, useWeeksEvents } from '../../hooks/events';
-import dayjs from 'dayjs';
+import { useEvents } from '../../hooks/events';
+import dayjs, { Dayjs } from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
 import { EmployeeRessource } from '../../types/Ressource';
 import { useUser } from '../../hooks/user';
@@ -15,6 +15,7 @@ import { filterContext } from '../../providers/filter';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { ViewWrapper } from '../../components/atoms/Wrapper';
 import { CalendarView } from '../../providers/filter/types';
+import { Employee } from '../../types/Employee';
 
 dayjs.extend(weekOfYear);
 dayjs.extend(LocalizedFormat);
@@ -23,9 +24,13 @@ dayjs.locale('de');
 
 interface PersonalCalendarInputProps {
   id: string;
+  employeeId: Employee['uuid'];
 }
 
-function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
+function PersonalCalendar({
+  id,
+  employeeId,
+}: PersonalCalendarInputProps): JSX.Element {
   const [currentCalendarView, setCurrentCalendarView] = useState<
     CalendarView | undefined
   >();
@@ -35,14 +40,23 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
-  const { isLoading: isLoadingDaysEvents, rawEvents: daysEventsUnfiltered } =
-    useDaysEvents(calendarDate);
-  const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEventsUnfiltered } =
-    useWeeksEvents(calendarDate.year(), calendarDate.week());
+
+  const eventDate =
+    calendarView === 'week'
+      ? {
+          week: calendarDate.week(),
+        }
+      : {
+          date: calendarDate,
+        };
+  const { isLoading: isLoadingEvents, rawEvents: events } = useEvents({
+    year: calendarDate.year(),
+    employeeId,
+    ...eventDate,
+  });
 
   const { user, isLoading: isLoadingUser } = useUser(id);
-  const isLoading =
-    isLoadingDaysEvents || isLoadingWeeksEvents || isLoadingUser;
+  const isLoading = isLoadingEvents || isLoadingUser;
 
   useEffect(() => {
     if (!currentCalendarView) {
@@ -66,12 +80,7 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
     return <FullPageSpinner />;
 
   const thisEmployee = user?.userSettings[0].employee;
-  const daysEvents = daysEventsUnfiltered.filter(
-    (e) => e.ressourceId === thisEmployee.uuid
-  );
-  const weeksEvents = weeksEventsUnfiltered.filter(
-    (e) => e.ressourceId === thisEmployee.uuid
-  );
+
   const ressources: EmployeeRessource[] = [
     {
       userId: user.uuid,
@@ -84,32 +93,28 @@ function PersonalCalendar({ id }: PersonalCalendarInputProps): JSX.Element {
     },
   ];
 
+  const daysRange: [Dayjs, Dayjs] =
+    calendarView === 'day'
+      ? [calendarDate, calendarDate]
+      : [
+          calendarDate.startOf('week'),
+          calendarDate.startOf('week').add(6, 'day'),
+        ];
   return (
     <ViewWrapper>
       <FilterBar hasDayWeekOption hasEventTypeOption />
-      {calendarView === 'day' && (
-        <CalendarContainer
-          readOnly={false}
-          events={daysEvents}
-          ressources={ressources}
-          daysRange={[calendarDate, calendarDate]}
-          columnHeaderFormat={'DD.MM.'}
-          columnSubHeaderContent="dddd"
-        />
-      )}
-      {calendarView === 'week' && (
-        <CalendarContainer
-          readOnly={false}
-          events={weeksEvents}
-          ressources={ressources}
-          daysRange={[
-            calendarDate.startOf('week'),
-            calendarDate.startOf('week').add(6, 'day'),
-          ]}
-          columnHeaderFormat={isMobile ? 'DD.' : 'DD.MM.'}
-          columnSubHeaderContent={isMobile ? 'dd' : 'dddd'}
-        />
-      )}
+      <CalendarContainer
+        readOnly={false}
+        events={events}
+        ressources={ressources}
+        daysRange={daysRange}
+        columnHeaderFormat={
+          calendarView === 'week' && isMobile ? 'DD.' : 'DD.MM.'
+        }
+        columnSubHeaderContent={
+          calendarView === 'week' && isMobile ? 'dd' : 'dddd'
+        }
+      />
     </ViewWrapper>
   );
 }
