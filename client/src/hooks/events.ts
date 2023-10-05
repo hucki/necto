@@ -14,6 +14,7 @@ import {
   LeaveStatus,
   NewEvent,
 } from '../types/Event';
+import { Employee } from '../types/Employee';
 
 export function useEvent(
   id: number
@@ -117,6 +118,58 @@ export function useWeeksEvents(
 ): UseQueryResult<Event[]> & { rawEvents: Event[] } {
   const eventsQuery = useQuery(['events', year, week], async () => {
     return client<Event[]>(`events/w/${year}/${week}`);
+  });
+
+  const rawEvents = eventsQuery.data ?? [];
+  return {
+    rawEvents,
+    ...eventsQuery,
+  };
+}
+
+type BaseEventProps = {
+  year: number;
+  employeeId: Employee['uuid'];
+};
+
+type MonthInput = {
+  month: number;
+  week?: never;
+  date?: never;
+};
+type WeekInput = {
+  week: number;
+  month?: never;
+  date?: never;
+};
+type DateInput = {
+  date: Dayjs;
+  week?: never;
+  month?: never;
+};
+
+export function useEvents({
+  year,
+  employeeId,
+  month,
+  week,
+  date,
+}: BaseEventProps & (MonthInput | WeekInput | DateInput)): UseQueryResult<
+  Event[]
+> & { rawEvents: Event[] } {
+  const searchParams = new URLSearchParams();
+  searchParams.append('employeeId', employeeId);
+  searchParams.append('year', year.toString());
+  if (week) searchParams.append('week', week.toString());
+  if (month) searchParams.append('week', month.toString());
+  if (date) {
+    const year = dayjs(date).format('YYYY');
+    const month = dayjs(date).format('MM');
+    const day = dayjs(date).format('DD');
+    searchParams.append('date', year + '-' + month + '-' + day);
+  }
+  const eventsQuery = useQuery(['events', year, week, date], async () => {
+    return client<Event[]>(`v2/events?${searchParams.toString()}`);
   });
 
   const rawEvents = eventsQuery.data ?? [];
