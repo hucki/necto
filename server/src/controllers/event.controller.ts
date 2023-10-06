@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { Serializer } from 'ts-japi';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
@@ -709,6 +710,7 @@ export const getAllDeletedEvents = async (
 
 /**
  * API V2 get Events per queryParameter
+ * https://jsonapi.org/recommendations/
  */
 export const getEvents = async (
   req: Request,
@@ -775,7 +777,15 @@ export const getEvents = async (
         });
       }
     }
-    res.json(events);
+    const EventSerializer = new Serializer('events');
+    let response;
+    try {
+      response = await EventSerializer.serialize(events);
+    } catch (error) {
+      console.error(error);
+    }
+    res.set({ 'Content-Type': 'application/vnd.api+json' });
+    res.json(response);
     res.status(200);
     return;
   } catch (e) {
