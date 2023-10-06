@@ -11,53 +11,13 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ApprovalPanel from '../../components/molecules/InfoPanel/ApprovalPanel';
 import NewUserPanel from '../../components/molecules/InfoPanel/NewUserPanel';
-import UpcomingPanel from '../../components/molecules/InfoPanel/UpcomingPanel';
 import { Greeting, NotificationCount } from '../../components/Library/Messages';
-import { useEmployeeEvents, useLeavesByStatus } from '../../hooks/events';
+import { useLeavesByStatus } from '../../hooks/events';
 import { useAllUsers } from '../../hooks/user';
 import { AuthContext } from '../../providers/AuthProvider';
-import { Event } from '../../types/Event';
 import { isAuthorized } from '../../config/home';
 import { useEmployee } from '../../hooks/employees';
 import { TimeSheet } from '../../components/organisms/Employee/TimeSheet';
-
-interface EmployeeEventAccordionItemProps {
-  employeeId: string;
-  now: dayjs.Dayjs;
-  upcomingEvents: Event[];
-}
-const EmployeeEventAccordionItem = ({
-  upcomingEvents,
-}: EmployeeEventAccordionItemProps) => {
-  const maxEvents = 10;
-  return (
-    <AccordionItem isDisabled={upcomingEvents.length < 1}>
-      <h2>
-        <AccordionButton>
-          <Box flex="1" textAlign="left" display="flex" flexDirection="row">
-            <span>anstehende Ereignisse </span>
-            <span
-              style={{
-                marginLeft: '0.2rem',
-                fontSize: 'small',
-              }}
-            >
-              (
-              {upcomingEvents.length > maxEvents
-                ? maxEvents + '+'
-                : upcomingEvents.length}
-              )
-            </span>
-          </Box>
-          <AccordionIcon />
-        </AccordionButton>
-      </h2>
-      <AccordionPanel pb={4}>
-        <UpcomingPanel events={upcomingEvents} maxEvents={maxEvents} />
-      </AccordionPanel>
-    </AccordionItem>
-  );
-};
 
 const Home = () => {
   const { t } = useTranslation();
@@ -75,16 +35,8 @@ const Home = () => {
     ? 'day'
     : 'evening';
 
-  const employeeEventsResult = useEmployeeEvents(user?.employeeId);
   const { employee } = useEmployee(user?.employeeId);
 
-  const upcomingEvents = employeeEventsResult
-    ? employeeEventsResult.employeeEvents
-        .filter((e) => dayjs(e.startTime).isAfter(now))
-        .sort((a, b) =>
-          dayjs(a.startTime).isBefore(dayjs(b.startTime)) ? 1 : -1
-        )
-    : [];
   return (
     <>
       <div
@@ -96,10 +48,7 @@ const Home = () => {
         <Greeting>{`${t('dict.good')} ${t(`time.ofDay.${timeOfDay}`)} ${
           user?.firstName
         }`}</Greeting>
-        <Accordion
-          allowMultiple
-          defaultIndex={upcomingEvents.length ? [2] : undefined}
-        >
+        <Accordion allowMultiple>
           {user && isAuthorized(user, 'newUsers') && (
             <AccordionItem isDisabled={newUsers.length < 1}>
               <h2>
@@ -145,13 +94,6 @@ const Home = () => {
                 <ApprovalPanel events={uniqueRequestedLeaves} />
               </AccordionPanel>
             </AccordionItem>
-          )}
-          {user?.employeeId && isAuthorized(user, 'employeeEvents') && (
-            <EmployeeEventAccordionItem
-              upcomingEvents={upcomingEvents}
-              employeeId={user.employeeId}
-              now={now}
-            />
           )}
           {user && employee && isAuthorized(user, 'personalTimesheet') && (
             <AccordionItem>
