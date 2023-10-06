@@ -1,6 +1,6 @@
 import React from 'react';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
-import { useDaysEvents } from '../../hooks/events';
+import { useEvents } from '../../hooks/events';
 import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
 import FilterBar from '../../components/molecules/FilterBar/FilterBar';
@@ -26,7 +26,7 @@ function TeamCalendar(): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
-  const { isLoading, rawEvents } = useDaysEvents(calendarDate);
+  const { isLoading, rawEvents } = useEvents({ date: calendarDate });
 
   useEffect(() => {
     setCalendarView('day');
