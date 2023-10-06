@@ -6,11 +6,14 @@ import { ErrorMessage } from '../../Library';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/de';
 import utc from 'dayjs/plugin/utc';
-import { useDaysEvents } from '../../../hooks/events';
+import { useEvents } from '../../../hooks/events';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { useCreateEvent } from '../../../hooks/events';
 import { NewEvent } from '../../../types/Event';
-import { EmployeeRessource } from '../../../types/Ressource';
+import {
+  EmployeeRessource,
+  isEmployeeRessource,
+} from '../../../types/Ressource';
 import { FaTimes } from 'react-icons/fa';
 import CalendarEventForm from './CalendarEventForm';
 import { checkOverlap } from '../../../helpers/eventChecker';
@@ -20,7 +23,6 @@ import { useHolidays } from '../../../hooks/useHolidays';
 import CalendarItemModal from './CalendarItemModal';
 import { ModalFooterControls } from './ModalFooterControls';
 import { Room } from '../../../types/Rooms';
-import { isEmployeeRessource } from './CalendarColumn';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 dayjs.extend(LocalizedFormat);
@@ -79,7 +81,13 @@ function CalendarEventInput({
     patientId: '',
   };
   const [newEvent, setNewEvent] = useState<NewEvent>(defaultEvent);
-  const { rawEvents } = useDaysEvents(dateTime);
+  const employeeId = isEmployeeRessource(ressource)
+    ? ressource.uuid
+    : undefined;
+  const { rawEvents } = useEvents({
+    employeeId,
+    date: dateTime,
+  });
 
   const { mutateAsync: createEvent, isIdle } = useCreateEvent();
   const [isCreatingRecurringEvents, setIsCreatingRecurringEvents] =
