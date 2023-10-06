@@ -100,19 +100,6 @@ export function useDeleteCurrentAndFutureEvents(): UseMutationResult<
   });
 }
 
-export function useAllEvents(): UseQueryResult<Event[]> & { events: Event[] } {
-  const eventsQuery = useQuery(['events'], async () => {
-    return client<Event[]>('events/a');
-  });
-
-  const events = eventsQuery.data ?? [];
-
-  return {
-    events,
-    ...eventsQuery,
-  };
-}
-
 type BaseEventProps = {
   employeeId?: Employee['uuid'];
 };
