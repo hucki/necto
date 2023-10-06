@@ -129,26 +129,31 @@ export function useWeeksEvents(
 }
 
 type BaseEventProps = {
-  year: number;
-  employeeId: Employee['uuid'];
+  employeeId?: Employee['uuid'];
 };
 
 type MonthInput = {
+  year: number;
   month: number;
   week?: never;
   date?: never;
 };
 type WeekInput = {
+  year: number;
   week: number;
   month?: never;
   date?: never;
 };
 type DateInput = {
   date: Dayjs;
+  year?: never;
   week?: never;
   month?: never;
 };
 
+/**
+ * universal V2 JSON API event getter
+ */
 export function useEvents({
   year,
   employeeId,
@@ -159,19 +164,34 @@ export function useEvents({
   (MonthInput | WeekInput | DateInput)): UseQueryResult<APIResponse> & {
   rawEvents: Event[];
 } {
-  const searchParams = new URLSearchParams();
-  searchParams.append('employeeId', employeeId);
-  searchParams.append('year', year.toString());
-  if (week) searchParams.append('week', week.toString());
-  if (month) searchParams.append('week', month.toString());
-  if (date) {
-    const year = dayjs(date).format('YYYY');
-    const month = dayjs(date).format('MM');
-    const day = dayjs(date).format('DD');
-    searchParams.append('date', year + '-' + month + '-' + day);
-  }
+  const queryDate = date
+    ? dayjs(date).format('YYYY') +
+      '-' +
+      dayjs(date).format('MM') +
+      '-' +
+      dayjs(date).format('DD')
+    : undefined;
+
+  const filterParameter = [
+    'employeeId',
+    'year',
+    'week',
+    'month',
+    'date',
+  ] as const;
+  type FilterParameter = (typeof filterParameter)[number];
+  type QueryParams = {
+    [key in FilterParameter as `filter[${key}]`]?: string;
+  };
+  const queryParams: QueryParams = {
+    'filter[employeeId]': employeeId ? employeeId : undefined,
+    'filter[year]': year ? year.toString() : undefined,
+    'filter[week]': week ? week.toString() : undefined,
+    'filter[month]': month ? month.toString() : undefined,
+    'filter[date]': queryDate,
+  };
   const eventsQuery = useQuery(['events', year, week, date], async () => {
-    return client<APIResponse>(`v2/events?${searchParams.toString()}`);
+    return client<APIResponse>('v2/events', { queryParams });
   });
 
   const rawEvents = eventsQuery.data?.data.map((e) => e.attributes) ?? [];
@@ -207,23 +227,6 @@ export function useLeavesByStatus(
   return {
     rawEvents,
     ...eventsQuery,
-  };
-}
-
-export function useDaysEvents(
-  currentDate: Dayjs
-): UseQueryResult<Event[]> & { rawEvents: Event[] } {
-  const year = dayjs(currentDate).format('YYYY');
-  const month = dayjs(currentDate).format('MM');
-  const day = dayjs(currentDate).format('DD');
-  const eventsDayQuery = useQuery(['events', currentDate], async () => {
-    return client<Event[]>(`events/d/${year}/${month}/${day}`);
-  });
-
-  const rawEvents = eventsDayQuery.data ?? [];
-  return {
-    rawEvents,
-    ...eventsDayQuery,
   };
 }
 
