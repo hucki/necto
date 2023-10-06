@@ -6,7 +6,10 @@ import { FaTimes } from 'react-icons/fa';
 import { Options, RRule, rrulestr } from 'rrule';
 import { useCreateEvent } from '../../../hooks/events';
 import { LeaveType, NewEvent } from '../../../types/Event';
-import { EmployeeRessource } from '../../../types/Ressource';
+import {
+  EmployeeRessource,
+  isEmployeeRessource,
+} from '../../../types/Ressource';
 import { LabelledInput } from '../../Library';
 import CalendarItemModal from './CalendarItemModal';
 import { ModalFooterControls } from './ModalFooterControls';
@@ -15,7 +18,6 @@ import utc from 'dayjs/plugin/utc';
 import { getNewUTCDate } from '../../../helpers/dataConverter';
 import { IconButton } from '../../atoms/Buttons';
 import { Room } from '../../../types/Rooms';
-import { isEmployeeRessource } from './CalendarColumn';
 import { EventIcon } from '../../molecules/DataDisplay/Icons';
 import { useViewport } from '../../../hooks/useViewport';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';

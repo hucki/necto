@@ -1,7 +1,10 @@
 import React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { Event, isLeave } from '../../../types/Event';
-import { EmployeeRessource } from '../../../types/Ressource';
+import {
+  EmployeeRessource,
+  isEmployeeRessource,
+} from '../../../types/Ressource';
 import { CalendarEntry } from './CalendarEntry';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -29,13 +32,6 @@ import {
   CalendarColumnSubHeaderContent,
 } from './types';
 dayjs.locale('de');
-
-// Typeguard
-export const isEmployeeRessource = (
-  ressource: EmployeeRessource | Room
-): ressource is EmployeeRessource => {
-  return ressource.hasOwnProperty('bgColor');
-};
 
 export type OnClickCalendarEventProps = {
   e: React.MouseEvent<HTMLDivElement, MouseEvent>;
