@@ -15,6 +15,7 @@ import {
   NewEvent,
 } from '../types/Event';
 import { Employee } from '../types/Employee';
+import { APIResponse } from '../types/Api';
 
 export function useEvent(
   id: number
@@ -154,9 +155,10 @@ export function useEvents({
   month,
   week,
   date,
-}: BaseEventProps & (MonthInput | WeekInput | DateInput)): UseQueryResult<
-  Event[]
-> & { rawEvents: Event[] } {
+}: BaseEventProps &
+  (MonthInput | WeekInput | DateInput)): UseQueryResult<APIResponse> & {
+  rawEvents: Event[];
+} {
   const searchParams = new URLSearchParams();
   searchParams.append('employeeId', employeeId);
   searchParams.append('year', year.toString());
@@ -169,10 +171,10 @@ export function useEvents({
     searchParams.append('date', year + '-' + month + '-' + day);
   }
   const eventsQuery = useQuery(['events', year, week, date], async () => {
-    return client<Event[]>(`v2/events?${searchParams.toString()}`);
+    return client<APIResponse>(`v2/events?${searchParams.toString()}`);
   });
 
-  const rawEvents = eventsQuery.data ?? [];
+  const rawEvents = eventsQuery.data?.data.map((e) => e.attributes) ?? [];
   return {
     rawEvents,
     ...eventsQuery,
