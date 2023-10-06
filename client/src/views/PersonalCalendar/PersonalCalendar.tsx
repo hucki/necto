@@ -1,7 +1,7 @@
 import React from 'react';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
 import { useEvents } from '../../hooks/events';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
 import { EmployeeRessource } from '../../types/Ressource';
 import { useUser } from '../../hooks/user';
@@ -93,28 +93,33 @@ function PersonalCalendar({
     },
   ];
 
-  const daysRange: [Dayjs, Dayjs] =
-    calendarView === 'day'
-      ? [calendarDate, calendarDate]
-      : [
-          calendarDate.startOf('week'),
-          calendarDate.startOf('week').add(6, 'day'),
-        ];
+  const isDayView = calendarView === 'day';
   return (
     <ViewWrapper>
       <FilterBar hasDayWeekOption hasEventTypeOption />
-      <CalendarContainer
-        readOnly={false}
-        events={events}
-        ressources={ressources}
-        daysRange={daysRange}
-        columnHeaderFormat={
-          calendarView === 'week' && isMobile ? 'DD.' : 'DD.MM.'
-        }
-        columnSubHeaderContent={
-          calendarView === 'week' && isMobile ? 'dd' : 'dddd'
-        }
-      />
+      {isDayView && (
+        <CalendarContainer
+          readOnly={false}
+          events={events}
+          ressources={ressources}
+          daysRange={[calendarDate, calendarDate]}
+          columnHeaderFormat={'DD.MM.'}
+          columnSubHeaderContent={'dddd'}
+        />
+      )}
+      {!isDayView && (
+        <CalendarContainer
+          readOnly={false}
+          events={events}
+          ressources={ressources}
+          daysRange={[
+            calendarDate.startOf('week'),
+            calendarDate.startOf('week').add(6, 'day'),
+          ]}
+          columnHeaderFormat={isMobile ? 'DD.' : 'DD.MM.'}
+          columnSubHeaderContent={isMobile ? 'dd' : 'dddd'}
+        />
+      )}
     </ViewWrapper>
   );
 }
