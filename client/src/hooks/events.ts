@@ -113,21 +113,6 @@ export function useAllEvents(): UseQueryResult<Event[]> & { events: Event[] } {
   };
 }
 
-export function useWeeksEvents(
-  year: number,
-  week: number
-): UseQueryResult<Event[]> & { rawEvents: Event[] } {
-  const eventsQuery = useQuery(['events', year, week], async () => {
-    return client<Event[]>(`events/w/${year}/${week}`);
-  });
-
-  const rawEvents = eventsQuery.data ?? [];
-  return {
-    rawEvents,
-    ...eventsQuery,
-  };
-}
-
 type BaseEventProps = {
   employeeId?: Employee['uuid'];
 };
