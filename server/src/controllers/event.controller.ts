@@ -363,63 +363,6 @@ export const getEmployeeEventsPerMonth = async (
 };
 
 /**
- * get all Events that are taking place in the given year/week combination
- *  @param {string} req.params.year
- *  @param {string} req.params.week
- */
-export const getWeeksEvents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const year = parseInt(req.params.year);
-    const week = parseInt(req.params.week);
-    const firstOfWeek = dayjs().year(year).isoWeek(week).startOf('isoWeek');
-    const lastOfWeek = firstOfWeek.endOf('isoWeek');
-    const events = await prisma.event.findMany({
-      where: {
-        OR: [
-          {
-            AND: [
-              { startTime: { gte: firstOfWeek.toDate() } },
-              { startTime: { lte: lastOfWeek.toDate() } },
-              { isDeleted: false },
-            ],
-          },
-          {
-            AND: [
-              { endTime: { gte: firstOfWeek.toDate() } },
-              { endTime: { lte: lastOfWeek.toDate() } },
-              { isDeleted: false },
-            ],
-          },
-        ],
-      },
-      include: {
-        patient: true,
-        parentEvent: { include: { childEvents: true } },
-        childEvents: true,
-        room: { include: { building: true } },
-        employee: { include: { contract: { where: { validUntil: null } } } },
-      },
-    });
-    for (let i = 0; i < events.length; i++) {
-      if (events[i].patient) {
-        events[i].patient = decryptPatient({
-          patient: events[i].patient,
-          fields: encryptedPatientFields,
-        });
-      }
-    }
-    res.json(events);
-    res.status(200);
-    return;
-  } catch (e) {
-    next(e);
-  }
-};
-/**
  * get all Roombooking from Events that are taking place in the given year/week combination
  *  @param {string} req.params.year
  *  @param {string} req.params.week
