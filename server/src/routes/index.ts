@@ -120,8 +120,6 @@ router.get('/buildings', buildingController.getAllBuildings);
 router.post('/buildings', buildingController.addBuilding);
 
 // events routes
-//router.get('/events/:eventId', eventController.getEvents);
-router.get('/events/r/:year/:week', eventController.getWeeksRoomsFromEvents);
 
 router.post('/events', eventController.addEvent);
 router.patch(
@@ -251,5 +249,7 @@ router.get('/companies', companyController.getAllCompanies);
 
 // v2 routes
 router.get('/v2/events', eventController.getEvents);
+// v2 routes
+router.get('/v2/events/:eventId', eventController.getEvents);
 
 export { router, errorRouter };

@@ -363,63 +363,6 @@ export const getEmployeeEventsPerMonth = async (
 };
 
 /**
- * get all Roombooking from Events that are taking place in the given year/week combination
- *  @param {string} req.params.year
- *  @param {string} req.params.week
- */
-export const getWeeksRoomsFromEvents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const year = parseInt(req.params.year);
-    const week = parseInt(req.params.week);
-    const firstOfWeek = dayjs().year(year).isoWeek(week).startOf('isoWeek');
-    const lastOfWeek = firstOfWeek.endOf('isoWeek');
-    const events = await prisma.event.findMany({
-      where: {
-        OR: [
-          {
-            AND: [
-              { startTime: { gte: firstOfWeek.toDate() } },
-              { startTime: { lte: lastOfWeek.toDate() } },
-              { isDeleted: false },
-              { roomId: { not: null } },
-            ],
-          },
-          {
-            AND: [
-              { endTime: { gte: firstOfWeek.toDate() } },
-              { endTime: { lte: lastOfWeek.toDate() } },
-              { isDeleted: false },
-              { roomId: { not: null } },
-            ],
-          },
-        ],
-      },
-      include: {
-        patient: false,
-        room: { include: { building: true } },
-        employee: { include: { contract: { where: { validUntil: null } } } },
-      },
-    });
-    const roomBookings = events.map((event) => ({
-      ...event,
-      ressourceId: event.roomId || '',
-      title: event.employee?.alias || '',
-      bgColor: event.employee?.contract[0].bgColor,
-      type: 'roomBooking',
-    }));
-    res.json(roomBookings);
-    res.status(200);
-    return;
-  } catch (e) {
-    next(e);
-  }
-};
-
-/**
  * get Leaves by status
  *  @param {Event['leaveStatus']} req.params.leaveStatus
  */
@@ -530,6 +473,7 @@ const filterParameter = [
   'week',
   'month',
   'date',
+  'roomId',
 ] as const;
 type FilterParameter = (typeof filterParameter)[number];
 interface APIRequest extends Request {
@@ -537,6 +481,7 @@ interface APIRequest extends Request {
     filter: {
       [key in FilterParameter]: string;
     };
+    includes: string;
   };
 }
 /**
@@ -549,7 +494,9 @@ export const getEvents = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { year, month, week, date, employeeId } = req.query.filter;
+    const { year, month, week, date, employeeId, roomId } = req.query.filter;
+    const includes = req.query.includes.split(',');
+    console.log('🍕', includes, roomId);
     let startDate;
     let endDate;
     if (year && month) {
@@ -577,6 +524,9 @@ export const getEvents = async (
               employeeId && {
                 ressourceId: employeeId,
               },
+              roomId && roomId === 'IS NOT NULL'
+                ? { roomId: { not: null } }
+                : roomId && { roomId: roomId },
             ],
           },
           {
@@ -587,15 +537,25 @@ export const getEvents = async (
               employeeId && {
                 ressourceId: employeeId,
               },
+              roomId && roomId === 'IS NOT NULL'
+                ? { roomId: { not: null } }
+                : roomId && { roomId: roomId },
             ],
           },
         ],
       },
       include: {
-        patient: true,
-        parentEvent: { include: { childEvents: true } },
-        childEvents: true,
-        room: { include: { building: true } },
+        patient: Boolean(includes.includes('patient')),
+        parentEvent: includes.includes('parentEvent')
+          ? { include: { childEvents: true } }
+          : false,
+        childEvents: Boolean(includes.includes('childEvents')),
+        room: includes.includes('room')
+          ? { include: { building: true } }
+          : false,
+        employee: includes.includes('employee')
+          ? { include: { contract: { where: { validUntil: null } } } }
+          : false,
       },
     });
     for (let i = 0; i < events.length; i++) {
