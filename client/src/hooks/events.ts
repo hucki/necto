@@ -230,25 +230,6 @@ export function useLeavesByStatus(
   };
 }
 
-export function useEmployeeEventsPerMonth(
-  employeeId: string,
-  year: number,
-  month: number
-): UseQueryResult<Event[]> & { employeeEvents: Event[] } {
-  const employeeEventsQuery = useQuery(
-    ['events', employeeId, year, month],
-    async () => {
-      return client<Event[]>(`events/me/${employeeId}/${year}/${month}`);
-    }
-  );
-
-  const employeeEvents = employeeEventsQuery.data ?? [];
-  return {
-    employeeEvents,
-    ...employeeEventsQuery,
-  };
-}
-
 export function usePatientEvents(
   patientId: string
 ): UseQueryResult<Event[]> & { patientEvents: Event[] } {
