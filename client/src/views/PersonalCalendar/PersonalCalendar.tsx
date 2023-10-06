@@ -44,13 +44,13 @@ function PersonalCalendar({
   const eventDate =
     calendarView === 'week'
       ? {
+          year: calendarDate.year(),
           week: calendarDate.week(),
         }
       : {
           date: calendarDate,
         };
   const { isLoading: isLoadingEvents, rawEvents: events } = useEvents({
-    year: calendarDate.year(),
     employeeId,
     ...eventDate,
   });
