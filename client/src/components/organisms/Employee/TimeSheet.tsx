@@ -8,7 +8,7 @@ import { IconButton } from '../../atoms/Buttons';
 import { CgPushChevronLeft, CgPushChevronRight } from 'react-icons/cg';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 import dayjs from 'dayjs';
-import { useEmployeeEventsPerMonth } from '../../../hooks/events';
+import { useEvents } from '../../../hooks/events';
 import { getCurrentContract } from '../../../helpers/contract';
 import { useHolidays } from '../../../hooks/useHolidays';
 
@@ -71,14 +71,14 @@ export const TimeSheet = ({ employee }: TimeSheetProps) => {
   const currentMonth = dayjs().year(year).month(month);
   const daysInMonth = currentMonth.daysInMonth();
   const {
-    employeeEvents,
+    rawEvents: employeeEvents,
     refetch,
     status: eventLoadingStatus,
-  } = useEmployeeEventsPerMonth(
-    employee.uuid || '',
-    currentDate.year(),
-    currentDate.month()
-  );
+  } = useEvents({
+    employeeId: employee.uuid || undefined,
+    year: currentDate.year(),
+    month: currentDate.month(),
+  });
   const currentMonthString = currentMonth.format('MMM');
   const currentTimesheet: CurrentTimesheet = [];
   useEffect(() => {
