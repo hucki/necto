@@ -24,11 +24,11 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import {
   useAllCancellationReasons,
-  useDaysEvents,
   useDeleteEvent,
   useDeleteCurrentAndFutureEvents,
   useUpdateEvent,
   useUpdateCurrentAndFutureEvent,
+  useEvents,
 } from '../../../hooks/events';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { CancellationReason, Event, NewEvent } from '../../../types/Event';
@@ -75,7 +75,10 @@ function CalendarEventEdit({
   const { isMobile } = useViewport();
   const [isReadOnly, setIsReadOnly] = useState<boolean>(readOnly);
 
-  const { rawEvents } = useDaysEvents(event.startTime);
+  const { rawEvents } = useEvents({
+    employeeId: event.ressourceId,
+    date: event.startTime,
+  });
   const { isLoading: isLoadingCR, cancellationReasons } =
     useAllCancellationReasons();
 
