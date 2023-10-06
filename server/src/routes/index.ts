@@ -122,7 +122,6 @@ router.post('/buildings', buildingController.addBuilding);
 // events routes
 //router.get('/events/:eventId', eventController.getEvents);
 router.get('/events/a', eventController.getAllEvents);
-router.get('/events/d/:year/:month/:day', eventController.getDaysEvents);
 router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 router.get('/events/r/:year/:week', eventController.getWeeksRoomsFromEvents);
 router.get('/events/e/:employeeId', eventController.getEmployeeEvents);

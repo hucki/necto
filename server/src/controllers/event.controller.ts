@@ -298,69 +298,6 @@ export const deleteCurrentAndFutureEvents = async (
 };
 
 /**
- * get all Events that are taking place in the given year/month/day combination
- *  @param {string} req.params.year
- *  @param {string} req.params.month
- *  @param {string} req.params.day
- */
-export const getDaysEvents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const startOfDay = dayjs(
-      `${req.params.year}-${req.params.month}-${req.params.day}`
-    )
-      .set('hour', 0)
-      .set('minute', 0)
-      .set('second', 0);
-    const endOfDay = startOfDay.add(24, 'h');
-
-    const events = await prisma.event.findMany({
-      where: {
-        OR: [
-          {
-            AND: [
-              { startTime: { gte: startOfDay.toDate() } },
-              { startTime: { lte: endOfDay.toDate() } },
-              { isDeleted: false },
-            ],
-          },
-          {
-            AND: [
-              { endTime: { gte: startOfDay.toDate() } },
-              { endTime: { lte: endOfDay.toDate() } },
-              { isDeleted: false },
-            ],
-          },
-        ],
-      },
-      include: {
-        patient: true,
-        parentEvent: { include: { childEvents: true } },
-        childEvents: true,
-        room: { include: { building: true } },
-        employee: { include: { contract: { where: { validUntil: null } } } },
-      },
-    });
-    for (let i = 0; i < events.length; i++) {
-      if (events[i].patient) {
-        events[i].patient = decryptPatient({
-          patient: events[i].patient,
-          fields: encryptedPatientFields,
-        });
-      }
-    }
-    res.json(events);
-    res.status(200);
-    return;
-  } catch (e) {
-    next(e);
-  }
-};
-
-/**
  * get all Events of the defined employeeId
  *  @param {string} req.params.employeeId
  */
@@ -709,32 +646,48 @@ export const getAllDeletedEvents = async (
 };
 
 /**
+ * API V2 filter parameter
+ */
+const filterParameter = [
+  'employeeId',
+  'year',
+  'week',
+  'month',
+  'date',
+] as const;
+type FilterParameter = (typeof filterParameter)[number];
+interface APIRequest extends Request {
+  query: {
+    filter: {
+      [key in FilterParameter]: string;
+    };
+  };
+}
+/**
  * API V2 get Events per queryParameter
  * https://jsonapi.org/recommendations/
  */
 export const getEvents = async (
-  req: Request,
+  req: APIRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { employeeId, year, week, month, date } = req.query;
+    const { year, month, week, date, employeeId } = req.query.filter;
     let startDate;
     let endDate;
-    const thisYear = parseInt(year.toString());
-    if (month) {
-      const thisMonth = parseInt(month.toString());
+    if (year && month) {
+      const thisYear = parseInt(year);
+      const thisMonth = parseInt(month);
       startDate = dayjs().year(thisYear).month(thisMonth).startOf('month');
       endDate = startDate.endOf('month');
-    } else if (week) {
-      const thisWeek = parseInt(week.toString());
+    } else if (year && week) {
+      const thisYear = parseInt(year);
+      const thisWeek = parseInt(week);
       startDate = dayjs().year(thisYear).isoWeek(thisWeek).startOf('isoWeek');
       endDate = startDate.endOf('isoWeek');
     } else if (date) {
-      startDate = dayjs(date.toString())
-        .set('hour', 0)
-        .set('minute', 0)
-        .set('second', 0);
+      startDate = dayjs(date).set('hour', 0).set('minute', 0).set('second', 0);
       endDate = startDate.add(24, 'h');
     }
     const events = await prisma.event.findMany({
@@ -746,7 +699,7 @@ export const getEvents = async (
               { startTime: { lte: endDate.toISOString() } },
               { isDeleted: false },
               employeeId && {
-                ressourceId: employeeId.toString(),
+                ressourceId: employeeId,
               },
             ],
           },
@@ -756,7 +709,7 @@ export const getEvents = async (
               { endTime: { lte: endDate.toISOString() } },
               { isDeleted: false },
               employeeId && {
-                ressourceId: employeeId.toString(),
+                ressourceId: employeeId,
               },
             ],
           },
