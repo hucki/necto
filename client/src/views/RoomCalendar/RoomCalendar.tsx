@@ -10,7 +10,7 @@ import { useFilter } from '../../hooks/useFilter';
 import FilterBar from '../../components/molecules/FilterBar/FilterBar';
 import { ViewWrapper } from '../../components/atoms/Wrapper';
 import { Room } from '../../types/Rooms';
-import { useWeeksRoomsFromEvents } from '../../hooks/events';
+import { useEvents } from '../../hooks/events';
 import { UserDateContext } from '../../providers/UserDate';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { Employee } from '../../types/Employee';
@@ -20,16 +20,23 @@ function combineRoomBookings(events: Event[]): Event[] {
     employyeeId: Employee['uuid'];
     events: Event[];
   }[] = [];
-  for (let i = 0; i < events.length; i++) {
+  const roomBookings: Event[] = events.map((event) => ({
+    ...event,
+    ressourceId: event.roomId || '',
+    title: event.employee?.alias || '',
+    bgColor: event.employee?.contract[0].bgColor,
+    type: 'roomBooking',
+  }));
+  for (let i = 0; i < roomBookings.length; i++) {
     const currentList = eventsPerEmployee.find(
-      (list) => list.employyeeId === events[i].employee?.uuid
+      (list) => list.employyeeId === roomBookings[i].employee?.uuid
     );
     if (currentList) {
-      currentList.events.push(events[i]);
+      currentList.events.push(roomBookings[i]);
     } else {
       eventsPerEmployee.push({
-        employyeeId: events[i].employee?.uuid || '',
-        events: [events[i]],
+        employyeeId: roomBookings[i].employee?.uuid || '',
+        events: [roomBookings[i]],
       });
     }
   }
@@ -84,8 +91,15 @@ function RoomCalendar(): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
-  const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } =
-    useWeeksRoomsFromEvents(calendarDate.year(), calendarDate.week());
+  const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } = useEvents(
+    {
+      year: calendarDate.year(),
+      week: calendarDate.week(),
+      roomId: 'IS NOT NULL',
+      includes: 'room,employee',
+    }
+  );
+
   const { isLoading: isLoadingRooms, rooms } = useAllRooms();
   const { isLoading: isLoadingBuildings, buildings } = useAllbuildings();
   useEffect(() => {
