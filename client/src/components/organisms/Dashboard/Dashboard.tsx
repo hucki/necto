@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAllTeamMembers } from '../../../hooks/user';
 import TeamCalendar from '../../../views/TeamCalendar/TeamCalendar';
 import PersonalCalendar from '../../../views/PersonalCalendar/PersonalCalendar';
-import Rooms from '../../../views/Rooms/Rooms';
 import Patients from '../../../views/Patients/Patients';
 import WaitingList from '../../../views/Patients/WaitingList';
 import Settings from '../../../views/Settings/Settings';
@@ -41,7 +40,6 @@ const Dashboard = ({ id }: DashboardInputProps) => {
       <div style={{ width: '100%', height: '100%' }}>
         <Routes>
           <Route path="/home" element={<Home />} />
-          <Route path="/rooms" element={<Rooms />} />
           <Route path="/roomCalendar" element={<RoomCalendar />} />
           <Route
             path="/patients"

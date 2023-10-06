@@ -94,22 +94,6 @@ const SideNav = ({ isOpen = true, onClose }: SideNavProps) => {
               {t('menu.teamcal')}
             </NavigationButton>
             <NavigationButton
-              hidden={!isAuthorized(user, 'rooms')}
-              colorScheme="teal"
-              variant={currentView === '/rooms' ? 'solid' : 'ghost'}
-              aria-label="Rooms"
-              leftIcon={
-                <>
-                  <IoCalendarNumberOutline />
-                  <IoStorefrontOutline />
-                </>
-              }
-              key="/rooms"
-              onClick={() => onClickHandler('/rooms')}
-            >
-              {t('menu.rooms')}
-            </NavigationButton>
-            <NavigationButton
               hidden={!isAuthorized(user, 'roomCalendar')}
               colorScheme="teal"
               variant={currentView === '/roomCalendar' ? 'solid' : 'ghost'}
