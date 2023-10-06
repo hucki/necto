@@ -78,6 +78,7 @@ function CalendarEventEdit({
   const { rawEvents } = useEvents({
     employeeId: event.ressourceId,
     date: event.startTime,
+    includes: 'patient,parentEvent,childEvents,room,employee',
   });
   const { isLoading: isLoadingCR, cancellationReasons } =
     useAllCancellationReasons();

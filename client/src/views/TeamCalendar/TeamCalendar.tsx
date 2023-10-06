@@ -26,7 +26,10 @@ function TeamCalendar(): JSX.Element {
   const [calendarDate, setCalendarDate] = useState(
     currentDate ? currentDate : dayjs()
   );
-  const { isLoading, rawEvents } = useEvents({ date: calendarDate });
+  const { isLoading, rawEvents } = useEvents({
+    date: calendarDate,
+    includes: 'patient,parentEvent,childEvents,room,employee',
+  });
 
   useEffect(() => {
     setCalendarView('day');

@@ -78,6 +78,7 @@ export const TimeSheet = ({ employee }: TimeSheetProps) => {
     employeeId: employee.uuid || undefined,
     year: currentDate.year(),
     month: currentDate.month(),
+    includes: 'patient,parentEvent,childEvents,room,employee',
   });
   const currentMonthString = currentMonth.format('MMM');
   const currentTimesheet: CurrentTimesheet = [];

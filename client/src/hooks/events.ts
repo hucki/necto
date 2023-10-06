@@ -16,6 +16,7 @@ import {
 } from '../types/Event';
 import { Employee } from '../types/Employee';
 import { APIResponse } from '../types/Api';
+import { Room } from '../types/Rooms';
 
 export function useEvent(
   id: number
@@ -102,6 +103,8 @@ export function useDeleteCurrentAndFutureEvents(): UseMutationResult<
 
 type BaseEventProps = {
   employeeId?: Employee['uuid'];
+  roomId?: Room['uuid'] | 'IS NOT NULL';
+  includes?: string;
 };
 
 type MonthInput = {
@@ -132,6 +135,8 @@ export function useEvents({
   month,
   week,
   date,
+  roomId,
+  includes,
 }: BaseEventProps &
   (MonthInput | WeekInput | DateInput)): UseQueryResult<APIResponse> & {
   rawEvents: Event[];
@@ -150,10 +155,13 @@ export function useEvents({
     'week',
     'month',
     'date',
+    'roomId',
   ] as const;
   type FilterParameter = (typeof filterParameter)[number];
   type QueryParams = {
     [key in FilterParameter as `filter[${key}]`]?: string;
+  } & {
+    includes?: string;
   };
   const queryParams: QueryParams = {
     'filter[employeeId]': employeeId ? employeeId : undefined,
@@ -161,9 +169,13 @@ export function useEvents({
     'filter[week]': week ? week.toString() : undefined,
     'filter[month]': month ? month.toString() : undefined,
     'filter[date]': queryDate,
+    'filter[roomId]': roomId ? roomId.toString() : undefined,
+    includes,
   };
   const eventsQuery = useQuery(['events', year, week, date], async () => {
-    return client<APIResponse>('v2/events', { queryParams });
+    return client<APIResponse>('v2/events', {
+      queryParams,
+    });
   });
 
   const rawEvents = eventsQuery.data?.data.map((e) => e.attributes) ?? [];

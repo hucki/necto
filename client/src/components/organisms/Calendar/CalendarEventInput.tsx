@@ -87,6 +87,7 @@ function CalendarEventInput({
   const { rawEvents } = useEvents({
     employeeId,
     date: dateTime,
+    includes: 'patient,parentEvent,childEvents,room,employee',
   });
 
   const { mutateAsync: createEvent, isIdle } = useCreateEvent();

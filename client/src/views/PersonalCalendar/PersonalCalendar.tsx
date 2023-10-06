@@ -53,6 +53,7 @@ function PersonalCalendar({
   const { isLoading: isLoadingEvents, rawEvents: events } = useEvents({
     employeeId,
     ...eventDate,
+    includes: 'patient,parentEvent,childEvents,room,employee',
   });
 
   const { user, isLoading: isLoadingUser } = useUser(id);
