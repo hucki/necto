@@ -420,28 +420,6 @@ export const getWeeksRoomsFromEvents = async (
 };
 
 /**
- * get all Events
- */
-export const getAllEvents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const events = await prisma.event.findMany({
-      where: {
-        isDeleted: false,
-      },
-    });
-    res.json(events);
-    res.status(200);
-    return;
-  } catch (e) {
-    next(e);
-  }
-};
-
-/**
  * get Leaves by status
  *  @param {Event['leaveStatus']} req.params.leaveStatus
  */
