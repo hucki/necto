@@ -298,51 +298,6 @@ export const deleteCurrentAndFutureEvents = async (
 };
 
 /**
- * get all Events of the defined employeeId
- *  @param {string} req.params.employeeId
- */
-export const getEmployeeEvents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const employeeId = req.params.employeeId;
-    const events = await prisma.event.findMany({
-      where: {
-        AND: [
-          {
-            isDeleted: false,
-          },
-          employeeId && {
-            ressourceId: employeeId,
-          },
-        ],
-      },
-      include: {
-        patient: true,
-        parentEvent: { include: { childEvents: true } },
-        childEvents: true,
-        room: { include: { building: true } },
-      },
-    });
-    for (let i = 0; i < events.length; i++) {
-      if (events[i].patient) {
-        events[i].patient = decryptPatient({
-          patient: events[i].patient,
-          fields: encryptedPatientFields,
-        });
-      }
-    }
-    res.json(events);
-    res.status(200);
-    return;
-  } catch (e) {
-    next(e);
-  }
-};
-
-/**
  * get all Events per month of the defined employeeId
  *  @param {string} req.params.employeeId
  *  @param {string} req.params.year

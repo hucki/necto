@@ -124,11 +124,6 @@ router.post('/buildings', buildingController.addBuilding);
 router.get('/events/a', eventController.getAllEvents);
 router.get('/events/w/:year/:week', eventController.getWeeksEvents);
 router.get('/events/r/:year/:week', eventController.getWeeksRoomsFromEvents);
-router.get('/events/e/:employeeId', eventController.getEmployeeEvents);
-router.get(
-  '/events/me/:employeeId/:year/:month',
-  eventController.getEmployeeEvents
-);
 
 router.post('/events', eventController.addEvent);
 router.patch(
