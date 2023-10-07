@@ -495,8 +495,7 @@ export const getEvents = async (
 ): Promise<void> => {
   try {
     const { year, month, week, date, employeeId, roomId } = req.query.filter;
-    const includes = req.query.includes.split(',');
-    console.log('🍕', includes, roomId);
+    const includes = req.query.includes ? req.query.includes.split(',') : [];
     let startDate;
     let endDate;
     if (year && month) {
