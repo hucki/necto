@@ -44,7 +44,7 @@ import {
   isPatient,
   isWaitingPatient,
 } from '../../../types/Person';
-import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
+import { CgChevronDoubleLeft, CgChevronDoubleRight } from 'react-icons/cg';
 import { IconButton } from '../../atoms/Buttons';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
 import { AddpayTags, getAddpayForTags } from '../Patients/AddpayForm';
@@ -231,7 +231,7 @@ function PersonList({
   const numOfNavButtons =
     numOfPages > maxNavButtons ? maxNavButtons : numOfPages;
   const ellipsisBefore =
-    numOfPages > numOfNavButtons && currentPage > 2 ? ' ... ' : '';
+    numOfPages > numOfNavButtons && currentPage > 3 ? ' ... ' : '';
   const ellipsisAfter =
     numOfPages > numOfNavButtons && currentPage < numOfPages - 1 ? ' ... ' : '';
 
@@ -485,10 +485,10 @@ function PersonList({
       <Flex m={2} alignSelf="flex-end">
         <IconButton
           aria-label="previous page"
-          leftIcon={<CgChevronLeft />}
+          leftIcon={<CgChevronDoubleLeft />}
           isDisabled={currentPage <= 1}
           colorScheme="blackAlpha"
-          onClick={() => setCurrentPage(currentPage - 1)}
+          onClick={() => setCurrentPage(1)}
         />
         {ellipsisBefore}
         {new Array(numOfPages).fill(numOfPages).map((_, index) => {
@@ -510,10 +510,10 @@ function PersonList({
         {ellipsisAfter}
         <IconButton
           aria-label="next page"
-          icon={<CgChevronRight />}
+          icon={<CgChevronDoubleRight />}
           isDisabled={currentPage >= numOfPages}
           colorScheme="blackAlpha"
-          onClick={() => setCurrentPage(currentPage + 1)}
+          onClick={() => setCurrentPage(numOfPages)}
         />
       </Flex>
       {/* pagination controls END */}
