@@ -1,8 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
+import { Company } from '@prisma/client';
+
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
+
+export const getCurrentCompany = async (): Promise<Company> => {
+  try {
+    const company = await prisma.company.findMany({ where: { tenantId } });
+    return company[0];
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 /**
  * get companies
