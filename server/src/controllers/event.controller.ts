@@ -5,10 +5,17 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import { decryptPatient, encryptedPatientFields } from '../utils/crypto';
-import { Event } from '@prisma/client';
+import { Event, User } from '@prisma/client';
+import { notifyUser, sendEventChange } from '../utils/nodemailer';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
+
+export type EventChange = {
+  field: string;
+  oldValue: string;
+  newValue: string;
+};
 
 /**
  * add one Event
@@ -64,8 +71,14 @@ export const updateEvent = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  const updatedBy = req.user;
   try {
     const eventId = req.params.eventId;
+    const currentEvent = await prisma.event.findUnique({
+      where: {
+        uuid: eventId,
+      },
+    });
     const updatedEvent = await prisma.event.update({
       where: {
         uuid: eventId,
@@ -95,7 +108,45 @@ export const updateEvent = async (
         patientId: req.body.patientId ? req.body.patientId : null,
         parentEventId: req.body.parentEventId ? req.body.parentEventId : null,
       },
+      include: {
+        employee: {
+          include: {
+            contactData: true,
+            user: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+      },
     });
+    const changedKeys = Object.keys(currentEvent).filter(
+      (key) =>
+        key !== 'updatedAt' &&
+        key !== 'createdAt' &&
+        currentEvent[key] !== updatedEvent[key]
+    );
+    const changes: EventChange[] = changedKeys.map((key) => ({
+      field: key,
+      oldValue: currentEvent[key],
+      newValue: updatedEvent[key],
+    }));
+    const eventUserId = updatedEvent.employee.user?.userId;
+    const employeeEmail = updatedEvent.employee.user.user.email;
+    const updatedByUserId = (req.user as User).uuid;
+    if (eventUserId && eventUserId !== updatedByUserId) {
+      console.log('📧 notify Event User', employeeEmail, changes);
+      sendEventChange({
+        user: req.user as User,
+        employee: updatedEvent.employee,
+        employeeEmail,
+        newEvent: updatedEvent,
+        changes,
+      });
+    } else {
+      console.log('❌📧 do NOT notify Event User');
+    }
     res.json(updatedEvent);
     res.status(201);
     return;
