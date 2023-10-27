@@ -1,7 +1,6 @@
 import {
   Button,
   Flex,
-  Icon,
   InputGroup,
   InputLeftElement,
   InputRightElement,
@@ -10,27 +9,15 @@ import {
   ModalContent,
   ModalOverlay,
   Switch,
-  Table,
   Tag,
   TagLabel,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
   useDisclosure,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  RiCheckboxBlankLine,
-  RiCheckLine,
-  RiCloseLine,
-  RiSearchLine,
-  RiUserAddLine,
-} from 'react-icons/ri';
+import { RiCloseLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri';
 import { getDisplayName } from '../../../helpers/displayNames';
 import { useViewport } from '../../../hooks/useViewport';
 import { Doctor } from '../../../types/Doctor';
@@ -44,8 +31,7 @@ import {
   isPatient,
   isWaitingPatient,
 } from '../../../types/Person';
-import { CgChevronDoubleLeft, CgChevronDoubleRight } from 'react-icons/cg';
-import { IconButton } from '../../atoms/Buttons';
+import { IconButton, PaginationButton } from '../../atoms/Buttons';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
 import { AddpayTags, getAddpayForTags } from '../Patients/AddpayForm';
 import { WaitingPreference } from '../../../types/Settings';
@@ -53,16 +39,68 @@ import { useAllWaitingPreferences } from '../../../hooks/settings';
 import { WaitingPreferenceTagWrapper } from '../Patients/WaitingPreferenceForm';
 import { FaTimes } from 'react-icons/fa';
 import { PersonCreateModal } from './PersonCreateModal';
+import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { PersonListStyle } from '../../atoms/TableStyles';
+import { PaginationWrapper } from '../../atoms/Wrapper';
+import { DiagnosticDisplay } from '../../molecules/DataDisplay/DiagnosticEvent';
 
 type ListType = 'doctors' | 'patients' | 'waitingPatients';
 
 interface PersonListProps {
-  persons: Doctor[] | Patient[] | WaitingPatient[];
+  persons: Person[];
   listType: ListType;
   showArchived?: boolean;
   // eslint-disable-next-line no-unused-vars
   setShowArchived?: (value: boolean) => void;
 }
+
+const columnHelper = createColumnHelper<Person>();
+const personColumnNames = [
+  'numberInLine',
+  'person',
+  'addpayFreedom',
+  'email',
+  'notices',
+  'doctor',
+  'isWaitingSince',
+  'firstContactAt',
+  'diagnostic',
+  'waitingPreference',
+] as const;
+type PersonColumnName = (typeof personColumnNames)[number];
+
+type PersonColumns = {
+  [key in PersonColumnName as key]:
+    | ColumnDef<Person, Person>
+    | ColumnDef<Person, unknown>;
+};
+
+const waitingPatientFields: Partial<PersonColumnName>[] = [
+  'numberInLine',
+  'person',
+  'diagnostic',
+  'isWaitingSince',
+  'waitingPreference',
+  'addpayFreedom',
+  'email',
+  'notices',
+  'doctor',
+];
+const patientFields: Partial<PersonColumnName>[] = [
+  'person',
+  'addpayFreedom',
+  'email',
+  'notices',
+  'doctor',
+  'firstContactAt',
+];
 
 function PersonList({
   persons,
@@ -116,13 +154,13 @@ function PersonList({
       </WaitingPreferenceTagWrapper>
     );
   };
-  const isWaitingPatientList = (
+  const checkIsWaitingPatientList = (
     persons: Person[]
   ): persons is WaitingPatient[] => {
     if (persons[0] && 'numberInLine' in persons[0]) return true;
     return false;
   };
-
+  const isWaitingPatientList = checkIsWaitingPatientList(persons);
   const isPatientList = (persons: Person[]): persons is Patient[] => {
     if (persons[0] && 'firstContactAt' in persons[0]) return true;
     return false;
@@ -135,77 +173,80 @@ function PersonList({
 
   // search function
   const [search, setSearch] = useState('');
-  useEffect(() => {
-    if (search) {
-      setCurrentPage(1);
-    }
-  }, [search]);
 
-  const filteredPatients: Patient[] | WaitingPatient[] =
-    isWaitingPatientList(persons) || isPatientList(persons)
-      ? (persons
-          .filter((person: Patient | WaitingPatient) => {
-            const searches = search.toLowerCase().split(/,| /);
-            const findings: boolean[] = [];
-            for (let i = 0; i < searches.length; i++) {
-              const found = (term: string) =>
-                ((isPatient(person) || isWaitingPatient(person)) &&
-                  person.firstName.toLowerCase().includes(term)) ||
-                person.lastName.toLowerCase().includes(term) ||
-                person.street?.toLowerCase().includes(term) ||
-                person.city?.toLowerCase().includes(term) ||
-                person.institution?.name?.toLowerCase().includes(term) ||
-                person.notices?.toLowerCase().includes(term) ||
-                person.contactData
-                  ?.filter((contact) => contact.type === 'telephone')
-                  .findIndex((contact) =>
-                    contact.contact.toLowerCase().includes(term)
-                  ) !== -1;
-              if (searches[i] === '') continue;
-              if (found(searches[i])) findings.push(true);
-            }
-            if (
-              searches.filter((term) => term !== '').length === findings.length
-            )
-              return true;
-            return false;
-          })
-          .filter((person) => {
-            return !waitingPreferenceFilter.length
-              ? true
-              : person.waitingPreferences?.filter((wp) =>
-                  waitingPreferenceFilter.includes(wp.key)
-                ).length;
-          }) as Patient[] | WaitingPatient[])
-      : ([] as Patient[] | WaitingPatient[]);
+  const filteredPatients: Patient[] | WaitingPatient[] = useMemo(
+    () =>
+      isWaitingPatientList || isPatientList(persons)
+        ? (persons
+            .filter((person: Patient | WaitingPatient) => {
+              const searches = search.toLowerCase().split(/,| /);
+              const findings: boolean[] = [];
+              for (let i = 0; i < searches.length; i++) {
+                const found = (term: string) =>
+                  ((isPatient(person) || isWaitingPatient(person)) &&
+                    person.firstName.toLowerCase().includes(term)) ||
+                  person.lastName.toLowerCase().includes(term) ||
+                  person.street?.toLowerCase().includes(term) ||
+                  person.city?.toLowerCase().includes(term) ||
+                  person.institution?.name?.toLowerCase().includes(term) ||
+                  person.notices?.toLowerCase().includes(term) ||
+                  person.contactData
+                    ?.filter((contact) => contact.type === 'telephone')
+                    .findIndex((contact) =>
+                      contact.contact.toLowerCase().includes(term)
+                    ) !== -1;
+                if (searches[i] === '') continue;
+                if (found(searches[i])) findings.push(true);
+              }
+              if (
+                searches.filter((term) => term !== '').length ===
+                findings.length
+              )
+                return true;
+              return false;
+            })
+            .filter((person) => {
+              return !waitingPreferenceFilter.length
+                ? true
+                : person.waitingPreferences?.filter((wp) =>
+                    waitingPreferenceFilter.includes(wp.key)
+                  ).length;
+            }) as Patient[] | WaitingPatient[])
+        : ([] as Patient[] | WaitingPatient[]),
+    [persons, search, waitingPreferenceFilter]
+  );
 
   const allDoctors = isDoctorList(persons) ? persons : [];
-  const filteredDoctors = allDoctors.filter((person: Doctor) => {
-    const searches = search.toLowerCase().split(/,| /);
-    const findings: boolean[] = [];
-    for (let i = 0; i < searches.length; i++) {
-      const found = (term: string) =>
-        person.firstName.toLowerCase().includes(term) ||
-        person.lastName.toLowerCase().includes(term) ||
-        person.street?.toLowerCase().includes(term) ||
-        person.city?.toLowerCase().includes(term) ||
-        person.contactData
-          ?.filter((contact) => contact.type === 'telephone')
-          .findIndex((contact) =>
-            contact.contact.toLowerCase().includes(term)
-          ) !== -1;
-      if (searches[i] === '') continue;
-      if (found(searches[i])) findings.push(true);
-    }
-    if (searches.filter((term) => term !== '').length === findings.length)
-      return true;
-    return false;
-  });
+  const filteredDoctors = useMemo(
+    () =>
+      allDoctors.filter((person: Doctor) => {
+        const searches = search.toLowerCase().split(/,| /);
+        const findings: boolean[] = [];
+        for (let i = 0; i < searches.length; i++) {
+          const found = (term: string) =>
+            person.firstName.toLowerCase().includes(term) ||
+            person.lastName.toLowerCase().includes(term) ||
+            person.street?.toLowerCase().includes(term) ||
+            person.city?.toLowerCase().includes(term) ||
+            person.contactData
+              ?.filter((contact) => contact.type === 'telephone')
+              .findIndex((contact) =>
+                contact.contact.toLowerCase().includes(term)
+              ) !== -1;
+          if (searches[i] === '') continue;
+          if (found(searches[i])) findings.push(true);
+        }
+        if (searches.filter((term) => term !== '').length === findings.length)
+          return true;
+        return false;
+      }),
+    [allDoctors]
+  );
 
   const filteredPersons: Person[] =
     listType === 'doctors'
       ? filteredDoctors
-      : isWaitingPatientList(filteredPatients)
+      : checkIsWaitingPatientList(filteredPatients)
       ? filteredPatients
       : filteredPatients;
 
@@ -219,21 +260,22 @@ function PersonList({
       : -1
   );
 
+  function showPersonInfo(pid: Person['uuid']) {
+    const person = persons.find((p) => p.uuid === pid);
+    if (person) {
+      setCurrentPerson({
+        ...person,
+        notices: isPatient(person) ? person.notices || '' : undefined,
+        medicalReport: isPatient(person)
+          ? person.medicalReport || ''
+          : undefined,
+      });
+      onOpenInfo();
+    }
+  }
   const handleSearch = (event: React.FormEvent<HTMLInputElement>) => {
     setSearch(event.currentTarget.value);
   };
-
-  // pagination Config
-  const rowsPerPage = isMobile ? 10 : 15;
-  const numOfPages = Math.ceil(filteredPersons.length / rowsPerPage);
-  const [currentPage, setCurrentPage] = useState(1);
-  const maxNavButtons = 5;
-  const numOfNavButtons =
-    numOfPages > maxNavButtons ? maxNavButtons : numOfPages;
-  const ellipsisBefore =
-    numOfPages > numOfNavButtons && currentPage > 3 ? ' ... ' : '';
-  const ellipsisAfter =
-    numOfPages > numOfNavButtons && currentPage < numOfPages - 1 ? ' ... ' : '';
 
   // modal control
   const {
@@ -252,119 +294,124 @@ function PersonList({
     Person | WaitingPatient | undefined
   >(undefined);
 
-  function showPersonInfo(person: Person) {
-    setCurrentPerson({
-      ...person,
-      notices: isPatient(person) ? person.notices || '' : undefined,
-      medicalReport: isPatient(person) ? person.medicalReport || '' : undefined,
-    });
-    onOpenInfo();
-  }
+  const personColumns: PersonColumns = {
+    numberInLine: columnHelper.accessor('numberInLine', {
+      id: 'nr',
+      header: 'Nr',
+      cell: (cell) => {
+        const cellValue = cell.getValue();
+        return <b>{cellValue as string}</b>;
+      },
+    }),
+    person: columnHelper.accessor((row) => row, {
+      id: 'person',
+      header: t('label.name'),
+      cell: (row) => {
+        const rowValue = row.getValue();
+        return <PersonCard person={rowValue} />;
+      },
+    }),
+    addpayFreedom: columnHelper.accessor((row) => row, {
+      id: 'addpayFreedom',
+      header: t('label.isAddpayFreed'),
+      cell: (row) => {
+        const person = row.getValue();
+        if (isDoctor(person)) return;
+        return (
+          <AddpayTags
+            size="md"
+            isInteractive={false}
+            addpayState={getAddpayForTags({
+              addpayFreedom: person.addpayFreedom || [],
+              currentYear: dayjs().year(),
+              onlyCurrentYear: true,
+            })}
+          />
+        );
+      },
+    }),
+    email: columnHelper.accessor((row) => row, {
+      id: 'email',
+      header: t('label.mailAddress'),
+      cell: (row) => {
+        const person = row.getValue();
+        if (isDoctor(person)) return;
+        return person.contactData
+          ?.filter((c) => c.type === 'email')
+          .map((mail) => <div key={mail.uuid}>{mail.contact}</div>);
+      },
+    }),
+    notices: columnHelper.accessor((row) => row, {
+      id: 'notices',
+      header: t('label.notices'),
+      cell: (row) => {
+        const person = row.getValue();
+        if (isDoctor(person)) return;
+        return person.notices;
+      },
+    }),
+    doctor: columnHelper.accessor((row) => row, {
+      id: 'doctor',
+      header: t('label.doctor'),
+      cell: (row) => {
+        const person = row.getValue();
+        if (isDoctor(person) || !person.doctor) return;
+        return getDisplayName({ person: person.doctor, type: 'short' });
+      },
+    }),
 
-  const diagnosticDisplay = (p: WaitingPatient) => {
-    const event =
-      p.events?.length &&
-      p.events.filter((event) => !event.isCancelled && event.isDiagnostic)
-        .length
-        ? p.events.filter(
-            (event) => !event.isCancelled && event.isDiagnostic
-          )[0]
-        : null;
-    if (event) {
-      return (
-        <>
-          <b>
-            {dayjs(event.startTime).format('DD.MM.YY HH:mm')}
-            {event.isDone && (
-              <Icon as={RiCheckLine} w={5} h={5} color="green" />
-            )}
-          </b>
-          {' @'}
-          <i>{event.employee?.alias}</i>
-        </>
-      );
-    }
-    return null;
+    isWaitingSince: columnHelper.accessor('isWaitingSince', {
+      id: 'isWaitingSince',
+      header: t('label.isWaitingSince'),
+      cell: (cell) => {
+        const cellValue = cell.getValue() as string;
+        return dayjs(cellValue).format('ll');
+      },
+    }),
+    firstContactAt: columnHelper.accessor('firstContactAt', {
+      id: 'firstContactAt',
+      header: t('label.firstContactAt'),
+      cell: (cell) => {
+        const cellValue = cell.getValue() as string;
+        return dayjs(cellValue).format('ll');
+      },
+    }),
+    diagnostic: columnHelper.accessor((row) => row, {
+      id: 'diagnostic',
+      header: t('label.diagnostic'),
+      cell: (row) => {
+        const person = row.getValue();
+        if (!person.uuid) return;
+        return DiagnosticDisplay({ patientId: person.uuid });
+      },
+    }),
+    waitingPreference: columnHelper.accessor((row) => row, {
+      id: 'waitingPreference',
+      header: t('label.waitingPreference'),
+      cell: (row) => {
+        const person = row.getValue();
+        return (person as Patient).waitingPreferences?.map((wp) => (
+          <>
+            <Tag colorScheme="orange" variant="solid" key={wp.key}>
+              <TagLabel>{wp.label}</TagLabel>
+            </Tag>
+          </>
+        ));
+      },
+    }),
   };
 
-  const PersonRows = (): JSX.Element[] =>
-    filteredPersons
-      // pagination Filter
-      .filter(
-        (_p: Person, i: number) =>
-          i < currentPage * rowsPerPage && i >= (currentPage - 1) * rowsPerPage
-      )
-      .map((p: Person) => (
-        <Tr key={p.uuid} onClick={() => showPersonInfo(p)}>
-          {isWaitingPatient(p) && (
-            <Td>
-              <b>{p.numberInLine}</b>
-            </Td>
-          )}
-          <Td>
-            <PersonCard person={p} />
-          </Td>
-          {!isDoctor(p) && (
-            <>
-              <Td textAlign="center">
-                <AddpayTags
-                  size="md"
-                  isInteractive={false}
-                  addpayState={getAddpayForTags({
-                    addpayFreedom: p.addpayFreedom || [],
-                    currentYear: 2023,
-                    onlyCurrentYear: true,
-                  })}
-                />
-              </Td>
-              {!isWaitingPatient(p) && (
-                <Td textAlign="center">
-                  <Icon
-                    as={p.hasContract ? RiCheckLine : RiCheckboxBlankLine}
-                    w={5}
-                    h={5}
-                    color={p.hasContract ? 'green' : 'red'}
-                  />
-                </Td>
-              )}
-              <Td textAlign="center">{p.gender}</Td>
-            </>
-          )}
-          <Td>
-            {p.contactData
-              ?.filter((c) => c.type === 'email')
-              .map((tel) => (
-                <div key={tel.uuid}>{tel.contact}</div>
-              ))}
-          </Td>
-          {!isDoctor(p) && (
-            <>
-              <Td>{p.notices}</Td>
-              <Td>
-                {p.doctor &&
-                  getDisplayName({ person: p.doctor, type: 'short' })}
-              </Td>
-            </>
-          )}
-          {isWaitingPatient(p) ? (
-            <Td textAlign="center">{dayjs(p.isWaitingSince).format('ll')}</Td>
-          ) : !isDoctor(p) ? (
-            <Td textAlign="center">{dayjs(p.firstContactAt).format('ll')}</Td>
-          ) : null}
-          {isWaitingPatient(p) && (
-            <>
-              <Td>{diagnosticDisplay(p)}</Td>
-              <Td>
-                {p.waitingPreferences?.map((wp) => (
-                  <Tag colorScheme="orange" variant="solid" key={wp.key}>
-                    <TagLabel>{wp.label}</TagLabel>
-                  </Tag>
-                ))}
-              </Td>
-            </>
-          )}
-        </Tr>
-      ));
+  const patientColumns = patientFields.map((field) => personColumns[field]);
+  const waitingPatientColumns = waitingPatientFields.map(
+    (field) => personColumns[field]
+  );
+
+  const table = useReactTable({
+    data: filteredPersons,
+    columns: isWaitingPatientList ? waitingPatientColumns : patientColumns,
+    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <>
@@ -428,95 +475,88 @@ function PersonList({
             width: '100%',
           }}
         >
-          {/** had to add default prop values from https://chakra-ui.com/docs/components/table/usage#table-container
-           * to make horiz. scrolling working */}
-          <Table
-            variant="striped"
-            size="xs"
-            colorScheme={showArchived ? 'orange' : 'green'}
-            display="block"
-            overflowX="auto"
-            overflowY="hidden"
-            maxWidth="100%"
-            whiteSpace="nowrap"
-          >
-            <Thead>
-              <Tr>
-                {listType === 'waitingPatients' && <Th width={5}>Nr </Th>}
-                <Th></Th>
-                {listType !== 'doctors' && (
-                  <>
-                    <Th width={5}>{t('label.isAddpayFreed')}</Th>
-                    {listType !== 'waitingPatients' && (
-                      <Th width={5}>{t('label.hasContract')}</Th>
-                    )}
-                    <Th width={2}>{t('label.gender')} </Th>
-                  </>
-                )}
-                <Th>{t('label.mailAddress')} </Th>
-                {listType !== 'doctors' && (
-                  <>
-                    <Th>{t('label.notices')} </Th>
-                    <Th>{t('label.doctor')} </Th>
-                  </>
-                )}
-                {listType === 'waitingPatients' ? (
-                  <Th width={7}>{t('label.isWaitingSince')}</Th>
-                ) : listType !== 'doctors' ? (
-                  <Th width={7}>{t('label.firstContactAt')}</Th>
-                ) : null}
-                {listType === 'waitingPatients' && (
-                  <>
-                    <Th width={5}>{t('label.diagnostic')}</Th>
-                    <Th width={5}>{t('label.waitingPreference')}</Th>
-                  </>
-                )}
-              </Tr>
-            </Thead>
-            <Tbody textDecoration={showArchived ? 'line-through' : undefined}>
-              {PersonRows()}
-            </Tbody>
-          </Table>
+          <PersonListStyle archived={showArchived}>
+            <table>
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => {
+                  // const isSum = row.original.dayOfMonth === 99;
+                  return (
+                    <tr
+                      key={row.id}
+                      style={{
+                        textAlign: 'center',
+                        // backgroundColor: 'lightgray',
+                      }}
+                      onClick={() => showPersonInfo(row.original.uuid)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <PaginationWrapper>
+              <PaginationButton
+                onClick={() => table.setPageIndex(0)}
+                isDisabled={!table.getCanPreviousPage()}
+              >
+                {'<<'}
+              </PaginationButton>
+              <PaginationButton
+                onClick={() => table.previousPage()}
+                isDisabled={!table.getCanPreviousPage()}
+              >
+                {'<'}
+              </PaginationButton>
+              <PaginationButton
+                onClick={() => table.nextPage()}
+                isDisabled={!table.getCanNextPage()}
+              >
+                {'>'}
+              </PaginationButton>
+              <PaginationButton
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                isDisabled={!table.getCanNextPage()}
+              >
+                {'>>'}
+              </PaginationButton>
+              <div>{t('pagination.page')}</div>
+              <span className="flex items-center gap-1">
+                <strong>
+                  {table.getState().pagination.pageIndex + 1}{' '}
+                  {t('pagination.of') + ' '}
+                  {table.getPageCount()}
+                </strong>
+              </span>
+            </PaginationWrapper>
+          </PersonListStyle>
         </div>
       ) : (
         <div>no persons in list</div>
       )}
-      {/* pagination controls START */}
-      <Flex m={2} alignSelf="flex-end">
-        <IconButton
-          aria-label="previous page"
-          leftIcon={<CgChevronDoubleLeft />}
-          isDisabled={currentPage <= 1}
-          colorScheme="blackAlpha"
-          onClick={() => setCurrentPage(1)}
-        />
-        {ellipsisBefore}
-        {new Array(numOfPages).fill(numOfPages).map((_, index) => {
-          const outOfRange =
-            index + 1 < currentPage - numOfNavButtons / 2 ||
-            index + 1 > currentPage + numOfNavButtons / 2;
-          return (
-            <Button
-              hidden={outOfRange}
-              isDisabled={index + 1 === currentPage}
-              colorScheme={index + 1 === currentPage ? 'orange' : undefined}
-              key={index}
-              onClick={() => setCurrentPage(index + 1)}
-            >
-              {index + 1}
-            </Button>
-          );
-        })}
-        {ellipsisAfter}
-        <IconButton
-          aria-label="next page"
-          icon={<CgChevronDoubleRight />}
-          isDisabled={currentPage >= numOfPages}
-          colorScheme="blackAlpha"
-          onClick={() => setCurrentPage(numOfPages)}
-        />
-      </Flex>
-      {/* pagination controls END */}
       <Modal
         isOpen={isOpenInfo}
         onClose={onCloseInfo}
