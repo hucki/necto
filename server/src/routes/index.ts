@@ -249,7 +249,8 @@ router.get('/companies', companyController.getAllCompanies);
 
 // v2 routes
 router.get('/v2/events', eventController.getEvents);
-// v2 routes
 router.get('/v2/events/:eventId', eventController.getEvents);
+router.get('/v2/patients', patientController.getPatients);
+router.get('/v2/patients/:patientId', patientController.getPatient);
 
 export { router, errorRouter };
