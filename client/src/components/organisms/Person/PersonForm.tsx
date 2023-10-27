@@ -22,7 +22,7 @@ import { useViewport } from '../../../hooks/useViewport';
 import { ContactData, ContactType } from '../../../types/ContactData';
 import { Doctor } from '../../../types/Doctor';
 import { Patient } from '../../../types/Patient';
-import { Person } from '../../../types/Person';
+import { NewPerson, Person, isNewPerson } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ContactInput } from '../../atoms/ContactData/ContactInput';
 import CreateContactButton from '../../atoms/ContactData/CreateContactButton';
@@ -59,7 +59,7 @@ export interface OnContactChangeProps {
   id: string;
 }
 interface PersonFormProps {
-  person: Person;
+  person: Person | NewPerson;
   isReadOnly: boolean;
   isPending: boolean;
   personType: 'doctor' | 'patient';
@@ -85,9 +85,11 @@ export const PersonForm = ({
   const { mutateAsync: createPatientContact } = useCreatePatientContact();
   const { mutateAsync: createDoctorContact } = useCreateDoctorContact();
   const { institutions } = useAllInstitutions();
-  const [currentPerson, setCurrentPerson] = useState<Doctor | Patient>(() => ({
-    ...person,
-  }));
+  const [currentPerson, setCurrentPerson] = useState<Person | NewPerson>(
+    () => ({
+      ...person,
+    })
+  );
   const personNotCreated = !currentPerson.uuid;
   const [currentContactDataCollection, setCurrentContactDataCollection] =
     useState<ContactData[]>(() => {
@@ -167,11 +169,13 @@ export const PersonForm = ({
   }
 
   useEffect(() => {
-    onChange(currentPerson, currentContactDataCollection);
+    if (!isNewPerson(currentPerson)) {
+      onChange(currentPerson, currentContactDataCollection);
+    }
   }, [currentPerson, currentContactDataCollection]);
 
   useEffect(() => {
-    if (person.uuid !== currentPerson.uuid) {
+    if (!isNewPerson(person) && person.uuid !== currentPerson.uuid) {
       setCurrentPerson((cur) => ({ ...cur, uuid: person.uuid }));
     }
   }, [person.uuid]);
