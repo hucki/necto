@@ -10,6 +10,7 @@ import {
   getEncryptedPatient,
 } from '../utils/crypto';
 import { Patient, User, WaitingPreference } from '@prisma/client';
+import { Serializer } from 'ts-japi';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
@@ -422,6 +423,126 @@ export const disconnectFromWaitingPreference = async (
     });
     res.json(updatedPatient);
     res.status(201);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * API V2 filter parameter
+ */
+const patientFilterParameter = ['institutionId', 'patientId'] as const;
+type PatientFilterParameter = (typeof patientFilterParameter)[number];
+interface PatientAPIRequest extends Request {
+  query: {
+    filter: {
+      [key in PatientFilterParameter]: string;
+    };
+    page: {
+      limit: string;
+      offset: string;
+    };
+    includes: string;
+  };
+}
+/**
+ * API V2 get many Patients per filter
+ * https://jsonapi.org/recommendations/
+ */
+export const getPatients = async (
+  req: PatientAPIRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const institutionId = req.query.filter?.institutionId;
+    const offset = req.query.page?.offset;
+    const limit = req.query.page?.limit;
+    const includes = req.query.includes ? req.query.includes.split(',') : [];
+
+    const patients = await prisma.patient.findMany({
+      where: {
+        archived: false,
+        institutionId: institutionId || undefined,
+      },
+      include: {
+        contactData: Boolean(includes.includes('contactData')),
+        waitingPreferences: Boolean(includes.includes('waitingPreferences')),
+        doctor: Boolean(includes.includes('doctor')),
+        institution: Boolean(includes.includes('institution')),
+        addpayFreedom: Boolean(includes.includes('addpayFreedom')),
+      },
+      skip: offset ? parseInt(offset) : undefined,
+      take: limit ? parseInt(limit) : undefined,
+    });
+    for (let i = 0; i < patients.length; i++) {
+      patients[i] = {
+        ...patients[i],
+        ...decryptPatient({
+          patient: patients[i],
+          fields: encryptedPatientFields,
+        }),
+      };
+      if (patients[i].contactData) {
+        patients[i].contactData = decryptContactData(patients[i].contactData);
+      }
+    }
+    const PatientSerializer = new Serializer('patients');
+    let response;
+    try {
+      response = await PatientSerializer.serialize(patients);
+    } catch (error) {
+      console.error(error);
+    }
+    res.set({ 'Content-Type': 'application/vnd.api+json' });
+    res.json(response);
+    res.status(200);
+    return;
+  } catch (e) {
+    next(e);
+  }
+};
+
+/**
+ * API V2 get Patient per id
+ * https://jsonapi.org/recommendations/
+ */
+export const getPatient = async (
+  req: PatientAPIRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const patientId = req.params.patientId;
+    const includes = req.query.includes ? req.query.includes.split(',') : [];
+
+    const patient = await prisma.patient.findUnique({
+      where: {
+        uuid: patientId,
+      },
+      include: {
+        contactData: Boolean(includes.includes('contactData')),
+        waitingPreferences: Boolean(includes.includes('waitingPreferences')),
+        doctor: Boolean(includes.includes('doctor')),
+        institution: Boolean(includes.includes('institution')),
+        addpayFreedom: Boolean(includes.includes('addpayFreedom')),
+      },
+    });
+    const decryptedPatient = {
+      ...patient,
+      ...decryptPatient({ patient, fields: encryptedPatientFields }),
+    };
+    const PatientSerializer = new Serializer('patients');
+    let response;
+    try {
+      response = await PatientSerializer.serialize(decryptedPatient);
+    } catch (error) {
+      console.error(error);
+    }
+    res.set({ 'Content-Type': 'application/vnd.api+json' });
+    res.json(response);
+    res.status(200);
     return;
   } catch (e) {
     next(e);
