@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PersonList from '../../components/organisms/Person/PersonList';
-import { useAllArchivedPatients, useAllPatients } from '../../hooks/patient';
+import { useAllArchivedPatients, usePatients } from '../../hooks/patient';
 import { PersonListWrapper } from '../../components/atoms/Wrapper';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 function Patients(): JSX.Element {
-  const { isLoading, patients } = useAllPatients();
+  const { isLoading, rawPatients: patients } = usePatients({
+    includes: 'contactData,addpayFreedom,doctor,institutions',
+  });
   const { isLoading: isLoadingArchivedPatients, archivedPatients } =
     useAllArchivedPatients();
   const [showArchived, setShowArchived] = useState(false);
