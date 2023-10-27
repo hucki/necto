@@ -8,6 +8,8 @@ import {
 import { client } from '../services/ApiClient';
 import { Patient } from '../types/Patient';
 import { WaitingPreference } from '../types/Settings';
+import { Institution } from '../types/Institution';
+import { PatientAPIResponse } from '../types/Api';
 
 export function useCreatePatient(): UseMutationResult<
   Patient,
@@ -184,6 +186,61 @@ export function useAllWaitingPatients(): UseQueryResult<Patient[]> & {
 
   return {
     patients,
+    ...patientsQuery,
+  };
+}
+
+type BasePatientProps = {
+  filter?: {
+    institutionId?: Institution['uuid'];
+  };
+  includes?: string;
+  page?: {
+    offset: string;
+    limit: string;
+  };
+};
+
+/**
+ * universal V2 JSON API patient getter
+ */
+export function usePatients({
+  filter,
+  includes,
+  page,
+}: BasePatientProps): UseQueryResult<PatientAPIResponse> & {
+  rawPatients: Patient[];
+} {
+  const institutionId = filter?.institutionId;
+  const filterParameter = ['institutionId'] as const;
+  const paginationParameter = ['limit', 'offset'] as const;
+  type FilterParameter = (typeof filterParameter)[number];
+  type PaginationParameter = (typeof paginationParameter)[number];
+  type QueryParams = {
+    [key in FilterParameter as `filter[${key}]`]?: string;
+  } & {
+    [key in PaginationParameter as `page[${key}]`]?: string;
+  } & {
+    includes?: string;
+  };
+  const queryParams: QueryParams = {
+    'filter[institutionId]': institutionId ? institutionId : undefined,
+    'page[limit]': page?.limit ? page.limit : undefined,
+    'page[offset]': page?.offset ? page?.offset : undefined,
+    includes,
+  };
+  const hasQueryParams = Boolean(
+    includes || !Object.entries(queryParams).find((e) => e !== undefined)
+  );
+  const patientsQuery = useQuery(['patients'], async () => {
+    return client<PatientAPIResponse>('v2/patients', {
+      queryParams: hasQueryParams ? queryParams : undefined,
+    });
+  });
+
+  const rawPatients = patientsQuery.data?.data.map((p) => p.attributes) ?? [];
+  return {
+    rawPatients,
     ...patientsQuery,
   };
 }
