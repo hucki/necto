@@ -213,5 +213,9 @@
       "dialogBody": "Möchtest Du den ✅ erledigt Haken für diesen Termin wieder entfernen?",
       "dialogConfirm": "ja, weg damit!"
     }
+  },
+  "pagination": {
+    "of": "von",
+    "page": "Seite"
   }
 }

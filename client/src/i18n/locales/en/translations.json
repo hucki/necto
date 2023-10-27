@@ -212,5 +212,9 @@
       "dialogBody": "Do you want to remove the ✅ done marker for this event?",
       "dialogConfirm": "yes, go away!"
     }
+  },
+  "pagination": {
+    "of": "of",
+    "page": "Page"
   }
 }
