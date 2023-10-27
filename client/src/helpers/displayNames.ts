@@ -1,8 +1,7 @@
-import { Doctor } from '../types/Doctor';
-import { Patient } from '../types/Patient';
+import { NewPerson, Person } from '../types/Person';
 
 interface GetDisplayNameProps {
-  person: Patient | Doctor;
+  person: Person | NewPerson;
   type: 'full' | 'short';
 }
 export const getDisplayName = ({ person, type }: GetDisplayNameProps) => {
