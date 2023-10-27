@@ -3,9 +3,7 @@ import React, { useState } from 'react';
 import { ModalBody, ModalContent, ModalOverlay } from '../../Library';
 import { useViewport } from '../../../hooks/useViewport';
 import { PersonModalContent } from './PersonModalContent';
-import { Patient } from '../../../types/Patient';
-import { Doctor } from '../../../types/Doctor';
-import { isDoctor } from '../../../types/Person';
+import { NewPerson, isDoctor } from '../../../types/Person';
 import dayjs from 'dayjs';
 import { useFilter } from '../../../hooks/useFilter';
 
@@ -46,9 +44,7 @@ export const PersonCreateModal = ({
     );
     return newPerson;
   };
-  const [newPerson] = useState<Patient | Doctor | undefined>(() =>
-    getNewPerson()
-  );
+  const [newPerson] = useState<NewPerson | undefined>(() => getNewPerson());
 
   return (
     <Modal
