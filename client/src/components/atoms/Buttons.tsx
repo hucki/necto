@@ -13,6 +13,14 @@ const NavigationButton = styled(ChakraButton)({
   },
 });
 
+const PaginationButton = styled(ChakraButton)({
+  borderRadius: '0',
+  justifyContent: 'flex-start',
+  ':focus': {
+    boxShadow: 'none',
+  },
+});
+
 const IconButton = styled(ChakraIconButton)({
   borderRadius: '0',
   ':focus': {
@@ -20,4 +28,4 @@ const IconButton = styled(ChakraIconButton)({
   },
 });
 
-export { NavigationButton, IconButton };
+export { NavigationButton, PaginationButton, IconButton };
