@@ -525,6 +525,8 @@ const filterParameter = [
   'month',
   'date',
   'roomId',
+  'isDiagnostic',
+  'patientId',
 ] as const;
 type FilterParameter = (typeof filterParameter)[number];
 interface APIRequest extends Request {
@@ -545,7 +547,16 @@ export const getEvents = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { year, month, week, date, employeeId, roomId } = req.query.filter;
+    const {
+      year,
+      month,
+      week,
+      date,
+      employeeId,
+      roomId,
+      isDiagnostic,
+      patientId,
+    } = req.query.filter;
     const includes = req.query.includes ? req.query.includes.split(',') : [];
     let startDate;
     let endDate;
@@ -563,37 +574,46 @@ export const getEvents = async (
       startDate = dayjs(date).set('hour', 0).set('minute', 0).set('second', 0);
       endDate = startDate.add(24, 'h');
     }
-    const events = await prisma.event.findMany({
-      where: {
-        OR: [
-          {
-            AND: [
-              { startTime: { gte: startDate.toISOString() } },
-              { startTime: { lte: endDate.toISOString() } },
-              { isDeleted: false },
-              employeeId && {
-                ressourceId: employeeId,
-              },
-              roomId && roomId === 'IS NOT NULL'
-                ? { roomId: { not: null } }
-                : roomId && { roomId: roomId },
-            ],
-          },
-          {
-            AND: [
-              { endTime: { gte: startDate.toISOString() } },
-              { endTime: { lte: endDate.toISOString() } },
-              { isDeleted: false },
-              employeeId && {
-                ressourceId: employeeId,
-              },
-              roomId && roomId === 'IS NOT NULL'
-                ? { roomId: { not: null } }
-                : roomId && { roomId: roomId },
-            ],
-          },
-        ],
+    const startDateISOString = startDate?.toISOString();
+    const endDateISOString = endDate?.toISOString();
+    const whereClauseWithoutDates = [
+      { isDeleted: false },
+      employeeId && {
+        ressourceId: employeeId,
       },
+      patientId && {
+        patientId: patientId,
+      },
+      roomId && roomId === 'IS NOT NULL'
+        ? { roomId: { not: null } }
+        : roomId && { roomId: roomId },
+      isDiagnostic && {
+        isDiagnostic: Boolean(isDiagnostic),
+      },
+    ];
+    const whereClauseWithDates = {
+      OR: [
+        {
+          AND: [
+            { startTime: { gte: startDateISOString } },
+            { startTime: { lte: endDateISOString } },
+            ...whereClauseWithoutDates,
+          ],
+        },
+        {
+          AND: [
+            { endTime: { gte: startDateISOString } },
+            { endTime: { lte: endDateISOString } },
+            ...whereClauseWithoutDates,
+          ],
+        },
+      ],
+    };
+    const events = await prisma.event.findMany({
+      where:
+        startDate && endDate
+          ? whereClauseWithDates
+          : { AND: whereClauseWithoutDates },
       include: {
         patient: Boolean(includes.includes('patient')),
         parentEvent: includes.includes('parentEvent')
