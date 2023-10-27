@@ -1,12 +1,15 @@
 import React from 'react';
-import { useFilteredPatients } from '../../../hooks/patient';
+import { usePatients } from '../../../hooks/patient';
 import { PersonCard } from '../../molecules/Cards/PersonCard';
 export const InstitutionsPatients = ({
   institutionId,
 }: {
   institutionId: string;
 }) => {
-  const { patients } = useFilteredPatients({ institutionId });
+  const { rawPatients: patients } = usePatients({
+    filter: { institutionId },
+    includes: 'contactData',
+  });
   return (
     <>
       {!patients.length ? (
