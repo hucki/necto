@@ -15,8 +15,9 @@ import {
   NewEvent,
 } from '../types/Event';
 import { Employee } from '../types/Employee';
-import { APIResponse } from '../types/Api';
+import { EventAPIResponse } from '../types/Api';
 import { Room } from '../types/Rooms';
+import { Patient } from '../types/Patient';
 
 export function useEvent(
   id: number
@@ -106,20 +107,33 @@ type BaseEventProps = {
   roomId?: Room['uuid'] | 'IS NOT NULL';
   includes?: string;
 };
-
+type PatientInput = {
+  patientId: Patient['uuid'];
+  isDiagnostic?: Event['isDiagnostic'];
+  year?: never;
+  month?: never;
+  week?: never;
+  date?: never;
+};
 type MonthInput = {
+  patientId?: never;
+  isDiagnostic?: never;
   year: number;
   month: number;
   week?: never;
   date?: never;
 };
 type WeekInput = {
+  patientId?: never;
+  isDiagnostic?: never;
   year: number;
   week: number;
   month?: never;
   date?: never;
 };
 type DateInput = {
+  patientId?: never;
+  isDiagnostic?: never;
   date: Dayjs;
   year?: never;
   week?: never;
@@ -132,13 +146,20 @@ type DateInput = {
 export function useEvents({
   year,
   employeeId,
+  patientId,
+  isDiagnostic,
   month,
   week,
   date,
   roomId,
   includes,
 }: BaseEventProps &
-  (MonthInput | WeekInput | DateInput)): UseQueryResult<APIResponse> & {
+  (
+    | MonthInput
+    | WeekInput
+    | DateInput
+    | PatientInput
+  )): UseQueryResult<EventAPIResponse> & {
   rawEvents: Event[];
 } {
   const queryDate = date
@@ -156,6 +177,8 @@ export function useEvents({
     'month',
     'date',
     'roomId',
+    'patientId',
+    'isDiagnostic',
   ] as const;
   type FilterParameter = (typeof filterParameter)[number];
   type QueryParams = {
@@ -163,20 +186,27 @@ export function useEvents({
   } & {
     includes?: string;
   };
-  const queryParams: QueryParams = {
-    'filter[employeeId]': employeeId ? employeeId : undefined,
-    'filter[year]': year ? year.toString() : undefined,
-    'filter[week]': week ? week.toString() : undefined,
-    'filter[month]': month ? month.toString() : undefined,
-    'filter[date]': queryDate,
-    'filter[roomId]': roomId ? roomId.toString() : undefined,
-    includes,
-  };
-  const eventsQuery = useQuery(['events', year, week, date], async () => {
-    return client<APIResponse>('v2/events', {
-      queryParams,
-    });
-  });
+
+  const queryParams: QueryParams = { includes };
+  if (employeeId) queryParams['filter[employeeId]'] = employeeId;
+  if (patientId) queryParams['filter[patientId]'] = patientId;
+  if (isDiagnostic)
+    queryParams['filter[isDiagnostic]'] = isDiagnostic.toString();
+  if (year) queryParams['filter[year]'] = year.toString();
+  if (week) queryParams['filter[week]'] = week.toString();
+  if (month) queryParams['filter[month]'] = month.toString();
+  if (date) queryParams['filter[date]'] = queryDate;
+  if (roomId) queryParams['filter[roomId]'] = roomId.toString();
+
+  console.log(queryParams);
+  const eventsQuery = useQuery(
+    ['events', year, week, date, patientId],
+    async () => {
+      return client<EventAPIResponse>('v2/events', {
+        queryParams,
+      });
+    }
+  );
 
   const rawEvents = eventsQuery.data?.data.map((e) => e.attributes) ?? [];
   return {
