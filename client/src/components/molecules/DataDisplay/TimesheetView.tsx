@@ -12,6 +12,7 @@ import ContractSummary from './ContractSummary';
 import { useTranslation } from 'react-i18next';
 import { EventsOfDay, TimesheetDay } from '../../organisms/Employee/TimeSheet';
 import { Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
+import { TimesheetStyle } from '../../atoms/TableStyles';
 
 const TimesheetHeader = styled.div({
   padding: '0.5rem',
@@ -25,36 +26,6 @@ const TimeframeLabel = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
 });
-const Styles = styled.div`
-  padding: 0.5rem;
-  overflow: scroll;
-
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
-    font-size: 12px;
-
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
-
-    th,
-    td {
-      margin: 0;
-      padding: 0.25rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
-`;
 
 type TimesheetViewProps = {
   year: number;
@@ -205,7 +176,7 @@ const TimesheetView = ({
         <div>{t('employee.timesheet.model')}:</div>
         <ContractSummary contract={contract} />
       </TimesheetHeader>
-      <Styles>
+      <TimesheetStyle>
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -259,7 +230,7 @@ const TimesheetView = ({
             })}
           </tbody>
         </table>
-      </Styles>
+      </TimesheetStyle>
     </>
   );
 };
