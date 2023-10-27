@@ -12,6 +12,12 @@ const ControlWrapper = styled.div(
   })
 );
 
+const PaginationWrapper = styled.div({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.25rem',
+});
+
 const wrapperStyles = {
   height: '100%',
   width: '100%',
@@ -56,6 +62,7 @@ const CalendarEventViewWrapper = styled.div(wrapperStyles, {
 
 export {
   ControlWrapper,
+  PaginationWrapper,
   PersonListWrapper,
   ViewWrapper,
   CalendarEventViewWrapper,
