@@ -2,7 +2,7 @@ import { ContactData } from './ContactData';
 import { Patient } from './Patient';
 
 export type Doctor = {
-  uuid?: string;
+  uuid: string;
   firstName: string;
   lastName: string;
   title?: string;
@@ -13,3 +13,5 @@ export type Doctor = {
   patients?: Patient[];
   archived?: boolean;
 };
+
+export type NewDoctor = Omit<Doctor, 'uuid'> & { uuid?: never };

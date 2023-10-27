@@ -102,5 +102,5 @@ export type Patient = {
   addpayFreedom?: AddpayFreedom[];
 };
 
-export type NewPatient = Partial<Patient>;
+export type NewPatient = Omit<Patient, 'uuid'> & { uuid: never };
 export type WaitingPatient = { numberInLine: number } & Patient;
