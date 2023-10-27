@@ -3,8 +3,12 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { FaBirthdayCake } from 'react-icons/fa';
 import { getDisplayName } from '../../../helpers/displayNames';
-import { Patient } from '../../../types/Patient';
-import { Person } from '../../../types/Person';
+import {
+  NewPerson,
+  Person,
+  isNewPerson,
+  isPatient,
+} from '../../../types/Person';
 import { ContactDataDisplay } from '../DataDisplay/ContactData';
 import { EventIcon } from '../DataDisplay/Icons';
 
@@ -49,7 +53,7 @@ const AvatarContainer = styled.div({
   borderRadius: '50%',
 });
 interface PersonCardProps {
-  person: Person;
+  person: Person | NewPerson;
   hasBorder?: boolean;
   // eslint-disable-next-line no-unused-vars
   handleClickPerson?: ({ person }: { person: Person }) => void;
@@ -67,12 +71,9 @@ export const PersonCard = ({
     person.contactData && person.contactData.filter((c) => c.type === 'fax');
 
   const onClickedPerson = () => {
-    handleClickPerson ? handleClickPerson({ person }) : console.log('');
-  };
-
-  const isPatient = (person: Person): person is Patient => {
-    if ('firstContactAt' in person) return true;
-    return false;
+    handleClickPerson && !isNewPerson(person)
+      ? handleClickPerson({ person })
+      : console.log('');
   };
 
   return (
