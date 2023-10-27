@@ -15,7 +15,7 @@ import { useViewport } from '../../../hooks/useViewport';
 import { ContactData } from '../../../types/ContactData';
 import { Doctor } from '../../../types/Doctor';
 import { Patient } from '../../../types/Patient';
-import { Person } from '../../../types/Person';
+import { Person, NewPerson, isNewPerson } from '../../../types/Person';
 import { IconButton } from '../../atoms/Buttons';
 import { ControlWrapper } from '../../atoms/Wrapper';
 import { ModalHeader } from '../../Library';
@@ -24,7 +24,7 @@ import { PersonMetaData } from '../../molecules/DataDisplay/PersonMetaData';
 import { PersonForm } from './PersonForm';
 
 interface PersonModalContentProps {
-  person: Person;
+  person: Person | NewPerson;
   type?: 'create' | 'edit';
   personType?: 'doctor' | 'patient';
   onClose: () => void;
@@ -54,9 +54,11 @@ export const PersonModalContent = ({
     useUpdateContact();
 
   const [isReadOnly, setIsReadOnly] = useState<boolean>(() => type === 'edit');
-  const [currentPerson, setCurrentPerson] = useState<Person>(() => ({
-    ...person,
-  }));
+  const [currentPerson, setCurrentPerson] = useState<Person | NewPerson>(
+    () => ({
+      ...person,
+    })
+  );
 
   const isIdleCreate =
     (createPatientStatus === 'idle' || createPatientStatus === 'success') &&
@@ -97,9 +99,11 @@ export const PersonModalContent = ({
     }));
   };
 
-  const onArchive = () => {
-    updatePerson({ ...currentPerson, archived: !currentPerson.archived });
-    onClose();
+  const handleArchivePerson = () => {
+    if (!isNewPerson(currentPerson)) {
+      updatePerson({ ...currentPerson, archived: !currentPerson.archived });
+      onClose();
+    }
   };
 
   const createPerson = () => {
@@ -135,7 +139,7 @@ export const PersonModalContent = ({
         }
       );
     } else {
-      createDoctor({ doctor: currentPerson }).then((res: Doctor) => {
+      createDoctor({ doctor: currentPerson as Doctor }).then((res: Doctor) => {
         if (res?.uuid) {
           setCurrentPerson(res);
           toast(
@@ -173,7 +177,7 @@ export const PersonModalContent = ({
             );
           }
         })
-      : updateDoctor({ doctor: updatePerson }).then((res: Doctor) => {
+      : updateDoctor({ doctor: updatePerson as Doctor }).then((res: Doctor) => {
           if (res?.uuid) {
             setCurrentPerson(res);
             toast(
@@ -198,9 +202,11 @@ export const PersonModalContent = ({
     }
   };
 
-  const onSaveChangesAndClose = () => {
-    updatePerson(currentPerson);
-    onClose();
+  const handleSaveChangesAndClose = () => {
+    if (!isNewPerson(currentPerson)) {
+      updatePerson(currentPerson);
+      onClose();
+    }
   };
   const personNotCreated = !currentPerson.uuid;
   return (
@@ -257,7 +263,7 @@ export const PersonModalContent = ({
               disabled={!isIdle || !currentPerson.uuid}
               size="sm"
               type="button"
-              onClick={onArchive}
+              onClick={handleArchivePerson}
             >
               {t(`button.${currentPerson.archived ? 'activate' : 'archive'}`)}
             </Button>
@@ -289,8 +295,12 @@ export const PersonModalContent = ({
                   <Button
                     aria-label="save changes"
                     type="button"
-                    disabled={!isIdle}
-                    onClick={onSaveChangesAndClose}
+                    disabled={!isIdle || isNewPerson(currentPerson)}
+                    onClick={
+                      !isNewPerson(currentPerson)
+                        ? handleSaveChangesAndClose
+                        : () => null
+                    }
                     size="sm"
                     colorScheme="blue"
                   >
