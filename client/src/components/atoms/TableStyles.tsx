@@ -41,11 +41,17 @@ export const PersonListStyle = styled.div(
       borderSpacing: 0,
       border: '1px solid lightgrey',
       fontSize: '12px',
+      th: {
+        backgroundColor: 'linen',
+      },
       tr: {
         ':nth-child(even)': {
           backgroundColor: archived
             ? 'var(--chakra-colors-orange-100)'
             : 'var(--chakra-colors-green-100)',
+        },
+        ':hover': {
+          backgroundColor: 'palegoldenrod',
         },
         ':last-child': {
           td: {
