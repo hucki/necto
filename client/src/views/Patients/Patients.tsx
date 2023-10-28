@@ -6,7 +6,7 @@ import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 
 function Patients(): JSX.Element {
   const { isLoading, rawPatients: patients } = usePatients({
-    includes: 'contactData,addpayFreedom,doctor,institutions',
+    includes: 'contactData,addpayFreedom,doctor,institution',
   });
   const { isLoading: isLoadingArchivedPatients, archivedPatients } =
     useAllArchivedPatients();
