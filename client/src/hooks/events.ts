@@ -198,7 +198,6 @@ export function useEvents({
   if (date) queryParams['filter[date]'] = queryDate;
   if (roomId) queryParams['filter[roomId]'] = roomId.toString();
 
-  console.log(queryParams);
   const eventsQuery = useQuery(
     ['events', year, week, date, patientId],
     async () => {
