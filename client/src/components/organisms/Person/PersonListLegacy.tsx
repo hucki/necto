@@ -310,7 +310,7 @@ function PersonListLegacy({
             </Td>
           )}
           <Td>
-            <PersonCard person={p} />
+            <PersonCard person={p} isInteractive={true} />
           </Td>
           {!isDoctor(p) && (
             <>
