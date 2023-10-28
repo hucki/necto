@@ -308,7 +308,7 @@ function PersonList({
       header: t('label.name'),
       cell: (row) => {
         const rowValue = row.getValue();
-        return <PersonCard person={rowValue} />;
+        return <PersonCard isInteractive={true} person={rowValue} />;
       },
     }),
     addpayFreedom: columnHelper.accessor((row) => row, {
@@ -495,13 +495,12 @@ function PersonList({
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => {
-                  // const isSum = row.original.dayOfMonth === 99;
                   return (
                     <tr
                       key={row.id}
                       style={{
                         textAlign: 'center',
-                        // backgroundColor: 'lightgray',
+                        cursor: 'pointer',
                       }}
                       onClick={() => showPersonInfo(row.original.uuid)}
                     >
