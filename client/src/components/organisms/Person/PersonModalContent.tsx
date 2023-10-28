@@ -217,7 +217,7 @@ export const PersonModalContent = ({
         justifyContent="space-between"
         bgColor="white"
       >
-        <PersonCard person={currentPerson} hasBorder />
+        <PersonCard person={currentPerson} hasBorder isInteractive={true} />
         {!isMobile && personType === 'patient' && (
           <PersonMetaData
             createdAt={(currentPerson as Patient)?.createdAt}
