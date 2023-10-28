@@ -5,11 +5,24 @@ import { ContactData } from '../../../types/ContactData';
 
 interface ContactDataDisplayProps {
   contactData: ContactData[];
+  isInteractive?: boolean;
 }
 
 export const ContactDataDisplay = ({
   contactData,
+  isInteractive = false,
 }: ContactDataDisplayProps) => {
+  const InteractiveContact = ({ number }: { number: string }) => {
+    return (
+      <a
+        href={`tel:${number}`}
+        onClick={(e) => e.stopPropagation()}
+        style={{ color: 'blue', textDecoration: 'underline' }}
+      >
+        {number}
+      </a>
+    );
+  };
   const currentContacts = contactData.map((contactItem: ContactData, index) => (
     <div
       className="contact"
@@ -23,7 +36,11 @@ export const ContactDataDisplay = ({
       ) : (
         <IoDocumentTextOutline />
       )}{' '}
-      {contactItem.contact}
+      {contactItem.type === 'telephone' && isInteractive ? (
+        <InteractiveContact number={contactItem.contact} />
+      ) : (
+        contactItem.contact
+      )}
     </div>
   ));
   return <>{currentContacts}</>;

@@ -55,12 +55,14 @@ const AvatarContainer = styled.div({
 interface PersonCardProps {
   person: Person | NewPerson;
   hasBorder?: boolean;
+  isInteractive?: boolean;
   // eslint-disable-next-line no-unused-vars
   handleClickPerson?: ({ person }: { person: Person }) => void;
 }
 export const PersonCard = ({
   person,
   hasBorder = false,
+  isInteractive = false,
   handleClickPerson,
 }: PersonCardProps) => {
   const currentPhones =
@@ -116,24 +118,29 @@ export const PersonCard = ({
             className="institution"
             style={{
               gridArea: 'address',
+              display: 'flex',
+              alignItems: 'start',
             }}
           >
             {person.institution.name +
               ' ' +
               (person.institution.description
                 ? `(${person.institution.description})`
-                : null)}
+                : null) +
+              (person.institution.city ? ', ' + person.institution.city : '')}
           </div>
         ) : (
           <div
             className="address"
             style={{
               gridArea: 'address',
+              display: 'flex',
+              alignItems: 'start',
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis',
             }}
           >
-            {person.street + ', ' + person.city}
+            {person.street + (person.city ? ', ' + person.city : '')}
           </div>
         )}
         {currentPhones && (
@@ -143,7 +150,10 @@ export const PersonCard = ({
               gridArea: 'phone',
             }}
           >
-            <ContactDataDisplay contactData={currentPhones} />
+            <ContactDataDisplay
+              isInteractive={isInteractive}
+              contactData={currentPhones}
+            />
           </div>
         )}
         {currentFaxes && (
