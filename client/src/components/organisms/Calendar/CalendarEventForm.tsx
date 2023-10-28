@@ -428,7 +428,11 @@ function CalendarEventForm({
         <FormControl id="patient" mb="0.75rem" mt="0.5rem">
           {currentPerson ? (
             <PersonCardControlWrapper>
-              <PersonCard person={currentPerson} hasBorder />
+              <PersonCard
+                person={currentPerson}
+                hasBorder
+                isInteractive={true}
+              />
               <IconButton
                 aria-label="remove patient"
                 icon={<FaTimes />}
