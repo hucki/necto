@@ -391,11 +391,9 @@ function PersonList({
       cell: (row) => {
         const person = row.getValue();
         return (person as Patient).waitingPreferences?.map((wp) => (
-          <>
-            <Tag colorScheme="orange" variant="solid" key={wp.key}>
-              <TagLabel>{wp.label}</TagLabel>
-            </Tag>
-          </>
+          <Tag colorScheme="orange" variant="solid" key={wp.key}>
+            <TagLabel>{wp.label}</TagLabel>
+          </Tag>
         ));
       },
     }),
