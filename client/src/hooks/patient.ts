@@ -234,7 +234,15 @@ export function usePatients({
   );
   const patientsQuery = useQuery(['patients'], async () => {
     return client<PatientAPIResponse>('v2/patients', {
-      queryParams: hasQueryParams ? queryParams : undefined,
+      queryParams: hasQueryParams
+        ? Object.entries(queryParams).reduce((acc, [key, value]) => {
+            if (!value) return { ...acc };
+            return {
+              ...acc,
+              ...{ [key]: value },
+            };
+          }, {})
+        : undefined,
     });
   });
 
