@@ -53,7 +53,7 @@ export const WaitingSinceInput = ({
           disabled={isDisabled || !isWaitingPatient()}
           name="isWaitingSince"
           defaultValue={defaultValueIsWaitingSince}
-          onBlur={(e) => onInputChange({ event: e, key: 'isWaitingSince' })}
+          onChange={(e) => onInputChange({ event: e, key: 'isWaitingSince' })}
         />
         <FormLabel>{t('label.date')}</FormLabel>
       </FormControl>
