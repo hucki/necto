@@ -43,11 +43,10 @@ const SideNavContainer = styled.div(
     backgroundColor: 'linen',
     overflowX: 'hidden' /* Disable horizontal scroll */,
     transition:
-      '0.5s' /* 0.5 second transition effect to slide in the sidenav */,
+      '0.5s ease-in' /* 0.5 second transition effect to slide in the sidenav */,
     display: 'flex',
     flexDirection: 'column',
     rowGap: '0.5rem',
-    // transition: 'all 0.1s ease-in',
   },
   ({ isOpen }: SideNavContainerProps) =>
     isOpen ? { width: '200px', zIndex: '10', position: 'absolute' } : null
@@ -63,7 +62,7 @@ const SideNavOverlay = styled.div(({ isOpen }: { isOpen: boolean }) => ({
   display: isOpen ? 'initial' : 'none',
   zIndex: '5' /* Stay on top */,
   backdropFilter: 'blur(0.2rem)',
-  transition: 'all 0.25s ease-in',
+  transition: 'all 0.5s ease-in',
 }));
 
 const ContentContainer = styled(Box)({

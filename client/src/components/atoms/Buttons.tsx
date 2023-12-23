@@ -7,6 +7,9 @@ import styled from '@emotion/styled/macro';
 const NavigationButton = styled(ChakraButton)({
   width: '100%',
   borderRadius: '0',
+  marginLeft: '0.2rem',
+  borderBottomLeftRadius: '1rem',
+  borderTopLeftRadius: '1rem',
   justifyContent: 'flex-start',
   ':focus': {
     boxShadow: 'none',
