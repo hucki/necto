@@ -36,22 +36,27 @@ interface PersonListStyleProps {
 export const PersonListStyle = styled.div(
   ({ archived = false }: PersonListStyleProps) => ({
     padding: '0.5rem',
-    overflow: 'scroll',
+    overflow: 'auto',
     table: {
       borderSpacing: 0,
-      border: '1px solid lightgrey',
+      // border: '1px solid lightgrey',
       fontSize: '12px',
       th: {
         backgroundColor: 'linen',
       },
       tr: {
-        ':nth-child(even)': {
+        backgroundColor: archived
+          ? 'var(--chakra-colors-orange-50)'
+          : 'var(--chakra-colors-gray-50)',
+        ':nth-of-type(2n)': {
           backgroundColor: archived
             ? 'var(--chakra-colors-orange-100)'
-            : 'var(--chakra-colors-green-100)',
+            : 'var(--chakra-colors-gray-100)',
         },
         ':hover': {
-          backgroundColor: 'palegoldenrod',
+          backgroundColor: archived
+            ? 'var(--chakra-colors-orange-200)'
+            : 'var(--chakra-colors-green-50)',
         },
         ':last-child': {
           td: {
@@ -63,8 +68,8 @@ export const PersonListStyle = styled.div(
       'th, td': {
         margin: 0,
         padding: '0.25rem',
-        borderBottom: '1px solid lightgrey',
-        borderRight: '1px solid lightgrey',
+        // borderBottom: '1px solid lightgrey',
+        // borderRight: '1px solid lightgrey',
 
         ':last-child': {
           borderRight: 0,
