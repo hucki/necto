@@ -102,9 +102,7 @@ function RoomCalendar(): JSX.Element {
 
   const { isLoading: isLoadingRooms, rooms } = useAllRooms();
   const { isLoading: isLoadingBuildings, buildings } = useAllbuildings();
-  useEffect(() => {
-    setCalendarView('week');
-  }, []);
+  setCalendarView('week');
   useEffect(() => {
     if (currentDate && calendarDate !== currentDate)
       setCalendarDate(currentDate);
