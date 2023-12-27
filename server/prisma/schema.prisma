@@ -89,6 +89,8 @@ model Employee {
   contactData  ContactData[]    @relation("contactData_referenceIdToemployees")
   teams        EmployeeToTeam[]
   events       Event[]          @relation("event_referenceIdToEmployee")
+  timebookings Timebooking[]    @relation("timebooking_employeeIdToEmployee")
+  timeaccounts Timeaccount[]    @relation("timeaccount_employeeIdToEmployee")
   availability Availability[]   @relation("availability_referenceIdToEmployee")
 
   @@map("employees")
@@ -182,6 +184,58 @@ model Event {
   room                    Room?                    @relation("event_referenceIdToRoom", fields: [roomId], references: [uuid])
 
   @@map("events")
+}
+
+// manual bookings on timeaccounts
+model Timebooking {
+  uuid          String    @id @default(uuid()) @db.Uuid
+  employeeId    String    @db.Uuid
+  accountId     String    @db.Uuid
+  unit          String    @db.VarChar
+  value         Int
+  info          String    @db.VarChar @default("")
+  isDeleted     Boolean   @default(false)
+  startTime     DateTime? @db.Timestamp(6)
+  endTime       DateTime? @db.Timestamp(6)
+  createdAt     DateTime  @default(now())
+  createdBy     String?   @db.Uuid
+  updatedAt     DateTime  @updatedAt
+  updatedBy     String?   @db.Uuid
+  employee      Employee  @relation("timebooking_employeeIdToEmployee", fields: [employeeId], references: [uuid])
+  account       Account   @relation("timebooking_accountIdToAccount", fields: [accountId], references: [uuid])
+}
+
+// timebookings on accounts over time
+model Timeaccount {
+  uuid          String    @id @default(uuid()) @db.Uuid
+  employeeId    String    @db.Uuid
+  accountId     String    @db.Uuid
+  unit          String    @db.VarChar
+  balance       Int
+  info          String    @db.VarChar @default("")
+  startTime     DateTime? @db.Timestamp(6) // start of period - regularly per month
+  endTime       DateTime? @db.Timestamp(6) // end of period - regularly per month
+  createdAt     DateTime  @default(now())
+  createdBy     String?   @db.Uuid
+  updatedAt     DateTime  @updatedAt
+  updatedBy     String?   @db.Uuid
+  account       Account   @relation("timeaccount_accountIdToAccount", fields: [accountId], references: [uuid])
+  employee      Employee  @relation("timeaccount_employeeIdToEmployee", fields: [employeeId], references: [uuid])
+}
+
+// accounts library
+model Account {
+  uuid          String    @id @default(uuid()) @db.Uuid
+  timeType      String    @db.VarChar
+  unit          String    @db.VarChar
+  validFrom     DateTime? @db.Timestamp(6)
+  validUntil    DateTime? @db.Timestamp(6)
+  createdAt     DateTime  @default(now())
+  createdBy     String?   @db.Uuid
+  updatedAt     DateTime  @updatedAt
+  updatedBy     String?   @db.Uuid
+  timeaccounts Timeaccount[]    @relation("timeaccount_accountIdToAccount")
+  timebookings Timebooking[]    @relation("timebooking_accountIdToAccount")
 }
 
 model EventInstanceException {
