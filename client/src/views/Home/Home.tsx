@@ -18,6 +18,7 @@ import { AuthContext } from '../../providers/AuthProvider';
 import { isAuthorized } from '../../config/home';
 import { useEmployee } from '../../hooks/employees';
 import { TimeSheet } from '../../components/organisms/Employee/TimeSheet';
+import Time from '../../components/organisms/Time/Time';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -99,6 +100,7 @@ const Home = () => {
             <AccordionItem>
               {({ isExpanded }) => (
                 <>
+                  <Time employeeId={employee.uuid} />
                   <h2>
                     <AccordionButton>
                       <Box
