@@ -22,6 +22,8 @@ import * as tenantController from '../controllers/tenant.controller';
 import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
 import * as waitingPreferenceController from '../controllers/waitingPreference.controller';
+import * as timesController from '../controllers/times.controller';
+// import * as timesheetController from '../controllers/timesheet.controller';
 // import * as seedController from '../controllers/seed.controller';
 // import expressjwt from 'express-jwt';
 import passport from 'passport';
@@ -256,5 +258,6 @@ router.get(
   '/v2/employees/:employeeId',
   employeeController.getActiveEmployeeWithEvents
 );
+router.get('/v2/times', timesController.getTimes);
 
 export { router, errorRouter };
