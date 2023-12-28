@@ -35,6 +35,11 @@ const TimeInputForm = ({
     startTime: dayjs(now).toISOString(),
     endTime: dayjs(now).toISOString(),
   }));
+  const minutesDiff = dayjs(currentTimes.endTime).diff(
+    dayjs(currentTimes.startTime),
+    'minute'
+  );
+  const isDisabled = minutesDiff < 1;
   const handleAddBooking = () => {
     onAddBooking({ currentTimes });
   };
@@ -68,7 +73,11 @@ const TimeInputForm = ({
         value={dayjs(currentTimes.endTime).format('YYYY-MM-DDTHH:mm')}
         onChangeHandler={(e) => handleTimeChange(e, 'endTime')}
       />
-      <Button className="add-booking" onClick={handleAddBooking}>
+      <Button
+        isDisabled={isDisabled}
+        className="add-booking"
+        onClick={handleAddBooking}
+      >
         add {type}
       </Button>
     </TimeWrapper>
