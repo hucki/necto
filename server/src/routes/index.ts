@@ -23,6 +23,7 @@ import * as companyController from '../controllers/company.controller';
 import * as errorController from '../controllers/error.controller';
 import * as waitingPreferenceController from '../controllers/waitingPreference.controller';
 import * as timesController from '../controllers/times.controller';
+import * as accountController from '../controllers/account.controller';
 // import * as timesheetController from '../controllers/timesheet.controller';
 // import * as seedController from '../controllers/seed.controller';
 // import expressjwt from 'express-jwt';
@@ -259,5 +260,8 @@ router.get(
   employeeController.getActiveEmployeeWithEvents
 );
 router.get('/v2/times', timesController.getTimes);
+router.post('/v2/times', timesController.addTimesheetEntry);
+router.get('/v2/accounts', accountController.getAccounts);
+router.post('/v2/accounts', accountController.addAccount);
 
 export { router, errorRouter };

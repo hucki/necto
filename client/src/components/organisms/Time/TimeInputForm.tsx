@@ -32,8 +32,8 @@ const TimeInputForm = ({
   const now = new Date();
   const [currentTimes, setCurrentTimes] = useState<Times>(() => ({
     type,
-    startTime: dayjs(now).toISOString(),
-    endTime: dayjs(now).toISOString(),
+    startTime: dayjs(now).format('YYYY-MM-DDTHH:mm'),
+    endTime: dayjs(now).format('YYYY-MM-DDTHH:mm'),
   }));
   const minutesDiff = dayjs(currentTimes.endTime).diff(
     dayjs(currentTimes.startTime),
