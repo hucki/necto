@@ -208,6 +208,7 @@ model TimeType {
   uuid   String    @id @default(uuid()) @db.Uuid
   name   String    @unique @db.VarChar // time or absence
   unit   String    @db.VarChar
+  accounts Account[] @relation("timeType_accountIdToAccount")
 
 }
 
@@ -231,7 +232,7 @@ model TimesheetPerMonth {
 // accounts library
 model Account {
   uuid              String      @id @default(uuid()) @db.Uuid
-  timeType          String      @db.VarChar
+  timeTypeId        String      @db.Uuid
   unit              String      @db.VarChar
   validFrom         DateTime?   @db.Timestamp(6)
   validUntil        DateTime?   @db.Timestamp(6)
@@ -240,6 +241,7 @@ model Account {
   createdBy         String?     @db.Uuid
   updatedAt         DateTime    @updatedAt
   updatedBy         String?     @db.Uuid
+  timeType          TimeType    @relation("timeType_accountIdToAccount", fields: [timeTypeId], references: [uuid])
   timesheetPerMonth TimesheetPerMonth[] @relation("timesheetPerMonth_accountIdToAccount")
   timesheetEntries  TimesheetEntry[] @relation("timesheetentry_accountIdToAccount")
 }
