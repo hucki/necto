@@ -9,11 +9,14 @@ import {
 } from '../../../hooks/addpay';
 import { AddpayFreedom } from '../../../types/Patient';
 
-const TagWrapper = styled.div({
+interface TagWrapperProps {
+  numOfTags: number;
+}
+const TagWrapper = styled.div((p: TagWrapperProps) => ({
   display: 'grid',
-  gridTemplateColumns: 'auto auto auto',
+  gridTemplateColumns: `repeat(${p.numOfTags}, auto)`,
   gridColumnGap: '0.5rem',
-});
+}));
 interface AddpayFormProps {
   patientId: string;
   isReadOnly: boolean;
@@ -91,7 +94,7 @@ export const AddpayTags = ({
       </Tag>
     );
   });
-  return <TagWrapper>{tags}</TagWrapper>;
+  return <TagWrapper numOfTags={tags.length}>{tags}</TagWrapper>;
 };
 
 export const AddpayForm = ({

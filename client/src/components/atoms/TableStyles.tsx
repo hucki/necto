@@ -43,6 +43,7 @@ export const PersonListStyle = styled.div(
       fontSize: '12px',
       th: {
         backgroundColor: 'linen',
+        minWidth: '4rem',
       },
       tr: {
         backgroundColor: archived
