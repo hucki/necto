@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
@@ -13,7 +12,6 @@ import { Patient, User, WaitingPreference } from '@prisma/client';
 import { Serializer } from 'ts-japi';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
-dayjs.extend(isoWeek);
 
 const getSanitizedPatient = (patient) => {
   const sanitizedPatient = { ...patient };

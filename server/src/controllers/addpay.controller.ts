@@ -1,12 +1,10 @@
 import dayjs from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import { AddpayFreedom, User } from '@prisma/client';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
-dayjs.extend(isoWeek);
 
 /**
  * add AddpayFreedom
