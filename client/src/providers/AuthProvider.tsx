@@ -125,7 +125,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
         msg = errorResponse.message;
       } else if (errorResponse && errorResponse.errors?.length) {
         const msgs = errorResponse.errors.map((e) => e.message);
-        msg = [...msgs].join();
+        msg = [...msgs].join(', ');
       }
       setErrorMessage(msg);
       throw new Error(msg);
