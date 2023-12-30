@@ -59,7 +59,7 @@ export const validateLogin = async (
     .run(req);
   const errors = validationResult(req).array();
   if (errors.length) {
-    const errorMessage = errors.map((e) => e.msg).join();
+    const errorMessage = errors.map((e) => e.msg).join(', ');
     res.status(400).json({ message: errorMessage, status: 400 });
     return;
   }
