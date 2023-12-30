@@ -105,7 +105,7 @@ export const getAllActiveEmployeesWithEventsPerWeek = async (
 ): Promise<void> => {
   const year = parseInt(req.params.year);
   const week = parseInt(req.params.week);
-  const firstOfWeek = dayjs().year(year).isoWeek(week).startOf('isoWeek');
+  const firstOfWeek = dayjs().isoWeek(week).year(year).startOf('isoWeek');
   const lastOfWeek = firstOfWeek.endOf('isoWeek');
   try {
     const employees = await prisma.employee.findMany({

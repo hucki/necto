@@ -568,7 +568,7 @@ export const getEvents = async (
     } else if (year && week) {
       const thisYear = parseInt(year);
       const thisWeek = parseInt(week);
-      startDate = dayjs().year(thisYear).isoWeek(thisWeek).startOf('isoWeek');
+      startDate = dayjs().isoWeek(thisWeek).year(thisYear).startOf('isoWeek');
       endDate = startDate.endOf('isoWeek');
     } else if (date) {
       startDate = dayjs(date).set('hour', 0).set('minute', 0).set('second', 0);
