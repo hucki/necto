@@ -129,7 +129,7 @@ type WeekInput = {
   year: number;
   week: number;
   month?: never;
-  date?: never;
+  date: Dayjs;
 };
 type DateInput = {
   patientId?: never;

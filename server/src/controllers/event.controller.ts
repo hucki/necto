@@ -568,7 +568,7 @@ export const getEvents = async (
     } else if (year && week) {
       const thisYear = parseInt(year);
       const thisWeek = parseInt(week);
-      startDate = dayjs().isoWeek(thisWeek).year(thisYear).startOf('isoWeek');
+      startDate = dayjs(date).set('hour', 0).set('minute', 0).set('second', 0);
       endDate = startDate.endOf('isoWeek');
     } else if (date) {
       startDate = dayjs(date).set('hour', 0).set('minute', 0).set('second', 0);
@@ -576,21 +576,33 @@ export const getEvents = async (
     }
     const startDateISOString = startDate?.toISOString();
     const endDateISOString = endDate?.toISOString();
-    const whereClauseWithoutDates = [
+    type WhereClause =
+      | { isDeleted: boolean }
+      | { isDiagnostic: boolean }
+      | { patientId: string }
+      | { ressourceId: string }
+      | { roomId: { not: null } }
+      | { roomId: string };
+    type WhereClauseWithoutDates = WhereClause[];
+    const whereClauseWithoutDates: WhereClauseWithoutDates = [
       { isDeleted: false },
-      employeeId && {
-        ressourceId: employeeId,
-      },
-      patientId && {
-        patientId: patientId,
-      },
-      roomId && roomId === 'IS NOT NULL'
-        ? { roomId: { not: null } }
-        : roomId && { roomId: roomId },
-      isDiagnostic && {
-        isDiagnostic: Boolean(isDiagnostic),
-      },
     ];
+    if (employeeId) whereClauseWithoutDates.push({ ressourceId: employeeId });
+    if (patientId)
+      whereClauseWithoutDates.push({
+        patientId: patientId,
+      });
+    if (roomId) {
+      if (roomId === 'IS NOT NULL') {
+        whereClauseWithoutDates.push({ roomId: { not: null } });
+      } else {
+        whereClauseWithoutDates.push({ roomId: roomId });
+      }
+    }
+    if (isDiagnostic)
+      whereClauseWithoutDates.push({
+        isDiagnostic: Boolean(isDiagnostic),
+      });
     const whereClauseWithDates = {
       OR: [
         {

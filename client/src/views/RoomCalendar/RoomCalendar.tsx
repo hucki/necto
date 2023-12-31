@@ -94,7 +94,8 @@ function RoomCalendar(): JSX.Element {
   const { isLoading: isLoadingWeeksEvents, rawEvents: weeksEvents } = useEvents(
     {
       year: calendarDate.year(),
-      week: calendarDate.week(),
+      week: calendarDate.isoWeek(),
+      date: calendarDate.isoWeekday(1),
       roomId: 'IS NOT NULL',
       includes: 'room,employee',
     }
