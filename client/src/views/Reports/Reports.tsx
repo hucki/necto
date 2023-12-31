@@ -15,7 +15,7 @@ const Reports = () => {
   const { currentDate } = useContext(UserDateContext);
   const { data, isLoading } = useAllEmployeesWithWeeksEvents(
     currentDate.year(),
-    currentDate.week()
+    currentDate.isoWeek()
   );
   const dateRangeLabel =
     currentDate.startOf('week').format('DD.MM.') +
@@ -47,7 +47,7 @@ const Reports = () => {
       ),
       content: (
         <>
-          current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
+          current week: {dateRangeLabel + ' (KW ' + currentDate.isoWeek() + ')'}
           {(!data || isLoading) && <FullPageSpinner />}
           {data && (
             <EmployeeReport
@@ -72,7 +72,7 @@ const Reports = () => {
       ),
       content: (
         <>
-          current week: {dateRangeLabel + ' (KW ' + currentDate.week() + ')'}
+          current week: {dateRangeLabel + ' (KW ' + currentDate.isoWeek() + ')'}
           {(!data || isLoading) && <FullPageSpinner />}
           {data && <EmployeeDashboard employees={data} />}
         </>

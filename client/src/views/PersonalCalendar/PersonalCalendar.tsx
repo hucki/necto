@@ -5,9 +5,9 @@ import dayjs from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
 import { EmployeeRessource } from '../../types/Ressource';
 import { useUser } from '../../hooks/user';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { UserDateContext } from '../../providers/UserDate';
 import { useViewport } from '../../hooks/useViewport';
 import FilterBar from '../../components/molecules/FilterBar/FilterBar';
@@ -17,7 +17,7 @@ import { ViewWrapper } from '../../components/atoms/Wrapper';
 import { CalendarView } from '../../providers/filter/types';
 import { Employee } from '../../types/Employee';
 
-dayjs.extend(weekOfYear);
+dayjs.extend(isoWeek);
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 dayjs.locale('de');
@@ -45,7 +45,8 @@ function PersonalCalendar({
     calendarView === 'week'
       ? {
           year: calendarDate.year(),
-          week: calendarDate.week(),
+          week: calendarDate.isoWeek(),
+          date: calendarDate.isoWeekday(1), // first day of isoWeek as startDate
         }
       : {
           date: calendarDate,
@@ -55,7 +56,6 @@ function PersonalCalendar({
     ...eventDate,
     includes: 'patient,parentEvent,childEvents,room,employee',
   });
-
   const { user, isLoading: isLoadingUser } = useUser(id);
   const isLoading = isLoadingEvents || isLoadingUser;
 
