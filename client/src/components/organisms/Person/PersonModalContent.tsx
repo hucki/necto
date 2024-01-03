@@ -89,7 +89,7 @@ export const PersonModalContent = ({
   };
 
   const handleCurrentPersonChange = (
-    person: Person,
+    person: Person | NewPerson,
     contactDataCollection: ContactData[]
   ) => {
     setCurrentPerson((cur) => ({

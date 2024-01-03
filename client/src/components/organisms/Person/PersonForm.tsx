@@ -63,8 +63,12 @@ interface PersonFormProps {
   isReadOnly: boolean;
   isPending: boolean;
   personType: 'doctor' | 'patient';
-  // eslint-disable-next-line no-unused-vars
-  onChange: (person: Person, contactDataCollection: ContactData[]) => void;
+  onChange: (
+    // eslint-disable-next-line no-unused-vars
+    person: Person | NewPerson,
+    // eslint-disable-next-line no-unused-vars
+    contactDataCollection: ContactData[]
+  ) => void;
   onCreate: () => void;
 }
 
@@ -169,9 +173,7 @@ export const PersonForm = ({
   }
 
   useEffect(() => {
-    if (!isNewPerson(currentPerson)) {
-      onChange(currentPerson, currentContactDataCollection);
-    }
+    onChange(currentPerson, currentContactDataCollection);
   }, [currentPerson, currentContactDataCollection]);
 
   useEffect(() => {
