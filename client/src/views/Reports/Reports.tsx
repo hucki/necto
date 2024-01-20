@@ -9,6 +9,7 @@ import EmployeeReport from '../../components/organisms/List/EmployeeReport';
 import { useAllEmployeesWithWeeksEvents } from '../../hooks/employees';
 import { UserDateContext } from '../../providers/UserDate';
 import SingleView from '../../components/organisms/Employee/SingleView';
+import SingleYearView from '../../components/organisms/Employee/SingleYearView';
 
 const Reports = () => {
   const { t } = useTranslation();
@@ -34,6 +35,20 @@ const Reports = () => {
       content: (
         <>
           <SingleView />
+        </>
+      ),
+    },
+    {
+      allowedRoles: ['admin'],
+      name: 'singleYearView',
+      label: (
+        <>
+          <IoPeople /> {t('menu.singleYearView')}
+        </>
+      ),
+      content: (
+        <>
+          <SingleYearView />
         </>
       ),
     },
