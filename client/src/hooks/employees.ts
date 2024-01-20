@@ -5,7 +5,7 @@ import {
   useMutation,
   UseMutationResult,
 } from '@tanstack/react-query';
-import { client } from '../services/ApiClient';
+import { QueryParams, client } from '../services/ApiClient';
 import { Employee, NewEmployee } from '../types/Employee';
 
 export function useEmployee(
@@ -125,5 +125,31 @@ export function useAllEmployeesWithMonthEvents(
   return {
     employees,
     ...employeesQuery,
+  };
+}
+
+/**
+ * V2 API
+ */
+
+export function useOneEmployeeWithMonthEvents(
+  employeeId: Employee['uuid'],
+  year: string,
+  month?: string
+): UseQueryResult<Employee> & { employee: Employee } {
+  const queryParams: QueryParams = {};
+  if (year) queryParams['filter[year]'] = year.toString();
+  if (month) queryParams['filter[month]'] = month.toString();
+
+  const employeeQuery = useQuery(
+    [`v2/employees/${employeeId}`, year, month],
+    async () => {
+      return client<Employee>(`v2/employees/${employeeId}`, { queryParams });
+    }
+  );
+  const employee = employeeQuery.data || ({} as Employee);
+  return {
+    employee,
+    ...employeeQuery,
   };
 }
