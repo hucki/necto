@@ -1,75 +1,30 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect } from 'react';
 import TimesheetView from '../../molecules/DataDisplay/TimesheetView';
 import { Employee } from '../../../types/Employee';
 import { getDisplayName } from '../../../helpers/displayNames';
 import { UserDateContext } from '../../../providers/UserDate';
-import { Event, Leave, isLeave } from '../../../types/Event';
 import { IconButton } from '../../atoms/Buttons';
 import { CgPushChevronLeft, CgPushChevronRight } from 'react-icons/cg';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 import dayjs from 'dayjs';
 import { useEvents } from '../../../hooks/events';
 import { getCurrentContract } from '../../../helpers/contract';
-import { useHolidays } from '../../../hooks/useHolidays';
-
-export type EventsOfDay = {
-  leaves: number;
-  hours: {
-    done: number;
-    planned: number;
-  };
-  appointments: {
-    done: number;
-    planned: number;
-  };
-  leaveStates: {
-    leaveType: Leave['leaveType'];
-    leaveStatus: Leave['leaveStatus'];
-  }[];
-};
-
-export type TimesheetDay = {
-  /**
-   * current day of the current month
-   */
-  dayOfMonth: number;
-  /**
-   * localized name of current weekday
-   */
-  weekdayName: string;
-  /**
-   * localized name of the current public Holiday or undefined
-   */
-  publicHolidayName: string | undefined;
-  isWeekend: boolean;
-  eventsOfDay: EventsOfDay | undefined;
-  targetTimeOfDay: number;
-  /**
-   * difference between targetTime and timeOfDay (times with `isDone === false` are ecxcluded)
-   */
-  timeDiffOfDay: number;
-  /**
-   * sum of all appointments, hours or leaves of the day
-   * with state `isDone === true`
-   */
-  timeOfDay: number;
-  /**
-   * sum of all appointments, hours or leaves of the day
-   */
-  plannedTimeOfDay: number;
-};
-export type CurrentTimesheet = TimesheetDay[];
+import { CurrentTimesheet, useTimesheet } from '../../../hooks/timesheet';
 
 interface TimeSheetProps {
   employee: Employee;
 }
 export const TimeSheet = ({ employee }: TimeSheetProps) => {
-  const { isPublicHoliday, isWeekend } = useHolidays();
   const { currentDate, goTo } = useContext(UserDateContext);
   const year = currentDate.year();
   const month = currentDate.month();
+
+  const { getTimesheetPerMonth, getTimesheetSumPerMonth } = useTimesheet({
+    employeeId: employee.uuid,
+    year: (year || dayjs().year()).toString(),
+  });
+
   const currentMonth = dayjs().year(year).month(month);
-  const daysInMonth = currentMonth.daysInMonth();
   const {
     rawEvents: employeeEvents,
     refetch,
@@ -80,7 +35,6 @@ export const TimeSheet = ({ employee }: TimeSheetProps) => {
     month: currentDate.month(),
   });
   const currentMonthString = currentMonth.format('MMM');
-  const currentTimesheet: CurrentTimesheet = [];
   useEffect(() => {
     if (employee.uuid && currentMonthString) {
       refetch();
@@ -88,128 +42,13 @@ export const TimeSheet = ({ employee }: TimeSheetProps) => {
   }, [employee, currentMonthString]);
   const contract = getCurrentContract(employee);
 
-  const filteredEvents = useMemo(
-    () =>
-      employeeEvents
-        ?.filter((event) => event.type !== 'note')
-        ?.filter((event) => !event.isCancelled)
-        .filter(
-          (event) =>
-            (dayjs(event.startTime).year() === year &&
-              dayjs(event.startTime).month() === month) ||
-            (dayjs(event.endTime).year() === year &&
-              dayjs(event.endTime).month() === month)
-        ),
-    [employeeEvents]
-  );
-
-  const contractBase: 'hours' | 'appointments' =
-    contract?.appointmentsPerWeek && contract?.appointmentsPerWeek > 0
-      ? 'appointments'
-      : 'hours';
-
-  const targetTimePerDay =
-    ((contract && contract[`${contractBase}PerWeek`]) || 0) /
-    ((contract && contract.workdaysPerWeek) || 0);
-  const leaveWorthPerDay = targetTimePerDay;
-
-  for (let i = 1; i <= daysInMonth; i++) {
-    const eventsOfDay = filteredEvents
-      ?.filter((event: Event) =>
-        dayjs(event.startTime).isSame(`${year}-${month + 1}-${i}`, 'day')
-      )
-      .reduce(
-        (prev: EventsOfDay, cur: Event) => {
-          if (isLeave(cur)) {
-            prev.leaveStates.push({
-              leaveType: cur.leaveType,
-              leaveStatus: cur.leaveStatus,
-            });
-            prev.leaves++;
-          }
-          if (!cur.leaveType) {
-            const state = cur.isDone ? 'done' : 'planned';
-            prev.appointments[state]++;
-            prev.hours[state] +=
-              dayjs(cur.endTime).diff(dayjs(cur.startTime), 'minutes') / 60;
-          }
-          return prev;
-        },
-        {
-          leaves: 0,
-          hours: {
-            done: 0,
-            planned: 0,
-          },
-          appointments: {
-            done: 0,
-            planned: 0,
-          },
-          leaveStates: [],
-        }
-      );
-
-    const date = dayjs(`${year}-${month + 1}-${i}`);
-    const weekDay = date.format('dd');
-    const isWorkday =
-      contract &&
-      contract.activeWorkdays
-        .split(',')
-        .find((day) => parseInt(day) === date.day());
-    const publicHoliday = isPublicHoliday({
-      date,
-    });
-    const weekend = isWeekend({
-      date,
-    });
-    const noTargetTime = publicHoliday || weekend || !isWorkday;
-    const targetTimeOfDay = noTargetTime ? 0 : targetTimePerDay;
-    const timeOfDay =
-      noTargetTime || !eventsOfDay
-        ? 0
-        : // leaves override `contractBase` times
-          eventsOfDay.leaves * leaveWorthPerDay ||
-          eventsOfDay[contractBase].done;
-    const plannedTimeOfDay =
-      noTargetTime || !eventsOfDay
-        ? 0
-        : // leaves override `contractBase` times
-          eventsOfDay.leaves * leaveWorthPerDay ||
-          eventsOfDay[contractBase].done + eventsOfDay[contractBase].planned;
-    const timeDiffOfDay = timeOfDay - targetTimeOfDay;
-    const currentTimesheetDay = {
-      dayOfMonth: i,
-      eventsOfDay: eventsOfDay,
-      timeOfDay,
-      plannedTimeOfDay,
-      timeDiffOfDay,
-      targetTimeOfDay,
-      isWeekend: weekend,
-      publicHolidayName: (publicHoliday && publicHoliday.join()) || undefined,
-      weekdayName: weekDay,
-    };
-    currentTimesheet.push(currentTimesheetDay);
-  }
-  const timesheetSum = currentTimesheet.reduce(
-    (prev, curr) => {
-      prev.timeOfDay += curr.timeOfDay;
-      prev.timeDiffOfDay += curr.timeDiffOfDay;
-      prev.targetTimeOfDay += curr.targetTimeOfDay;
-      prev.plannedTimeOfDay += curr.plannedTimeOfDay;
-      return prev;
-    },
-    {
-      dayOfMonth: 99,
-      eventsOfDay: undefined,
-      timeOfDay: 0,
-      plannedTimeOfDay: 0,
-      timeDiffOfDay: 0,
-      targetTimeOfDay: 0,
-      isWeekend: false,
-      publicHolidayName: undefined,
-      weekdayName: 'Sum',
-    }
-  );
+  const currentTimesheet: CurrentTimesheet = getTimesheetPerMonth({
+    month: month.toString(),
+    year: year.toString(),
+  });
+  const timesheetSum = getTimesheetSumPerMonth({
+    timesheetOfMonth: currentTimesheet,
+  });
   currentTimesheet.push(timesheetSum);
   return (
     <>
