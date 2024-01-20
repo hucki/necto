@@ -8,9 +8,15 @@ export const TimesheetStyle = styled.div`
     border-spacing: 0;
     border: 1px solid black;
     font-size: 12px;
+    thead {
+      border-bottom: 1px solid black;
+      font-weight: bold;
+    }
 
     tr {
       :last-child {
+        font-size: larger;
+        font-weight: bold;
         td {
           border-bottom: 0;
         }
