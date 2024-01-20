@@ -252,5 +252,9 @@ router.get('/v2/events', eventController.getEvents);
 router.get('/v2/events/:eventId', eventController.getEvents);
 router.get('/v2/patients', patientController.getPatients);
 router.get('/v2/patients/:patientId', patientController.getPatient);
+router.get(
+  '/v2/employees/:employeeId',
+  employeeController.getActiveEmployeeWithEvents
+);
 
 export { router, errorRouter };

@@ -319,3 +319,79 @@ export const updateEmployee = async (
     next(e);
   }
 };
+
+/**
+ * API V2 filter parameter
+ */
+const filterParameter = ['year', 'month'] as const;
+type FilterParameter = (typeof filterParameter)[number];
+interface APIRequest extends Request {
+  query: {
+    filter: {
+      [key in FilterParameter]: string;
+    };
+    includes: string;
+  };
+}
+
+/**
+ * API V2 get employee with events summary per month or year
+ */
+
+export const getActiveEmployeeWithEvents = async (
+  req: APIRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const employeeId = req.params.employeeId;
+  const { year, month } = req.query.filter;
+  const thisYear = parseInt(year);
+  const thisMonth = month ? parseInt(month) : undefined;
+
+  const startDate = dayjs(`${thisYear}-${thisMonth || '01'}-01`).startOf(
+    thisMonth ? 'month' : 'year'
+  );
+  const endDate = startDate.endOf(thisMonth ? 'month' : 'year');
+
+  try {
+    const employee = await prisma.employee.findUnique({
+      where: {
+        uuid: employeeId,
+      },
+      include: {
+        contract: {
+          where: {
+            validUntil: null,
+          },
+        },
+        events: {
+          where: {
+            OR: [
+              {
+                AND: [
+                  { startTime: { gte: startDate.toISOString() } },
+                  { startTime: { lte: endDate.toISOString() } },
+                  { isDeleted: false },
+                  { isCancelled: false },
+                ],
+              },
+              {
+                AND: [
+                  { endTime: { gte: startDate.toISOString() } },
+                  { endTime: { lte: endDate.toISOString() } },
+                  { isDeleted: false },
+                  { isCancelled: false },
+                ],
+              },
+            ],
+          },
+        },
+        user: true,
+      },
+    });
+    res.json(employee);
+    res.status(201);
+  } catch (error) {
+    console.error(error);
+  }
+};
