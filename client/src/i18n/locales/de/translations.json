@@ -119,7 +119,8 @@
     "refresh": "neu laden",
     "reports": "Auswertungen",
     "weekReport": "Wochenbericht",
-    "singleView": "Einzelansicht"
+    "singleView": "Monatsansicht",
+    "singleYearView": "Jahresansicht"
   },
   "label": {
     "user": "user",

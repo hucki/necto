@@ -118,7 +118,8 @@
     "refresh": "refresh",
     "reports": "reports",
     "weekReport": "week report",
-    "singleView": "single view"
+    "singleView": "month view",
+    "singleYearView": "year view"
   },
   "label": {
     "name": "name",
