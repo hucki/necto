@@ -29,7 +29,7 @@ import {
 import { useCreateContract, useUpdateContract } from '../../hooks/contract';
 import { useAllRooms } from '../../hooks/rooms';
 import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
-import ContractSummary from '../../components/molecules/DataDisplay/ContractSummary';
+import { ContractSummary } from '../../components/molecules/DataDisplay/ContractSummary';
 import { getCurrentContract } from '../../helpers/contract';
 import { TeamsForm } from '../../components/organisms/Employee/TeamsForm';
 dayjs.extend(isBetween);

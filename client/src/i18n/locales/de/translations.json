@@ -119,7 +119,8 @@
     "refresh": "neu laden",
     "reports": "Auswertungen",
     "weekReport": "Wochenbericht",
-    "singleView": "Einzelansicht"
+    "singleView": "Monatsansicht",
+    "singleYearView": "Jahresansicht"
   },
   "label": {
     "user": "user",
@@ -155,7 +156,7 @@
     "no": "keine",
     "institution": "Einrichtung",
     "employeeProfile": "Mitarbeiterprofil",
-    "employeeSelect": "Mitarbeiter:in auswählen",
+    "employeeSelect": "Mitarbeiter:in",
     "contractData": "Vertragsdaten",
     "newPermission": "neue Berechtigung",
     "currentPermissions": "aktuelle Berechtigungen",

@@ -8,11 +8,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import ContractSummary from './ContractSummary';
+import { ContractSummary } from './ContractSummary';
 import { useTranslation } from 'react-i18next';
-import { EventsOfDay, TimesheetDay } from '../../organisms/Employee/TimeSheet';
 import { Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
 import { TimesheetStyle } from '../../atoms/TableStyles';
+import { EventsOfDay, TimesheetDay } from '../../../hooks/timesheet';
 
 const TimesheetHeader = styled.div({
   padding: '0.5rem',

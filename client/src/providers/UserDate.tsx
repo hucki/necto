@@ -15,9 +15,11 @@ export type GoToTarget =
   | 'previousDay'
   | 'previousWeek'
   | 'previousMonth'
+  | 'previousYear'
   | 'nextDay'
   | 'nextWeek'
-  | 'nextMonth';
+  | 'nextMonth'
+  | 'nextYear';
 
 type UserDateContextType = {
   currentDate: Dayjs;
@@ -37,6 +39,9 @@ function UserDateProvider({ children }: { children: ReactNode }) {
 
   const goTo = (target: GoToTarget) => {
     switch (target) {
+      case 'previousYear':
+        setCurrentDate(dayjs(currentDate).subtract(1, 'year'));
+        break;
       case 'previousMonth':
         setCurrentDate(dayjs(currentDate).subtract(1, 'month'));
         break;
@@ -45,6 +50,9 @@ function UserDateProvider({ children }: { children: ReactNode }) {
         break;
       case 'previousDay':
         setCurrentDate(dayjs(currentDate).subtract(1, 'day'));
+        break;
+      case 'nextYear':
+        setCurrentDate(dayjs(currentDate).add(1, 'year'));
         break;
       case 'nextMonth':
         setCurrentDate(dayjs(currentDate).add(1, 'month'));
