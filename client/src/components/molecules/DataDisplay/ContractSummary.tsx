@@ -79,10 +79,12 @@ export const ContractSummaryDoc = ({ contract }: ContractSummaryProps) => {
         flexDirection: 'column',
         border: '1px solid #3333',
         padding: '2pt',
+        backgroundColor: '#f5f5f5', // whitesmoke
+        lineHeight: '1.5pt',
       }}
     >
       <Text style={{ width: '100%', fontWeight: 'bold' }}>
-        {t('label.contractData')}
+        {t('employee.timesheet.model')}:
       </Text>
       <Text style={{ width: '100%' }}>
         {t('employee.contract.summary', {
