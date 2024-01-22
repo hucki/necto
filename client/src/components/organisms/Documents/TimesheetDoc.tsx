@@ -1,5 +1,12 @@
 import React from 'react';
-import { Document, Page, Text, View, PDFViewer } from '@react-pdf/renderer';
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  PDFViewer,
+  PDFDownloadLink,
+} from '@react-pdf/renderer';
 import {
   LeaveStateEvaluated,
   TimesheetPerYear,
@@ -10,6 +17,8 @@ import { Leave } from '../../../types/Event';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { timesheetStyle } from './styles';
+import { useViewport } from '../../../hooks/useViewport';
+import { Box } from '@chakra-ui/react';
 
 interface TimesheetYearDocProps {
   timesheet: TimesheetPerYear;
@@ -28,9 +37,33 @@ export const TimesheetYearDoc = ({
     value?: string | number;
   };
   const { t } = useTranslation();
+  const { isMobile } = useViewport();
   const getInterpretedValue = ({ value = '-' }: GetInterpretedValueProps) => {
     if (typeof value === 'string') return value;
     return value === 0 ? '-' : value.toFixed(2);
+  };
+
+  const DownloadBox = ({
+    isDisabled,
+    label,
+  }: {
+    isDisabled: boolean;
+    label: string;
+  }) => {
+    return (
+      <Box
+        borderRadius="md"
+        bg={isDisabled ? 'lightslategrey' : 'darkolivegreen'}
+        color={isDisabled ? 'darkolivegreen' : 'white'}
+        h={10}
+        w="100%"
+        p={2}
+        textAlign="center"
+        cursor={isDisabled ? 'not-allowed' : 'pointer'}
+      >
+        {label}
+      </Box>
+    );
   };
 
   type ReducedLeaveState = {
@@ -184,9 +217,7 @@ export const TimesheetYearDoc = ({
           </Text>
         </View>
         <View style={{ ...timesheetStyle.section }}>
-          <Text>
-            <ContractSummaryDoc contract={contract} />
-          </Text>
+          <ContractSummaryDoc contract={contract} />
         </View>
         <View style={{ ...timesheetStyle.section }}>
           <TimesheetTable />
@@ -194,7 +225,23 @@ export const TimesheetYearDoc = ({
       </Page>
     </Document>
   );
-  return (
+  return isMobile ? (
+    <PDFDownloadLink
+      document={<TimesheetDocument />}
+      fileName={`timesheet_${year}_${name.replaceAll(' ', '_')}.pdf`}
+    >
+      {({ loading }) => {
+        return (
+          <DownloadBox
+            isDisabled={loading}
+            label={
+              loading ? 'Loading document...' : '💾 Zeitkonto herunterladen'
+            }
+          />
+        );
+      }}
+    </PDFDownloadLink>
+  ) : (
     <PDFViewer width="100%" height="500px">
       <TimesheetDocument />
     </PDFViewer>
