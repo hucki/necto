@@ -15,8 +15,6 @@ export const TimesheetStyle = styled.div`
 
     tr {
       :last-child {
-        font-size: larger;
-        font-weight: bold;
         td {
           border-bottom: 0;
         }
