@@ -211,12 +211,10 @@ export const TimesheetYearDoc = ({
   const TimesheetDocument = () => (
     <Document>
       <Page size="A4" style={timesheetStyle.page}>
-        <View style={{ ...timesheetStyle.heading }}>
-          <Text>
+        <View>
+          <Text style={{ ...timesheetStyle.heading }}>
             Zeitkonto {year} - {name}
           </Text>
-        </View>
-        <View style={{ ...timesheetStyle.section }}>
           <ContractSummaryDoc contract={contract} />
         </View>
         <View style={{ ...timesheetStyle.section }}>
