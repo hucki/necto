@@ -73,15 +73,25 @@ export const ContractSummaryDoc = ({ contract }: ContractSummaryProps) => {
 
   const leaveWorthPerDay = targetTimePerDay;
   return (
-    <View style={{ display: 'flex', flexDirection: 'column' }}>
-      <Text>
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        border: '1px solid #3333',
+        padding: '2pt',
+      }}
+    >
+      <Text style={{ width: '100%', fontWeight: 'bold' }}>
+        {t('label.contractData')}
+      </Text>
+      <Text style={{ width: '100%' }}>
         {t('employee.contract.summary', {
           numberOfUnits: contract[`${contractBase}PerWeek`] || 0,
           contractBase: t(`employee.contract.${contractBase}`),
           workdaysPerWeek: contract.workdaysPerWeek,
         })}
       </Text>
-      <Text>
+      <Text style={{ width: '100%' }}>
         {activeWorkdayNames ? (
           <>
             {t('employee.contract.activeWorkdays', {
@@ -90,7 +100,7 @@ export const ContractSummaryDoc = ({ contract }: ContractSummaryProps) => {
           </>
         ) : undefined}
       </Text>
-      <Text>
+      <Text style={{ width: '100%' }}>
         {t('employee.contract.leaveWorthDescription', {
           leaveWorthPerDay,
           contractBase: t(`employee.contract.${contractBase}`),
