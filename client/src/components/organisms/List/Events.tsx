@@ -32,12 +32,18 @@ export const EventList = ({ patientId }: EventListProps) => {
 
   const { t } = useTranslation();
 
+  const sortedEvents = events
+    // sort date asc
+    .sort((a: Event, b: Event) =>
+      dayjs(a.startTime).isAfter(dayjs(b.startTime)) ? -1 : 1
+    );
+
   // pagination controls
   const rowsPerPage = 6;
   const numOfPages = Math.ceil(events.length / rowsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
   const EventRows = (): JSX.Element[] =>
-    events
+    sortedEvents
       // pagination filter
       .filter(
         (p: Event, i) =>
