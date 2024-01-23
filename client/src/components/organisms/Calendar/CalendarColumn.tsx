@@ -55,6 +55,8 @@ interface CalendarColumnInputProps {
   setClickedId: Dispatch<SetStateAction<string | undefined>>;
   clickedDateTime: Dayjs;
   setClickedDateTime: Dispatch<SetStateAction<Dayjs>>;
+  targetDateTime: Dayjs | undefined;
+  setTargetDateTime: Dispatch<SetStateAction<Dayjs | undefined>>;
   openModal: () => void;
   readOnly?: boolean;
   columnHeaderFormat?: CalendarColumnHeaderFormat;
@@ -73,6 +75,8 @@ function CalendarColumn({
   hoursInterval,
   setClickedId,
   setClickedDateTime,
+  targetDateTime,
+  setTargetDateTime,
   openModal,
   readOnly = false,
   columnHeaderFormat = 'dddd',
@@ -164,6 +168,26 @@ function CalendarColumn({
     openModal();
   }
 
+  function setMouseOverTime(
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void {
+    e.preventDefault();
+    if (e.target !== e.currentTarget) return;
+    const clickedDate = dayjs(
+      e.currentTarget.id.split(/_d/)[1].substring(0, 8)
+    );
+    const { height, top } = e.currentTarget.getBoundingClientRect();
+    const startOfDay = clickedDate.add(hoursInterval[0], 'hour');
+    const pxPerHour = height / numOfHours;
+    const clickedPx = e.pageY - top < 0 ? 0 : e.pageY - top;
+    const clickedMinutesRounded =
+      Math.round(clickedPx / (pxPerHour / 60) / 15) * 15;
+    const newTargetDateTime = startOfDay.add(clickedMinutesRounded, 'minute');
+    if (targetDateTime !== newTargetDateTime) {
+      setTargetDateTime(newTargetDateTime);
+    }
+  }
+
   function getItemStyle(event: Event) {
     if (event.isAllDay) {
       return {
@@ -223,6 +247,7 @@ function CalendarColumn({
         isWeekend={isWeekend({ date: dayjs(date) })}
         index={index}
         onClick={readOnly ? () => null : getPosition}
+        onMouseMove={setMouseOverTime}
       >
         {Boolean(noOfAppointments.total) && (
           <CounterOfDoneContainer>
@@ -275,6 +300,16 @@ function CalendarColumn({
     >
       {isToday && (
         <CalendarTimeMarker scaleHeightUnits={numOfHours + 1} firstHour={6} />
+      )}
+      {targetDateTime && (
+        <CalendarTimeMarker
+          scaleHeightUnits={numOfHours + 1}
+          firstHour={6}
+          color="black"
+          dateTime={targetDateTime}
+          onlyLine={!date.isSame(targetDateTime, 'day')}
+          hasDot={false}
+        />
       )}
       <CalendarColumnDayHeader
         numOfHours={numOfHours}
