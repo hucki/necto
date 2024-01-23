@@ -58,6 +58,7 @@ function CalendarContainer({
   const isOpenModal = eventModal.isOpen || leaveModal.isOpen;
   const [clickedId, setClickedId] = useState<string | undefined>(undefined);
   const [clickedDateTime, setClickedDateTime] = useState(dayjs());
+  const [targetDateTime, setTargetDateTime] = useState<Dayjs | undefined>();
   const [numOfDays] = useState(
     dayjs(daysRange[1]).diff(daysRange[0], 'day') + 1
   );
@@ -165,6 +166,8 @@ function CalendarContainer({
         setClickedId={setClickedId}
         clickedDateTime={clickedDateTime}
         setClickedDateTime={setClickedDateTime}
+        targetDateTime={targetDateTime}
+        setTargetDateTime={setTargetDateTime}
         openModal={
           currentEventType === 'appointments'
             ? eventModal.onOpen
@@ -177,12 +180,20 @@ function CalendarContainer({
     );
     curCalendarDay = curCalendarDay.add(1, 'day');
   }
+  function handleMouseLeave(
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void {
+    e.preventDefault();
+    setTargetDateTime(undefined);
+  }
   return (
     <CalendarWrapper
       id="containerDiv"
       key="containerDiv"
       onTouchStart={setTouchStart}
       onTouchEnd={setTouchEnd}
+      onMouseLeave={handleMouseLeave}
+      onMouseOut={handleMouseLeave}
     >
       <CalendarScale
         scaleWidth={scaleWidth}
