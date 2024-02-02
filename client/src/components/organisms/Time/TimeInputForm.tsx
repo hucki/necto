@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
 import { Button } from '@chakra-ui/react';
+import { TimeType, Times } from './Time';
 
 const TimeWrapper = styled.div({
   display: 'grid',
@@ -11,13 +12,6 @@ const TimeWrapper = styled.div({
   alignItems: 'center',
   gridAutoColumns: 'max-content',
 });
-
-export type TimeType = 'workingHours' | 'break';
-export type Times = {
-  type: string;
-  startTime: string;
-  endTime: string;
-};
 
 interface TimeInputFormProps {
   type: TimeType;
@@ -32,11 +26,11 @@ const TimeInputForm = ({
   const now = new Date();
   const [currentTimes, setCurrentTimes] = useState<Times>(() => ({
     type,
-    startTime: dayjs(now).format('YYYY-MM-DDTHH:mm'),
-    endTime: dayjs(now).format('YYYY-MM-DDTHH:mm'),
+    start: dayjs(now).format('YYYY-MM-DDTHH:mm'),
+    end: dayjs(now).format('YYYY-MM-DDTHH:mm'),
   }));
-  const minutesDiff = dayjs(currentTimes.endTime).diff(
-    dayjs(currentTimes.startTime),
+  const minutesDiff = dayjs(currentTimes.end).diff(
+    dayjs(currentTimes.start),
     'minute'
   );
   const isDisabled = minutesDiff < 1;
@@ -61,7 +55,7 @@ const TimeInputForm = ({
         autoComplete="off"
         type="datetime-local"
         name="startTime"
-        value={dayjs(currentTimes.startTime).format('YYYY-MM-DDTHH:mm')}
+        value={dayjs(currentTimes.start).format('YYYY-MM-DDTHH:mm')}
         onChangeHandler={(e) => handleTimeChange(e, 'startTime')}
       />
       <LabelledInput
@@ -70,7 +64,7 @@ const TimeInputForm = ({
         autoComplete="off"
         type="datetime-local"
         name="endTime"
-        value={dayjs(currentTimes.endTime).format('YYYY-MM-DDTHH:mm')}
+        value={dayjs(currentTimes.end).format('YYYY-MM-DDTHH:mm')}
         onChangeHandler={(e) => handleTimeChange(e, 'endTime')}
       />
       <Button
