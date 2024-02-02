@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import TimeInputForm, { Times } from './TimeInputForm';
+import TimeInputForm from './TimeInputForm';
 import { NewTimesheetEntry } from '../../../types/Times';
 import { useCreateTimsheetEntry, useTimes } from '../../../hooks/times';
+import TimeInput from './TimeInput';
 
 interface TimeProps {
   employeeId: string;
 }
+export type TimeType = 'workingHours' | 'break';
+export type Times = {
+  type: string;
+  start: string;
+  end: string;
+};
 const Time = ({ employeeId }: TimeProps) => {
   const { rawTimes: times } = useTimes({
     employeeId,
   });
-  const { mutateAsync: createTimesheetEntry, isIdle } =
-    useCreateTimsheetEntry();
+  const { mutateAsync: createTimesheetEntry } = useCreateTimsheetEntry();
 
   const [bookings, setBookings] = useState<NewTimesheetEntry[]>([]);
   const now = new Date();
@@ -31,17 +37,14 @@ const Time = ({ employeeId }: TimeProps) => {
     currentTimes: Times;
   }) => {
     const value = Math.round(
-      dayjs(currentTimes.endTime).diff(
-        dayjs(currentTimes.startTime),
-        'seconds'
-      ) / 60
+      dayjs(currentTimes.end).diff(dayjs(currentTimes.start), 'seconds') / 60
     );
     const newBooking: NewTimesheetEntry = {
       ...newTimeBooking,
       info: currentTimes.type,
       value,
-      startTime: currentTimes.startTime,
-      endTime: currentTimes.endTime,
+      startTime: currentTimes.start,
+      endTime: currentTimes.end,
     };
     const createdTimesheetEntry = await createTimesheetEntry({
       timesheetEntry: newBooking,
@@ -54,6 +57,7 @@ const Time = ({ employeeId }: TimeProps) => {
   return (
     <>
       <TimeInputForm onAddBooking={handleAddBooking} type="workingHours" />
+      <TimeInput onAddBooking={handleAddBooking} type="workingHours" />
       <TimeInputForm onAddBooking={handleAddBooking} type="break" />
       {bookings?.length
         ? bookings.map((t, i) => (
