@@ -15,11 +15,7 @@ export const getAllEmployees = async (
     const employees = await prisma.employee.findMany({
       where: { tenantId },
       include: {
-        contract: {
-          where: {
-            validUntil: null,
-          },
-        },
+        contract: true,
         teams: {
           select: {
             team: true,
@@ -45,11 +41,7 @@ export const getOneEmployee = async (
     const employee = await prisma.employee.findUnique({
       where: { uuid: employeeId },
       include: {
-        contract: {
-          where: {
-            validUntil: null,
-          },
-        },
+        contract: true,
         teams: {
           select: {
             team: true,
