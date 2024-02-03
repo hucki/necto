@@ -14,6 +14,11 @@ export type User = {
   permissions?: UserToPermissions[];
 };
 
+export type EmployeeUser = Pick<
+  User,
+  'createdAt' | 'updatedAt' | 'validUntil'
+> & { id: string; userId: string };
+
 export type TeamMember = {
   uuid: string;
   a0Id?: string;
@@ -26,4 +31,14 @@ export type TeamMember = {
   appointmentsPerWeek: number | null;
   bgColor: BgColor;
   planningProgress?: number;
+};
+
+// Typeguard
+export const isUser = (data: unknown): data is User => {
+  return (data as User).hasOwnProperty('password');
+};
+
+// Typeguard
+export const isEmployeeUser = (data: unknown): data is EmployeeUser => {
+  return (data as EmployeeUser).hasOwnProperty('userId');
 };
