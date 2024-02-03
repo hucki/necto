@@ -6,6 +6,7 @@ import { Text, View } from '@react-pdf/renderer';
 
 type ContractSummaryProps = {
   contract: Contract | NewContract;
+  variant?: 'full' | 'short';
 };
 
 const getContractBase = (
@@ -22,7 +23,11 @@ const getTargetTimePerDay = (contract: Contract | NewContract) => {
     ((contract && contract.workdaysPerWeek) || 0)
   );
 };
-export const ContractSummary = ({ contract }: ContractSummaryProps) => {
+
+export const ContractSummary = ({
+  contract,
+  variant = 'full',
+}: ContractSummaryProps) => {
   const { t } = useTranslation();
   const contractBase: 'hours' | 'appointments' = getContractBase(contract);
   const targetTimePerDay = getTargetTimePerDay(contract);
@@ -35,7 +40,8 @@ export const ContractSummary = ({ contract }: ContractSummaryProps) => {
       : undefined;
 
   const leaveWorthPerDay = targetTimePerDay;
-  return (
+
+  return variant === 'full' ? (
     <div className="contract">
       {t('employee.contract.summary', {
         numberOfUnits: contract[`${contractBase}PerWeek`] || 0,
@@ -56,9 +62,44 @@ export const ContractSummary = ({ contract }: ContractSummaryProps) => {
         contractBase: t(`employee.contract.${contractBase}`),
       })}
     </div>
+  ) : (
+    <div className="contract">{getShortContractSummary({ contract })}</div>
   );
 };
 
+export const getShortContractSummary = ({
+  contract,
+}: {
+  contract: Contract | NewContract;
+}) => {
+  const { t } = useTranslation();
+  const contractBase: 'hours' | 'appointments' = getContractBase(contract);
+  const targetTimePerDay = getTargetTimePerDay(contract);
+  const activeWorkdays = contract.activeWorkdays.split(',');
+  const activeWorkdayNames =
+    activeWorkdays.length !== 5
+      ? activeWorkdays
+          .map((day) => dayjs().day(parseInt(day)).format('dddd'))
+          .join(', ')
+      : undefined;
+
+  const leaveWorthPerDay = targetTimePerDay;
+
+  return `${t('employee.contractShortform.summary', {
+    numberOfUnits: contract[`${contractBase}PerWeek`] || 0,
+    contractBase: t(`employee.contractShortform.${contractBase}`),
+    workdaysPerWeek: contract.workdaysPerWeek,
+  })} - ${
+    activeWorkdayNames
+      ? t('employee.contractShortform.activeWorkdays', {
+          activeWorkdayNames,
+        })
+      : ''
+  } ${t('employee.contractShortform.leaveWorthDescription', {
+    leaveWorthPerDay,
+    contractBase: t(`employee.contractShortform.${contractBase}`),
+  })}`;
+};
 export const ContractSummaryDoc = ({ contract }: ContractSummaryProps) => {
   const { t } = useTranslation();
   const contractBase: 'hours' | 'appointments' = getContractBase(contract);
