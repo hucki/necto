@@ -171,7 +171,8 @@
     "cancelled": "cancelled",
     "continue": "continue",
     "showArchivedData": "show archived data",
-    "waitingPreference": "prefers"
+    "waitingPreference": "prefers",
+    "contract": "Contract"
   },
   "auth": {
     "login": "login",
@@ -204,6 +205,15 @@
       "activeWorkdays": "working days: {{activeWorkdayNames}}",
       "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} days per week.",
       "leaveWorthDescription": "One day of leave equals {{leaveWorthPerDay}} {{contractBase}}",
+      "overruledBy": "overruled by "
+    },
+    "contractShortform": {
+      "label": "contract",
+      "appointments": "app.",
+      "hours": "h",
+      "activeWorkdays": "days: {{activeWorkdayNames}}",
+      "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} d/wk.",
+      "leaveWorthDescription": "leave = {{leaveWorthPerDay}} {{contractBase}}",
       "overruledBy": "overruled by "
     }
   },
