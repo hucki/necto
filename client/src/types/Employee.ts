@@ -53,7 +53,13 @@ export type NewContract = Pick<
   | 'activeWorkdays'
   | 'bgColor'
   | 'roomId'
+  | 'validUntil'
 >;
+
+// Typeguard
+export const isContract = (data: unknown): data is Contract => {
+  return (data as Contract).hasOwnProperty('workdaysPerWeek');
+};
 
 export type Employee2Team = {
   employee: Employee;
