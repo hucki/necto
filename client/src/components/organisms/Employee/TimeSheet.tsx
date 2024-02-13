@@ -8,8 +8,7 @@ import { CgPushChevronLeft, CgPushChevronRight } from 'react-icons/cg';
 import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 import dayjs from 'dayjs';
 import { useEvents } from '../../../hooks/events';
-import { getCurrentContract } from '../../../helpers/contract';
-import { CurrentTimesheet, useTimesheet } from '../../../hooks/timesheet';
+import { useTimesheet } from '../../../hooks/timesheet';
 
 interface TimeSheetProps {
   employee: Employee;
@@ -40,9 +39,8 @@ export const TimeSheet = ({ employee }: TimeSheetProps) => {
       refetch();
     }
   }, [employee, currentMonthString]);
-  const contract = getCurrentContract(employee);
 
-  const currentTimesheet: CurrentTimesheet = getTimesheetPerMonth({
+  const { currentTimesheet, contract } = getTimesheetPerMonth({
     month: month.toString(),
     year: year.toString(),
   });
