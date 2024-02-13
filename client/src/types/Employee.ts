@@ -39,6 +39,7 @@ export type Contract = {
   workdaysPerWeek: number;
   activeWorkdays: string;
   bgColor?: BgColor;
+  validFrom?: null | Date;
   validUntil?: null | Date;
   createdAt?: Date;
   updatedAt?: Date;
