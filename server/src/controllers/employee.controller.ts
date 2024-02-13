@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
-import { Employee } from '@prisma/client';
+import { Contract, Employee } from '@prisma/client';
 import dayjs from 'dayjs';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
@@ -353,7 +353,21 @@ export const getActiveEmployeeWithEvents = async (
       include: {
         contract: {
           where: {
-            validUntil: null,
+            OR: [
+              {
+                validUntil: null,
+              },
+              {
+                validUntil: {
+                  gte: startDate.hour(0).minute(0).second(0).toISOString(),
+                },
+              },
+              {
+                validUntil: {
+                  gte: endDate.hour(0).minute(0).second(0).toISOString(),
+                },
+              },
+            ],
           },
         },
         events: {
@@ -381,9 +395,36 @@ export const getActiveEmployeeWithEvents = async (
         user: true,
       },
     });
+    employee.contract = addValidFromToContracts(employee.contract);
     res.json(employee);
     res.status(201);
   } catch (error) {
     console.error(error);
   }
+};
+
+const addValidFromToContracts = (contracts: Contract[]): Contract[] => {
+  const sortedContracts = contracts
+    .map((c) => ({
+      ...c,
+      validUntil:
+        c.validUntil === null ? dayjs('12.31.2999').toDate() : c.validUntil,
+    }))
+    .sort((a, b) =>
+      dayjs(a.validUntil).isBefore(dayjs(b.validUntil)) ? -1 : 1
+    );
+  return sortedContracts.map((contract, index) => {
+    if (index === 0) {
+      return {
+        ...contract,
+        validFrom: dayjs('01.01.1970').toDate(),
+      };
+    }
+    return {
+      ...contract,
+      validFrom: dayjs(sortedContracts[index - 1].validUntil)
+        .add(1, 'day')
+        .toDate(),
+    };
+  });
 };
