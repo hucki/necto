@@ -24,6 +24,9 @@ export const getAllEmployees = async (
         user: true,
       },
     });
+    for (const employee of employees) {
+      employee.contract = addValidFromToContracts(employee.contract);
+    }
     res.json(employees);
     res.status(200);
     return;
@@ -50,6 +53,7 @@ export const getOneEmployee = async (
         user: true,
       },
     });
+    employee.contract = addValidFromToContracts(employee.contract);
     res.json(employee);
     res.status(200);
     return;
@@ -351,25 +355,7 @@ export const getActiveEmployeeWithEvents = async (
         uuid: employeeId,
       },
       include: {
-        contract: {
-          where: {
-            OR: [
-              {
-                validUntil: null,
-              },
-              {
-                validUntil: {
-                  gte: startDate.hour(0).minute(0).second(0).toISOString(),
-                },
-              },
-              {
-                validUntil: {
-                  gte: endDate.hour(0).minute(0).second(0).toISOString(),
-                },
-              },
-            ],
-          },
-        },
+        contract: true,
         events: {
           where: {
             OR: [
@@ -403,7 +389,7 @@ export const getActiveEmployeeWithEvents = async (
   }
 };
 
-const addValidFromToContracts = (contracts: Contract[]): Contract[] => {
+export const addValidFromToContracts = (contracts: Contract[]): Contract[] => {
   const sortedContracts = contracts
     .map((c) => ({
       ...c,
