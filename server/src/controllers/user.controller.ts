@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
+import { addValidFromToContracts } from './employee.controller';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 
@@ -63,6 +64,13 @@ export const getUser = async (
         },
       },
     });
+    if (user?.userSettings) {
+      for (let i = 0; i < user.userSettings.length; i++) {
+        user.userSettings[i].employee.contract = addValidFromToContracts(
+          user.userSettings[i].employee.contract
+        );
+      }
+    }
     res.json(user);
     res.status(200);
     return;
