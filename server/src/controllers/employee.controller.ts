@@ -74,11 +74,7 @@ export const getAllActiveEmployees = async (
         validUntil: null,
       },
       include: {
-        contract: {
-          where: {
-            validUntil: null,
-          },
-        },
+        contract: true,
         teams: {
           select: {
             team: true,
@@ -87,6 +83,9 @@ export const getAllActiveEmployees = async (
         user: true,
       },
     });
+    for (const employee of employees) {
+      employee.contract = addValidFromToContracts(employee.contract);
+    }
     res.json(employees);
     res.status(200);
     return;
@@ -110,11 +109,7 @@ export const getAllActiveEmployeesWithEventsPerWeek = async (
         validUntil: null,
       },
       include: {
-        contract: {
-          where: {
-            validUntil: null,
-          },
-        },
+        contract: true,
         teams: {
           select: {
             team: true,
@@ -143,6 +138,9 @@ export const getAllActiveEmployeesWithEventsPerWeek = async (
         user: true,
       },
     });
+    for (const employee of employees) {
+      employee.contract = addValidFromToContracts(employee.contract);
+    }
     res.json(employees);
     res.status(200);
     return;
@@ -166,11 +164,7 @@ export const getAllActiveEmployeesWithEventsPerMonth = async (
         validUntil: null,
       },
       include: {
-        contract: {
-          where: {
-            validUntil: null,
-          },
-        },
+        contract: true,
         teams: {
           select: {
             team: true,
@@ -199,6 +193,9 @@ export const getAllActiveEmployeesWithEventsPerMonth = async (
         user: true,
       },
     });
+    for (const employee of employees) {
+      employee.contract = addValidFromToContracts(employee.contract);
+    }
     res.json(employees);
     res.status(200);
     return;
@@ -230,11 +227,7 @@ export const addEmployee = async (
         },
       },
       include: {
-        contract: {
-          where: {
-            validUntil: null,
-          },
-        },
+        contract: true,
       },
     });
 
@@ -246,7 +239,9 @@ export const addEmployee = async (
         },
       });
     }
-
+    createdEmployee.contract = addValidFromToContracts(
+      createdEmployee.contract
+    );
     res.json(createdEmployee);
     res.status(201);
     return;
