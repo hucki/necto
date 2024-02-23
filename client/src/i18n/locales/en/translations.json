@@ -133,6 +133,8 @@
     "zip": "zip",
     "street": "street",
     "city": "City",
+    "from": "from",
+    "until": "until",
     "isAddpayFreed": "freed?",
     "addPayFreedUntil": "freed for",
     "hasContract": "contract?",
@@ -194,7 +196,8 @@
   "employee": {
     "timesheet": {
       "label": "timesheet",
-      "model": "current timemodel",
+      "model": "timemodel",
+      "currentModel": "current timemodel",
       "absences": "absences",
       "publicHoliday": "public holiday"
     },

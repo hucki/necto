@@ -134,6 +134,8 @@
     "zip": "PLZ",
     "street": "Straße",
     "city": "Ort",
+    "from": "von",
+    "until": "bis",
     "isAddpayFreed": "befreit?",
     "addPayFreedUntil": "befreit für",
     "hasContract": "Vertrag?",
@@ -195,7 +197,8 @@
   "employee": {
     "timesheet": {
       "label": "Zeitkonto",
-      "model": "aktuelles Zeitmodell",
+      "model": "Zeitmodell",
+      "currentModel": "aktuelles Zeitmodell",
       "absences": "Abwesenheiten",
       "publicHoliday": "Feiertag"
     },
