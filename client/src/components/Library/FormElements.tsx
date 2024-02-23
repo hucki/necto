@@ -170,13 +170,15 @@ const LabelledSelect = ({
                 : dayjs(item.validUntil).format('DD.MM.YYYY'))
             : '';
 
+          const contractValue = itemIsContract
+            ? item.hoursPerWeek
+              ? `${item.hoursPerWeek}h an `
+              : item.appointmentsPerWeek
+              ? `${item.appointmentsPerWeek}TE an `
+              : ''
+            : '0 h/TE an ';
           const contractSummary = itemIsContract
-            ? item.hoursPerWeek +
-              'h bzw. ' +
-              item.appointmentsPerWeek +
-              'TE an ' +
-              item.workdaysPerWeek +
-              ' Tag(en)/Woche'
+            ? contractValue + item.workdaysPerWeek + ' Tag(en)/Woche'
             : '';
           const optionLabel = itemIsUser
             ? item.email + ': ' + item.lastName + ', ' + item.firstName
@@ -195,7 +197,7 @@ const LabelledSelect = ({
           );
         })}
       </Select>
-      <FormLabel>{label}</FormLabel>
+      {label && <FormLabel>{label}</FormLabel>}
     </FormControl>
   );
 };
