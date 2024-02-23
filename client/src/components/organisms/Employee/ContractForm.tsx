@@ -40,9 +40,10 @@ export const ContractForm = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     e.preventDefault();
+    const newdate = dayjs(e.target.value).endOf('month');
     handleChangeContract({
       targetName: e.target.name as keyof Contract,
-      targetValue: e.target.value,
+      targetValue: newdate.format('YYYY-MM-DD'),
     });
   };
 
@@ -165,12 +166,12 @@ export const ContractForm = ({
       <LabelledInput
         id="validUntil"
         disabled={disabled}
-        type="date"
+        type="month"
         name="validUntil"
         autoComplete="valid-until"
         value={
           contract.validUntil
-            ? dayjs(contract.validUntil).format('YYYY-MM-DD')
+            ? dayjs(contract.validUntil).format('YYYY-MM')
             : ''
         }
         onChangeHandler={handleContractChange}
