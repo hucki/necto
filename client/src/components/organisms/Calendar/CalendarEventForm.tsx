@@ -483,7 +483,7 @@ function CalendarEventForm({
           style={{
             backgroundColor: currentEvent.roomId ? undefined : 'var(--bgNote)',
           }}
-          value={currentEvent.roomId}
+          value={currentEvent.roomId || ''}
           onChange={onSelectChange}
         >
           <option value="">{t('label.noRoom')}</option>
