@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import {
@@ -11,6 +11,7 @@ import {
   Employee,
   NewContract,
   isContract,
+  isContractWithId,
 } from '../../types/Employee';
 import {
   FormLabel,
@@ -31,13 +32,28 @@ import {
 } from '../../components/atoms/Wrapper';
 import { useCreateContract, useUpdateContract } from '../../hooks/contract';
 import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
-import { getCurrentContract } from '../../helpers/contract';
+import { getContractOfCurrentMonth } from '../../helpers/contract';
 import { TeamsForm } from '../../components/organisms/Employee/TeamsForm';
 import { ContractForm } from '../../components/organisms/Employee/ContractForm';
+import { UserDateContext } from '../../providers/UserDate';
 dayjs.extend(isBetween);
+
+export const defaultContract: NewContract = {
+  employeeId: '',
+  hoursPerWeek: 0,
+  appointmentsPerWeek: 0,
+  activeWorkdays: '1,2,3,4,5',
+  workdaysPerWeek: 5,
+  roomId: '',
+  bgColor: 'green',
+  validUntil: null,
+};
 
 const EmployeeSettings = () => {
   const { t } = useTranslation();
+  const { currentDate } = useContext(UserDateContext);
+  const year = currentDate.year();
+  const month = currentDate.month();
   const { isLoading, employees, refetch: refetchEmployees } = useAllEmployees();
 
   const { users } = useAllUsers();
@@ -75,15 +91,9 @@ const EmployeeSettings = () => {
         : currentCompany?.uuid || '',
   });
 
-  const defaultContract: NewContract = {
-    employeeId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
-    hoursPerWeek: 0,
-    appointmentsPerWeek: 0,
-    activeWorkdays: '1,2,3,4,5',
-    workdaysPerWeek: 5,
-    roomId: '',
-    bgColor: 'green',
-    validUntil: null,
+  const newEmptyContract = {
+    ...defaultContract,
+    employeeId: currentEmployee?.uuid || '',
   };
 
   const [currentContract, setCurrentContract] = useState<
@@ -91,29 +101,13 @@ const EmployeeSettings = () => {
   >(() => {
     if (currentEmployee?.contract.length) {
       return {
-        ...sanitizeContract(currentEmployee.contract[0]),
+        ...sanitizeContract(
+          getContractOfCurrentMonth(currentEmployee, year, month)
+        ),
       };
     }
-    return defaultContract;
+    return newEmptyContract;
   });
-
-  // const [newContractValidFrom, setNewContractValidFrom] = useState<
-  //   Date | null | undefined
-  // >(
-  //   currentContract.validUntil
-  //     ? dayjs(currentContract.validUntil).add(1, 'day').toDate()
-  //     : dayjs().toDate()
-  // );
-  // const [newContractValidUntil, setNewContractValidUntil] = useState<
-  //   Date | null | undefined
-  // >(null);
-
-  // const onChangeNewContractValidity = (
-  //   e: React.ChangeEvent<HTMLInputElement>
-  // ): void => {
-  //   e.preventDefault();
-  //   setNewContractValidFrom(dayjs(e.target.value).toDate());
-  // };
 
   const [state, setState] = useState<'view' | 'edit'>('view');
 
@@ -198,12 +192,25 @@ const EmployeeSettings = () => {
       ? new Date(currentContract.validUntil)
       : null;
     const contract = {
-      ...defaultContract,
+      ...newEmptyContract,
       ...currentContract,
       validUntil: validUntilContract,
     } as Contract;
     if (contract.roomId === '') contract.roomId = undefined;
-    if (currentContract.hasOwnProperty('id')) {
+    const lastContract = currentEmployee?.contract.find(
+      (contract) =>
+        contract.validUntil === null ||
+        dayjs(contract.validUntil).isSame(dayjs('2999-12-31'), 'day')
+    );
+    if (isContractWithId(currentContract)) {
+      if (
+        currentContract.id === lastContract?.id &&
+        currentContract.validUntil !== lastContract?.validUntil
+      ) {
+        createContract({
+          contract: { ...contract, validUntil: lastContract?.validUntil },
+        });
+      }
       updateContract({ contract });
     } else {
       createContract({ contract });
@@ -213,10 +220,14 @@ const EmployeeSettings = () => {
 
   const handleCreateEmployeeContract = () => {
     const newContract = {
-      ...defaultContract,
+      ...newEmptyContract,
     } as Contract;
     if (newContract.roomId === '') newContract.roomId = undefined;
-    if (isContract(currentContract) && currentContract.validUntil === null) {
+    if (
+      isContract(currentContract) &&
+      (currentContract.validUntil === null ||
+        dayjs(currentContract.validUntil).isSame(dayjs('2999-12-31'), 'day'))
+    ) {
       // update current contract with validUntil === yesterday
       updateContract({
         contract: {
@@ -270,25 +281,17 @@ const EmployeeSettings = () => {
         alias: currentEmployee.alias || '',
       }));
       setCurrentContract({
-        ...defaultContract,
+        ...newEmptyContract,
         employeeId: currentEmployee.uuid,
-        ...(getCurrentContract(currentEmployee)
-          ? sanitizeContract(getCurrentContract(currentEmployee))
+        ...(getContractOfCurrentMonth(currentEmployee, year, month)
+          ? sanitizeContract(
+              getContractOfCurrentMonth(currentEmployee, year, month)
+            )
           : undefined),
       });
     }
   }, [currentEmployee, isLoading]);
 
-  // useEffect(() => {
-  //   if (currentContract) {
-  //     setNewContractValidFrom(
-  //       currentContract.validUntil
-  //         ? dayjs(currentContract.validUntil).add(1, 'day').toDate()
-  //         : dayjs().toDate()
-  //     );
-  //   }
-  // }, [currentContract]);
-  console.log('🍕', { currentContract });
   return !currentEmployee ? null : (
     <>
       <ControlWrapper>
@@ -418,7 +421,7 @@ const EmployeeSettings = () => {
         </SettingsWrapper>
         <SettingsWrapper>
           <Heading as="h2" size="sm" mb="2" mt="5">
-            {t('label.chooseContract')}
+            {t('label.contract')}
           </Heading>
           <LabelledSelect
             id="currentContract"
@@ -427,7 +430,7 @@ const EmployeeSettings = () => {
             value={(currentContract as Contract).id}
             onChangeHandler={onSelectContractHandler}
             noSelectionLabel="❌ No Contract"
-            label={t('label.contract')}
+            label=""
             options={employeeState.contract}
           />
           {currentContract ? (
