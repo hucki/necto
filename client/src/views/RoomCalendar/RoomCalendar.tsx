@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import CalendarContainer from '../../components/organisms/Calendar/CalendarContainer';
-import { Event } from '../../types/Event';
+import { Event, EventType } from '../../types/Event';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useAllRooms } from '../../hooks/rooms';
@@ -14,19 +14,30 @@ import { useEvents } from '../../hooks/events';
 import { UserDateContext } from '../../providers/UserDate';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { Employee } from '../../types/Employee';
+import { getContractOfCurrentMonth } from '../../helpers/contract';
 
 function combineRoomBookings(events: Event[]): Event[] {
   const eventsPerEmployee: {
     employyeeId: Employee['uuid'];
     events: Event[];
   }[] = [];
-  const roomBookings: Event[] = events.map((event) => ({
-    ...event,
-    ressourceId: event.roomId || '',
-    title: event.employee?.alias || '',
-    bgColor: event.employee?.contract[0].bgColor,
-    type: 'roomBooking',
-  }));
+
+  const roomBookings: Event[] = events.map((event) => {
+    const contract = event.employee
+      ? getContractOfCurrentMonth(
+          event.employee,
+          dayjs(event.startTime).year(),
+          dayjs(event.startTime).month()
+        )
+      : undefined;
+    return {
+      ...event,
+      ressourceId: event.roomId || '',
+      title: event.employee?.alias || '',
+      bgColor: contract?.bgColor || 'green',
+      type: 'roomBooking' as EventType,
+    };
+  });
   for (let i = 0; i < roomBookings.length; i++) {
     const currentList = eventsPerEmployee.find(
       (list) => list.employyeeId === roomBookings[i].employee?.uuid

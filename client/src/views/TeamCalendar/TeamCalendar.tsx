@@ -12,6 +12,7 @@ import { Flex } from '@chakra-ui/react';
 import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { AuthContext } from '../../providers/AuthProvider';
 import { MinimalUser } from '../../types/Auth';
+import { getContractOfCurrentMonth } from '../../helpers/contract';
 
 function TeamCalendar(): JSX.Element {
   const { user } = useContext(AuthContext);
@@ -49,14 +50,21 @@ function TeamCalendar(): JSX.Element {
     employee: Employee;
   }
   const ressources: EmployeeRessource[] = teamMembers?.length
-    ? teamMembers.map(({ employee }: TeamMemberMapProps) => ({
-        uuid: employee.uuid,
-        displayName: employee.alias || employee.firstName,
-        shortDescription: employee.firstName,
-        longDescription: employee.firstName + ' ' + employee.lastName,
-        bgColor: employee.contract[0].bgColor || 'green',
-        roomId: employee.contract[0].roomId || '',
-      }))
+    ? teamMembers.map(({ employee }: TeamMemberMapProps) => {
+        const contract = getContractOfCurrentMonth(
+          employee,
+          calendarDate.year(),
+          calendarDate.month()
+        );
+        return {
+          uuid: employee.uuid,
+          displayName: employee.alias || employee.firstName,
+          shortDescription: employee.firstName,
+          longDescription: employee.firstName + ' ' + employee.lastName,
+          bgColor: contract.bgColor || 'green',
+          roomId: contract.roomId || '',
+        };
+      })
     : [];
 
   if (isLoading) return <FullPageSpinner />;
