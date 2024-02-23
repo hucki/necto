@@ -44,7 +44,7 @@ export const defaultContract: NewContract = {
   appointmentsPerWeek: 0,
   activeWorkdays: '1,2,3,4,5',
   workdaysPerWeek: 5,
-  roomId: '',
+  roomId: undefined,
   bgColor: 'green',
   validUntil: null,
 };
@@ -274,21 +274,26 @@ const EmployeeSettings = () => {
   useEffect(() => {
     if (!isLoading && currentEmployee) {
       setState('view');
+
       setEmployeeState((currentState) => ({
         ...currentState,
         ...currentEmployee,
         userId: currentEmployee.user?.userId || '',
         alias: currentEmployee.alias || '',
       }));
-      setCurrentContract({
-        ...newEmptyContract,
-        employeeId: currentEmployee.uuid,
-        ...(getContractOfCurrentMonth(currentEmployee, year, month)
-          ? sanitizeContract(
-              getContractOfCurrentMonth(currentEmployee, year, month)
-            )
-          : undefined),
-      });
+      if (!currentEmployee.contract.length) {
+        createContract({ contract: newEmptyContract }).then(setCurrentContract);
+      } else {
+        setCurrentContract({
+          ...newEmptyContract,
+          employeeId: currentEmployee.uuid,
+          ...(getContractOfCurrentMonth(currentEmployee, year, month)
+            ? sanitizeContract(
+                getContractOfCurrentMonth(currentEmployee, year, month)
+              )
+            : undefined),
+        });
+      }
     }
   }, [currentEmployee, isLoading]);
 

@@ -35,6 +35,7 @@ export const getContractsOfCurrentYear = (
   );
   if (!contracts) {
     // FIXME: handle error when no contract is found
+    // should be fixed with auto contract creation in employee settings
     throw new Error('No contract found for current year');
   }
   return contracts;
