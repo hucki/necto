@@ -36,7 +36,7 @@ import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 
 import CalendarEventView from './CalendarEventView';
 import CalendarEventForm from './CalendarEventForm';
-import { checkOverlap } from '../../../helpers/eventChecker';
+import { checkOverlap } from '../../../helpers/event';
 import { useViewport } from '../../../hooks/useViewport';
 import { ModalFooter } from '../../Library/Modal';
 import {

@@ -16,7 +16,7 @@ import {
 } from '../../../types/Ressource';
 import { FaTimes } from 'react-icons/fa';
 import CalendarEventForm from './CalendarEventForm';
-import { checkOverlap } from '../../../helpers/eventChecker';
+import { checkOverlap } from '../../../helpers/event';
 import { rrulestr } from 'rrule';
 import { useViewport } from '../../../hooks/useViewport';
 import { useHolidays } from '../../../hooks/useHolidays';
