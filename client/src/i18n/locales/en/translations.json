@@ -133,6 +133,8 @@
     "zip": "zip",
     "street": "street",
     "city": "City",
+    "from": "from",
+    "until": "until",
     "isAddpayFreed": "freed?",
     "addPayFreedUntil": "freed for",
     "hasContract": "contract?",
@@ -171,7 +173,8 @@
     "cancelled": "cancelled",
     "continue": "continue",
     "showArchivedData": "show archived data",
-    "waitingPreference": "prefers"
+    "waitingPreference": "prefers",
+    "contract": "Contract"
   },
   "auth": {
     "login": "login",
@@ -193,7 +196,8 @@
   "employee": {
     "timesheet": {
       "label": "timesheet",
-      "model": "current timemodel",
+      "model": "timemodel",
+      "currentModel": "current timemodel",
       "absences": "absences",
       "publicHoliday": "public holiday"
     },
@@ -204,6 +208,15 @@
       "activeWorkdays": "working days: {{activeWorkdayNames}}",
       "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} days per week.",
       "leaveWorthDescription": "One day of leave equals {{leaveWorthPerDay}} {{contractBase}}",
+      "overruledBy": "overruled by "
+    },
+    "contractShortform": {
+      "label": "contract",
+      "appointments": "app.",
+      "hours": "h",
+      "activeWorkdays": "days: {{activeWorkdayNames}}",
+      "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} d/wk.",
+      "leaveWorthDescription": "leave = {{leaveWorthPerDay}} {{contractBase}}",
       "overruledBy": "overruled by "
     }
   },

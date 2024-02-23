@@ -24,14 +24,14 @@ interface TimesheetYearDocProps {
   timesheet: TimesheetPerYear;
   year: string;
   name: string;
-  contract: Contract;
+  contracts: Contract[];
 }
 
 export const TimesheetYearDoc = ({
   timesheet,
   year,
   name,
-  contract,
+  contracts,
 }: TimesheetYearDocProps) => {
   type GetInterpretedValueProps = {
     value?: string | number;
@@ -215,7 +215,9 @@ export const TimesheetYearDoc = ({
           <Text style={{ ...timesheetStyle.heading }}>
             Zeitkonto {year} - {name}
           </Text>
-          <ContractSummaryDoc contract={contract} />
+          {contracts.map((contract) => (
+            <ContractSummaryDoc contract={contract} />
+          ))}
         </View>
         <View style={{ ...timesheetStyle.section }}>
           <TimesheetTable />

@@ -7,14 +7,14 @@ import { FullPageSpinner } from '../../atoms/LoadingSpinner';
 type TimeSheetYearProps = {
   employeeId: Employee['uuid'];
   name: string;
-  contract: Contract;
+  contracts: Contract[];
   year: string;
 };
 
 export const TimeSheetYear = ({
   employeeId,
   name,
-  contract,
+  contracts,
   year,
 }: TimeSheetYearProps) => {
   const { getTimesheetPerYear, status } = useTimesheet({
@@ -30,7 +30,7 @@ export const TimeSheetYear = ({
           timesheet={timesheet}
           year={year}
           name={name}
-          contract={contract}
+          contracts={contracts}
         />
       )}
     </>

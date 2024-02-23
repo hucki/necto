@@ -134,6 +134,8 @@
     "zip": "PLZ",
     "street": "Straße",
     "city": "Ort",
+    "from": "von",
+    "until": "bis",
     "isAddpayFreed": "befreit?",
     "addPayFreedUntil": "befreit für",
     "hasContract": "Vertrag?",
@@ -172,7 +174,8 @@
     "cancelled": "abges.",
     "continue": "weiter",
     "showArchivedData": "archivierte Daten anzeigen",
-    "waitingPreference": "bevorzugt"
+    "waitingPreference": "bevorzugt",
+    "contract": "Vertrag"
   },
   "auth": {
     "login": "anmelden",
@@ -194,7 +197,8 @@
   "employee": {
     "timesheet": {
       "label": "Zeitkonto",
-      "model": "aktuelles Zeitmodell",
+      "model": "Zeitmodell",
+      "currentModel": "aktuelles Zeitmodell",
       "absences": "Abwesenheiten",
       "publicHoliday": "Feiertag"
     },
@@ -205,6 +209,15 @@
       "activeWorkdays": "vereinbarte Arbeitstage: {{activeWorkdayNames}}",
       "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} Tagen pro Woche.",
       "leaveWorthDescription": "Ein Tag Abwesenheit entspricht {{leaveWorthPerDay}} {{contractBase}}",
+      "overruledBy": "übersteuert durch "
+    },
+    "contractShortform": {
+      "label": "Vertrag",
+      "appointments": "TE",
+      "hours": "Std",
+      "activeWorkdays": "Tage: {{activeWorkdayNames}}",
+      "summary": "{{numberOfUnits}} {{contractBase}} in {{workdaysPerWeek}} Tg/W",
+      "leaveWorthDescription": "Abwesenh. = {{leaveWorthPerDay}} {{contractBase}}",
       "overruledBy": "übersteuert durch "
     }
   },

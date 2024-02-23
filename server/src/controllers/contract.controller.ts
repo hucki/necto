@@ -39,6 +39,7 @@ export const addContract = async (
         appointmentsPerWeek: parseInt(req.body.appointmentsPerWeek),
         hoursPerWeek: parseInt(req.body.hoursPerWeek),
         workdaysPerWeek: parseInt(req.body.workdaysPerWeek),
+        validUntil: req.body.validUntil,
       },
       include: {
         employee: true,
@@ -74,6 +75,7 @@ export const updateContract = async (
         appointmentsPerWeek: parseInt(req.body.appointmentsPerWeek),
         hoursPerWeek: parseInt(req.body.hoursPerWeek),
         workdaysPerWeek: parseInt(req.body.workdaysPerWeek),
+        validUntil: req.body.validUntil,
       },
       include: {
         employee: true,

@@ -8,7 +8,9 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled/macro';
-import { User } from '../../types/User';
+import { User, isUser } from '../../types/User';
+import { Contract, isContract } from '../../types/Employee';
+import dayjs from 'dayjs';
 
 const inputStyles = {
   border: '1px solid #ababab',
@@ -106,7 +108,7 @@ type CommonLabelledFormElementProps = {
 type LabelledSelectProps = CommonLabelledFormElementProps & {
   hasOptionNoSelection?: boolean;
   noSelectionLabel?: string;
-  options: User[];
+  options: User[] | Contract[];
   // eslint-disable-next-line no-unused-vars
   onChangeHandler: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
@@ -147,6 +149,9 @@ const LabelledSelect = ({
         value={value}
         onChange={onChangeHandler}
         style={{
+          fontSize: 'small',
+          fontWeight: 'normal',
+          fontFamily: 'monospace',
           backgroundColor:
             !value || value === 'remove' ? 'var(--bgNote)' : undefined,
         }}
@@ -154,13 +159,45 @@ const LabelledSelect = ({
         {hasOptionNoSelection && (
           <option value={'remove'}>{noSelectionLabel}</option>
         )}
-        {options.map((u, i) => (
-          <option key={i} value={u.uuid}>
-            {u.email + ': ' + u.lastName + ', ' + u.firstName}
-          </option>
-        ))}
+        {options.map((item, i) => {
+          const itemIsUser = isUser(item);
+          const itemIsContract = isContract(item);
+
+          const contractValidity = itemIsContract
+            ? ' bis: ' +
+              (item.validUntil === null
+                ? 'unendlich'
+                : dayjs(item.validUntil).format('DD.MM.YYYY'))
+            : '';
+
+          const contractValue = itemIsContract
+            ? item.hoursPerWeek
+              ? `${item.hoursPerWeek}h an `
+              : item.appointmentsPerWeek
+              ? `${item.appointmentsPerWeek}TE an `
+              : ''
+            : '0 h/TE an ';
+          const contractSummary = itemIsContract
+            ? contractValue + item.workdaysPerWeek + ' Tag(en)/Woche'
+            : '';
+          const optionLabel = itemIsUser
+            ? item.email + ': ' + item.lastName + ', ' + item.firstName
+            : itemIsContract
+            ? contractValidity + ' - ' + contractSummary
+            : '❌ data not supported';
+          const optionValue = itemIsUser
+            ? item.uuid
+            : itemIsContract
+            ? item.id
+            : '';
+          return (
+            <option key={i} value={optionValue}>
+              {optionLabel}
+            </option>
+          );
+        })}
       </Select>
-      <FormLabel>{label}</FormLabel>
+      {label && <FormLabel>{label}</FormLabel>}
     </FormControl>
   );
 };

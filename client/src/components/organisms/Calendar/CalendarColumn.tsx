@@ -31,6 +31,7 @@ import {
   CalendarColumnHeaderFormat,
   CalendarColumnSubHeaderContent,
 } from './types';
+import { getBgColorFromEvent } from '../../../helpers/event';
 dayjs.locale('de');
 
 export type OnClickCalendarEventProps = {
@@ -200,6 +201,7 @@ function CalendarColumn({
       </CalendarColumnRessourceHeader>
     );
   });
+
   const ressourceColsBody = ressources.map((ressource, index) => {
     const noOfAppointments = {
       total: events
@@ -242,7 +244,7 @@ function CalendarColumn({
               event,
               styles: getItemStyle(event),
               bgColor: isEmployeeRessource(ressource)
-                ? ressource.bgColor
+                ? getBgColorFromEvent(event)
                 : undefined,
             })
           )}

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import {
@@ -6,20 +6,24 @@ import {
   useCreateEmployee,
   useUpdateEmployee,
 } from '../../hooks/employees';
-import { Contract, Employee, NewContract } from '../../types/Employee';
+import {
+  Contract,
+  Employee,
+  NewContract,
+  isContract,
+  isContractWithId,
+} from '../../types/Employee';
 import {
   FormLabel,
   FormControl,
   LabelledInput,
   LabelledSelect,
   Select,
-  Checkbox,
 } from '../../components/Library';
-import { Button, Heading, Stack } from '@chakra-ui/react';
+import { Button, Heading } from '@chakra-ui/react';
 import { RiEditFill, RiUserAddLine } from 'react-icons/ri';
 import { useTranslation } from 'react-i18next';
 import { useAllUsers } from '../../hooks/user';
-import { colors } from '../../config/colors';
 import { useFilter } from '../../hooks/useFilter';
 import {
   ControlWrapper,
@@ -27,167 +31,29 @@ import {
   SettingsGrid,
 } from '../../components/atoms/Wrapper';
 import { useCreateContract, useUpdateContract } from '../../hooks/contract';
-import { useAllRooms } from '../../hooks/rooms';
 import { IoCloseOutline, IoSaveOutline } from 'react-icons/io5';
-import { ContractSummary } from '../../components/molecules/DataDisplay/ContractSummary';
-import { getCurrentContract } from '../../helpers/contract';
+import { getContractOfCurrentMonth } from '../../helpers/contract';
 import { TeamsForm } from '../../components/organisms/Employee/TeamsForm';
+import { ContractForm } from '../../components/organisms/Employee/ContractForm';
+import { UserDateContext } from '../../providers/UserDate';
 dayjs.extend(isBetween);
 
-interface ContractFormProps {
-  contract: Contract | NewContract;
-  disabled: boolean;
-  handleChangeContract: ({
-    // eslint-disable-next-line no-unused-vars
-    targetName,
-    // eslint-disable-next-line no-unused-vars
-    targetValue,
-  }: {
-    targetName: keyof Contract;
-    targetValue: string;
-  }) => void;
-}
-const ContractForm = ({
-  contract,
-  handleChangeContract,
-  disabled = true,
-}: ContractFormProps) => {
-  const { t } = useTranslation();
-  const { rooms } = useAllRooms();
-  const bgColor = contract.bgColor || 'green';
-  const activeWorkdays = contract.activeWorkdays.split(',');
-  const handleContractChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    e.preventDefault();
-    handleChangeContract({
-      targetName: e.target.name as keyof Contract,
-      targetValue: e.target.value,
-    });
-  };
-
-  const ActiveWorkdaysCheckboxes = () => {
-    const allWorkdays = ['1', '2', '3', '4', '5'];
-    const handleActiveWorkdayChange = (e: ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      const day = e.currentTarget.name;
-      const checked = e.currentTarget.checked;
-      const newActiveWorkdays = checked
-        ? [...activeWorkdays, day].sort((a, b) => parseInt(a) - parseInt(b))
-        : [...activeWorkdays.filter((activeDay) => activeDay !== day)].sort(
-            (a, b) => parseInt(a) - parseInt(b)
-          );
-      handleChangeContract({
-        targetName: 'activeWorkdays',
-        targetValue: newActiveWorkdays.join(),
-      });
-    };
-    return (
-      <>
-        {allWorkdays.map((day) => (
-          <Checkbox
-            disabled={disabled}
-            key={day}
-            name={day}
-            isChecked={Boolean(activeWorkdays.find((item) => item === day))}
-            onChange={handleActiveWorkdayChange}
-          >
-            {dayjs().day(parseInt(day)).format('ddd')}
-          </Checkbox>
-        ))}
-      </>
-    );
-  };
-  return (
-    <>
-      <Heading as="h2" size="sm" mb="3" mt="5">
-        {t('label.contractData')}
-      </Heading>
-      <ContractSummary contract={contract} />
-      <Stack direction="row">
-        <ActiveWorkdaysCheckboxes />
-      </Stack>
-      <LabelledInput
-        id="workdaysPerWeek"
-        disabled={disabled}
-        type="number"
-        name="workdaysPerWeek"
-        value={contract.workdaysPerWeek || 0}
-        onChangeHandler={handleContractChange}
-        label={t('label.workdaysPerWeek')}
-      />
-      <LabelledInput
-        id="appointmentsPerWeek"
-        disabled={disabled}
-        type="number"
-        name="appointmentsPerWeek"
-        value={contract.appointmentsPerWeek || 0}
-        onChangeHandler={handleContractChange}
-        label={t('label.appointmentsPerWeek')}
-      />
-      <LabelledInput
-        id="hoursPerWeek"
-        disabled={disabled || Boolean(contract.appointmentsPerWeek)}
-        type="number"
-        name="hoursPerWeek"
-        value={contract.hoursPerWeek || 0}
-        onChangeHandler={handleContractChange}
-        label={t('label.hoursPerWeek')}
-        errorMessage={
-          contract.appointmentsPerWeek && contract.appointmentsPerWeek > 0
-            ? t('employee.contract.hours') +
-              ' ' +
-              t('employee.contract.overruledBy') +
-              t('employee.contract.appointments')
-            : undefined
-        }
-      />
-      <FormControl id="bgColor" m={'15px auto 10px auto'}>
-        <Select
-          disabled={disabled}
-          name="bgColor"
-          value={contract.bgColor || 'green'}
-          style={{
-            backgroundColor: `var(--bg${
-              bgColor[0].toUpperCase() + bgColor.substring(1)
-            })`,
-          }}
-          onChange={handleContractChange}
-        >
-          {colors.map((color, i) => (
-            <option key={i} value={color}>
-              {color}
-            </option>
-          ))}
-        </Select>
-        <FormLabel>{t('label.bgColor')}</FormLabel>
-      </FormControl>
-      <FormControl id="roomId">
-        <Select
-          disabled={disabled}
-          name="roomId"
-          style={{
-            backgroundColor: contract.roomId ? undefined : 'var(--bgNote)',
-          }}
-          value={contract.roomId}
-          onChange={handleContractChange}
-        >
-          <option value="">{t('label.noRoom')}</option>
-          {rooms.map((room, i) => (
-            <option key={i} value={room.uuid}>
-              {room.displayName} (
-              {room.building.displayName + ': ' + room.description})
-            </option>
-          ))}
-        </Select>
-        <FormLabel>{t('label.room')}</FormLabel>
-      </FormControl>
-    </>
-  );
+export const defaultContract: NewContract = {
+  employeeId: '',
+  hoursPerWeek: 0,
+  appointmentsPerWeek: 0,
+  activeWorkdays: '1,2,3,4,5',
+  workdaysPerWeek: 5,
+  roomId: '',
+  bgColor: 'green',
+  validUntil: null,
 };
 
 const EmployeeSettings = () => {
   const { t } = useTranslation();
+  const { currentDate } = useContext(UserDateContext);
+  const year = currentDate.year();
+  const month = currentDate.month();
   const { isLoading, employees, refetch: refetchEmployees } = useAllEmployees();
 
   const { users } = useAllUsers();
@@ -224,24 +90,23 @@ const EmployeeSettings = () => {
         ? currentEmployee?.companyId
         : currentCompany?.uuid || '',
   });
-  const defaultContract: NewContract = {
-    employeeId: currentEmployee?.uuid ? currentEmployee?.uuid : '',
-    hoursPerWeek: 0,
-    appointmentsPerWeek: 0,
-    activeWorkdays: '1,2,3,4,5',
-    workdaysPerWeek: 5,
-    roomId: '',
-    bgColor: 'green',
+
+  const newEmptyContract = {
+    ...defaultContract,
+    employeeId: currentEmployee?.uuid || '',
   };
+
   const [currentContract, setCurrentContract] = useState<
     Contract | NewContract
   >(() => {
     if (currentEmployee?.contract.length) {
       return {
-        ...sanitizeContract(currentEmployee.contract[0]),
+        ...sanitizeContract(
+          getContractOfCurrentMonth(currentEmployee, year, month)
+        ),
       };
     }
-    return defaultContract;
+    return newEmptyContract;
   });
 
   const [state, setState] = useState<'view' | 'edit'>('view');
@@ -323,16 +188,55 @@ const EmployeeSettings = () => {
         validUntil,
       },
     });
+    const validUntilContract = currentContract.validUntil
+      ? new Date(currentContract.validUntil)
+      : null;
     const contract = {
-      ...defaultContract,
+      ...newEmptyContract,
       ...currentContract,
+      validUntil: validUntilContract,
     } as Contract;
     if (contract.roomId === '') contract.roomId = undefined;
-    if (currentContract.hasOwnProperty('id')) {
+    const lastContract = currentEmployee?.contract.find(
+      (contract) =>
+        contract.validUntil === null ||
+        dayjs(contract.validUntil).isSame(dayjs('2999-12-31'), 'day')
+    );
+    if (isContractWithId(currentContract)) {
+      if (
+        currentContract.id === lastContract?.id &&
+        currentContract.validUntil !== lastContract?.validUntil
+      ) {
+        createContract({
+          contract: { ...contract, validUntil: lastContract?.validUntil },
+        });
+      }
       updateContract({ contract });
     } else {
       createContract({ contract });
     }
+    refetchEmployees();
+  };
+
+  const handleCreateEmployeeContract = () => {
+    const newContract = {
+      ...newEmptyContract,
+    } as Contract;
+    if (newContract.roomId === '') newContract.roomId = undefined;
+    if (
+      isContract(currentContract) &&
+      (currentContract.validUntil === null ||
+        dayjs(currentContract.validUntil).isSame(dayjs('2999-12-31'), 'day'))
+    ) {
+      // update current contract with validUntil === yesterday
+      updateContract({
+        contract: {
+          ...currentContract,
+          validUntil: dayjs().subtract(1, 'day').toDate(),
+        },
+      });
+    }
+    createContract({ contract: newContract });
     refetchEmployees();
   };
   const onSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -341,6 +245,16 @@ const EmployeeSettings = () => {
       userId: e.target.value,
     }));
   };
+
+  const onSelectContractHandler = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
+    const contract = currentEmployee?.contract.filter(
+      (c) => c.id === parseInt(e.target.value)
+    )[0];
+    if (contract) setCurrentContract(contract);
+  };
+
   const onSubmitHandler = (e: FormEvent): void => {
     e.preventDefault();
     onUpdateEmployee();
@@ -367,10 +281,12 @@ const EmployeeSettings = () => {
         alias: currentEmployee.alias || '',
       }));
       setCurrentContract({
-        ...defaultContract,
+        ...newEmptyContract,
         employeeId: currentEmployee.uuid,
-        ...(getCurrentContract(currentEmployee)
-          ? sanitizeContract(getCurrentContract(currentEmployee))
+        ...(getContractOfCurrentMonth(currentEmployee, year, month)
+          ? sanitizeContract(
+              getContractOfCurrentMonth(currentEmployee, year, month)
+            )
           : undefined),
       });
     }
@@ -496,8 +412,27 @@ const EmployeeSettings = () => {
             label={t('label.user')}
             options={users}
           />
+          <SettingsWrapper>
+            <TeamsForm
+              employeeId={currentEmployee.uuid}
+              isReadOnly={state === 'view'}
+            />
+          </SettingsWrapper>
         </SettingsWrapper>
         <SettingsWrapper>
+          <Heading as="h2" size="sm" mb="2" mt="5">
+            {t('label.contract')}
+          </Heading>
+          <LabelledSelect
+            id="currentContract"
+            disabled={state === 'view'}
+            name="contractId"
+            value={(currentContract as Contract).id}
+            onChangeHandler={onSelectContractHandler}
+            noSelectionLabel="❌ No Contract"
+            label=""
+            options={employeeState.contract}
+          />
           {currentContract ? (
             <ContractForm
               disabled={state === 'view'}
@@ -507,13 +442,40 @@ const EmployeeSettings = () => {
           ) : (
             <b>no Contract!</b>
           )}
-        </SettingsWrapper>
-
-        <SettingsWrapper>
-          <TeamsForm
-            employeeId={currentEmployee.uuid}
-            isReadOnly={state === 'view'}
-          />
+          <SettingsWrapper>
+            <Heading as="h2" size="sm" mb="2" mt="5">
+              {t('label.createContract')}
+            </Heading>
+            <ControlWrapper>
+              <Button
+                isDisabled={state === 'view'}
+                colorScheme="green"
+                onClick={handleCreateEmployeeContract}
+              >
+                New Contract
+              </Button>
+              {/* <LabelledInput
+                id="validFromContract"
+                disabled={state === 'view'}
+                type="date"
+                name="validFrom"
+                autoComplete="valid-from"
+                value={dayjs(newContractValidFrom).format('YYYY-MM-DD')}
+                onChangeHandler={onChangeNewContractValidity}
+                label={t('label.validFrom')}
+              /> */}
+              {/* <LabelledInput
+                id="validUntilContract"
+                disabled={state === 'view'}
+                type="date"
+                name="validUntil"
+                autoComplete="valid-until"
+                value={dayjs(newContractValidUntil).format('YYYY-MM-DD')}
+                onChangeHandler={onChangeNewContractValidity}
+                label={t('label.validUntil')}
+              /> */}
+            </ControlWrapper>
+          </SettingsWrapper>
         </SettingsWrapper>
       </SettingsGrid>
     </>

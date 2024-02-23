@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { getCurrentContract } from '../helpers/contract';
+import { getContractOfCurrentMonth } from '../helpers/contract';
 import { Event, Leave, isLeave } from '../types/Event';
 import { Employee } from '../types/Employee';
 import { useOneEmployeeWithMonthEvents } from './employees';
@@ -88,8 +88,7 @@ export type TimesheetPerYear = {
 export const useTimesheet = ({ employeeId, year }: UseTimesheetProps) => {
   const { employee, status } = useOneEmployeeWithMonthEvents(employeeId, year);
   const events = employee.events;
-  const contract = employee.contract ? getCurrentContract(employee) : undefined;
-  const isPending = status !== 'success' || !contract;
+  const isPending = status !== 'success';
   const filteredEvents = useMemo(
     () =>
       events
@@ -110,7 +109,7 @@ export const useTimesheet = ({ employeeId, year }: UseTimesheetProps) => {
     };
     Object.keys(timesheetPerYear).forEach((year) =>
       Object.keys(timesheetPerYear[year]).forEach((month) => {
-        const timesheetDays = getTimesheetPerMonth({
+        const { currentTimesheet: timesheetDays } = getTimesheetPerMonth({
           year,
           month,
         });
@@ -144,6 +143,10 @@ export const useTimesheet = ({ employeeId, year }: UseTimesheetProps) => {
   }, [employee, status, year]);
 
   const getTimesheetPerMonth = ({ year, month }: TimeSheetPerMonthProps) => {
+    const contract = employee?.contract
+      ? getContractOfCurrentMonth(employee, parseInt(year), parseInt(month))
+      : undefined;
+
     const thisYear = dayjs().year(parseInt(year));
     const thisMonth = dayjs().year(parseInt(year)).month(parseInt(month));
     const daysInMonth = thisMonth.daysInMonth();
@@ -245,7 +248,7 @@ export const useTimesheet = ({ employeeId, year }: UseTimesheetProps) => {
       };
       currentTimesheet.push(currentTimesheetDay);
     }
-    return currentTimesheet;
+    return { currentTimesheet, contract };
   };
 
   const getTimesheetSumPerMonth = ({

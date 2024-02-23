@@ -16,6 +16,7 @@ import { FullPageSpinner } from '../../components/atoms/LoadingSpinner';
 import { ViewWrapper } from '../../components/atoms/Wrapper';
 import { CalendarView } from '../../providers/filter/types';
 import { Employee } from '../../types/Employee';
+import { getContractOfCurrentMonth } from '../../helpers/contract';
 
 dayjs.extend(isoWeek);
 dayjs.extend(LocalizedFormat);
@@ -81,6 +82,11 @@ function PersonalCalendar({
     return <FullPageSpinner />;
 
   const thisEmployee = user?.userSettings[0].employee;
+  const thisEmployeesContract = getContractOfCurrentMonth(
+    thisEmployee,
+    calendarDate.year(),
+    calendarDate.month()
+  );
 
   const ressources: EmployeeRessource[] = [
     {
@@ -89,8 +95,8 @@ function PersonalCalendar({
       displayName: thisEmployee.firstName,
       shortDescription: thisEmployee.firstName,
       longDescription: thisEmployee.firstName + ' ' + thisEmployee.lastName,
-      bgColor: thisEmployee.contract[0]?.bgColor || '',
-      roomId: thisEmployee.contract[0]?.roomId || '',
+      bgColor: thisEmployeesContract.bgColor || '',
+      roomId: thisEmployeesContract.roomId || '',
     },
   ];
 

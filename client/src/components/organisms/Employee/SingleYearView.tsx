@@ -6,7 +6,7 @@ import { useAllActiveEmployees } from '../../../hooks/employees';
 import { useTranslation } from 'react-i18next';
 import { TimeSheetYear } from './TimeSheetYear';
 import { getDisplayName } from '../../../helpers/displayNames';
-import { getCurrentContract } from '../../../helpers/contract';
+import { getContractsOfCurrentYear } from '../../../helpers/contract';
 import { Button } from '@chakra-ui/react';
 import { UserDateContext } from '../../../providers/UserDate';
 import dayjs from 'dayjs';
@@ -42,11 +42,11 @@ const SingleYearView = () => {
       setCurrentEmployee(selectedEmployee);
     }
   };
-  const contract = currentEmployee
-    ? getCurrentContract(currentEmployee)
-    : undefined;
 
-  return !currentEmployee || !contract || !employees ? null : (
+  const contracts = currentEmployee
+    ? getContractsOfCurrentYear(currentEmployee, currentDate.year())
+    : undefined;
+  return !currentEmployee || !contracts || !employees ? null : (
     <>
       <ControlWrapper>
         <IconButton
@@ -101,7 +101,7 @@ const SingleYearView = () => {
         <TimeSheetYear
           employeeId={currentEmployee.uuid}
           name={getDisplayName({ person: currentEmployee, type: 'full' })}
-          contract={contract}
+          contracts={contracts}
           year={year}
         />
       )}

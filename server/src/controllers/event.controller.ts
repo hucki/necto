@@ -5,8 +5,9 @@ import { Request, Response, NextFunction } from 'express';
 import prisma from '../db/prisma';
 import dotenv from 'dotenv';
 import { decryptPatient, encryptedPatientFields } from '../utils/crypto';
-import { Event, User } from '@prisma/client';
+import { Contract, Employee, Event, User } from '@prisma/client';
 import { notifyUser, sendEventChange } from '../utils/nodemailer';
+import { addValidFromToContracts } from './employee.controller';
 dotenv.config();
 const tenantId = process.env.TENANT_UUID;
 dayjs.extend(isoWeek);
@@ -199,6 +200,7 @@ export const updateCurrentAndFutureEvents = async (
     });
     const finalUpdateData = updatableFieldsEvent
       .map((field) =>
+        // FIXME: allow removing isDiagnostic
         !req.body[field]
           ? null
           : req.body[field] === currentEventData[field]
@@ -635,17 +637,23 @@ export const getEvents = async (
         room: includes.includes('room')
           ? { include: { building: true } }
           : false,
-        employee: includes.includes('employee')
-          ? { include: { contract: { where: { validUntil: null } } } }
-          : false,
+        employee: { include: { contract: true } },
       },
     });
     for (let i = 0; i < events.length; i++) {
-      if (events[i].patient) {
-        events[i].patient = decryptPatient({
-          patient: events[i].patient,
+      const event = events[i];
+      if (event.patient) {
+        event.patient = decryptPatient({
+          patient: event.patient,
           fields: encryptedPatientFields,
         });
+      }
+      if (!includes.includes('employee')) {
+        delete event.employee;
+      } else {
+        event.employee.contract = addValidFromToContracts(
+          event.employee.contract
+        );
       }
     }
     const EventSerializer = new Serializer('events');
