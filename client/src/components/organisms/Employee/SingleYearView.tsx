@@ -6,7 +6,7 @@ import { useAllActiveEmployees } from '../../../hooks/employees';
 import { useTranslation } from 'react-i18next';
 import { TimeSheetYear } from './TimeSheetYear';
 import { getDisplayName } from '../../../helpers/displayNames';
-import { getCurrentContract } from '../../../helpers/contract';
+import { getContractOfCurrentMonth } from '../../../helpers/contract';
 import { Button } from '@chakra-ui/react';
 import { UserDateContext } from '../../../providers/UserDate';
 import dayjs from 'dayjs';
@@ -43,7 +43,11 @@ const SingleYearView = () => {
     }
   };
   const contract = currentEmployee
-    ? getCurrentContract(currentEmployee)
+    ? getContractOfCurrentMonth(
+        currentEmployee,
+        currentDate.year(),
+        currentDate.month()
+      )
     : undefined;
 
   return !currentEmployee || !contract || !employees ? null : (
