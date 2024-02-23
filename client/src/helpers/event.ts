@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { Event, NewEvent } from '../types/Event';
+import { getContractOfCurrentMonth } from './contract';
 
 interface CheckOverlapProps {
   eventToCheck: NewEvent | Event;
@@ -36,3 +37,12 @@ export function checkOverlap({ eventToCheck, eventList }: CheckOverlapProps) {
   }
   return result;
 }
+
+export const getBgColorFromEvent = (event: Event) => {
+  if (!event.employee) return;
+  return getContractOfCurrentMonth(
+    event.employee,
+    dayjs(event.startTime).year(),
+    dayjs(event.startTime).month()
+  ).bgColor;
+};
