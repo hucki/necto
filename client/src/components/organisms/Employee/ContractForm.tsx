@@ -40,10 +40,13 @@ export const ContractForm = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     e.preventDefault();
-    const newdate = dayjs(e.target.value).endOf('month');
+    const newValue =
+      e.target.name === 'validUntil'
+        ? dayjs(e.target.value).endOf('month').format('YYYY-MM-DD')
+        : e.target.value;
     handleChangeContract({
       targetName: e.target.name as keyof Contract,
-      targetValue: newdate.format('YYYY-MM-DD'),
+      targetValue: newValue,
     });
   };
 
