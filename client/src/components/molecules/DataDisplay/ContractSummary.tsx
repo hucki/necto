@@ -43,6 +43,10 @@ export const ContractSummary = ({
 
   return variant === 'full' ? (
     <div className="contract">
+      <b>{`${t('label.validUntil')}: ${dayjs(contract.validUntil).format(
+        'L'
+      )}`}</b>
+      <br />
       {t('employee.contract.summary', {
         numberOfUnits: contract[`${contractBase}PerWeek`] || 0,
         contractBase: t(`employee.contract.${contractBase}`),
@@ -125,7 +129,14 @@ export const ContractSummaryDoc = ({ contract }: ContractSummaryProps) => {
       }}
     >
       <Text style={{ width: '100%', fontWeight: 'bold' }}>
-        {t('employee.timesheet.model')}:
+        {t('employee.timesheet.model')}
+        {(contract as Contract).validFrom
+          ? ` - ${dayjs((contract as Contract).validFrom).format('L')}`
+          : ''}
+        {` - ${
+          !(contract as Contract).validFrom ? t('label.validUntil') + ': ' : ''
+        }${dayjs(contract.validUntil).format('L')}`}
+        :
       </Text>
       <Text style={{ width: '100%' }}>
         {t('employee.contract.summary', {
