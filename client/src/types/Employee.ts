@@ -39,8 +39,8 @@ export type Contract = {
   workdaysPerWeek: number;
   activeWorkdays: string;
   bgColor?: BgColor;
-  validFrom?: null | Date;
-  validUntil?: null | Date;
+  validFrom: null | Date;
+  validUntil: null | Date;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -60,6 +60,11 @@ export type NewContract = Pick<
 // Typeguard
 export const isContract = (data: unknown): data is Contract => {
   return (data as Contract).hasOwnProperty('workdaysPerWeek');
+};
+
+// Typeguard
+export const isContractWithId = (data: unknown): data is Contract => {
+  return (data as Contract).hasOwnProperty('id');
 };
 
 export type Employee2Team = {
