@@ -1,9 +1,6 @@
 import dayjs from 'dayjs';
 import { Contract, Employee } from '../types/Employee';
 
-export const getCurrentContract = (employee: Employee): Contract =>
-  employee.contract[0];
-
 export const getContractOfCurrentMonth = (
   employee: Employee,
   year: number,
@@ -17,6 +14,9 @@ export const getContractOfCurrentMonth = (
       (dayjs(contract.validUntil).isAfter(currentMonth, 'month') ||
         dayjs(contract.validUntil).isSame(currentMonth, 'month'))
   );
-  if (!contract) throw new Error('No contract found for current month');
+  if (!contract) {
+    // FIXME: handle error when no contract is found
+    throw new Error('No contract found for current month');
+  }
   return contract;
 };
