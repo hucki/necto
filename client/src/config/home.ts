@@ -13,6 +13,9 @@ export const authorizedHome = {
   personalTimesheet: {
     rolesWithAccess: ['admin', 'planner', 'employee'],
   },
+  workingHours: {
+    rolesWithAccess: ['admin'],
+  },
 };
 
 export type HomeItem = keyof typeof authorizedHome;

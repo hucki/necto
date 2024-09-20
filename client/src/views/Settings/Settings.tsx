@@ -8,6 +8,7 @@ import {
   IoPeople,
   IoPeopleCircleOutline,
   IoPersonCircleOutline,
+  IoTime,
 } from 'react-icons/io5';
 import UserProfile from '../../components/organisms/UserProfile/UserProfile';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ import { useViewport } from '../../hooks/useViewport';
 import { TabPanel } from '../../components/Library';
 
 import { Role } from '../../types/Auth';
+import { Accounts } from '../../components/organisms/Time/Accounts';
 
 const Settings = (): JSX.Element => {
   const { user } = useContext(AuthContext);
@@ -78,6 +80,17 @@ const Settings = (): JSX.Element => {
         </>
       ),
       content: <UserProfile id={user?.uuid || ''} />,
+    },
+    {
+      allowedRoles: ['admin'],
+      name: 'timesheetAccounts',
+      label: (
+        <>
+          <IoTime />
+          {t('menu.timesheetAccounts')}
+        </>
+      ),
+      content: <Accounts />,
     },
   ];
 

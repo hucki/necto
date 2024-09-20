@@ -89,6 +89,8 @@ model Employee {
   contactData  ContactData[]    @relation("contactData_referenceIdToemployees")
   teams        EmployeeToTeam[]
   events       Event[]          @relation("event_referenceIdToEmployee")
+  timesheetEntries  TimesheetEntry[]      @relation("timesheetentry_employeeIdToEmployee")
+  timesheetsPerMonth TimesheetPerMonth[]    @relation("timesheetPerMonth_employeeIdToEmployee")
   availability Availability[]   @relation("availability_referenceIdToEmployee")
 
   @@map("employees")
@@ -182,6 +184,66 @@ model Event {
   room                    Room?                    @relation("event_referenceIdToRoom", fields: [roomId], references: [uuid])
 
   @@map("events")
+}
+
+// manual bookings on timeaccounts
+model TimesheetEntry {
+  uuid          String    @id @default(uuid()) @db.Uuid
+  employeeId    String    @db.Uuid
+  accountId     String    @db.Uuid
+  value         Int
+  info          String    @db.VarChar @default("")
+  isDeleted     Boolean   @default(false)
+  startTime     DateTime? @db.Timestamp(6)
+  endTime       DateTime? @db.Timestamp(6)
+  createdAt     DateTime  @default(now())
+  createdBy     String?   @db.Uuid
+  updatedAt     DateTime  @updatedAt
+  updatedBy     String?   @db.Uuid
+  employee      Employee  @relation("timesheetentry_employeeIdToEmployee", fields: [employeeId], references: [uuid])
+  account       Account   @relation("timesheetentry_accountIdToAccount", fields: [accountId], references: [uuid])
+}
+
+model TimeType {
+  uuid   String    @id @default(uuid()) @db.Uuid
+  name   String    @unique @db.VarChar // time or absence
+  unit   String    @db.VarChar
+  accounts Account[] @relation("timeType_accountIdToAccount")
+
+}
+
+// timebookings on accounts per Month
+model TimesheetPerMonth {
+  uuid          String    @id @default(uuid()) @db.Uuid
+  employeeId    String    @db.Uuid
+  accountId     String    @db.Uuid
+  value         Int
+  year          Int
+  month         Int
+  info          String    @db.VarChar @default("")
+  createdAt     DateTime  @default(now())
+  createdBy     String?   @db.Uuid
+  updatedAt     DateTime  @updatedAt
+  updatedBy     String?   @db.Uuid
+  account       Account   @relation("timesheetPerMonth_accountIdToAccount", fields: [accountId], references: [uuid])
+  employee      Employee  @relation("timesheetPerMonth_employeeIdToEmployee", fields: [employeeId], references: [uuid])
+}
+
+// accounts library
+model Account {
+  uuid              String      @id @default(uuid()) @db.Uuid
+  timeTypeId        String      @db.Uuid
+  unit              String      @db.VarChar
+  validFrom         DateTime?   @db.Timestamp(6)
+  validUntil        DateTime?   @db.Timestamp(6)
+  description       String      @db.VarChar @default("")
+  createdAt         DateTime    @default(now())
+  createdBy         String?     @db.Uuid
+  updatedAt         DateTime    @updatedAt
+  updatedBy         String?     @db.Uuid
+  timeType          TimeType    @relation("timeType_accountIdToAccount", fields: [timeTypeId], references: [uuid])
+  timesheetPerMonth TimesheetPerMonth[] @relation("timesheetPerMonth_accountIdToAccount")
+  timesheetEntries  TimesheetEntry[] @relation("timesheetentry_accountIdToAccount")
 }
 
 model EventInstanceException {
