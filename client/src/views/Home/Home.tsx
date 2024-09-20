@@ -96,11 +96,11 @@ const Home = () => {
               </AccordionPanel>
             </AccordionItem>
           )}
+
           {user && employee && isAuthorized(user, 'personalTimesheet') && (
             <AccordionItem>
               {({ isExpanded }) => (
                 <>
-                  <Time employeeId={employee.uuid} />
                   <h2>
                     <AccordionButton>
                       <Box
@@ -116,6 +116,31 @@ const Home = () => {
                   </h2>
                   <AccordionPanel pb={4}>
                     {isExpanded ? <TimeSheet employee={employee} /> : null}
+                  </AccordionPanel>
+                </>
+              )}
+            </AccordionItem>
+          )}
+
+          {user && employee && isAuthorized(user, 'workingHours') && (
+            <AccordionItem>
+              {({ isExpanded }) => (
+                <>
+                  <h2>
+                    <AccordionButton>
+                      <Box
+                        flex="1"
+                        textAlign="left"
+                        display="flex"
+                        flexDirection="row"
+                      >
+                        <span>Arbeitszeit</span>
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    {isExpanded ? <Time employeeId={employee.uuid} /> : null}
                   </AccordionPanel>
                 </>
               )}
