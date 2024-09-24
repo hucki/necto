@@ -5,6 +5,7 @@ import EmployeeSettings from '../EmployeeSettings/EmployeeSettings';
 import {
   IoCalendarNumberOutline,
   IoConstructOutline,
+  IoDiamondOutline,
   IoPeople,
   IoPeopleCircleOutline,
   IoPersonCircleOutline,
@@ -21,6 +22,7 @@ import { TabPanel } from '../../components/Library';
 
 import { Role } from '../../types/Auth';
 import { Accounts } from '../../components/organisms/Time/Accounts';
+import PatientData from '../Patients/PatientData';
 
 const Settings = (): JSX.Element => {
   const { user } = useContext(AuthContext);
@@ -91,6 +93,17 @@ const Settings = (): JSX.Element => {
         </>
       ),
       content: <Accounts />,
+    },
+    {
+      allowedRoles: ['admin'],
+      name: 'adminTools',
+      label: (
+        <>
+          <IoDiamondOutline color="red" />
+          {t('menu.adminTools')}
+        </>
+      ),
+      content: <PatientData />,
     },
   ];
 

@@ -36,3 +36,35 @@ export const sanitizePatient = (patient: Patient): Patient => {
     return { ...prev, [cur]: (patient as Patient)[cur] };
   }, {}) as Patient;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const jsonToCsv = (jsonData: any[]) => {
+  if (jsonData.length === 0) {
+    return '';
+  }
+
+  const headers = Object.keys(jsonData[0]);
+  const csvRows = [
+    headers.join(';'), // Header row
+    ...jsonData.map((row) => headers.map((header) => row[header]).join(';')), // Data rows
+  ];
+
+  return csvRows.join('\n');
+};
+
+export const flattenJsonRecursively = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  entry: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result: any,
+  parentKey = ''
+) => {
+  for (const key in entry) {
+    const newKey = parentKey ? `${parentKey}_${key}` : key;
+    if (typeof entry[key] === 'object') {
+      flattenJsonRecursively(entry[key], result, newKey);
+    } else {
+      result[newKey] = entry[key];
+    }
+  }
+};
