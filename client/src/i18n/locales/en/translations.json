@@ -119,11 +119,14 @@
     "reports": "reports",
     "weekReport": "week report",
     "singleView": "month view",
-    "singleYearView": "year view"
+    "singleYearView": "year view",
+    "adminTools": "admin tools",
+    "timesheetAccounts": "time sheet accounts"
   },
   "label": {
     "name": "name",
     "user": "user",
+    "externalId": "external ID",
     "alias": "alias",
     "description": "description",
     "firstName": "first name",

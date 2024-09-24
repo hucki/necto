@@ -120,10 +120,13 @@
     "reports": "Auswertungen",
     "weekReport": "Wochenbericht",
     "singleView": "Monatsansicht",
-    "singleYearView": "Jahresansicht"
+    "singleYearView": "Jahresansicht",
+    "adminTools": "admin tools",
+    "timesheetAccounts": "Zeitkonten"
   },
   "label": {
     "user": "user",
+    "externalId": "externe ID",
     "alias": "alias",
     "name": "Name",
     "description": "Beschreibung",
