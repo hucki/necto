@@ -124,6 +124,25 @@ export const PatientForm = ({
       <SimpleGrid columns={[1, null, 2]} gap={6}>
         <GridItem>{autoFormFields()}</GridItem>
         <GridItem>
+          <ModalFormGroup key="externalId">
+            <Label htmlFor="externalId">{t('label.externalId')}</Label>
+            {type === 'view' ? (
+              <TextDisplay id="externalId">
+                {currentPatient['externalId' as PatientKey]?.toString()}&nbsp;
+              </TextDisplay>
+            ) : (
+              <Input
+                autoComplete="off"
+                onChange={(e) =>
+                  onInputChange({ event: e, key: 'externalId' as PatientKey })
+                }
+                id="externalId"
+                value={currentPatient['externalId' as PatientKey]?.toString()}
+              ></Input>
+            )}
+          </ModalFormGroup>
+        </GridItem>
+        <GridItem>
           <ModalFormGroup>
             <Label htmlFor="doctorId">{t('label.doctor')}</Label>
             {type === 'view' ? (

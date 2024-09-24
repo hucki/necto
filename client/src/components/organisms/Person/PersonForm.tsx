@@ -404,7 +404,7 @@ export const PersonForm = ({
             {!personNotCreated &&
               personType !== 'doctor' &&
               patientCheckboxes()}
-            <ModalFormGroup>
+            <ModalFormGroup gridTemplateColumns="2fr 1fr">
               <FormControl id="firstName" isRequired={true}>
                 <Input
                   autoComplete="off"
@@ -419,6 +419,23 @@ export const PersonForm = ({
                   value={currentPerson['firstName' as keyof Person]?.toString()}
                 ></Input>
                 <FormLabel>{t('label.firstName')}</FormLabel>
+              </FormControl>
+              <FormControl id="externalId">
+                <Input
+                  autoComplete="off"
+                  isDisabled={isReadOnly}
+                  onChange={(e) =>
+                    onInputChange({
+                      event: e,
+                      key: 'externalId' as keyof Person,
+                    })
+                  }
+                  name="externalId"
+                  value={currentPerson[
+                    'externalId' as keyof Person
+                  ]?.toString()}
+                ></Input>
+                <FormLabel>{t('label.externalId')}</FormLabel>
               </FormControl>
             </ModalFormGroup>
             <FormGroup gridColsUnit="auto" gridCols={personNotCreated ? 2 : 1}>

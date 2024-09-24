@@ -83,12 +83,18 @@ const FormGroup = styled.div(
   }
 );
 
-const ModalFormGroup = styled.div({
-  display: 'grid',
-  alignItems: 'center',
-  marginBottom: '0.75rem',
-  maxHeight: '70vh',
-});
+interface ModalFormGroupProps {
+  gridTemplateColumns?: string;
+}
+const ModalFormGroup = styled.div(
+  ({ gridTemplateColumns = '1fr' }: ModalFormGroupProps) => ({
+    display: 'grid',
+    gridTemplateColumns: gridTemplateColumns,
+    alignItems: 'center',
+    marginBottom: '0.75rem',
+    maxHeight: '70vh',
+  })
+);
 
 const RadioGroup = styled.div({
   display: 'flex',
