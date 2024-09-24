@@ -51,12 +51,14 @@ export const patientUpdateKeys = [
   'tenantId',
   'doctorId',
   'institutionId',
+  'externalId',
 ] as const;
 
 export type PatientUpdate = (typeof patientUpdateKeys)[number];
 
 export type Patient = {
   uuid: string;
+  externalId: string;
   firstName: string;
   lastName: string;
   title?: string;

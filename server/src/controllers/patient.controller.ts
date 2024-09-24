@@ -44,6 +44,7 @@ export const addPatient = async (
     const createdPatient = await prisma.patient.create({
       data: {
         ...encryptedPatient,
+        externalId: incomingPatient.externalId,
         tenantId: tenantId,
         updatedBy: user.uuid,
         createdBy: user.uuid,
@@ -71,6 +72,7 @@ export const updatePatient = async (
     const user = req.user as User;
     const patientId = req.params.patientId;
     const incomingPatient = getSanitizedPatient(req.body);
+    const externalId = incomingPatient.externalId;
     const encryptedPatient = getEncryptedPatient(incomingPatient);
     const updatedPatient = await prisma.patient.update({
       where: {
@@ -78,6 +80,7 @@ export const updatePatient = async (
       },
       data: {
         ...encryptedPatient,
+        externalId: externalId,
         updatedBy: user.uuid,
         waitingPreferences: encryptedPatient.waitingPreferences
           ? {

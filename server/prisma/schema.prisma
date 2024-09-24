@@ -362,6 +362,7 @@ model ContactData {
 
 model Patient {
   uuid                String          @id @default(uuid()) @db.Uuid
+  externalId          String          @default("") @db.VarChar(64)
   firstName           String?         @db.VarChar(255)
   lastName            String?         @db.VarChar(255)
   title               String?         @db.VarChar(64)
